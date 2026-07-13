@@ -1,4 +1,7 @@
-export const metadata = {
+import type { Metadata } from "next";
+import "./globals.css";
+
+export const metadata: Metadata = {
   metadataBase: new URL("https://solardev.ai"),
 
   title: {
@@ -10,14 +13,22 @@ export const metadata = {
     "Professional AI methodologies, engineering workflows and consultant-grade prompts for utility-scale Solar PV and BESS project development.",
 
   keywords: [
-    "utility-scale solar",
+    "SolarDev AI",
+    "Utility Scale Solar",
+    "Solar PV",
+    "Battery Energy Storage System",
     "BESS",
-    "solar project development",
-    "renewable energy engineering",
-    "artificial intelligence",
-    "AI prompts for engineers",
-    "solar engineering handbook",
-    "battery energy storage",
+    "Renewable Energy",
+    "Artificial Intelligence",
+    "AI",
+    "Project Development",
+    "Engineering",
+    "Solar Engineering",
+    "Renewable Energy Engineering",
+    "ChatGPT",
+    "AI Prompt Library",
+    "Solar Development",
+    "Utility Scale BESS",
   ],
 
   authors: [
@@ -27,7 +38,12 @@ export const metadata = {
   ],
 
   creator: "SolarDev AI",
+
   publisher: "SolarDev AI",
+
+  applicationName: "SolarDev AI",
+
+  category: "Engineering",
 
   openGraph: {
     title: "SolarDev AI",
@@ -35,19 +51,38 @@ export const metadata = {
       "AI for Utility-Scale Solar & BESS Project Development.",
     url: "https://solardev.ai",
     siteName: "SolarDev AI",
-    type: "website",
     locale: "en_US",
+    type: "website",
   },
 
   twitter: {
     card: "summary_large_image",
     title: "SolarDev AI",
     description:
-      "Professional AI for utility-scale Solar PV and BESS project development.",
+      "Professional AI for Utility-Scale Solar & BESS Project Development.",
   },
 
   robots: {
     index: true,
     follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
   },
 };
+
+export default function RootLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
+  return (
+    <html lang="en">
+      <body>{children}</body>
+    </html>
+  );
+}
