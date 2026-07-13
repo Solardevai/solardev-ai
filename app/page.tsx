@@ -1,5 +1,8 @@
 import Image from "next/image";
 
+const checkoutUrl =
+  "PASTE_YOUR_LEMON_SQUEEZY_CHECKOUT_URL_HERE";
+
 const chapters = [
   "AI Foundations & Professional Prompting",
   "Research & Technical Due Diligence",
@@ -62,7 +65,9 @@ export default function Home() {
           </nav>
 
           <a
-            href="#buy"
+            href={checkoutUrl}
+            target="_blank"
+            rel="noopener noreferrer"
             className="rounded-lg bg-amber-400 px-5 py-3 text-sm font-semibold text-slate-950 transition hover:bg-amber-300"
           >
             Get Volume 1
@@ -91,10 +96,12 @@ export default function Home() {
 
             <div className="mt-10 flex flex-col gap-4 sm:flex-row">
               <a
-                href="#buy"
+                href={checkoutUrl}
+                target="_blank"
+                rel="noopener noreferrer"
                 className="rounded-xl bg-amber-400 px-7 py-4 text-center font-semibold text-slate-950 transition hover:bg-amber-300"
               >
-                Get Volume 1
+                Get Volume 1 — €49
               </a>
 
               <a
@@ -128,7 +135,7 @@ export default function Home() {
             </div>
           </div>
 
-          {/* Real book cover */}
+          {/* Book cover */}
           <div className="flex justify-center lg:justify-end">
             <div className="relative w-full max-w-md">
               <div className="absolute -inset-10 rounded-full bg-amber-400/10 blur-3xl" />
@@ -269,7 +276,7 @@ export default function Home() {
                 <li>✓ Quick, Professional and Expert prompts</li>
                 <li>✓ Worked examples and checklists</li>
                 <li>✓ Engineering risk controls</li>
-                <li>✓ Future edition updates</li>
+                <li>✓ Minor corrections for this edition</li>
               </ul>
             </div>
 
@@ -278,18 +285,34 @@ export default function Home() {
                 Launch price
               </p>
 
-              <p className="mt-3 text-5xl font-bold">€49</p>
+              <div className="mt-3 flex items-end gap-3">
+                <span className="text-2xl text-slate-400 line-through">
+                  €59
+                </span>
+
+                <span className="text-5xl font-bold">€49</span>
+              </div>
+
+              <p className="mt-3 text-sm font-medium text-green-700">
+                Save €10 during the launch period
+              </p>
 
               <p className="mt-2 text-sm text-slate-500">
                 One-time payment
               </p>
 
-              <button
-                type="button"
-                className="mt-7 w-full rounded-xl bg-amber-400 px-6 py-4 font-semibold transition hover:bg-amber-300"
+              <a
+                href={checkoutUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mt-7 block w-full rounded-xl bg-amber-400 px-6 py-4 text-center font-semibold transition hover:bg-amber-300"
               >
-                Checkout coming soon
-              </button>
+                Get Instant Access
+              </a>
+
+              <p className="mt-4 text-center text-xs leading-5 text-slate-500">
+                Secure checkout and digital delivery through Lemon Squeezy.
+              </p>
             </div>
           </div>
         </div>
