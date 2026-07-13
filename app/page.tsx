@@ -123,7 +123,6 @@ export default function Home() {
     </div>
   </div>
 </div>
-      </section>
 
       {/* Volume 1 */}
       <section id="volume-1" className="mx-auto max-w-7xl px-6 py-24">
