@@ -106,80 +106,23 @@ export default function Home() {
             </div>
           </div>
 
-          {/* Book placeholder */}
-          <div className="flex justify-center lg:justify-end">
-            <div className="relative w-full max-w-md">
-              <div className="absolute -inset-8 rounded-full bg-amber-400/10 blur-3xl" />
+          {/* Book cover */}
+<div className="flex justify-center lg:justify-end">
+  <div className="relative w-full max-w-md">
+    <div className="absolute -inset-10 rounded-full bg-amber-400/10 blur-3xl" />
 
-              <div className="relative rotate-2 rounded-2xl border border-white/15 bg-gradient-to-br from-slate-800 to-slate-900 p-10 shadow-2xl">
-                <p className="text-sm font-semibold uppercase tracking-[0.2em] text-amber-400">
-                  Volume 1
-                </p>
-
-                <h2 className="mt-8 text-4xl font-bold leading-tight">
-                  AI for Utility-Scale Solar &amp; BESS Project Development
-                </h2>
-
-                <p className="mt-6 text-lg text-slate-300">
-                  AI Foundations &amp; Professional Prompt Library
-                </p>
-
-                <div className="mt-16 border-t border-white/15 pt-6 text-sm text-slate-400">
-                  Tiago Pires
-                  <br />
-                  Publisher Edition v4.0
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Positioning */}
-      <section className="border-y border-white/10 bg-slate-900/50">
-        <div className="mx-auto max-w-7xl px-6 py-20">
-          <div className="max-w-3xl">
-            <p className="text-sm font-semibold uppercase tracking-[0.24em] text-amber-400">
-              Engineering first
-            </p>
-
-            <h2 className="mt-4 text-3xl font-bold tracking-tight sm:text-4xl">
-              Not another generic AI prompt book
-            </h2>
-
-            <p className="mt-6 text-lg leading-8 text-slate-300">
-              SolarDev AI places artificial intelligence inside controlled
-              engineering workflows. The objective is not to replace
-              professional judgement, but to improve the consistency,
-              traceability and speed of project-development work.
-            </p>
-          </div>
-
-          <div className="mt-12 grid gap-6 md:grid-cols-3">
-            {[
-              {
-                title: "Engineering methodology",
-                text: "Structured workflows based on real utility-scale Solar PV and BESS development activities.",
-              },
-              {
-                title: "Consultant-grade prompts",
-                text: "Prompts built around roles, inputs, deliverables, constraints, risks and validation.",
-              },
-              {
-                title: "Professional controls",
-                text: "Assumptions, evidence, traceability, peer review and accountability remain explicit.",
-              },
-            ].map((item) => (
-              <article
-                key={item.title}
-                className="rounded-2xl border border-white/10 bg-white/[0.03] p-7"
-              >
-                <h3 className="text-xl font-semibold">{item.title}</h3>
-                <p className="mt-4 leading-7 text-slate-400">{item.text}</p>
-              </article>
-            ))}
-          </div>
-        </div>
+    <div className="relative">
+      <Image
+        src="/volume-1-cover.png"
+        alt="AI for Utility-Scale Solar and BESS Project Development, Volume 1"
+        width={900}
+        height={1273}
+        priority
+        className="h-auto w-full rounded-sm shadow-2xl"
+      />
+    </div>
+  </div>
+</div>
       </section>
 
       {/* Volume 1 */}
@@ -275,7 +218,7 @@ export default function Home() {
               <p className="text-sm font-semibold uppercase tracking-wider text-slate-500">
                 Launch price
               </p>
-              <p className="mt-3 text-5xl font-bold">€49</p>
+              <p className="mt-3 text-5xl font-bold">€9</p>
               <p className="mt-2 text-sm text-slate-500">
                 One-time payment
               </p>
