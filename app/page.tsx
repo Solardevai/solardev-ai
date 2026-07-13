@@ -278,7 +278,7 @@ export default function Home() {
                 Launch price
               </p>
 
-              <p className="mt-3 text-5xl font-bold">€59</p>
+              <p className="mt-3 text-5xl font-bold">€49</p>
 
               <p className="mt-2 text-sm text-slate-500">
                 One-time payment
