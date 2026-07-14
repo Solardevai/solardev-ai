@@ -101,9 +101,9 @@ export default function Home() {
               Professional Handbook Series
             </p>
 
-            <h1 className="max-w-4xl text-5xl font-bold leading-[1.05] tracking-tight sm:text-6xl lg:text-7xl">
-              AI for Utility-Scale Solar &amp; BESS Project Development
-            </h1>
+            <h1>
+  AI Tools for Utility-Scale Solar &amp; BESS Project Development
+</h1>
 
             <p className="mt-7 max-w-2xl text-xl leading-8 text-slate-300">
               Professional engineering methodologies, controlled AI workflows
