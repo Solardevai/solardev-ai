@@ -1,7 +1,7 @@
 import Image from "next/image";
 
 const checkoutUrl =
-  "https://solardevai.lemonsqueezy.com/checkout/buy/14ca4fa1-0396-49e8-9213-d3770d70a36a";
+  "PASTE_YOUR_LEMON_SQUEEZY_CHECKOUT_URL_HERE";
 
 const chapters = [
   "AI Foundations & Professional Prompting",
@@ -44,23 +44,39 @@ export default function Home() {
   return (
     <main className="min-h-screen bg-slate-950 text-white">
       {/* Navigation */}
-      <header className="border-b border-white/10">
+      <header className="sticky top-0 z-50 border-b border-white/10 bg-slate-950/90 backdrop-blur">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-5">
           <a href="#" className="text-xl font-bold tracking-tight">
             SolarDev <span className="text-amber-400">AI</span>
           </a>
 
           <nav className="hidden items-center gap-8 text-sm text-slate-300 md:flex">
-            <a href="#volume-1" className="transition hover:text-white">
+            <a
+              href="#volume-1"
+              className="transition hover:text-white"
+            >
               Volume 1
             </a>
 
-            <a href="#inside" className="transition hover:text-white">
+            <a
+              href="#inside"
+              className="transition hover:text-white"
+            >
               What’s Inside
             </a>
 
-            <a href="#about" className="transition hover:text-white">
+            <a
+              href="#about"
+              className="transition hover:text-white"
+            >
               About
+            </a>
+
+            <a
+              href="#contact"
+              className="transition hover:text-white"
+            >
+              Contact
             </a>
           </nav>
 
@@ -183,7 +199,9 @@ export default function Home() {
               >
                 <h3 className="text-xl font-semibold">{item.title}</h3>
 
-                <p className="mt-4 leading-7 text-slate-400">{item.text}</p>
+                <p className="mt-4 leading-7 text-slate-400">
+                  {item.text}
+                </p>
               </article>
             ))}
           </div>
@@ -191,7 +209,10 @@ export default function Home() {
       </section>
 
       {/* Volume 1 */}
-      <section id="volume-1" className="mx-auto max-w-7xl px-6 py-24">
+      <section
+        id="volume-1"
+        className="mx-auto max-w-7xl scroll-mt-24 px-6 py-24"
+      >
         <div className="grid gap-14 lg:grid-cols-[0.85fr_1.15fr]">
           <div>
             <p className="text-sm font-semibold uppercase tracking-[0.24em] text-amber-400">
@@ -219,7 +240,9 @@ export default function Home() {
                   Chapter {index + 1}
                 </span>
 
-                <p className="mt-2 font-medium leading-6">{chapter}</p>
+                <p className="mt-2 font-medium leading-6">
+                  {chapter}
+                </p>
               </div>
             ))}
           </div>
@@ -227,7 +250,10 @@ export default function Home() {
       </section>
 
       {/* Audience */}
-      <section id="inside" className="bg-white text-slate-950">
+      <section
+        id="inside"
+        className="scroll-mt-24 bg-white text-slate-950"
+      >
         <div className="mx-auto max-w-7xl px-6 py-24">
           <div className="max-w-3xl">
             <p className="text-sm font-semibold uppercase tracking-[0.24em] text-amber-600">
@@ -253,7 +279,10 @@ export default function Home() {
       </section>
 
       {/* Pricing */}
-      <section id="buy" className="mx-auto max-w-5xl px-6 py-24">
+      <section
+        id="buy"
+        className="mx-auto max-w-5xl scroll-mt-24 px-6 py-24"
+      >
         <div className="rounded-3xl border border-amber-400/30 bg-gradient-to-br from-slate-900 to-slate-950 p-8 shadow-2xl sm:p-12">
           <div className="grid gap-10 lg:grid-cols-[1fr_auto] lg:items-end">
             <div>
@@ -319,7 +348,10 @@ export default function Home() {
       </section>
 
       {/* About */}
-      <section id="about" className="border-t border-white/10">
+      <section
+        id="about"
+        className="scroll-mt-24 border-t border-white/10"
+      >
         <div className="mx-auto max-w-7xl px-6 py-20">
           <div className="max-w-3xl">
             <p className="text-sm font-semibold uppercase tracking-[0.24em] text-amber-400">
@@ -340,12 +372,100 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Contact */}
+      <section
+        id="contact"
+        className="scroll-mt-24 border-t border-white/10 bg-slate-900/40"
+      >
+        <div className="mx-auto max-w-7xl px-6 py-20">
+          <div className="grid gap-12 lg:grid-cols-2">
+            <div>
+              <p className="text-sm font-semibold uppercase tracking-[0.24em] text-amber-400">
+                Contact
+              </p>
+
+              <h2 className="mt-4 text-3xl font-bold">
+                Questions about the handbook or SolarDev AI?
+              </h2>
+
+              <p className="mt-6 max-w-2xl text-lg leading-8 text-slate-300">
+                Contact us regarding Volume 1, digital delivery, professional
+                use, future volumes or corporate licensing.
+              </p>
+            </div>
+
+            <div className="space-y-5 rounded-2xl border border-white/10 bg-slate-950 p-7">
+              <div>
+                <p className="text-sm font-semibold uppercase tracking-wider text-slate-500">
+                  General enquiries
+                </p>
+
+                <a
+                  href="mailto:info@solardev.ai"
+                  className="mt-2 inline-block text-lg font-semibold text-amber-400 transition hover:text-amber-300"
+                >
+                  info@solardev.ai
+                </a>
+              </div>
+
+              <div className="border-t border-white/10 pt-5">
+                <p className="text-sm font-semibold uppercase tracking-wider text-slate-500">
+                  Customer support
+                </p>
+
+                <a
+                  href="mailto:support@solardev.ai"
+                  className="mt-2 inline-block text-lg font-semibold text-amber-400 transition hover:text-amber-300"
+                >
+                  support@solardev.ai
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Footer */}
       <footer className="border-t border-white/10">
-        <div className="mx-auto flex max-w-7xl flex-col gap-4 px-6 py-8 text-sm text-slate-400 sm:flex-row sm:items-center sm:justify-between">
-          <p>© 2026 SolarDev AI. All rights reserved.</p>
+        <div className="mx-auto grid max-w-7xl gap-8 px-6 py-10 text-sm text-slate-400 md:grid-cols-3">
+          <div>
+            <p className="text-lg font-bold text-white">
+              SolarDev <span className="text-amber-400">AI</span>
+            </p>
 
-          <p>AI for Utility-Scale Solar &amp; BESS Professionals</p>
+            <p className="mt-3 max-w-xs leading-6">
+              AI for Utility-Scale Solar &amp; BESS Professionals.
+            </p>
+          </div>
+
+          <div>
+            <p className="font-semibold text-white">Contact</p>
+
+            <div className="mt-3 space-y-2">
+              <p>
+                <a
+                  href="mailto:info@solardev.ai"
+                  className="transition hover:text-amber-400"
+                >
+                  info@solardev.ai
+                </a>
+              </p>
+
+              <p>
+                <a
+                  href="mailto:support@solardev.ai"
+                  className="transition hover:text-amber-400"
+                >
+                  support@solardev.ai
+                </a>
+              </p>
+            </div>
+          </div>
+
+          <div className="md:text-right">
+            <p>© 2026 SolarDev AI.</p>
+            <p className="mt-2">All rights reserved.</p>
+          </div>
         </div>
       </footer>
     </main>
