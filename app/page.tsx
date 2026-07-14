@@ -105,10 +105,11 @@ export default function Home() {
   AI Tools for Utility-Scale Solar &amp; BESS Project Development
 </h1>
 
-            <p className="mt-7 max-w-2xl text-xl leading-8 text-slate-300">
-              Professional engineering methodologies, controlled AI workflows
-              and consultant-grade prompts for renewable-energy professionals.
-            </p>
+            <<p>
+  Professional handbooks, engineering workflows and AI prompt libraries
+  designed to support utility-scale solar PV and battery energy storage
+  projects from early-stage screening through construction readiness.
+</p>
 
             <div className="mt-10 flex flex-col gap-4 sm:flex-row">
               <a
