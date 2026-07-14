@@ -1,19 +1,49 @@
 import Image from "next/image";
 
-const checkoutUrl =
+const CHECKOUT_URL =
   "https://solardevai.lemonsqueezy.com/checkout/buy/14ca4fa1-0396-49e8-9213-d3770d70a36a";
 
 const chapters = [
-  "AI Foundations & Professional Prompting",
-  "Research & Technical Due Diligence",
-  "Site Identification & Feasibility Screening",
-  "Preliminary Development Roadmap",
-  "Landowner Assessment & Land Control",
-  "Satellite & Aerial Image Interpretation",
-  "Site Visit Planning & Field Due Diligence",
-  "Environmental & Social Screening",
-  "Initial Project Risk Register",
-  "Initial CAPEX Benchmark",
+  {
+    number: "01",
+    title: "AI Foundations & Professional Prompting",
+  },
+  {
+    number: "02",
+    title: "Research & Technical Due Diligence",
+  },
+  {
+    number: "03",
+    title: "Site Identification & Feasibility Screening",
+  },
+  {
+    number: "04",
+    title: "Preliminary Development Roadmap",
+  },
+  {
+    number: "05",
+    title: "Landowner Assessment & Land Control",
+  },
+  {
+    number: "06",
+    title: "Satellite & Aerial Image Interpretation",
+  },
+  {
+    number: "07",
+    title: "Site Visit Planning & Field Due Diligence",
+  },
+  {
+    number: "08",
+    title: "Environmental & Social Screening",
+  },
+  {
+    number: "09",
+    title: "Initial Project Risk Register",
+  },
+  {
+    number: "10",
+    title: "Initial CAPEX Benchmark",
+  },
 ];
 
 const audiences = [
@@ -25,32 +55,33 @@ const audiences = [
   "Developers and Investors",
 ];
 
-const features = [
-  {
-    title: "Engineering methodology",
-    text: "Structured workflows based on real utility-scale Solar PV and BESS development activities.",
-  },
-  {
-    title: "Consultant-grade prompts",
-    text: "Prompts built around roles, inputs, deliverables, constraints, risks and validation.",
-  },
-  {
-    title: "Professional controls",
-    text: "Assumptions, evidence, traceability, peer review and accountability remain explicit.",
-  },
+const productFeatures = [
+  "218-page PDF edition",
+  "10 professional chapters",
+  "Quick, Professional and Expert prompts",
+  "Worked examples and checklists",
+  "Engineering risk controls",
+  "Minor corrections for this edition",
 ];
 
 export default function Home() {
   return (
-    <main className="min-h-screen bg-slate-950 text-white">
-      {/* Navigation */}
-      <header className="sticky top-0 z-50 border-b border-white/10 bg-slate-950/90 backdrop-blur">
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-5">
-          <a href="#" className="text-xl font-bold tracking-tight">
-            SolarDev <span className="text-amber-400">AI</span>
+    <main className="min-h-screen bg-[#030817] text-white">
+      {/* Header */}
+      <header className="sticky top-0 z-50 border-b border-white/10 bg-[#030817]/95 backdrop-blur">
+        <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4 lg:px-8">
+          <a
+            href="#top"
+            className="text-sm font-semibold tracking-tight text-white"
+            aria-label="SolarDev AI homepage"
+          >
+            SolarDev AI
           </a>
 
-          <nav className="hidden items-center gap-8 text-sm text-slate-300 md:flex">
+          <nav
+            aria-label="Primary navigation"
+            className="hidden items-center gap-7 text-sm text-slate-300 md:flex"
+          >
             <a
               href="#volume-1"
               className="transition hover:text-white"
@@ -59,7 +90,7 @@ export default function Home() {
             </a>
 
             <a
-              href="#inside"
+              href="#whats-inside"
               className="transition hover:text-white"
             >
               What’s Inside
@@ -81,10 +112,10 @@ export default function Home() {
           </nav>
 
           <a
-            href={checkoutUrl}
+            href={CHECKOUT_URL}
             target="_blank"
             rel="noopener noreferrer"
-            className="rounded-lg bg-amber-400 px-5 py-3 text-sm font-semibold text-slate-950 transition hover:bg-amber-300"
+            className="rounded-md bg-amber-400 px-4 py-2 text-sm font-semibold text-slate-950 transition hover:bg-amber-300"
           >
             Get Volume 1
           </a>
@@ -92,80 +123,107 @@ export default function Home() {
       </header>
 
       {/* Hero */}
-      <section className="relative overflow-hidden">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(245,158,11,0.15),transparent_35%)]" />
+      <section
+        id="top"
+        className="relative overflow-hidden border-b border-white/10"
+      >
+        <div
+          className="pointer-events-none absolute inset-0 opacity-40"
+          aria-hidden="true"
+        >
+          <div className="absolute -left-32 top-20 h-96 w-96 rounded-full bg-blue-900/40 blur-3xl" />
+          <div className="absolute right-0 top-10 h-96 w-96 rounded-full bg-amber-500/10 blur-3xl" />
+        </div>
 
-        <div className="relative mx-auto grid min-h-[760px] max-w-7xl items-center gap-14 px-6 py-24 lg:grid-cols-2">
+        <div className="relative mx-auto grid max-w-7xl items-center gap-14 px-6 py-20 lg:grid-cols-[1.05fr_0.75fr] lg:px-8 lg:py-28">
           <div>
-            <p className="mb-6 text-sm font-semibold uppercase tracking-[0.28em] text-amber-400">
-              Professional Handbook Series
+            {/* SEO-focused introductory label */}
+            <p className="mb-5 text-xs font-semibold uppercase tracking-[0.22em] text-amber-400">
+              Professional Solar &amp; BESS Development Resources
             </p>
 
-            <h1>
-  AI Tools for Utility-Scale Solar &amp; BESS Project Development
-</h1>
+            {/* Primary page heading — keep only one H1 */}
+            <h1 className="max-w-4xl text-4xl font-bold leading-[1.05] tracking-tight text-white sm:text-5xl lg:text-7xl">
+              AI Tools for Utility-Scale Solar &amp; BESS Project Development
+            </h1>
 
-            <p>
-              
-  Professional handbooks, engineering workflows and AI prompt libraries
-  designed to support utility-scale solar PV and battery energy storage
-  projects from early-stage screening through construction readiness.
-</p>
+            {/* SEO-focused supporting text */}
+            <p className="mt-7 max-w-2xl text-base leading-8 text-slate-300 sm:text-lg">
+              Professional handbooks, engineering workflows and AI prompt
+              libraries designed to support utility-scale solar PV and battery
+              energy storage projects from early-stage screening through
+              construction readiness.
+            </p>
 
-            <div className="mt-10 flex flex-col gap-4 sm:flex-row">
+            <div className="mt-9 flex flex-col gap-4 sm:flex-row">
               <a
-                href={checkoutUrl}
+                href={CHECKOUT_URL}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="rounded-xl bg-amber-400 px-7 py-4 text-center font-semibold text-slate-950 transition hover:bg-amber-300"
+                className="inline-flex items-center justify-center rounded-md bg-amber-400 px-6 py-3 text-sm font-semibold text-slate-950 transition hover:bg-amber-300"
               >
                 Get Volume 1 — €49
               </a>
 
               <a
-                href="#inside"
-                className="rounded-xl border border-white/15 px-7 py-4 text-center font-semibold transition hover:bg-white/5"
+                href="#volume-1"
+                className="inline-flex items-center justify-center rounded-md border border-white/20 px-6 py-3 text-sm font-semibold text-white transition hover:border-white/40 hover:bg-white/5"
               >
                 Explore the Handbook
               </a>
             </div>
 
-            <div className="mt-12 grid max-w-2xl grid-cols-2 gap-5 text-sm text-slate-300 sm:grid-cols-4">
+            <dl className="mt-12 grid max-w-2xl grid-cols-2 gap-x-6 gap-y-7 border-t border-white/10 pt-8 sm:grid-cols-4">
               <div>
-                <strong className="block text-2xl text-white">218</strong>
-                Pages
+                <dt className="text-xs uppercase tracking-wider text-slate-500">
+                  Pages
+                </dt>
+                <dd className="mt-1 text-lg font-semibold text-white">218</dd>
               </div>
 
               <div>
-                <strong className="block text-2xl text-white">10</strong>
-                Chapters
+                <dt className="text-xs uppercase tracking-wider text-slate-500">
+                  Chapters
+                </dt>
+                <dd className="mt-1 text-lg font-semibold text-white">10</dd>
               </div>
 
               <div>
-                <strong className="block text-2xl text-white">3</strong>
-                Prompt levels
+                <dt className="text-xs uppercase tracking-wider text-slate-500">
+                  Prompt levels
+                </dt>
+                <dd className="mt-1 text-lg font-semibold text-white">3</dd>
               </div>
 
               <div>
-                <strong className="block text-2xl text-white">1</strong>
-                Engineering system
+                <dt className="text-xs uppercase tracking-wider text-slate-500">
+                  Methodology
+                </dt>
+                <dd className="mt-1 text-lg font-semibold text-white">
+                  1 system
+                </dd>
               </div>
-            </div>
+            </dl>
           </div>
 
-          {/* Book cover */}
-          <div className="flex justify-center lg:justify-end">
-            <div className="relative w-full max-w-md">
-              <div className="absolute -inset-10 rounded-full bg-amber-400/10 blur-3xl" />
+          {/* Handbook cover */}
+          <div className="mx-auto w-full max-w-md lg:max-w-lg">
+            <div className="relative">
+              <div
+                className="absolute -inset-6 rounded-3xl bg-amber-400/10 blur-3xl"
+                aria-hidden="true"
+              />
 
-              <div className="relative">
+              <div className="relative overflow-hidden rounded-lg border border-white/10 bg-white shadow-2xl shadow-black/50">
                 <Image
                   src="/volume-1-cover.png"
-                  alt="AI for Utility-Scale Solar and BESS Project Development, Volume 1"
-                  width={900}
-                  height={1273}
-                  priority
-                  className="h-auto w-full rounded-sm shadow-2xl"
+                  alt="SolarDev AI utility-scale solar PV and BESS project development handbook cover, Volume 1"
+                  width={708}
+                  height={1000}
+                  sizes="(max-width: 1024px) 90vw, 36vw"
+                  loading="eager"
+                  fetchPriority="high"
+                  className="h-auto w-full"
                 />
               </div>
             </div>
@@ -173,11 +231,14 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Positioning */}
-      <section className="border-y border-white/10 bg-slate-900/50">
-        <div className="mx-auto max-w-7xl px-6 py-20">
+      {/* Engineering approach */}
+      <section
+        id="whats-inside"
+        className="border-b border-white/10 bg-[#060c1d]"
+      >
+        <div className="mx-auto max-w-7xl px-6 py-20 lg:px-8 lg:py-24">
           <div className="max-w-3xl">
-            <p className="text-sm font-semibold uppercase tracking-[0.24em] text-amber-400">
+            <p className="text-xs font-semibold uppercase tracking-[0.22em] text-amber-400">
               Engineering first
             </p>
 
@@ -185,7 +246,7 @@ export default function Home() {
               Not another generic AI prompt book
             </h2>
 
-            <p className="mt-6 text-lg leading-8 text-slate-300">
+            <p className="mt-6 text-base leading-8 text-slate-300">
               SolarDev AI places artificial intelligence inside controlled
               engineering workflows. The objective is not to replace
               professional judgement, but to improve the consistency,
@@ -194,18 +255,38 @@ export default function Home() {
           </div>
 
           <div className="mt-12 grid gap-6 md:grid-cols-3">
-            {features.map((item) => (
-              <article
-                key={item.title}
-                className="rounded-2xl border border-white/10 bg-white/[0.03] p-7"
-              >
-                <h3 className="text-xl font-semibold">{item.title}</h3>
+            <article className="rounded-xl border border-white/10 bg-white/[0.03] p-7">
+              <p className="text-sm font-semibold text-amber-400">01</p>
+              <h3 className="mt-4 text-xl font-semibold">
+                Engineering methodology
+              </h3>
+              <p className="mt-4 leading-7 text-slate-400">
+                Structured workflows based on real utility-scale solar PV and
+                BESS development activities.
+              </p>
+            </article>
 
-                <p className="mt-4 leading-7 text-slate-400">
-                  {item.text}
-                </p>
-              </article>
-            ))}
+            <article className="rounded-xl border border-white/10 bg-white/[0.03] p-7">
+              <p className="text-sm font-semibold text-amber-400">02</p>
+              <h3 className="mt-4 text-xl font-semibold">
+                Consultant-grade prompts
+              </h3>
+              <p className="mt-4 leading-7 text-slate-400">
+                Prompts built around roles, inputs, deliverables, constraints,
+                risks and validation requirements.
+              </p>
+            </article>
+
+            <article className="rounded-xl border border-white/10 bg-white/[0.03] p-7">
+              <p className="text-sm font-semibold text-amber-400">03</p>
+              <h3 className="mt-4 text-xl font-semibold">
+                Professional controls
+              </h3>
+              <p className="mt-4 leading-7 text-slate-400">
+                Assumptions, evidence, traceability, peer review and
+                accountability remain explicit.
+              </p>
+            </article>
           </div>
         </div>
       </section>
@@ -213,65 +294,69 @@ export default function Home() {
       {/* Volume 1 */}
       <section
         id="volume-1"
-        className="mx-auto max-w-7xl scroll-mt-24 px-6 py-24"
+        className="border-b border-white/10"
       >
-        <div className="grid gap-14 lg:grid-cols-[0.85fr_1.15fr]">
-          <div>
-            <p className="text-sm font-semibold uppercase tracking-[0.24em] text-amber-400">
+        <div className="mx-auto max-w-7xl px-6 py-20 lg:px-8 lg:py-24">
+          <div className="max-w-3xl">
+            <p className="text-xs font-semibold uppercase tracking-[0.22em] text-amber-400">
               Volume 1
             </p>
 
-            <h2 className="mt-4 text-4xl font-bold tracking-tight">
+            <h2 className="mt-4 text-3xl font-bold tracking-tight sm:text-4xl">
               AI Foundations &amp; Professional Prompt Library
             </h2>
 
-            <p className="mt-6 text-lg leading-8 text-slate-300">
+            <p className="mt-6 text-base leading-8 text-slate-300">
               A structured early-stage development system covering responsible
-              AI use, due diligence, site screening, development planning, land,
-              field evidence, environmental constraints, risk and CAPEX.
+              AI use, due diligence, site screening, development planning,
+              land, field evidence, environmental constraints, risk and CAPEX.
             </p>
           </div>
 
-          <div className="grid gap-4 sm:grid-cols-2">
-            {chapters.map((chapter, index) => (
-              <div
-                key={chapter}
-                className="rounded-xl border border-white/10 bg-slate-900 p-5"
+          <div className="mt-12 grid gap-px overflow-hidden rounded-xl border border-white/10 bg-white/10 md:grid-cols-2">
+            {chapters.map((chapter) => (
+              <article
+                key={chapter.number}
+                className="bg-[#060c1d] p-6 transition hover:bg-white/[0.05]"
               >
-                <span className="text-sm font-semibold text-amber-400">
-                  Chapter {index + 1}
-                </span>
+                <div className="flex gap-5">
+                  <span className="text-sm font-semibold text-amber-400">
+                    {chapter.number}
+                  </span>
 
-                <p className="mt-2 font-medium leading-6">
-                  {chapter}
-                </p>
-              </div>
+                  <div>
+                    <p className="text-xs uppercase tracking-wider text-slate-500">
+                      Chapter {Number(chapter.number)}
+                    </p>
+                    <h3 className="mt-2 font-semibold leading-6 text-white">
+                      {chapter.title}
+                    </h3>
+                  </div>
+                </div>
+              </article>
             ))}
           </div>
         </div>
       </section>
 
       {/* Audience */}
-      <section
-        id="inside"
-        className="scroll-mt-24 bg-white text-slate-950"
-      >
-        <div className="mx-auto max-w-7xl px-6 py-24">
+      <section className="border-b border-white/10 bg-[#060c1d]">
+        <div className="mx-auto max-w-7xl px-6 py-20 lg:px-8 lg:py-24">
           <div className="max-w-3xl">
-            <p className="text-sm font-semibold uppercase tracking-[0.24em] text-amber-600">
+            <p className="text-xs font-semibold uppercase tracking-[0.22em] text-amber-400">
               Built for professionals
             </p>
 
-            <h2 className="mt-4 text-4xl font-bold tracking-tight">
+            <h2 className="mt-4 text-3xl font-bold tracking-tight sm:text-4xl">
               Designed for people responsible for real projects
             </h2>
           </div>
 
-          <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {audiences.map((audience) => (
               <div
                 key={audience}
-                className="rounded-xl border border-slate-200 bg-slate-50 p-6 font-semibold"
+                className="rounded-lg border border-white/10 bg-white/[0.03] px-5 py-5 font-medium text-slate-200"
               >
                 {audience}
               </div>
@@ -280,63 +365,63 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Pricing */}
-      <section
-        id="buy"
-        className="mx-auto max-w-5xl scroll-mt-24 px-6 py-24"
-      >
-        <div className="rounded-3xl border border-amber-400/30 bg-gradient-to-br from-slate-900 to-slate-950 p-8 shadow-2xl sm:p-12">
-          <div className="grid gap-10 lg:grid-cols-[1fr_auto] lg:items-end">
+      {/* Purchase */}
+      <section className="border-b border-white/10">
+        <div className="mx-auto max-w-7xl px-6 py-20 lg:px-8 lg:py-24">
+          <div className="grid gap-12 rounded-2xl border border-white/10 bg-gradient-to-br from-white/[0.06] to-white/[0.02] p-8 lg:grid-cols-[1fr_0.7fr] lg:p-12">
             <div>
-              <p className="text-sm font-semibold uppercase tracking-[0.24em] text-amber-400">
+              <p className="text-xs font-semibold uppercase tracking-[0.22em] text-amber-400">
                 Publisher Edition
               </p>
 
-              <h2 className="mt-4 text-4xl font-bold">
+              <h2 className="mt-4 text-3xl font-bold tracking-tight sm:text-4xl">
                 Start with Volume 1
               </h2>
 
-              <p className="mt-5 max-w-2xl text-lg leading-8 text-slate-300">
+              <p className="mt-5 max-w-2xl leading-8 text-slate-300">
                 Immediate digital access to the complete professional handbook
                 and prompt library.
               </p>
 
-              <ul className="mt-8 grid gap-3 text-slate-300 sm:grid-cols-2">
-                <li>✓ 218-page PDF edition</li>
-                <li>✓ 10 professional chapters</li>
-                <li>✓ Quick, Professional and Expert prompts</li>
-                <li>✓ Worked examples and checklists</li>
-                <li>✓ Engineering risk controls</li>
-                <li>✓ Minor corrections for this edition</li>
+              <ul className="mt-8 grid gap-4 sm:grid-cols-2">
+                {productFeatures.map((feature) => (
+                  <li
+                    key={feature}
+                    className="flex gap-3 text-sm leading-6 text-slate-300"
+                  >
+                    <span
+                      className="font-semibold text-amber-400"
+                      aria-hidden="true"
+                    >
+                      ✓
+                    </span>
+                    <span>{feature}</span>
+                  </li>
+                ))}
               </ul>
             </div>
 
-            <div className="min-w-64 rounded-2xl bg-white p-7 text-slate-950">
-              <p className="text-sm font-semibold uppercase tracking-wider text-slate-500">
-                Launch price
-              </p>
+            <div className="rounded-xl border border-white/10 bg-[#030817] p-7">
+              <p className="text-sm text-slate-400">Launch price</p>
 
               <div className="mt-3 flex items-end gap-3">
-                <span className="text-2xl text-slate-400 line-through">
-                  €59
+                <span className="text-xl text-slate-500 line-through">€59</span>
+                <span className="text-5xl font-bold tracking-tight text-white">
+                  €49
                 </span>
-
-                <span className="text-5xl font-bold">€49</span>
               </div>
 
-              <p className="mt-3 text-sm font-medium text-green-700">
+              <p className="mt-3 text-sm text-amber-400">
                 Save €10 during the launch period
               </p>
 
-              <p className="mt-2 text-sm text-slate-500">
-                One-time payment
-              </p>
+              <p className="mt-6 text-sm text-slate-400">One-time payment</p>
 
               <a
-                href={checkoutUrl}
+                href={CHECKOUT_URL}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="mt-7 block w-full rounded-xl bg-amber-400 px-6 py-4 text-center font-semibold transition hover:bg-amber-300"
+                className="mt-6 inline-flex w-full items-center justify-center rounded-md bg-amber-400 px-5 py-3 font-semibold text-slate-950 transition hover:bg-amber-300"
               >
                 Get Instant Access
               </a>
@@ -352,22 +437,22 @@ export default function Home() {
       {/* About */}
       <section
         id="about"
-        className="scroll-mt-24 border-t border-white/10"
+        className="border-b border-white/10 bg-[#060c1d]"
       >
-        <div className="mx-auto max-w-7xl px-6 py-20">
+        <div className="mx-auto max-w-7xl px-6 py-20 lg:px-8 lg:py-24">
           <div className="max-w-3xl">
-            <p className="text-sm font-semibold uppercase tracking-[0.24em] text-amber-400">
+            <p className="text-xs font-semibold uppercase tracking-[0.22em] text-amber-400">
               About SolarDev AI
             </p>
 
-            <h2 className="mt-4 text-3xl font-bold">
+            <h2 className="mt-4 text-3xl font-bold tracking-tight sm:text-4xl">
               Practitioner-led AI for renewable-energy development
             </h2>
 
-            <p className="mt-6 text-lg leading-8 text-slate-300">
+            <p className="mt-6 text-base leading-8 text-slate-300">
               SolarDev AI develops professional methodologies, handbooks and
               tools for the responsible use of artificial intelligence across
-              utility-scale Solar PV and Battery Energy Storage System project
+              utility-scale solar PV and Battery Energy Storage System project
               development.
             </p>
           </div>
@@ -377,96 +462,88 @@ export default function Home() {
       {/* Contact */}
       <section
         id="contact"
-        className="scroll-mt-24 border-t border-white/10 bg-slate-900/40"
+        className="border-b border-white/10"
       >
-        <div className="mx-auto max-w-7xl px-6 py-20">
-          <div className="grid gap-12 lg:grid-cols-2">
+        <div className="mx-auto max-w-7xl px-6 py-20 lg:px-8 lg:py-24">
+          <div className="grid gap-12 lg:grid-cols-[1fr_0.8fr]">
             <div>
-              <p className="text-sm font-semibold uppercase tracking-[0.24em] text-amber-400">
+              <p className="text-xs font-semibold uppercase tracking-[0.22em] text-amber-400">
                 Contact
               </p>
 
-              <h2 className="mt-4 text-3xl font-bold">
+              <h2 className="mt-4 text-3xl font-bold tracking-tight sm:text-4xl">
                 Questions about the handbook or SolarDev AI?
               </h2>
 
-              <p className="mt-6 max-w-2xl text-lg leading-8 text-slate-300">
+              <p className="mt-6 max-w-2xl leading-8 text-slate-300">
                 Contact us regarding Volume 1, digital delivery, professional
                 use, future volumes or corporate licensing.
               </p>
             </div>
 
-            <div className="space-y-5 rounded-2xl border border-white/10 bg-slate-950 p-7">
-              <div>
-                <p className="text-sm font-semibold uppercase tracking-wider text-slate-500">
+            <address className="not-italic">
+              <div className="rounded-xl border border-white/10 bg-white/[0.03] p-7">
+                <p className="text-xs uppercase tracking-wider text-slate-500">
                   General enquiries
                 </p>
 
                 <a
                   href="mailto:info@solardev.ai"
-                  className="mt-2 inline-block text-lg font-semibold text-amber-400 transition hover:text-amber-300"
+                  className="mt-2 block font-semibold text-white hover:text-amber-400"
                 >
                   info@solardev.ai
                 </a>
-              </div>
 
-              <div className="border-t border-white/10 pt-5">
-                <p className="text-sm font-semibold uppercase tracking-wider text-slate-500">
+                <div className="my-6 border-t border-white/10" />
+
+                <p className="text-xs uppercase tracking-wider text-slate-500">
                   Customer support
                 </p>
 
                 <a
                   href="mailto:support@solardev.ai"
-                  className="mt-2 inline-block text-lg font-semibold text-amber-400 transition hover:text-amber-300"
+                  className="mt-2 block font-semibold text-white hover:text-amber-400"
                 >
                   support@solardev.ai
                 </a>
               </div>
-            </div>
+            </address>
           </div>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="border-t border-white/10">
-        <div className="mx-auto grid max-w-7xl gap-8 px-6 py-10 text-sm text-slate-400 md:grid-cols-3">
+      <footer className="bg-[#020611]">
+        <div className="mx-auto flex max-w-7xl flex-col gap-8 px-6 py-10 lg:flex-row lg:items-end lg:justify-between lg:px-8">
           <div>
-            <p className="text-lg font-bold text-white">
-              SolarDev <span className="text-amber-400">AI</span>
-            </p>
-
-            <p className="mt-3 max-w-xs leading-6">
+            <p className="font-semibold text-white">SolarDev AI</p>
+            <p className="mt-2 text-sm text-slate-500">
               AI for Utility-Scale Solar &amp; BESS Professionals.
             </p>
           </div>
 
-          <div>
-            <p className="font-semibold text-white">Contact</p>
+          <div className="text-sm text-slate-500 lg:text-right">
+            <p>
+              <a
+                href="mailto:info@solardev.ai"
+                className="hover:text-white"
+              >
+                info@solardev.ai
+              </a>
+            </p>
 
-            <div className="mt-3 space-y-2">
-              <p>
-                <a
-                  href="mailto:info@solardev.ai"
-                  className="transition hover:text-amber-400"
-                >
-                  info@solardev.ai
-                </a>
-              </p>
+            <p className="mt-1">
+              <a
+                href="mailto:support@solardev.ai"
+                className="hover:text-white"
+              >
+                support@solardev.ai
+              </a>
+            </p>
 
-              <p>
-                <a
-                  href="mailto:support@solardev.ai"
-                  className="transition hover:text-amber-400"
-                >
-                  support@solardev.ai
-                </a>
-              </p>
-            </div>
-          </div>
-
-          <div className="md:text-right">
-            <p>© 2026 SolarDev AI.</p>
-            <p className="mt-2">All rights reserved.</p>
+            <p className="mt-5">
+              © {new Date().getFullYear()} SolarDev AI. All rights reserved.
+            </p>
           </div>
         </div>
       </footer>
