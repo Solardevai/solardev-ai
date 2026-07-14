@@ -1,7 +1,7 @@
 import Image from "next/image";
 
 const checkoutUrl =
-  "PASTE_YOUR_LEMON_SQUEEZY_CHECKOUT_URL_HERE";
+  "https://solardevai.lemonsqueezy.com/checkout/buy/14ca4fa1-0396-49e8-9213-d3770d70a36a";
 
 const chapters = [
   "AI Foundations & Professional Prompting",
