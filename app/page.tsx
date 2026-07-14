@@ -106,6 +106,7 @@ export default function Home() {
 </h1>
 
             <p>
+              
   Professional handbooks, engineering workflows and AI prompt libraries
   designed to support utility-scale solar PV and battery energy storage
   projects from early-stage screening through construction readiness.
