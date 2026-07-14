@@ -105,7 +105,7 @@ export default function Home() {
   AI Tools for Utility-Scale Solar &amp; BESS Project Development
 </h1>
 
-            <<p>
+            <p>
   Professional handbooks, engineering workflows and AI prompt libraries
   designed to support utility-scale solar PV and battery energy storage
   projects from early-stage screening through construction readiness.
