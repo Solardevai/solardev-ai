@@ -143,9 +143,9 @@ export default function Home() {
             </p>
 
             {/* Primary page heading — keep only one H1 */}
-            <h1 className="max-w-4xl text-4xl font-bold leading-[1.05] tracking-tight text-white sm:text-5xl lg:text-7xl">
-              AI Tools for Utility-Scale Solar &amp; BESS Project Development
-            </h1>
+            <h1 className="max-w-3xl text-4xl font-bold leading-[1.08] tracking-tight text-white sm:text-5xl lg:text-6xl">
+  AI Tools for Utility-Scale Solar &amp; BESS Project Development
+</h1>
 
             {/* SEO-focused supporting text */}
             <p className="mt-7 max-w-2xl text-base leading-8 text-slate-300 sm:text-lg">
