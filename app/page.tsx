@@ -4,6 +4,7 @@ import TrustBar from "@/components/TrustBar";
 import Features from "@/components/Features";
 import VolumeOne from "@/components/VolumeOne";
 import BookPreview from "@/components/BookPreview";
+import Audience from "@/components/Audience";
 
 export default function Home() {
   return (
@@ -14,6 +15,7 @@ export default function Home() {
       <Features />
       <VolumeOne />
       <BookPreview />
+      <Audience />
 
       {/* Temporary continuation */}
       <section className="border-t border-white/10">
@@ -23,12 +25,12 @@ export default function Home() {
           </p>
 
           <h2 className="mt-4 text-4xl font-bold tracking-tight">
-            Built for professionals responsible for real projects
+            Follow the SolarDev AI product roadmap
           </h2>
 
           <p className="mt-6 max-w-2xl text-lg leading-8 text-slate-300">
-            The next section will present the professional audience, use cases
-            and roles supported by the SolarDev AI methodology.
+            The next section will present Volume 1, future publications,
+            professional toolkits and the planned prompt platform.
           </p>
         </div>
       </section>
