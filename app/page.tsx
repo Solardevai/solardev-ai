@@ -19,6 +19,8 @@ export default function Home() {
       <BookPreview />
       <Audience />
       <Roadmap />
+      <Pricing />
+      
 
       {/* Temporary continuation */}
       <section className="border-t border-white/10">
