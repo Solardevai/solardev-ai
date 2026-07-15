@@ -6,6 +6,7 @@ import VolumeOne from "@/components/VolumeOne";
 import BookPreview from "@/components/BookPreview";
 import Audience from "@/components/Audience";
 import Roadmap from "@/components/Roadmap";
+import Pricing from "@/components/Pricing";
 
 export default function Home() {
   return (
