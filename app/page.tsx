@@ -8,6 +8,7 @@ import Audience from "@/components/Audience";
 import Roadmap from "@/components/Roadmap";
 import Pricing from "@/components/Pricing";
 import FAQ from "@/components/FAQ";
+import Contact from "@/components/Contact";
 
 export default function Home() {
   return (
@@ -22,21 +23,22 @@ export default function Home() {
       <Roadmap />
       <Pricing />
       <FAQ />
+      <Contact />
 
       {/* Temporary continuation */}
       <section className="border-t border-white/10">
         <div className="mx-auto max-w-7xl px-6 py-24">
           <p className="text-sm font-semibold uppercase tracking-[0.24em] text-amber-400">
-            Coming next
+            Final step
           </p>
 
           <h2 className="mt-4 text-4xl font-bold tracking-tight">
-            Contact and professional footer
+            Professional footer and legal navigation
           </h2>
 
           <p className="mt-6 max-w-2xl text-lg leading-8 text-slate-300">
-            The final homepage sections will complete customer support,
-            business enquiries and legal navigation.
+            The next step will complete the homepage with product links,
+            support contacts and legal navigation.
           </p>
         </div>
       </section>
