@@ -20,7 +20,6 @@ export default function Home() {
       <Audience />
       <Roadmap />
       <Pricing />
-      
 
       {/* Temporary continuation */}
       <section className="border-t border-white/10">
@@ -30,12 +29,12 @@ export default function Home() {
           </p>
 
           <h2 className="mt-4 text-4xl font-bold tracking-tight">
-            Pricing, FAQ and contact
+            Frequently asked questions and contact
           </h2>
 
           <p className="mt-6 max-w-2xl text-lg leading-8 text-slate-300">
-            The next sections will complete the purchase experience and provide
-            answers to the most important professional and customer questions.
+            The final homepage sections will answer important purchasing,
+            licensing and customer-support questions.
           </p>
         </div>
       </section>

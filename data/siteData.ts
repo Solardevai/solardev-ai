@@ -43,6 +43,10 @@ export const navigationItems = [
     label: "Roadmap",
     href: "#roadmap",
   },
+  {
+    label: "Pricing",
+    href: "#pricing",
+  },
 ];
 
 export const trustAudiences = [
