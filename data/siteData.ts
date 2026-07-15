@@ -14,13 +14,15 @@ export const siteConfig = {
     subtitle: "AI Foundations & Professional Prompt Library",
     edition: "Publisher Edition v4.0",
     author: "Tiago Pires",
+
     pages: 218,
     chapters: 10,
+    prompts: 100,
     promptLevels: 3,
+
     launchPrice: 49,
     standardPrice: 59,
-  },
-};
+},
 
 export const navigationItems = [
   {
