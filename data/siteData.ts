@@ -51,6 +51,14 @@ export const navigationItems = [
     label: "Pricing",
     href: "#pricing",
   },
+  {
+    label: "FAQ",
+    href: "#faq",
+  },
+  {
+    label: "Contact",
+    href: "#contact",
+  },
 ];
 
 export const trustAudiences = [

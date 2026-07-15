@@ -7,6 +7,7 @@ import BookPreview from "@/components/BookPreview";
 import Audience from "@/components/Audience";
 import Roadmap from "@/components/Roadmap";
 import Pricing from "@/components/Pricing";
+import FAQ from "@/components/FAQ";
 
 export default function Home() {
   return (
@@ -20,6 +21,7 @@ export default function Home() {
       <Audience />
       <Roadmap />
       <Pricing />
+      <FAQ />
 
       {/* Temporary continuation */}
       <section className="border-t border-white/10">
@@ -29,12 +31,12 @@ export default function Home() {
           </p>
 
           <h2 className="mt-4 text-4xl font-bold tracking-tight">
-            Frequently asked questions and contact
+            Contact and professional footer
           </h2>
 
           <p className="mt-6 max-w-2xl text-lg leading-8 text-slate-300">
-            The final homepage sections will answer important purchasing,
-            licensing and customer-support questions.
+            The final homepage sections will complete customer support,
+            business enquiries and legal navigation.
           </p>
         </div>
       </section>
