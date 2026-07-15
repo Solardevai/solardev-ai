@@ -36,16 +36,12 @@ export const navigationItems = [
     href: "#preview",
   },
   {
+    label: "Professionals",
+    href: "#audience",
+  },
+  {
     label: "Roadmap",
     href: "#roadmap",
-  },
-  {
-    label: "FAQ",
-    href: "#faq",
-  },
-  {
-    label: "Contact",
-    href: "#contact",
   },
 ];
 
