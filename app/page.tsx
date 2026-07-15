@@ -5,6 +5,7 @@ import Features from "@/components/Features";
 import VolumeOne from "@/components/VolumeOne";
 import BookPreview from "@/components/BookPreview";
 import Audience from "@/components/Audience";
+import Roadmap from "@/components/Roadmap";
 
 export default function Home() {
   return (
@@ -16,6 +17,7 @@ export default function Home() {
       <VolumeOne />
       <BookPreview />
       <Audience />
+      <Roadmap />
 
       {/* Temporary continuation */}
       <section className="border-t border-white/10">
@@ -25,12 +27,12 @@ export default function Home() {
           </p>
 
           <h2 className="mt-4 text-4xl font-bold tracking-tight">
-            Follow the SolarDev AI product roadmap
+            Pricing, FAQ and contact
           </h2>
 
           <p className="mt-6 max-w-2xl text-lg leading-8 text-slate-300">
-            The next section will present Volume 1, future publications,
-            professional toolkits and the planned prompt platform.
+            The next sections will complete the purchase experience and provide
+            answers to the most important professional and customer questions.
           </p>
         </div>
       </section>
