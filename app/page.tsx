@@ -3,6 +3,7 @@ import Hero from "@/components/Hero";
 import TrustBar from "@/components/TrustBar";
 import Features from "@/components/Features";
 import VolumeOne from "@/components/VolumeOne";
+import BookPreview from "@/components/BookPreview";
 
 export default function Home() {
   return (
@@ -12,6 +13,7 @@ export default function Home() {
       <TrustBar />
       <Features />
       <VolumeOne />
+      <BookPreview />
 
       {/* Temporary continuation */}
       <section className="border-t border-white/10">
@@ -21,12 +23,12 @@ export default function Home() {
           </p>
 
           <h2 className="mt-4 text-4xl font-bold tracking-tight">
-            Preview the handbook before purchasing
+            Built for professionals responsible for real projects
           </h2>
 
           <p className="mt-6 max-w-2xl text-lg leading-8 text-slate-300">
-            The next section will display selected pages, professional tables,
-            workflows and prompt examples from Volume 1.
+            The next section will present the professional audience, use cases
+            and roles supported by the SolarDev AI methodology.
           </p>
         </div>
       </section>
