@@ -3,6 +3,7 @@ export const siteConfig = {
   tagline: "AI for Utility-Scale Solar & BESS Professionals",
   description:
     "Professional engineering methodologies, controlled AI workflows and consultant-grade prompts for utility-scale Solar PV and BESS project development.",
+
   infoEmail: "info@solardev.ai",
   supportEmail: "support@solardev.ai",
 
@@ -22,7 +23,8 @@ export const siteConfig = {
 
     launchPrice: 49,
     standardPrice: 59,
-},
+  },
+};
 
 export const navigationItems = [
   {
@@ -197,9 +199,10 @@ export const roadmapItems = [
 ];
 
 export const pricingFeatures = [
-  "218-page Publisher Edition PDF",
-  "10 professional chapters",
-  "Quick, Professional and Expert prompts",
+  `${siteConfig.product.pages}-page Publisher Edition PDF`,
+  `${siteConfig.product.chapters} professional chapters`,
+  `${siteConfig.product.prompts}+ professional AI prompts`,
+  "Quick, Professional and Expert prompt levels",
   "Worked utility-scale examples",
   "Engineering review checklists",
   "Decision-support tables and frameworks",
@@ -240,12 +243,10 @@ export const faqItems = [
   },
   {
     question: "Can I share the PDF with my company?",
-    answer:
-      "The standard purchase is intended for individual professional use. Team and corporate licensing should be requested through info@solardev.ai.",
+    answer: `The standard purchase is intended for individual professional use. Team and corporate licensing should be requested through ${siteConfig.infoEmail}.`,
   },
   {
     question: "How do I obtain customer support?",
-    answer:
-      "For payment, access or delivery questions, contact support@solardev.ai.",
+    answer: `For payment, access or delivery questions, contact ${siteConfig.supportEmail}.`,
   },
 ];
