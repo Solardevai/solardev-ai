@@ -29,99 +29,86 @@ export default function Roadmap() {
     <section
       id="roadmap"
       aria-labelledby="roadmap-title"
-      className="relative scroll-mt-24 overflow-hidden border-y border-white/10 bg-slate-950 py-20 sm:py-24"
+      className="scroll-mt-24 border-y border-white/10 bg-slate-950 py-16 sm:py-20"
     >
-      {/* Background decoration */}
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-0"
-      >
-        <div className="absolute left-1/2 top-0 h-72 w-72 -translate-x-1/2 rounded-full bg-amber-400/5 blur-3xl" />
-      </div>
-
-      <div className="relative mx-auto max-w-5xl px-6 lg:px-8">
-        {/* Section heading */}
-        <div className="mx-auto max-w-3xl text-center">
-          <p className="text-sm font-semibold uppercase tracking-[0.22em] text-amber-400">
+      <div className="mx-auto max-w-5xl px-6 lg:px-8">
+        {/* Heading */}
+        <div className="mx-auto max-w-2xl text-center">
+          <p className="text-xs font-semibold uppercase tracking-[0.22em] text-amber-400">
             Product Roadmap
           </p>
 
           <h2
             id="roadmap-title"
-            className="mt-4 text-3xl font-bold tracking-tight text-white sm:text-4xl"
+            className="mt-3 text-3xl font-bold tracking-tight text-white sm:text-4xl"
           >
-            Building SolarDev AI step by step
+            From handbook to platform
           </h2>
 
-          <p className="mx-auto mt-5 max-w-2xl text-base leading-7 text-slate-300 sm:text-lg">
-            From professional engineering handbooks to a practical AI-assisted
-            project-development platform.
+          <p className="mt-4 text-base leading-7 text-slate-400">
+            Building practical AI resources for utility-scale Solar PV and
+            BESS project development.
           </p>
         </div>
 
         {/* Timeline */}
-        <div className="relative mx-auto mt-14 max-w-4xl">
-          {/* Desktop horizontal line */}
+        <div className="relative mx-auto mt-12 max-w-4xl">
+          {/* Desktop connecting line */}
           <div
             aria-hidden="true"
-            className="absolute left-[12.5%] right-[12.5%] top-5 hidden h-px bg-white/15 md:block"
+            className="absolute left-1/4 right-1/4 top-[11px] hidden h-px bg-white/15 md:block"
           />
 
-          {/* Mobile vertical line */}
+          {/* Mobile connecting line */}
           <div
             aria-hidden="true"
-            className="absolute bottom-8 left-[19px] top-5 w-px bg-white/15 md:hidden"
+            className="absolute bottom-4 left-[5px] top-2 w-px bg-white/15 md:hidden"
           />
 
-          <div className="grid gap-10 md:grid-cols-2 md:gap-12">
+          <div className="grid gap-10 md:grid-cols-2 md:gap-16">
             {roadmapItems.map((item) => (
               <article
                 key={item.year}
-                className="relative grid grid-cols-[40px_1fr] gap-5 md:block md:text-center"
+                className="relative pl-8 md:pl-0 md:text-center"
               >
-                {/* Timeline marker */}
-                <div
-                  className={`relative z-10 flex h-10 w-10 items-center justify-center rounded-full border ${
+                {/* Marker */}
+                <span
+                  aria-hidden="true"
+                  className={`absolute left-0 top-1 h-3 w-3 rounded-full border md:relative md:left-auto md:top-auto md:mx-auto md:block ${
                     item.active
-                      ? "border-amber-400 bg-amber-400 text-slate-950 shadow-lg shadow-amber-400/15"
-                      : "border-white/20 bg-slate-950 text-slate-400"
-                  } md:mx-auto`}
-                >
-                  <span
-                    aria-hidden="true"
-                    className={`h-2.5 w-2.5 rounded-full ${
-                      item.active ? "bg-slate-950" : "bg-slate-500"
-                    }`}
-                  />
-                </div>
+                      ? "border-amber-400 bg-amber-400"
+                      : "border-slate-500 bg-slate-950"
+                  }`}
+                />
 
-                {/* Timeline content */}
-                <div className="pb-4 md:mt-6">
-                  <p
-                    className={`text-3xl font-bold tracking-tight ${
-                      item.active ? "text-amber-400" : "text-white"
-                    }`}
-                  >
-                    {item.year}
-                  </p>
+                <div className="md:mt-5">
+                  <div className="flex flex-wrap items-center gap-3 md:justify-center">
+                    <p
+                      className={`text-2xl font-bold ${
+                        item.active ? "text-amber-400" : "text-white"
+                      }`}
+                    >
+                      {item.year}
+                    </p>
 
-                  <h3 className="mt-3 text-xl font-semibold text-white">
+                    <span
+                      className={`rounded-full border px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.14em] ${
+                        item.active
+                          ? "border-amber-400/25 text-amber-300"
+                          : "border-white/10 text-slate-500"
+                      }`}
+                    >
+                      {item.status}
+                    </span>
+                  </div>
+
+                  <h3 className="mt-3 text-lg font-semibold text-white">
                     {item.title}
                   </h3>
 
-                  <p className="mx-auto mt-3 max-w-sm text-sm leading-6 text-slate-400 sm:text-base">
+                  <p className="mt-2 text-sm leading-6 text-slate-400">
                     {item.description}
                   </p>
-
-                  <span
-                    className={`mt-5 inline-flex rounded-full border px-3 py-1 text-xs font-semibold uppercase tracking-[0.14em] ${
-                      item.active
-                        ? "border-amber-400/25 bg-amber-400/10 text-amber-300"
-                        : "border-white/10 bg-white/[0.03] text-slate-400"
-                    }`}
-                  >
-                    {item.status}
-                  </span>
                 </div>
               </article>
             ))}
