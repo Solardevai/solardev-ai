@@ -10,7 +10,7 @@ export const legalConfig = {
 
   operatorName: "TIAGO PIRES",
   legalForm: "INDIVIDUAL PROFESSIONAL",
-  taxId: "z0475752w",
+  taxId: "231631693",
   businessAddress: "Barcelona",
   countryOfEstablishment: "Spain",
   commercialRegistryDetails:
@@ -18,9 +18,9 @@ export const legalConfig = {
 
   generalEmail: "info@solardev.ai",
   supportEmail: "support@solardev.ai",
-  privacyEmail: "privacy@solardev.ai]",
+  privacyEmail: "privacy@solardev.ai",
 
-  hostingProvider: "ERCEL INC.",
+  hostingProvider: "VERCEL INC.",
   analyticsProvider: "Google Analytics",
   merchantOfRecord: "Lemon Squeezy",
 
