@@ -27,11 +27,7 @@ export default function PrivacyPolicyPage() {
       title="Privacy Policy"
       introduction="This policy explains how personal data is processed when you visit SolarDev AI, contact us, request support, enquire about corporate licensing or purchase a digital product through our checkout provider."
     >
-      <LegalCallout>
-        This page is a structured template. Complete all bracketed placeholders,
-        verify the actual services and cookies used by the website, and obtain
-        professional legal review before publication.
-      </LegalCallout>
+
 
       <LegalSection title="1. Data controller">
         <p>

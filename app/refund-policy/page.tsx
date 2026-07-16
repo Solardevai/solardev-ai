@@ -28,11 +28,6 @@ export default function RefundPolicyPage() {
       title="Refund Policy"
       introduction="This policy explains how refund requests, digital-delivery issues and statutory withdrawal rights are handled for SolarDev AI digital products."
     >
-      <LegalCallout>
-        Confirm the intended commercial refund approach and the exact consent
-        wording used at checkout before publishing. Mandatory consumer rights
-        always take priority over this template.
-      </LegalCallout>
 
       <LegalSection title="1. Digital-product delivery">
         <p>

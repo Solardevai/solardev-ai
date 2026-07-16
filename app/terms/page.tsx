@@ -27,10 +27,6 @@ export default function TermsOfSalePage() {
       title="Terms of Sale"
       introduction="These terms govern the purchase, delivery, licensing and use of SolarDev AI digital products. Additional checkout-provider terms may apply to the payment transaction."
     >
-      <LegalCallout>
-        This is a structured drafting template, not final legal advice. Replace
-        all bracketed placeholders and obtain legal review before commercial use.
-      </LegalCallout>
 
       <LegalSection title="1. Operator information">
         <LegalList>
