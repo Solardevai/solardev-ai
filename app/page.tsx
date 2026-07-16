@@ -21,9 +21,9 @@ export default function Home() {
       <VolumeOne />
       <BookPreview />
       <Audience />
-      <Roadmap />
       <Pricing />
       <FAQ />
+      <Roadmap />
       <Contact />
       <Footer />
     </main>

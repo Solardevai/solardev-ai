@@ -118,7 +118,7 @@ const chapters: Chapter[] = [
   },
 ];
 
-export function VolumeOne () {
+export default function VolumeOne() {
   return (
     <section
       id="volume-one"
@@ -131,6 +131,7 @@ export function VolumeOne () {
         className="pointer-events-none absolute inset-0"
       >
         <div className="absolute left-1/2 top-0 h-96 w-96 -translate-x-1/2 rounded-full bg-emerald-500/5 blur-3xl" />
+
         <div className="absolute bottom-0 right-0 h-80 w-80 rounded-full bg-cyan-500/5 blur-3xl" />
       </div>
 
@@ -217,6 +218,7 @@ export function VolumeOne () {
                           aria-hidden="true"
                           className="mt-[7px] h-1.5 w-1.5 shrink-0 rounded-full bg-emerald-400"
                         />
+
                         <span>{deliverable}</span>
                       </li>
                     ))}
