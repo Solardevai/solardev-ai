@@ -118,7 +118,7 @@ const chapters: Chapter[] = [
   },
 ];
 
-export function VolumeOneSection() {
+export function VolumeOne () {
   return (
     <section
       id="volume-one"
