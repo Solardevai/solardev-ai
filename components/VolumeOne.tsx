@@ -1,179 +1,261 @@
-import { chapters, siteConfig } from "@/data/siteData";
+type Chapter = {
+  number: string;
+  title: string;
+  description: string;
+  deliverables: string[];
+};
 
-export default function VolumeOne() {
-  const { product } = siteConfig;
+const chapters: Chapter[] = [
+  {
+    number: "01",
+    title: "AI Foundations for Engineering Practice",
+    description:
+      "Establishes the principles, controls and professional responsibilities required for reliable AI-assisted engineering work.",
+    deliverables: [
+      "Controlled AI workflow",
+      "Evidence and assumption checks",
+      "Professional validation framework",
+    ],
+  },
+  {
+    number: "02",
+    title: "Technical Due Diligence",
+    description:
+      "Structures multidisciplinary technical reviews for early-stage Solar PV and BESS opportunities.",
+    deliverables: [
+      "Due-diligence workflow",
+      "Evidence register",
+      "Technical findings structure",
+    ],
+  },
+  {
+    number: "03",
+    title: "Site Feasibility and Constraint Screening",
+    description:
+      "Supports the initial identification of technical, environmental, grid, land and development constraints.",
+    deliverables: [
+      "Site-screening matrix",
+      "Constraint register",
+      "Preliminary go/no-go basis",
+    ],
+  },
+  {
+    number: "04",
+    title: "Project Development Roadmap",
+    description:
+      "Converts an early-stage opportunity into a structured sequence of studies, approvals, decisions and development gates.",
+    deliverables: [
+      "Development workplan",
+      "Decision-gate structure",
+      "Responsibility and dependency mapping",
+    ],
+  },
+  {
+    number: "05",
+    title: "Land Strategy and Landowner Engagement",
+    description:
+      "Provides a systematic approach to land requirements, ownership review, access strategy and landowner engagement.",
+    deliverables: [
+      "Land requirements brief",
+      "Landowner engagement plan",
+      "Land-risk register",
+    ],
+  },
+  {
+    number: "06",
+    title: "Satellite and Geospatial Desktop Review",
+    description:
+      "Uses available mapping and imagery to support preliminary site interpretation before field investigations.",
+    deliverables: [
+      "Desktop site assessment",
+      "Terrain and access observations",
+      "Field-verification priorities",
+    ],
+  },
+  {
+    number: "07",
+    title: "Site Visit Planning and Execution",
+    description:
+      "Structures site visits around defined engineering questions, evidence requirements and development risks.",
+    deliverables: [
+      "Site-visit plan",
+      "Inspection checklist",
+      "Observation and action register",
+    ],
+  },
+  {
+    number: "08",
+    title: "Environmental and Social Screening",
+    description:
+      "Supports proportionate early-stage identification of environmental, permitting, community and social constraints.",
+    deliverables: [
+      "Environmental screening matrix",
+      "Stakeholder considerations",
+      "Further-study recommendations",
+    ],
+  },
+  {
+    number: "09",
+    title: "Project Risk Register",
+    description:
+      "Creates a structured process for identifying, evaluating, allocating and monitoring project-development risks.",
+    deliverables: [
+      "Development risk register",
+      "Risk ownership structure",
+      "Mitigation and monitoring actions",
+    ],
+  },
+  {
+    number: "10",
+    title: "Initial CAPEX Benchmarking",
+    description:
+      "Develops a transparent early-stage cost basis for Solar PV and BESS projects before detailed engineering and procurement.",
+    deliverables: [
+      "Initial CAPEX structure",
+      "Assumption register",
+      "Cost sensitivity framework",
+    ],
+  },
+];
 
+export function VolumeOneSection() {
   return (
     <section
-      id="volume-1"
-      className="relative overflow-hidden border-b border-white/10 bg-slate-950"
+      id="volume-one"
+      aria-labelledby="volume-one-title"
+      className="relative overflow-hidden border-y border-white/10 bg-slate-950 py-20 sm:py-24 lg:py-28"
     >
-      <div className="pointer-events-none absolute inset-0">
-        <div className="absolute right-[-10rem] top-24 h-[30rem] w-[30rem] rounded-full bg-amber-400/5 blur-3xl" />
-        <div className="absolute left-[-10rem] bottom-0 h-[28rem] w-[28rem] rounded-full bg-blue-500/5 blur-3xl" />
+      {/* Background decoration */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0"
+      >
+        <div className="absolute left-1/2 top-0 h-96 w-96 -translate-x-1/2 rounded-full bg-emerald-500/5 blur-3xl" />
+        <div className="absolute bottom-0 right-0 h-80 w-80 rounded-full bg-cyan-500/5 blur-3xl" />
       </div>
 
-      <div className="relative mx-auto max-w-7xl px-6 py-24">
-        <div className="grid gap-12 lg:grid-cols-[0.78fr_1.22fr]">
-          {/* Introduction */}
-          <div className="lg:sticky lg:top-32 lg:self-start">
-            <p className="text-sm font-semibold uppercase tracking-[0.24em] text-amber-400">
-              Volume 1
-            </p>
+      <div className="relative mx-auto max-w-7xl px-6 lg:px-8">
+        {/* Section introduction */}
+        <div className="mx-auto max-w-4xl text-center">
+          <p className="text-sm font-semibold uppercase tracking-[0.22em] text-emerald-400">
+            Volume 1
+          </p>
 
-            <h2 className="mt-5 text-4xl font-bold tracking-tight text-white sm:text-5xl">
-              {product.subtitle}
-            </h2>
+          <h2
+            id="volume-one-title"
+            className="mt-4 text-3xl font-bold tracking-tight text-white sm:text-4xl lg:text-5xl"
+          >
+            AI Foundations &amp; Professional Prompt Library
+          </h2>
 
-            <p className="mt-6 text-lg leading-8 text-slate-300">
-              A complete early-stage development sequence for responsible,
-              traceable and decision-focused AI-assisted Solar PV and BESS
-              project development.
-            </p>
+          <p className="mx-auto mt-6 max-w-3xl text-lg leading-8 text-slate-300">
+            A complete ten-chapter methodology for responsible, traceable
+            and decision-focused AI-assisted Solar PV and BESS project
+            development.
+          </p>
 
-            <div className="mt-8 grid grid-cols-2 gap-4">
-              <Metric value={`${product.pages}`} label="Pages" />
-              <Metric value={`${product.chapters}`} label="Chapters" />
-              <Metric
-                value={`${product.promptLevels}`}
-                label="Prompt levels"
-              />
-              <Metric value="PDF" label="Digital edition" />
-            </div>
+          <p className="mx-auto mt-4 max-w-3xl text-base leading-7 text-slate-400">
+            The handbook takes professionals from responsible AI practice
+            and technical due diligence through site screening, development
+            planning, project risk and initial CAPEX assessment. The chapters
+            follow the practical progression of an early-stage utility-scale
+            project toward a decision-ready initial investment basis.
+          </p>
 
-            <div className="mt-8 rounded-2xl border border-white/10 bg-white/[0.025] p-6">
-              <p className="text-sm font-semibold uppercase tracking-[0.18em] text-slate-500">
-                End-state
-              </p>
+          <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
+            <span className="rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm font-medium text-slate-300">
+              PDF Publisher Edition
+            </span>
 
-              <p className="mt-3 leading-7 text-slate-300">
-                A structured early-stage development basis supporting informed
-                project progression, targeted studies, accountable risk
-                ownership and a transparent initial investment view.
-              </p>
-            </div>
-
-            <a
-              href={siteConfig.checkoutUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="mt-8 inline-flex rounded-xl bg-amber-400 px-7 py-4 font-semibold text-slate-950 transition hover:-translate-y-0.5 hover:bg-amber-300"
-            >
-              Get Volume 1 — €{product.launchPrice}
-            </a>
-          </div>
-
-          {/* Chapters */}
-          <div className="space-y-5">
-            {chapters.map((chapter, index) => (
-              <article
-                key={chapter.number}
-                className="group relative overflow-hidden rounded-3xl border border-white/10 bg-slate-900/65 p-6 transition duration-300 hover:-translate-y-1 hover:border-amber-400/25 sm:p-8"
-              >
-                <div className="absolute inset-y-0 left-0 w-1 bg-gradient-to-b from-amber-300 via-amber-400 to-amber-600 opacity-70" />
-
-                <div className="grid gap-6 sm:grid-cols-[90px_1fr]">
-                  <div>
-                    <span className="text-4xl font-bold tracking-tight text-white/15 transition group-hover:text-amber-400/35">
-                      {chapter.number}
-                    </span>
-
-                    <p className="mt-2 text-xs font-semibold uppercase tracking-[0.18em] text-amber-400">
-                      Chapter
-                    </p>
-                  </div>
-
-                  <div>
-                    <h3 className="text-2xl font-bold text-white">
-                      {chapter.title}
-                    </h3>
-
-                    <p className="mt-4 leading-7 text-slate-400">
-                      {chapter.description}
-                    </p>
-
-                    <div className="mt-6 flex flex-wrap gap-2">
-                      {getChapterTags(index).map((tag) => (
-                        <span
-                          key={tag}
-                          className="rounded-full border border-white/10 bg-white/[0.035] px-3 py-1.5 text-xs font-medium text-slate-300"
-                        >
-                          {tag}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              </article>
-            ))}
+            <span className="rounded-full border border-emerald-400/20 bg-emerald-400/10 px-4 py-2 text-sm font-medium text-emerald-300">
+              Available immediately
+            </span>
           </div>
         </div>
 
-        {/* Development sequence */}
-        <div className="mt-20 rounded-3xl border border-white/10 bg-gradient-to-br from-slate-900 to-slate-950 p-8 sm:p-10">
-          <p className="text-sm font-semibold uppercase tracking-[0.24em] text-amber-400">
-            Development sequence
-          </p>
+        {/* Chapter cards */}
+        <div className="mt-16 grid gap-6 md:grid-cols-2">
+          {chapters.map((chapter) => (
+            <article
+              key={chapter.number}
+              className="group relative overflow-hidden rounded-2xl border border-white/10 bg-white/[0.035] p-6 transition duration-300 hover:-translate-y-1 hover:border-emerald-400/30 hover:bg-white/[0.055] sm:p-7"
+            >
+              <div
+                aria-hidden="true"
+                className="absolute right-0 top-0 h-24 w-24 rounded-bl-full bg-emerald-400/[0.04] transition duration-300 group-hover:bg-emerald-400/[0.08]"
+              />
 
-          <h3 className="mt-4 max-w-3xl text-3xl font-bold text-white">
-            From responsible AI practice to an initial investment basis
+              <div className="relative">
+                <div className="flex items-start gap-4">
+                  <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-emerald-400/20 bg-emerald-400/10 text-sm font-bold text-emerald-300">
+                    {chapter.number}
+                  </span>
+
+                  <div>
+                    <h3 className="text-xl font-semibold leading-7 text-white">
+                      {chapter.title}
+                    </h3>
+
+                    <p className="mt-3 text-sm leading-6 text-slate-400 sm:text-base">
+                      {chapter.description}
+                    </p>
+                  </div>
+                </div>
+
+                <div className="mt-6 border-t border-white/10 pt-5">
+                  <p className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-500">
+                    Example outputs
+                  </p>
+
+                  <ul className="mt-3 grid gap-2 sm:grid-cols-3">
+                    {chapter.deliverables.map((deliverable) => (
+                      <li
+                        key={deliverable}
+                        className="flex items-start gap-2 text-sm leading-5 text-slate-300"
+                      >
+                        <span
+                          aria-hidden="true"
+                          className="mt-[7px] h-1.5 w-1.5 shrink-0 rounded-full bg-emerald-400"
+                        />
+                        <span>{deliverable}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+            </article>
+          ))}
+        </div>
+
+        {/* Section conclusion */}
+        <div className="mt-12 rounded-2xl border border-emerald-400/20 bg-emerald-400/[0.06] px-6 py-8 text-center sm:px-10">
+          <h3 className="text-xl font-semibold text-white sm:text-2xl">
+            A structured basis for early-stage project decisions
           </h3>
 
-          <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
-            {chapters.map((chapter, index) => (
-              <div
-                key={chapter.number}
-                className="relative rounded-2xl border border-white/10 bg-white/[0.025] p-5"
-              >
-                <span className="text-sm font-semibold text-amber-400">
-                  {chapter.number}
-                </span>
+          <p className="mx-auto mt-3 max-w-3xl text-sm leading-6 text-slate-300 sm:text-base">
+            The complete workflow supports project progression, targeted
+            technical studies, accountable risk ownership and transparent
+            early-stage investment assessment.
+          </p>
 
-                <p className="mt-3 text-sm font-semibold leading-6 text-white">
-                  {chapter.shortTitle}
-                </p>
+          <div className="mt-6 flex flex-col justify-center gap-3 sm:flex-row">
+            <a
+              href="#preview"
+              className="inline-flex min-h-11 items-center justify-center rounded-lg border border-white/15 bg-white/5 px-5 py-3 text-sm font-semibold text-white transition hover:border-white/30 hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-emerald-400 focus:ring-offset-2 focus:ring-offset-slate-950"
+            >
+              Preview the Handbook
+            </a>
 
-                {index < chapters.length - 1 && (
-                  <span className="absolute -right-3 top-1/2 hidden -translate-y-1/2 text-slate-600 lg:block">
-                    →
-                  </span>
-                )}
-              </div>
-            ))}
+            <a
+              href="#pricing"
+              className="inline-flex min-h-11 items-center justify-center rounded-lg bg-emerald-500 px-5 py-3 text-sm font-semibold text-slate-950 transition hover:bg-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-400 focus:ring-offset-2 focus:ring-offset-slate-950"
+            >
+              Get Volume 1 — €49
+            </a>
           </div>
         </div>
       </div>
     </section>
   );
-}
-
-type MetricProps = {
-  value: string;
-  label: string;
-};
-
-function Metric({ value, label }: MetricProps) {
-  return (
-    <div className="rounded-2xl border border-white/10 bg-white/[0.025] p-5">
-      <strong className="block text-2xl font-bold text-white">{value}</strong>
-      <span className="mt-1 block text-sm text-slate-500">{label}</span>
-    </div>
-  );
-}
-
-function getChapterTags(index: number) {
-  const tags = [
-    ["Prompt design", "Validation", "Accountability"],
-    ["Research", "Evidence", "Due diligence"],
-    ["Constraints", "Fatal flaws", "Site scoring"],
-    ["Workstreams", "Decision gates", "RTB"],
-    ["Ownership", "Land rights", "Parcel strategy"],
-    ["Terrain", "Access", "Drainage"],
-    ["Field evidence", "HSE", "Reporting"],
-    ["Permitting", "Surveys", "Mitigation"],
-    ["Risk ownership", "Treatment", "Residual risk"],
-    ["Benchmarking", "Contingency", "Sensitivity"],
-  ];
-
-  return tags[index] ?? [];
 }

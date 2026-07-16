@@ -81,7 +81,7 @@ export const features = [
     number: "02",
     title: "AI with control",
     description:
-      "Every workflow addresses evidence, assumptions, uncertainty, validation and accountability.",
+      "Every workflow addresses evidence, assumptions, uncertainty, traceability and professional validation.",
   },
   {
     number: "03",

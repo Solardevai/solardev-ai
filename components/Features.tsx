@@ -12,7 +12,7 @@ const featureDetails = [
   },
   {
     supportingText:
-      "AI outputs are treated as draft analysis requiring verification, traceability and qualified professional review.",
+      "AI outputs are treated as draft analysis requiring verification before being used in project decisions or issued deliverables.",
     points: [
       "Explicit assumptions and gaps",
       "Evidence and source control",
@@ -117,16 +117,8 @@ export default function Features() {
               <span className="text-2xl text-amber-300">✓</span>
             </div>
 
-            <div>
-              <p className="font-semibold text-white">
-                Core professional principle
-              </p>
+           
 
-              <p className="mt-2 max-w-4xl leading-7 text-slate-300">
-                AI should increase the time available for engineering judgement,
-                investigation and optimisation. It should never reduce the need
-                for validation, accountability or qualified professional review.
-              </p>
             </div>
           </div>
         </div>
