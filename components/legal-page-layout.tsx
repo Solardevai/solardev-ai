@@ -90,9 +90,7 @@ export function LegalPageLayout({
               </div>
             </dl>
 
-            <div className="mt-6 border-t border-white/10 pt-5 text-xs leading-5 text-slate-500">
-              Replace every bracketed placeholder before publishing these pages.
-            </div>
+
           </aside>
         </div>
       </section>
