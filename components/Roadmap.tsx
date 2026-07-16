@@ -1,136 +1,133 @@
-import { roadmapItems, siteConfig } from "@/data/siteData";
+type RoadmapItem = {
+  year: string;
+  title: string;
+  description: string;
+  status: string;
+  active?: boolean;
+};
+
+const roadmapItems: RoadmapItem[] = [
+  {
+    year: "2026",
+    title: "Professional Handbook Series",
+    description:
+      "Launch Volume 1 and continue developing professional Solar PV and BESS engineering content.",
+    status: "Current phase",
+    active: true,
+  },
+  {
+    year: "2027",
+    title: "SolarDev AI Platform",
+    description:
+      "Introduce searchable prompts, engineering templates and interactive project-development workflows.",
+    status: "Planned",
+  },
+];
 
 export default function Roadmap() {
   return (
     <section
       id="roadmap"
-      className="relative scroll-mt-24 overflow-hidden border-b border-white/10 bg-slate-950"
+      aria-labelledby="roadmap-title"
+      className="relative scroll-mt-24 overflow-hidden border-y border-white/10 bg-slate-950 py-20 sm:py-24"
     >
-      <div className="pointer-events-none absolute inset-0">
-        <div className="absolute -right-32 top-10 h-96 w-96 rounded-full bg-amber-400/5 blur-3xl" />
-        <div className="absolute -left-32 bottom-0 h-96 w-96 rounded-full bg-blue-500/5 blur-3xl" />
+      {/* Background decoration */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0"
+      >
+        <div className="absolute left-1/2 top-0 h-72 w-72 -translate-x-1/2 rounded-full bg-amber-400/5 blur-3xl" />
       </div>
 
-      <div className="relative mx-auto max-w-7xl px-6 py-24">
-        <div className="grid gap-12 lg:grid-cols-[0.9fr_1.1fr] lg:items-end">
-          <div>
-            <p className="text-sm font-semibold uppercase tracking-[0.24em] text-amber-400">
-              Product roadmap
-            </p>
+      <div className="relative mx-auto max-w-5xl px-6 lg:px-8">
+        {/* Section heading */}
+        <div className="mx-auto max-w-3xl text-center">
+          <p className="text-sm font-semibold uppercase tracking-[0.22em] text-amber-400">
+            Product Roadmap
+          </p>
 
-            <h2 className="mt-5 max-w-3xl text-4xl font-bold tracking-tight text-white sm:text-5xl">
-              Building a complete AI platform for renewable-energy professionals
-            </h2>
-          </div>
+          <h2
+            id="roadmap-title"
+            className="mt-4 text-3xl font-bold tracking-tight text-white sm:text-4xl"
+          >
+            Building SolarDev AI step by step
+          </h2>
 
-          <p className="max-w-2xl text-lg leading-8 text-slate-300">
-            Volume 1 is the foundation. Future SolarDev AI products will expand
-            into advanced project-development applications, engineering
-            toolkits, searchable prompt libraries and professional workflows.
+          <p className="mx-auto mt-5 max-w-2xl text-base leading-7 text-slate-300 sm:text-lg">
+            From professional engineering handbooks to a practical AI-assisted
+            project-development platform.
           </p>
         </div>
 
-        <div className="mt-16 grid gap-6 md:grid-cols-2">
-          {roadmapItems.map((item, index) => (
-            <article
-              key={`${item.volume}-${item.title}`}
-              className={`relative overflow-hidden rounded-3xl border p-8 transition duration-300 hover:-translate-y-1 ${
-                item.active
-                  ? "border-amber-400/30 bg-amber-400/[0.06]"
-                  : "border-white/10 bg-white/[0.025]"
-              }`}
-            >
-              <div className="absolute right-0 top-0 h-32 w-32 rounded-full bg-amber-400/5 blur-3xl" />
+        {/* Timeline */}
+        <div className="relative mx-auto mt-14 max-w-4xl">
+          {/* Desktop horizontal line */}
+          <div
+            aria-hidden="true"
+            className="absolute left-[12.5%] right-[12.5%] top-5 hidden h-px bg-white/15 md:block"
+          />
 
-              <div className="relative">
-                <div className="flex items-start justify-between gap-6">
-                  <div>
-                    <p className="text-sm font-semibold uppercase tracking-[0.2em] text-amber-400">
-                      {item.volume}
-                    </p>
+          {/* Mobile vertical line */}
+          <div
+            aria-hidden="true"
+            className="absolute bottom-8 left-[19px] top-5 w-px bg-white/15 md:hidden"
+          />
 
-                    <h3 className="mt-4 text-2xl font-bold text-white">
-                      {item.title}
-                    </h3>
-                  </div>
+          <div className="grid gap-10 md:grid-cols-2 md:gap-12">
+            {roadmapItems.map((item) => (
+              <article
+                key={item.year}
+                className="relative grid grid-cols-[40px_1fr] gap-5 md:block md:text-center"
+              >
+                {/* Timeline marker */}
+                <div
+                  className={`relative z-10 flex h-10 w-10 items-center justify-center rounded-full border ${
+                    item.active
+                      ? "border-amber-400 bg-amber-400 text-slate-950 shadow-lg shadow-amber-400/15"
+                      : "border-white/20 bg-slate-950 text-slate-400"
+                  } md:mx-auto`}
+                >
+                  <span
+                    aria-hidden="true"
+                    className={`h-2.5 w-2.5 rounded-full ${
+                      item.active ? "bg-slate-950" : "bg-slate-500"
+                    }`}
+                  />
+                </div>
+
+                {/* Timeline content */}
+                <div className="pb-4 md:mt-6">
+                  <p
+                    className={`text-3xl font-bold tracking-tight ${
+                      item.active ? "text-amber-400" : "text-white"
+                    }`}
+                  >
+                    {item.year}
+                  </p>
+
+                  <h3 className="mt-3 text-xl font-semibold text-white">
+                    {item.title}
+                  </h3>
+
+                  <p className="mx-auto mt-3 max-w-sm text-sm leading-6 text-slate-400 sm:text-base">
+                    {item.description}
+                  </p>
 
                   <span
-                    className={`shrink-0 rounded-full border px-3 py-1.5 text-xs font-semibold ${
+                    className={`mt-5 inline-flex rounded-full border px-3 py-1 text-xs font-semibold uppercase tracking-[0.14em] ${
                       item.active
-                        ? "border-amber-400/30 bg-amber-400/10 text-amber-300"
+                        ? "border-amber-400/25 bg-amber-400/10 text-amber-300"
                         : "border-white/10 bg-white/[0.03] text-slate-400"
                     }`}
                   >
                     {item.status}
                   </span>
                 </div>
-
-                <div className="mt-8 flex items-center gap-4">
-                  <span className="flex h-10 w-10 items-center justify-center rounded-xl border border-white/10 bg-slate-900 text-sm font-bold text-amber-400">
-                    {String(index + 1).padStart(2, "0")}
-                  </span>
-
-                  <div className="h-px flex-1 bg-gradient-to-r from-amber-400/50 to-transparent" />
-                </div>
-
-                <p className="mt-7 leading-7 text-slate-400">
-                  {getRoadmapDescription(index)}
-                </p>
-
-                {item.active && (
-                  <a
-                    href={siteConfig.checkoutUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="mt-8 inline-flex rounded-xl bg-amber-400 px-6 py-3 font-semibold text-slate-950 transition hover:-translate-y-0.5 hover:bg-amber-300"
-                  >
-                    Get Volume 1 — €{siteConfig.product.launchPrice}
-                  </a>
-                )}
-              </div>
-            </article>
-          ))}
-        </div>
-
-        <div className="mt-14 rounded-3xl border border-white/10 bg-slate-900/70 p-8 sm:p-10">
-          <div className="grid gap-8 lg:grid-cols-[1fr_auto] lg:items-center">
-            <div>
-              <p className="text-sm font-semibold uppercase tracking-[0.22em] text-amber-400">
-                Future development
-              </p>
-
-              <h3 className="mt-4 text-3xl font-bold text-white">
-                SolarDev AI will evolve beyond handbooks
-              </h3>
-
-              <p className="mt-5 max-w-3xl leading-7 text-slate-300">
-                Planned development includes professional templates,
-                interactive engineering workflows, searchable prompt systems,
-                training resources and future AI-assisted project-development
-                tools.
-              </p>
-            </div>
-
-            <a
-              href={`mailto:${siteConfig.infoEmail}?subject=SolarDev%20AI%20Roadmap`}
-              className="shrink-0 rounded-xl border border-white/15 px-7 py-4 text-center font-semibold text-white transition hover:border-amber-400/30 hover:bg-amber-400/[0.06]"
-            >
-              Discuss the Roadmap
-            </a>
+              </article>
+            ))}
           </div>
         </div>
       </div>
     </section>
   );
-}
-
-function getRoadmapDescription(index: number) {
-  const descriptions = [
-    "The current Publisher Edition establishes responsible AI-assisted engineering practice and the complete early-stage Solar PV and BESS development sequence.",
-    "Advanced applications will extend the methodology into broader multidisciplinary development, design coordination and decision support.",
-    "A practical library of professional templates, checklists, registers and repeatable engineering workflows.",
-    "A searchable platform for professional prompts, structured by project stage, engineering discipline and required deliverable.",
-  ];
-
-  return descriptions[index] ?? "";
 }
