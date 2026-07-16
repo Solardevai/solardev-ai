@@ -19,9 +19,27 @@ export const metadata: Metadata = {
     canonical: "/",
   },
 
+  icons: {
+    icon: [
+      {
+        url: "/favicon.svg",
+        type: "image/svg+xml",
+      },
+    ],
+    shortcut: "/favicon.svg",
+    apple: "/icon.svg",
+  },
+
   robots: {
     index: true,
     follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
   },
 
   openGraph: {
@@ -65,8 +83,10 @@ export default function RootLayout({
             window.dataLayer.push(arguments);
           }
 
-          gtag('js', new Date());
-          gtag('config', '${GA_MEASUREMENT_ID}');
+          gtag("js", new Date());
+          gtag("config", "${GA_MEASUREMENT_ID}", {
+            page_path: window.location.pathname,
+          });
         `}
       </Script>
     </html>
