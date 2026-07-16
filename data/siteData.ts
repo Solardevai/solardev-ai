@@ -214,7 +214,7 @@ export const pricingFeatures = [
   "Worked utility-scale examples",
   "Engineering review checklists",
   "Decision-support tables and frameworks",
-  "Minor corrections for this edition",
+  "Minor editorial updates to Publisher Edition v4.0 included",
   "Secure digital delivery",
 ];
 
