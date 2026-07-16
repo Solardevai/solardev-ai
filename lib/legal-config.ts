@@ -11,8 +11,8 @@ export const legalConfig = {
   operatorName: "TIAGO PIRES",
   legalForm: "INDIVIDUAL PROFESSIONAL",
   taxId: "231631693",
-  businessAddress: "Barcelona",
-  countryOfEstablishment: "Spain",
+  businessAddress: "Lisbon",
+  countryOfEstablishment: "Portugal",
   commercialRegistryDetails:
     "NOT APPLICABLE",
 
