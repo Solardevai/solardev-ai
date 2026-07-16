@@ -25,7 +25,7 @@ export const legalConfig = {
   merchantOfRecord: "Lemon Squeezy",
 
   privacyRetentionPeriod:
-    "support records for 3 years; invoicing records for the statutory period; analytics data according to the configured retention period]",
+    "support records for 3 years; invoicing records for the statutory period; Analytics data is retained according to the retention period configured within the applicable analytics platform.",
 
   refundRequestWindowDays: 14,
   lastUpdated: "16 July 2026",

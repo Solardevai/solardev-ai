@@ -304,7 +304,8 @@ export default function TermsOfSalePage() {
           mandatory consumer-jurisdiction rules.
         </p>
         <p>
-          Business-customer jurisdiction: <strong>[INSERT AGREED COURTS OR ARBITRATION PROVISION]</strong>
+          Business-customer jurisdiction: <strong>For business customers, disputes shall be subject to the competent
+courts of Lisbon, Portugal, unless otherwise agreed in writing.</strong>
         </p>
       </LegalSection>
 

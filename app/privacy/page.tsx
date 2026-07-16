@@ -229,8 +229,10 @@ export default function PrivacyPolicyPage() {
         <p>
           Requests should be sent to {legalConfig.privacyEmail}. We may ask for
           proportionate information to verify identity before acting on a request.
-          You may also contact the Spanish Data Protection Agency at
-          https://www.aepd.es.
+          You may also lodge a complaint with the Portuguese data-protection
+supervisory authority, the Comissão Nacional de Proteção de Dados
+(CNPD), or with another competent supervisory authority where permitted
+under applicable data-protection law.
         </p>
       </LegalSection>
 
