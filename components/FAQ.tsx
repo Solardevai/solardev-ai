@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { faqItems, siteConfig } from "@/data/siteData";
+import { faqItems } from "@/data/siteData";
 
 export default function FAQ() {
   const [openIndex, setOpenIndex] = useState<number | null>(0);
@@ -52,6 +52,7 @@ export default function FAQ() {
                   </span>
 
                   <span
+                    aria-hidden="true"
                     className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full border text-xl transition ${
                       isOpen
                         ? "rotate-45 border-amber-400/30 bg-amber-400/10 text-amber-300"
@@ -78,35 +79,6 @@ export default function FAQ() {
               </article>
             );
           })}
-        </div>
-
-        <div className="mt-12 rounded-3xl border border-amber-400/20 bg-amber-400/[0.045] p-8">
-          <div className="grid gap-8 lg:grid-cols-[1fr_auto] lg:items-center">
-            <div>
-
-              <h3 className="mt-3 text-2xl font-bold text-white">
-                Contact SolarDev AI directly
-              </h3>
-
-              <p className="mt-4 max-w-2xl leading-7 text-slate-300">
-                For product, licensing or general enquiries, contact{" "}
-                <a
-                  href={`mailto:${siteConfig.infoEmail}`}
-                  className="font-semibold text-amber-400 hover:text-amber-300"
-                >
-                  {siteConfig.infoEmail}
-                </a>
-                .
-              </p>
-            </div>
-
-            <a
-              href={`mailto:${siteConfig.infoEmail}?subject=SolarDev%20AI%20Enquiry`}
-              className="shrink-0 rounded-xl bg-amber-400 px-7 py-4 text-center font-semibold text-slate-950 transition hover:-translate-y-0.5 hover:bg-amber-300"
-            >
-              Contact SolarDev AI
-            </a>
-          </div>
         </div>
       </div>
     </section>
