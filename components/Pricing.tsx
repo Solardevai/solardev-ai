@@ -1,172 +1,149 @@
-import { pricingFeatures, siteConfig } from "@/data/siteData";
+const productBenefits = [
+  "218-page Publisher Edition PDF",
+  "10 professional project-development chapters",
+  "100+ professional AI prompts",
+  "Quick, Professional and Expert prompt levels",
+  "Worked utility-scale Solar PV and BESS examples",
+  "Engineering validation and review checklists",
+  "Risk, CAPEX and decision-support frameworks",
+  "Minor editorial updates to Publisher Edition v4.0 included",
+];
+
+const CHECKOUT_URL = "YOUR_LEMON_SQUEEZY_CHECKOUT_URL";
 
 export default function Pricing() {
   return (
     <section
       id="pricing"
-      className="relative scroll-mt-24 overflow-hidden border-b border-white/10 bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950"
+      aria-labelledby="pricing-title"
+      className="relative scroll-mt-24 overflow-hidden border-y border-white/10 bg-slate-950 py-20 sm:py-24"
     >
-      {/* Background */}
-      <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute left-1/2 top-0 h-[40rem] w-[40rem] -translate-x-1/2 rounded-full bg-amber-400/8 blur-3xl" />
+      {/* Background decoration */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0"
+      >
+        <div className="absolute left-1/2 top-0 h-80 w-80 -translate-x-1/2 rounded-full bg-amber-400/5 blur-3xl" />
+
+        <div className="absolute bottom-0 right-0 h-72 w-72 rounded-full bg-emerald-500/5 blur-3xl" />
       </div>
 
-      <div className="relative mx-auto max-w-7xl px-6 py-28">
-
-        <div className="text-center">
-
-          <p className="text-sm font-semibold uppercase tracking-[0.25em] text-amber-400">
+      <div className="relative mx-auto max-w-7xl px-6 lg:px-8">
+        {/* Section heading */}
+        <div className="mx-auto max-w-3xl text-center">
+          <p className="text-sm font-semibold uppercase tracking-[0.22em] text-amber-400">
             Publisher Edition
           </p>
 
-          <h2 className="mt-5 text-5xl font-bold tracking-tight text-white">
-            Start using AI like a professional engineer
+          <h2
+            id="pricing-title"
+            className="mt-4 text-3xl font-bold tracking-tight text-white sm:text-4xl lg:text-5xl"
+          >
+            Get Volume 1
           </h2>
 
-          <p className="mx-auto mt-8 max-w-3xl text-xl leading-9 text-slate-300">
-            Everything you need to integrate AI into utility-scale Solar PV and
-            BESS project development with structured engineering methodology.
+          <p className="mx-auto mt-5 max-w-2xl text-base leading-7 text-slate-300 sm:text-lg">
+            Access the complete professional handbook for AI-assisted
+            utility-scale Solar PV and BESS project development.
           </p>
-
         </div>
 
-        <div className="mx-auto mt-20 max-w-3xl">
+        {/* Compact pricing box */}
+        <div className="mx-auto mt-12 w-full max-w-2xl">
+          <div className="relative overflow-hidden rounded-3xl border border-amber-400/25 bg-white/[0.035] p-6 shadow-2xl shadow-black/20 sm:p-8">
+            <div
+              aria-hidden="true"
+              className="absolute right-0 top-0 h-40 w-40 rounded-bl-full bg-amber-400/[0.055]"
+            />
 
-          <div className="rounded-[32px] border border-amber-400/25 bg-slate-900/80 p-10 shadow-2xl backdrop-blur">
+            <div className="relative">
+              {/* Product information */}
+              <div className="text-center">
+                <p className="text-sm font-semibold uppercase tracking-[0.18em] text-amber-400">
+                  Volume 1
+                </p>
 
-            {/* Badge */}
+                <h3 className="mt-3 text-2xl font-bold text-white sm:text-3xl">
+                  AI Foundations &amp; Professional Prompt Library
+                </h3>
 
-            <div className="flex justify-center">
-
-              <span className="rounded-full border border-amber-400/30 bg-amber-400/10 px-5 py-2 text-sm font-semibold text-amber-300">
-                🚀 Launch Offer
-              </span>
-
-            </div>
-
-            {/* Title */}
-
-            <h3 className="mt-8 text-center text-3xl font-bold text-white">
-              {siteConfig.product.name}
-            </h3>
-
-            <p className="mt-4 text-center text-slate-400">
-              {siteConfig.product.subtitle}
-            </p>
-
-            {/* Price */}
-
-            <div className="mt-10 text-center">
-
-              <p className="text-lg text-slate-500 line-through">
-                €{siteConfig.product.standardPrice}
-              </p>
-
-              <div className="mt-2 flex items-end justify-center gap-2">
-
-                <span className="text-7xl font-bold text-white">
-                  €{siteConfig.product.launchPrice}
-                </span>
-
+                <p className="mx-auto mt-4 max-w-xl text-sm leading-6 text-slate-400 sm:text-base">
+                  A professional engineering handbook combining controlled AI
+                  workflows, worked examples, review checklists and
+                  consultant-grade prompts.
+                </p>
               </div>
 
-              <p className="mt-4 text-green-400 font-semibold">
-                Save €10 during launch
-              </p>
+              {/* Price */}
+              <div className="mt-7 text-center">
+                <div className="flex items-end justify-center gap-4">
+                  <del className="pb-2 text-2xl font-semibold text-slate-500 decoration-slate-500">
+                    €49
+                  </del>
 
-              <p className="mt-2 text-slate-500">
-                One-time purchase • Instant download
-              </p>
-
-            </div>
-
-            {/* CTA */}
-
-            <a
-              href={siteConfig.checkoutUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="mt-12 block w-full rounded-2xl bg-amber-400 py-5 text-center text-lg font-bold text-slate-950 transition duration-300 hover:-translate-y-1 hover:bg-amber-300"
-            >
-              Get Instant Access
-            </a>
-
-            {/* Features */}
-
-            <div className="mt-14 grid gap-5 sm:grid-cols-2">
-
-              {pricingFeatures.map((feature) => (
-
-                <div
-                  key={feature}
-                  className="flex items-center gap-3"
-                >
-                  <div className="flex h-7 w-7 items-center justify-center rounded-full bg-green-500/20 text-green-400">
-                    ✓
-                  </div>
-
-                  <span className="text-slate-300">
-                    {feature}
+                  <span className="text-5xl font-bold tracking-tight text-white sm:text-6xl">
+                    €39
                   </span>
-
                 </div>
 
-              ))}
+                <p className="mt-2 text-sm font-semibold text-emerald-400">
+                  Save €10
+                </p>
 
-            </div>
-
-            {/* Trust */}
-
-            <div className="mt-14 rounded-2xl border border-white/10 bg-slate-950/60 p-6">
-
-              <div className="grid gap-6 md:grid-cols-3 text-center">
-
-                <div>
-
-                  <p className="text-3xl font-bold text-white">
-                    218
-                  </p>
-
-                  <p className="mt-2 text-slate-400">
-                    Professional Pages
-                  </p>
-
-                </div>
-
-                <div>
-
-                  <p className="text-3xl font-bold text-white">
-                    10
-                  </p>
-
-                  <p className="mt-2 text-slate-400">
-                    Engineering Chapters
-                  </p>
-
-                </div>
-
-                <div>
-
-                  <p className="text-3xl font-bold text-white">
-                    100+
-                  </p>
-
-                  <p className="mt-2 text-slate-400">
-                    Professional AI Prompts
-                  </p>
-
-                </div>
-
+                <p className="mt-1 text-sm font-medium text-slate-400">
+                  Introductory price · One-time purchase
+                </p>
               </div>
 
+              {/* Benefits */}
+              <div className="mt-7 border-t border-white/10 pt-7">
+                <ul className="grid gap-3 sm:grid-cols-2">
+                  {productBenefits.map((benefit) => (
+                    <li
+                      key={benefit}
+                      className="flex items-start gap-3 text-sm leading-6 text-slate-300"
+                    >
+                      <span
+                        aria-hidden="true"
+                        className="mt-1 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-emerald-400/10 text-xs font-bold text-emerald-400"
+                      >
+                        ✓
+                      </span>
+
+                      <span>{benefit}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              {/* Purchase button */}
+              <div className="mt-8">
+                <a
+                  href={CHECKOUT_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="Purchase SolarDev AI Volume 1 for 39 euros"
+                  className="inline-flex min-h-12 w-full items-center justify-center rounded-xl bg-amber-400 px-6 py-3 text-base font-bold text-slate-950 transition hover:bg-amber-300 focus:outline-none focus:ring-2 focus:ring-amber-400 focus:ring-offset-2 focus:ring-offset-slate-950"
+                >
+                  Get Immediate Access — €39
+                </a>
+
+                <p className="mt-4 text-center text-xs leading-5 text-slate-500">
+                  Secure checkout and immediate digital delivery through
+                  Lemon Squeezy.
+                </p>
+              </div>
+
+              {/* Delivery information */}
+              <div className="mt-6 flex flex-wrap justify-center gap-x-6 gap-y-2 border-t border-white/10 pt-6 text-xs font-medium text-slate-400">
+                <span>PDF format</span>
+                <span>Immediate access</span>
+                <span>Secure payment</span>
+              </div>
             </div>
-
           </div>
-
         </div>
-
       </div>
-
     </section>
   );
 }
