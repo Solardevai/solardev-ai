@@ -253,7 +253,7 @@ export default function VolumeOne() {
               href="#pricing"
               className="inline-flex min-h-11 items-center justify-center rounded-lg bg-emerald-500 px-5 py-3 text-sm font-semibold text-slate-950 transition hover:bg-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-400 focus:ring-offset-2 focus:ring-offset-slate-950"
             >
-              Get Volume 1 — €49
+              Get Volume 1
             </a>
           </div>
         </div>

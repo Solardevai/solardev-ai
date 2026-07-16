@@ -45,7 +45,7 @@ export default function Hero() {
               rel="noopener noreferrer"
               className="rounded-xl bg-amber-400 px-7 py-4 text-center font-semibold text-slate-950 shadow-lg shadow-amber-400/10 transition hover:-translate-y-0.5 hover:bg-amber-300"
             >
-              Get Volume 1 — €{product.launchPrice}
+              Get Volume 1 
             </a>
 
             <a

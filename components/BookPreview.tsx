@@ -139,7 +139,7 @@ export default function BookPreview() {
             rel="noopener noreferrer"
             className="shrink-0 rounded-xl bg-amber-400 px-7 py-4 text-center font-semibold text-slate-950 transition hover:-translate-y-0.5 hover:bg-amber-300"
           >
-            Get Volume 1 — €{siteConfig.product.launchPrice}
+            Get Volume 1 
           </a>
         </div>
       </div>
