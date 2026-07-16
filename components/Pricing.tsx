@@ -9,7 +9,7 @@ const productBenefits = [
   "Minor editorial updates to Publisher Edition v4.0 included",
 ];
 
-const CHECKOUT_URL = "YOUR_LEMON_SQUEEZY_CHECKOUT_URL";
+const CHECKOUT_URL = "https://solardevai.lemonsqueezy.com/checkout/buy/14ca4fa1-0396-49e8-9213-d3770d70a36a";
 
 export default function Pricing() {
   return (
