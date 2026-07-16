@@ -36,10 +36,7 @@ export default function Hero() {
             AI for Utility-Scale Solar &amp; BESS Project Development
           </h1>
 
-          <p className="mt-7 max-w-2xl text-lg leading-8 text-slate-300 sm:text-xl">
-            Professional engineering methodologies, controlled AI workflows
-            and consultant-grade prompts for renewable-energy professionals.
-          </p>
+
 
           <div className="mt-10 flex flex-col gap-4 sm:flex-row">
             <a
@@ -66,11 +63,7 @@ export default function Hero() {
             <Stat value="Solar + BESS" label="Utility-scale focus" />
           </div>
 
-          <p className="mt-10 max-w-xl text-sm leading-6 text-slate-500">
-            Developed by a utility-scale renewable-energy project development
-            professional. AI supports engineering judgement; it does not replace
-            professional responsibility.
-          </p>
+          
         </div>
 
         {/* Visual */}
