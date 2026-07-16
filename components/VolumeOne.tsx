@@ -228,35 +228,6 @@ export default function VolumeOne() {
             </article>
           ))}
         </div>
-
-        {/* Section conclusion */}
-        <div className="mt-12 rounded-2xl border border-emerald-400/20 bg-emerald-400/[0.06] px-6 py-8 text-center sm:px-10">
-          <h3 className="text-xl font-semibold text-white sm:text-2xl">
-            A structured basis for early-stage project decisions
-          </h3>
-
-          <p className="mx-auto mt-3 max-w-3xl text-sm leading-6 text-slate-300 sm:text-base">
-            The complete workflow supports project progression, targeted
-            technical studies, accountable risk ownership and transparent
-            early-stage investment assessment.
-          </p>
-
-          <div className="mt-6 flex flex-col justify-center gap-3 sm:flex-row">
-            <a
-              href="#preview"
-              className="inline-flex min-h-11 items-center justify-center rounded-lg border border-white/15 bg-white/5 px-5 py-3 text-sm font-semibold text-white transition hover:border-white/30 hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-emerald-400 focus:ring-offset-2 focus:ring-offset-slate-950"
-            >
-              Preview the Handbook
-            </a>
-
-            <a
-              href="#pricing"
-              className="inline-flex min-h-11 items-center justify-center rounded-lg bg-emerald-500 px-5 py-3 text-sm font-semibold text-slate-950 transition hover:bg-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-400 focus:ring-offset-2 focus:ring-offset-slate-950"
-            >
-              Get Volume 1
-            </a>
-          </div>
-        </div>
       </div>
     </section>
   );
