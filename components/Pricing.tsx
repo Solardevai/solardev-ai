@@ -119,13 +119,13 @@ export default function Pricing() {
               {/* Purchase button */}
               <div className="mt-8">
                 <a
-                  href={CHECKOUT_URL}
+                  href={https://solardevai.lemonsqueezy.com/checkout/buy/14ca4fa1-0396-49e8-9213-d3770d70a36a}
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label="Purchase SolarDev AI Volume 1 for 39 euros"
                   className="inline-flex min-h-12 w-full items-center justify-center rounded-xl bg-amber-400 px-6 py-3 text-base font-bold text-slate-950 transition hover:bg-amber-300 focus:outline-none focus:ring-2 focus:ring-amber-400 focus:ring-offset-2 focus:ring-offset-slate-950"
                 >
-                  Get Immediate Access — €39
+                  Get Immediate Access
                 </a>
 
                 <p className="mt-4 text-center text-xs leading-5 text-slate-500">
