@@ -83,9 +83,6 @@ export default function FAQ() {
         <div className="mt-12 rounded-3xl border border-amber-400/20 bg-amber-400/[0.045] p-8">
           <div className="grid gap-8 lg:grid-cols-[1fr_auto] lg:items-center">
             <div>
-              <p className="text-sm font-semibold uppercase tracking-[0.22em] text-amber-400">
-                Still have a question?
-              </p>
 
               <h3 className="mt-3 text-2xl font-bold text-white">
                 Contact SolarDev AI directly
