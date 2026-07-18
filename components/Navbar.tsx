@@ -1,5 +1,7 @@
 import Image from "next/image";
 import { navigationItems } from "@/data/siteData";
+import { productData } from "@/data/productData";
+import TrackedCheckoutLink from "@/components/TrackedCheckoutLink";
 
 export default function Navbar() {
   return (
@@ -41,8 +43,26 @@ export default function Navbar() {
           ))}
         </nav>
 
-        {/* Empty column keeps navigation centred */}
-        <div aria-hidden="true" className="justify-self-end" />
+        {/* Tracked checkout CTA */}
+        <div className="justify-self-end">
+          <TrackedCheckoutLink
+            href={productData.checkoutUrl}
+            buttonLocation="navbar"
+            itemId={productData.itemId}
+            itemName={productData.itemName}
+            itemCategory={productData.itemCategory}
+            price={productData.price}
+            currency={productData.currency}
+            ariaLabel={`Buy SolarDev AI Volume 1 for €${productData.price}`}
+            className="inline-flex items-center justify-center rounded-lg bg-amber-400 px-4 py-2.5 text-sm font-semibold text-slate-950 transition hover:bg-amber-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-300 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950"
+          >
+            <span className="sm:hidden">Get Volume 1</span>
+
+            <span className="hidden sm:inline">
+              Get Volume 1 — €{productData.price}
+            </span>
+          </TrackedCheckoutLink>
+        </div>
       </div>
     </header>
   );
