@@ -1,94 +1,114 @@
 import type { Metadata } from "next";
+import type { ReactNode } from "react";
 import Script from "next/script";
 import "./globals.css";
 
+const SITE_URL = "https://www.solardev.ai";
 const GA_MEASUREMENT_ID = "G-MM2D3CS1FS";
 
+const SITE_TITLE =
+  "SolarDev AI | Utility-Scale Solar & BESS Development Tools";
+
+const SITE_DESCRIPTION =
+  "Professional handbooks, engineering workflows and AI prompt libraries for utility-scale solar PV and battery energy storage project development.";
+
 export const metadata: Metadata = {
-  metadataBase: new URL("https://www.solardev.ai"),
+  metadataBase: new URL(SITE_URL),
 
   title: {
-    default: "SolarDev AI | Utility-Scale Solar & BESS Development Tools",
+    default: SITE_TITLE,
     template: "%s | SolarDev AI",
   },
 
-  description:
-    "Professional handbooks, AI prompt libraries and practical tools for utility-scale solar PV and BESS project development professionals.",
+  description: SITE_DESCRIPTION,
+
+  applicationName: "SolarDev AI",
+
+  authors: [
+    {
+      name: "Tiago Pires",
+      url: SITE_URL,
+    },
+  ],
+
+  creator: "Tiago Pires",
+  publisher: "SolarDev AI",
 
   alternates: {
     canonical: "/",
   },
 
-  icons: {
-    icon: [
-      {
-        url: "/favicon.svg",
-        type: "image/svg+xml",
-      },
-    ],
-    shortcut: "/favicon.svg",
-    apple: "/icon.svg",
-  },
-
   robots: {
     index: true,
     follow: true,
+
     googleBot: {
       index: true,
       follow: true,
-      "max-video-preview": -1,
       "max-image-preview": "large",
       "max-snippet": -1,
+      "max-video-preview": -1,
     },
   },
 
   openGraph: {
     type: "website",
     locale: "en_US",
-    url: "https://www.solardev.ai",
+    url: SITE_URL,
     siteName: "SolarDev AI",
-    title: "SolarDev AI | Utility-Scale Solar & BESS Development Tools",
-    description:
-      "Professional handbooks, AI prompt libraries and practical tools for utility-scale solar PV and BESS project development professionals.",
+    title: SITE_TITLE,
+    description: SITE_DESCRIPTION,
   },
 
   twitter: {
-    card: "summary_large_image",
-    title: "SolarDev AI | Solar & BESS Development Tools",
-    description:
-      "Professional handbooks and AI prompt libraries for utility-scale solar and BESS project development.",
+    card: "summary",
+    title: SITE_TITLE,
+    description: SITE_DESCRIPTION,
+  },
+
+  category: "technology",
+
+  formatDetection: {
+    email: false,
+    address: false,
+    telephone: false,
   },
 };
 
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+type RootLayoutProps = Readonly<{
+  children: ReactNode;
+}>;
+
+export default function RootLayout({ children }: RootLayoutProps) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body className="bg-slate-950 text-white antialiased">
+        {children}
 
-      {/* Google Analytics */}
-      <Script
-        src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}
-        strategy="afterInteractive"
-      />
+        {/* Google Analytics — loads on every page */}
+        <Script
+          src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}
+          strategy="afterInteractive"
+        />
 
-      <Script id="google-analytics" strategy="afterInteractive">
-        {`
-          window.dataLayer = window.dataLayer || [];
+        <Script id="google-analytics" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
 
-          function gtag() {
-            window.dataLayer.push(arguments);
-          }
+            function gtag() {
+              window.dataLayer.push(arguments);
+            }
 
-          gtag("js", new Date());
-          gtag("config", "${GA_MEASUREMENT_ID}", {
-            page_path: window.location.pathname,
-          });
-        `}
-      </Script>
+            window.gtag = gtag;
+
+            gtag('js', new Date());
+
+            gtag('config', '${GA_MEASUREMENT_ID}', {
+              anonymize_ip: true
+            });
+          `}
+        </Script>
+      </body>
     </html>
   );
 }
