@@ -1,3 +1,5 @@
+const GA_MEASUREMENT_ID = "G-MM2D3CS1FS";
+
 type GtagFunction = (
   command: "event",
   eventName: string,
@@ -32,14 +34,31 @@ export function trackBeginCheckout({
   const browserWindow = window as BrowserWindow;
 
   if (typeof browserWindow.gtag !== "function") {
-    console.warn("Google Analytics is not available yet.");
+    console.warn(
+      "Google Analytics is not available. The checkout will still continue."
+    );
     return;
   }
 
+  console.info("Sending GA4 begin_checkout event:", {
+    buttonLocation,
+    itemId,
+    itemName,
+    itemCategory,
+    price,
+    currency,
+  });
+
   browserWindow.gtag("event", "begin_checkout", {
+    send_to: GA_MEASUREMENT_ID,
+
+    // Temporary: makes this event visible in GA4 DebugView.
+    debug_mode: true,
+
     currency,
     value: price,
     button_location: buttonLocation,
+
     items: [
       {
         item_id: itemId,
