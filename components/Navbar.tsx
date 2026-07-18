@@ -59,7 +59,7 @@ export default function Navbar() {
             <span className="sm:hidden">Get Volume 1</span>
 
             <span className="hidden sm:inline">
-              Get Volume 1 — €{productData.price}
+              Get Volume 1 
             </span>
           </TrackedCheckoutLink>
         </div>
