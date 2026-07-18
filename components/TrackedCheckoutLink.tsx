@@ -28,7 +28,7 @@ export default function TrackedCheckoutLink({
   ariaLabel,
   children,
 }: TrackedCheckoutLinkProps) {
-  function handleClick() {
+  function handleClick(): void {
     trackBeginCheckout({
       buttonLocation,
       itemId,
