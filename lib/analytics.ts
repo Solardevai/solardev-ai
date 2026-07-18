@@ -35,7 +35,7 @@ export function trackBeginCheckout({
 
   if (typeof browserWindow.gtag !== "function") {
     console.warn(
-      "Google Analytics is not available. The checkout will still continue."
+      "Google Analytics is not available. Checkout navigation will continue."
     );
     return;
   }
@@ -49,18 +49,20 @@ export function trackBeginCheckout({
     currency,
   });
 
- browserWindow.gtag("event", "begin_checkout", {
-  send_to: GA_MEASUREMENT_ID,
-  currency,
-  value: price,
-  button_location: buttonLocation,
-  items: [
-    {
-      item_id: itemId,
-      item_name: itemName,
-      item_category: itemCategory,
-      price,
-      quantity: 1,
-    },
-  ],
-});
+  browserWindow.gtag("event", "begin_checkout", {
+    send_to: GA_MEASUREMENT_ID,
+    debug_mode: true,
+    currency,
+    value: price,
+    button_location: buttonLocation,
+    items: [
+      {
+        item_id: itemId,
+        item_name: itemName,
+        item_category: itemCategory,
+        price,
+        quantity: 1,
+      },
+    ],
+  });
+}
