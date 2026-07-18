@@ -51,7 +51,7 @@ export function trackBeginCheckout({
 
   browserWindow.gtag("event", "begin_checkout", {
     send_to: GA_MEASUREMENT_ID,
-    debug_mode: true,
+   
     currency,
     value: price,
     button_location: buttonLocation,
