@@ -9,7 +9,7 @@ const productBenefits = [
   "Minor editorial updates to Publisher Edition v4.0 included",
 ];
 
-const CHECKOUT_URL = "https://solardevai.lemonsqueezy.com/checkout/buy/14ca4fa1-0396-49e8-9213-d3770d70a36a";
+const CHECKOUT_URL = "https://buy.stripe.com/dRm5kEaLNdcf8id49Ycs800";
 
 export default function Pricing() {
   return (

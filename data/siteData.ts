@@ -8,7 +8,7 @@ export const siteConfig = {
   supportEmail: "support@solardev.ai",
 
   checkoutUrl:
-    "https://solardevai.lemonsqueezy.com/checkout/buy/14ca4fa1-0396-49e8-9213-d3770d70a36a",
+    "https://buy.stripe.com/dRm5kEaLNdcf8id49Ycs800",
 
   product: {
     name: "AI for Utility-Scale Solar & BESS Project Development",
