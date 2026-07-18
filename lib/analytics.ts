@@ -49,24 +49,18 @@ export function trackBeginCheckout({
     currency,
   });
 
-  browserWindow.gtag("event", "begin_checkout", {
-    send_to: GA_MEASUREMENT_ID,
-
-    // Temporary: makes this event visible in GA4 DebugView.
-    debug_mode: true,
-
-    currency,
-    value: price,
-    button_location: buttonLocation,
-
-    items: [
-      {
-        item_id: itemId,
-        item_name: itemName,
-        item_category: itemCategory,
-        price,
-        quantity: 1,
-      },
-    ],
-  });
-}
+ browserWindow.gtag("event", "begin_checkout", {
+  send_to: GA_MEASUREMENT_ID,
+  currency,
+  value: price,
+  button_location: buttonLocation,
+  items: [
+    {
+      item_id: itemId,
+      item_name: itemName,
+      item_category: itemCategory,
+      price,
+      quantity: 1,
+    },
+  ],
+});
