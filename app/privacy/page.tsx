@@ -128,20 +128,37 @@ export default function PrivacyPolicyPage() {
       </LegalSection>
 
       <LegalSection title="4. Checkout and payment processing">
-        <p>
-          Purchases are completed through {legalConfig.merchantOfRecord}, which
-          acts as the merchant of record for transactions processed through its
-          checkout. It handles payment collection, applicable sales taxes or VAT,
-          transaction receipts, refunds and chargebacks under its own terms and
-          privacy documentation.
-        </p>
-        <p>
-          SolarDev AI may receive limited order information needed to deliver the
-          product, manage licences, respond to support requests and maintain
-          business records. Please review the checkout provider&apos;s notices before
-          completing a purchase.
-        </p>
-      </LegalSection>
+  <p>
+    Purchases are completed through Stripe, which provides hosted checkout
+    and payment-processing services to SolarDev AI.
+  </p>
+
+  <p>
+    The seller and merchant of record for SolarDev AI digital products is
+    TIAGO PIRES, trading as SolarDev AI. Stripe does not become the seller or
+    merchant of record solely by providing checkout and payment-processing
+    services.
+  </p>
+
+  <p>
+    Stripe processes information required to complete the transaction,
+    including payment details, billing information, transaction identifiers,
+    transaction status and fraud-prevention information.
+  </p>
+
+  <p>
+    SolarDev AI does not receive or store complete payment-card details.
+    SolarDev AI may receive limited customer and order information required
+    to deliver the product, provide support, manage licences, maintain
+    transaction records and comply with legal and accounting obligations.
+  </p>
+
+  <p>
+    Stripe processes personal data according to its own privacy documentation.
+    Customers should review the information presented during checkout before
+    completing a purchase.
+  </p>
+</LegalSection>
 
       <LegalSection title="5. Cookies and analytics">
         <p>
@@ -150,12 +167,12 @@ export default function PrivacyPolicyPage() {
           technologies should only be activated where a valid legal basis exists,
           including consent where required.
         </p>
-        <p>
-          The current analytics provider is identified as {legalConfig.analyticsProvider}.
-          Before publishing this policy, verify the exact analytics configuration,
-          consent mechanism, cookie names, retention settings and whether any
-          advertising features are enabled.
-        </p>
+       <p>
+  SolarDev AI uses Google Analytics to understand website usage and improve
+  website performance. Where consent is legally required, non-essential
+  analytics technologies are activated only after the visitor has provided
+  consent through the website's cookie-preference controls.
+</p>
         <p>
           Visitors must be able to reject non-essential cookies as easily as they
           accept them and to change their preferences later through the website&apos;s
@@ -170,7 +187,7 @@ export default function PrivacyPolicyPage() {
         </p>
         <LegalList>
           <li>Hosting and infrastructure provider: {legalConfig.hostingProvider}</li>
-          <li>Checkout and merchant-of-record provider: {legalConfig.merchantOfRecord}</li>
+          <li>Checkout and payment-processing provider: {legalConfig.merchantOfRecord}</li>
           <li>Analytics provider: {legalConfig.analyticsProvider}</li>
           <li>Email, customer-support or professional advisers used by the operator</li>
           <li>Public authorities where disclosure is required by law</li>
