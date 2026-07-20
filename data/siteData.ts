@@ -242,7 +242,7 @@ export const faqItems = [
   {
     question: "What format will I receive?",
     answer:
-      "You will receive the digital Publisher Edition PDF through the secure Lemon Squeezy delivery system.",
+      "After successful payment through Stripe, you will be redirected to a confirmation page where you can immediately download the Volume 1 PDF. A Stripe payment receipt will also be sent to the email address provided during checkout.",
   },
   {
     question: "Are updates included?",
