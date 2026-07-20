@@ -42,35 +42,94 @@ const chapters = [
   "Initial CAPEX Benchmark",
 ];
 
-const productJsonLd = {
+const structuredData = {
   "@context": "https://schema.org",
-  "@type": "Product",
-  name:
-    "AI for Utility-Scale Solar & BESS Project Development — Volume 1",
-  description:
-    "A 218-page professional handbook and AI prompt library for utility-scale Solar PV and BESS project development.",
-  image: [
-    "https://www.solardev.ai/volume-1-cover.png",
-  ],
-  sku: "SOLARDEV-VOL1",
-  brand: {
-    "@type": "Brand",
-    name: "SolarDev AI",
-  },
-  author: {
-    "@type": "Person",
-    name: "Tiago Pires",
-  },
-  offers: {
-    "@type": "Offer",
-    url:
-      "https://www.solardev.ai/solar-bess-project-development-handbook",
-    priceCurrency: productData.currency,
-    price: productData.price.toFixed(2),
-    availability: "https://schema.org/InStock",
-  },
-};
 
+  "@graph": [
+    {
+      "@type": "Product",
+      "@id":
+        "https://www.solardev.ai/solar-bess-project-development-handbook#product",
+
+      name:
+        "AI for Utility-Scale Solar & BESS Project Development — Volume 1",
+
+      description:
+        "A 218-page professional handbook and AI prompt library for utility-scale Solar PV and BESS project development.",
+
+      image: [
+        "https://www.solardev.ai/volume-1-cover.png",
+      ],
+
+      sku: "SOLARDEV-VOL1",
+
+      category: "Digital engineering handbook",
+
+      brand: {
+        "@type": "Brand",
+        name: "SolarDev AI",
+      },
+
+      isRelatedTo: {
+        "@id":
+          "https://www.solardev.ai/solar-bess-project-development-handbook#book",
+      },
+
+      offers: {
+        "@type": "Offer",
+
+        url:
+          "https://www.solardev.ai/solar-bess-project-development-handbook",
+
+        priceCurrency: productData.currency,
+
+        price: productData.price.toFixed(2),
+
+        availability: "https://schema.org/InStock",
+
+        itemCondition: "https://schema.org/NewCondition",
+
+        seller: {
+          "@type": "Organization",
+          name: "SolarDev AI",
+          url: "https://www.solardev.ai",
+        },
+      },
+    },
+
+    {
+      "@type": "Book",
+      "@id":
+        "https://www.solardev.ai/solar-bess-project-development-handbook#book",
+
+      name:
+        "AI for Utility-Scale Solar & BESS Project Development — Volume 1",
+
+      author: {
+        "@type": "Person",
+        name: "Tiago Pires",
+      },
+
+      publisher: {
+        "@type": "Organization",
+        name: "SolarDev AI",
+        url: "https://www.solardev.ai",
+      },
+
+      bookFormat: "https://schema.org/EBook",
+
+      inLanguage: "en",
+
+      numberOfPages: 218,
+
+      image:
+        "https://www.solardev.ai/volume-1-cover.png",
+
+      description:
+        "A professional digital handbook covering AI-supported workflows for utility-scale Solar PV and BESS project development.",
+    },
+  ],
+};
 export default function HandbookPage() {
   return (
     <main className="min-h-screen bg-slate-950 text-white">
