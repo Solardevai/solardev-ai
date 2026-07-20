@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import {
-  LegalCallout,
   LegalList,
   LegalPageLayout,
   LegalSection,
@@ -8,7 +7,7 @@ import {
 import { legalConfig } from "../../lib/legal-config";
 
 export const metadata: Metadata = {
-  title: "Terms of Sale | SolarDev AI",
+  title: "Terms of Sale",
   description:
     "Terms governing the purchase, delivery and professional use of SolarDev AI digital products.",
   alternates: {
