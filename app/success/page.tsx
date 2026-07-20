@@ -229,13 +229,13 @@ export default async function SuccessPage({
 </p>
 
 <div className="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row">
-  <a
-    href={DOWNLOAD_URL}
-    download
-    className="inline-flex w-full items-center justify-center rounded-lg bg-amber-400 px-6 py-3 font-semibold text-slate-950 transition hover:bg-amber-300 sm:w-auto"
-  >
-    Download Volume 1 PDF
-  </a>
+<a
+  href={DOWNLOAD_URL}
+  download="SolarDev-AI-Volume-1-v4.pdf"
+  className="inline-flex w-full items-center justify-center rounded-lg bg-amber-400 px-6 py-3 font-semibold text-slate-950 transition hover:bg-amber-300 sm:w-auto"
+>
+  Download Volume 1 PDF
+</a>
 
   <Link
     href="/"
