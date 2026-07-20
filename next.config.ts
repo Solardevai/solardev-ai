@@ -4,7 +4,7 @@ const nextConfig: NextConfig = {
   async headers() {
     return [
       {
-        source: "/downloads/solardev-ai-volume-1-v4.pdf",
+        source: "/downloads/:path*",
         headers: [
           {
             key: "X-Robots-Tag",
