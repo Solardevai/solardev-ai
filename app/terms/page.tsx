@@ -19,6 +19,9 @@ export const metadata: Metadata = {
   },
 };
 
+const legalLinkClass =
+  "font-semibold text-amber-400 underline decoration-amber-400/40 underline-offset-4 transition hover:text-amber-300";
+
 export default function TermsOfSalePage() {
   return (
     <LegalPageLayout
@@ -36,8 +39,24 @@ export default function TermsOfSalePage() {
           <li>
             Commercial registry: {legalConfig.commercialRegistryDetails}
           </li>
-          <li>General email: {legalConfig.generalEmail}</li>
-          <li>Customer-support email: {legalConfig.supportEmail}</li>
+          <li>
+            General email:{" "}
+            <a
+              href={`mailto:${legalConfig.generalEmail}`}
+              className={legalLinkClass}
+            >
+              {legalConfig.generalEmail}
+            </a>
+          </li>
+          <li>
+            Customer-support email:{" "}
+            <a
+              href={`mailto:${legalConfig.supportEmail}`}
+              className={legalLinkClass}
+            >
+              {legalConfig.supportEmail}
+            </a>
+          </li>
         </LegalList>
       </LegalSection>
 
@@ -52,7 +71,20 @@ export default function TermsOfSalePage() {
         <p>
           By placing an order, you confirm that you have reviewed the product
           description, price, delivery format, licence scope, refund
-          information and these terms.
+          information and these Terms of Sale.
+        </p>
+
+        <p>
+          Acceptance of these Terms of Sale does not, by itself, replace any
+          separate express request, consent or acknowledgement required by law
+          for the immediate supply of paid digital content before the end of an
+          applicable withdrawal period.
+        </p>
+
+        <p>
+          Where required, the customer will be asked before completing the
+          purchase to expressly request immediate supply and acknowledge the
+          consequences for the statutory right of withdrawal.
         </p>
 
         <p>
@@ -76,8 +108,14 @@ export default function TermsOfSalePage() {
 
         <p>
           Please review the product description carefully before purchasing
-          and contact {legalConfig.generalEmail} with any material
-          pre-purchase question.
+          and contact{" "}
+          <a
+            href={`mailto:${legalConfig.generalEmail}`}
+            className={legalLinkClass}
+          >
+            {legalConfig.generalEmail}
+          </a>{" "}
+          with any material pre-purchase question.
         </p>
       </LegalSection>
 
@@ -110,7 +148,7 @@ export default function TermsOfSalePage() {
         </p>
 
         <p>
-          An order is completed only after Stripe confirms successful payment.
+          An order is completed only after Stripe confirms successful payment.{" "}
           {legalConfig.tradingName} may reject or cancel an order where payment
           is not completed, fraud is reasonably suspected or the transaction
           cannot lawfully be fulfilled.
@@ -147,6 +185,13 @@ export default function TermsOfSalePage() {
         </p>
 
         <p>
+          Where consumer law requires prior express consent for delivery to
+          begin before the end of an applicable withdrawal period, immediate
+          access will be provided only after the required request, consent and
+          acknowledgement have been obtained.
+        </p>
+
+        <p>
           The customer is responsible for providing an accurate email address,
           maintaining access to the relevant inbox and downloading or securely
           retaining the purchased file.
@@ -154,8 +199,14 @@ export default function TermsOfSalePage() {
 
         <p>
           If delivery does not arrive within a reasonable period, contact{" "}
-          {legalConfig.supportEmail} and provide the order reference and the
-          email address used for the purchase.
+          <a
+            href={`mailto:${legalConfig.supportEmail}`}
+            className={legalLinkClass}
+          >
+            {legalConfig.supportEmail}
+          </a>{" "}
+          and provide the order reference and the email address used for the
+          purchase.
         </p>
       </LegalSection>
 
@@ -227,9 +278,15 @@ export default function TermsOfSalePage() {
         </p>
 
         <p>
-          Contact {legalConfig.generalEmail} before distributing the material
-          within an organisation or integrating it into a shared internal
-          system.
+          Contact{" "}
+          <a
+            href={`mailto:${legalConfig.generalEmail}`}
+            className={legalLinkClass}
+          >
+            {legalConfig.generalEmail}
+          </a>{" "}
+          before distributing the material within an organisation or
+          integrating it into a shared internal system.
         </p>
 
         <p>
@@ -293,33 +350,63 @@ export default function TermsOfSalePage() {
         </p>
       </LegalSection>
 
-      <LegalSection title="13. Withdrawal, immediate delivery and refunds">
+      <LegalSection title="13. Withdrawal, immediate digital delivery and refunds">
         <p>
-          Refunds and statutory withdrawal rights are described in the{" "}
-          <a
-            href="/refund-policy"
-            className="font-semibold text-amber-400 underline decoration-amber-400/40 underline-offset-4 transition hover:text-amber-300"
-          >
+          Refunds, delivery problems and statutory withdrawal rights are
+          described in the{" "}
+          <a href="/refund-policy" className={legalLinkClass}>
             Refund Policy
           </a>{" "}
-          and in any mandatory information presented during checkout.
+          and in any mandatory information presented before purchase.
         </p>
 
         <p>
-          Where a consumer requests access to digital content before the end
-          of the applicable withdrawal period, the consumer expressly requests
-          that supply begin immediately.
+          Consumers may have a statutory withdrawal period for contracts
+          concluded at a distance. Different rules may apply to paid digital
+          content that is not supplied on a tangible medium and is made
+          available immediately.
         </p>
 
         <p>
-          By providing the legally required prior consent and acknowledgement,
-          the consumer acknowledges that the statutory right of withdrawal may
-          be lost once the supply of the digital content begins.
+          Where immediate delivery is requested before the end of the
+          applicable withdrawal period, the customer may be required to:
+        </p>
+
+        <LegalList>
+          <li>
+            Expressly request that supply of the digital content begin
+            immediately and before the end of the applicable withdrawal
+            period.
+          </li>
+
+          <li>
+            Acknowledge that the statutory right of withdrawal may be lost once
+            supply of the digital content begins.
+          </li>
+
+          <li>
+            Confirm acceptance of these Terms of Sale and the applicable Refund
+            Policy.
+          </li>
+        </LegalList>
+
+        <p>
+          Where required by law, SolarDev AI will provide confirmation of the
+          customer&apos;s express request, consent and acknowledgement in the
+          order confirmation, payment confirmation, delivery email or another
+          durable electronic format.
         </p>
 
         <p>
-          Mandatory rights concerning defective, inaccessible or
-          non-conforming digital content remain unaffected.
+          Where the legally required request, consent, acknowledgement or
+          confirmation has not been properly obtained, the customer retains any
+          withdrawal rights and remedies provided by applicable mandatory law.
+        </p>
+
+        <p>
+          Loss of the withdrawal right does not remove mandatory remedies where
+          the digital product is not supplied, is inaccessible, is defective,
+          is corrupted or does not materially conform to its description.
         </p>
       </LegalSection>
 
@@ -373,8 +460,8 @@ export default function TermsOfSalePage() {
         <p>
           To the maximum extent permitted by law, SolarDev AI is not
           responsible for losses arising from unverified AI output,
-          project-specific reliance, inaccurate customer inputs, changes in
-          law or standards, unauthorised sharing, third-party services or
+          project-specific reliance, inaccurate customer inputs, changes in law
+          or standards, unauthorised sharing, third-party services or
           professional decisions made without suitable independent review.
         </p>
 
@@ -410,13 +497,19 @@ export default function TermsOfSalePage() {
 
         <p>
           The parties should first attempt to resolve concerns by contacting{" "}
-          {legalConfig.supportEmail}.
+          <a
+            href={`mailto:${legalConfig.supportEmail}`}
+            className={legalLinkClass}
+          >
+            {legalConfig.supportEmail}
+          </a>
+          .
         </p>
 
         <p>
           For customers acting in the course of business, disputes shall be
-          subject to the competent courts of Lisbon, Portugal, unless
-          otherwise agreed in writing.
+          subject to the competent courts of Lisbon, Portugal, unless otherwise
+          agreed in writing.
         </p>
       </LegalSection>
 
@@ -434,9 +527,21 @@ export default function TermsOfSalePage() {
 
       <LegalSection title="20. Contact">
         <p>
-          Product and licensing enquiries: {legalConfig.generalEmail}
+          Product and licensing enquiries:{" "}
+          <a
+            href={`mailto:${legalConfig.generalEmail}`}
+            className={legalLinkClass}
+          >
+            {legalConfig.generalEmail}
+          </a>
           <br />
-          Payment, access and delivery support: {legalConfig.supportEmail}
+          Payment, access and delivery support:{" "}
+          <a
+            href={`mailto:${legalConfig.supportEmail}`}
+            className={legalLinkClass}
+          >
+            {legalConfig.supportEmail}
+          </a>
         </p>
       </LegalSection>
     </LegalPageLayout>
