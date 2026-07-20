@@ -8,15 +8,11 @@ import {
 import { legalConfig } from "../../lib/legal-config";
 
 export const metadata: Metadata = {
-  title: "Privacy Policy | SolarDev AI",
+  title: "Privacy Policy",
   description:
-    "How SolarDev AI collects, uses, stores and protects personal data.",
+    "Privacy information explaining how SolarDev AI processes personal data.",
   alternates: {
     canonical: "/privacy",
-  },
-  robots: {
-    index: true,
-    follow: true,
   },
 };
 

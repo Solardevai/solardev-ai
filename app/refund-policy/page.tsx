@@ -9,15 +9,11 @@ import {
 import { legalConfig } from "../../lib/legal-config";
 
 export const metadata: Metadata = {
-  title: "Refund Policy | SolarDev AI",
+  title: "Refund Policy",
   description:
-    "Refund, withdrawal and digital-delivery policy for SolarDev AI products.",
+    "Refund and withdrawal conditions for SolarDev AI digital products.",
   alternates: {
     canonical: "/refund-policy",
-  },
-  robots: {
-    index: true,
-    follow: true,
   },
 };
 
