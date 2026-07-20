@@ -9,16 +9,13 @@ export const metadata: Metadata = {
   description:
     "A 218-page professional handbook with AI prompts, engineering workflows, checklists and worked examples for utility-scale Solar PV and BESS project development.",
   alternates: {
-    canonical:
-      "/solar-bess-project-development-handbook",
+    canonical: "/solar-bess-project-development-handbook",
   },
   openGraph: {
-    title:
-      "Utility-Scale Solar & BESS Project Development Handbook",
+    title: "Utility-Scale Solar & BESS Project Development Handbook",
     description:
       "Professional handbook and AI prompt library for utility-scale Solar PV and BESS project development.",
-    url:
-      "https://www.solardev.ai/solar-bess-project-development-handbook",
+    url: "https://www.solardev.ai/solar-bess-project-development-handbook",
     type: "website",
     images: [
       {
@@ -57,9 +54,7 @@ const structuredData = {
       description:
         "A 218-page professional handbook and AI prompt library for utility-scale Solar PV and BESS project development.",
 
-      image: [
-        "https://www.solardev.ai/volume-1-cover.png",
-      ],
+      image: ["https://www.solardev.ai/volume-1-cover.png"],
 
       sku: "SOLARDEV-VOL1",
 
@@ -122,34 +117,27 @@ const structuredData = {
 
       numberOfPages: 218,
 
-      image:
-        "https://www.solardev.ai/volume-1-cover.png",
+      image: "https://www.solardev.ai/volume-1-cover.png",
 
       description:
         "A professional digital handbook covering AI-supported workflows for utility-scale Solar PV and BESS project development.",
     },
   ],
 };
+
 export default function HandbookPage() {
   return (
     <main className="min-h-screen bg-slate-950 text-white">
-<script
-  type="application/ld+json"
-  dangerouslySetInnerHTML={{
-    __html: JSON.stringify(structuredData).replace(
-      /</g,
-      "\\u003c"
-    ),
-  }}
-/>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(structuredData).replace(/</g, "\\u003c"),
+        }}
       />
 
       <header className="border-b border-white/10">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-5">
-          <Link
-            href="/"
-            className="text-lg font-bold"
-          >
+          <Link href="/" className="text-lg font-bold">
             SolarDev <span className="text-amber-400">AI</span>
           </Link>
 
@@ -186,45 +174,35 @@ export default function HandbookPage() {
           </h1>
 
           <p className="mt-6 max-w-3xl text-lg leading-8 text-slate-300">
-            A professional handbook and AI prompt library designed
-            for utility-scale Solar PV and battery energy storage
-            project development.
+            A professional handbook and AI prompt library designed for
+            utility-scale Solar PV and battery energy storage project
+            development.
           </p>
 
           <div className="mt-8 grid grid-cols-2 gap-4 sm:grid-cols-4">
             <div className="rounded-lg border border-white/10 p-4">
-              <p className="text-xs uppercase text-slate-500">
-                Pages
-              </p>
+              <p className="text-xs uppercase text-slate-500">Pages</p>
               <p className="mt-1 text-xl font-semibold">218</p>
             </div>
 
             <div className="rounded-lg border border-white/10 p-4">
-              <p className="text-xs uppercase text-slate-500">
-                Chapters
-              </p>
+              <p className="text-xs uppercase text-slate-500">Chapters</p>
               <p className="mt-1 text-xl font-semibold">10</p>
             </div>
 
             <div className="rounded-lg border border-white/10 p-4">
-              <p className="text-xs uppercase text-slate-500">
-                Format
-              </p>
+              <p className="text-xs uppercase text-slate-500">Format</p>
               <p className="mt-1 text-xl font-semibold">PDF</p>
             </div>
 
             <div className="rounded-lg border border-white/10 p-4">
-              <p className="text-xs uppercase text-slate-500">
-                Edition
-              </p>
+              <p className="text-xs uppercase text-slate-500">Edition</p>
               <p className="mt-1 text-xl font-semibold">v4.0</p>
             </div>
           </div>
 
           <div className="mt-10 rounded-2xl border border-white/10 bg-white/[0.04] p-7">
-            <p className="text-sm text-slate-400">
-              One-time payment
-            </p>
+            <p className="text-sm text-slate-400">One-time payment</p>
 
             <p className="mt-2 text-5xl font-bold">
               €{productData.price}
@@ -245,8 +223,8 @@ export default function HandbookPage() {
             </TrackedCheckoutLink>
 
             <p className="mt-4 text-center text-xs text-slate-500">
-              Secure payment through Stripe. Immediate PDF download
-              after successful payment.
+              Secure payment through Stripe. Immediate PDF download after
+              successful payment.
             </p>
           </div>
         </div>
@@ -254,9 +232,7 @@ export default function HandbookPage() {
 
       <section className="border-t border-white/10 bg-slate-900/40">
         <div className="mx-auto max-w-7xl px-6 py-16">
-          <h2 className="text-3xl font-bold">
-            What is included
-          </h2>
+          <h2 className="text-3xl font-bold">What is included</h2>
 
           <div className="mt-8 grid gap-4 md:grid-cols-2">
             {chapters.map((chapter, index) => (
@@ -268,9 +244,7 @@ export default function HandbookPage() {
                   Chapter {index + 1}
                 </p>
 
-                <h3 className="mt-2 font-semibold">
-                  {chapter}
-                </h3>
+                <h3 className="mt-2 font-semibold">{chapter}</h3>
               </article>
             ))}
           </div>
@@ -278,15 +252,13 @@ export default function HandbookPage() {
       </section>
 
       <section className="mx-auto max-w-4xl px-6 py-16">
-        <h2 className="text-3xl font-bold">
-          Who this handbook is for
-        </h2>
+        <h2 className="text-3xl font-bold">Who this handbook is for</h2>
 
         <p className="mt-5 leading-8 text-slate-300">
-          Designed for project development engineers, solar and BESS
-          engineers, technical advisors, owner&apos;s engineers, EPC
-          professionals, developers and investors involved in real
-          utility-scale renewable-energy projects.
+          Designed for project development engineers, solar and BESS engineers,
+          technical advisors, owner&apos;s engineers, EPC professionals,
+          developers and investors involved in real utility-scale
+          renewable-energy projects.
         </p>
 
         <h2 className="mt-12 text-3xl font-bold">
@@ -294,11 +266,11 @@ export default function HandbookPage() {
         </h2>
 
         <p className="mt-5 leading-8 text-slate-300">
-          The handbook is an educational and methodological resource.
-          It does not replace project-specific engineering, legal,
-          financial, environmental or regulatory advice. All AI
-          outputs and project assumptions must be independently
-          reviewed by appropriately qualified professionals.
+          The handbook is an educational and methodological resource. It does
+          not replace project-specific engineering, legal, financial,
+          environmental or regulatory advice. All AI outputs and project
+          assumptions must be independently reviewed by appropriately qualified
+          professionals.
         </p>
       </section>
     </main>
