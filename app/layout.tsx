@@ -38,10 +38,31 @@ export const metadata: Metadata = {
     canonical: "/",
   },
 
+  icons: {
+    icon: [
+      {
+        url: "/favicon.ico",
+        sizes: "any",
+      },
+      {
+        url: "/icon.png",
+        type: "image/png",
+        sizes: "512x512",
+      },
+    ],
+    apple: [
+      {
+        url: "/apple-icon.png",
+        type: "image/png",
+        sizes: "180x180",
+      },
+    ],
+    shortcut: "/favicon.ico",
+  },
+
   robots: {
     index: true,
     follow: true,
-
     googleBot: {
       index: true,
       follow: true,
@@ -58,12 +79,21 @@ export const metadata: Metadata = {
     siteName: "SolarDev AI",
     title: SITE_TITLE,
     description: SITE_DESCRIPTION,
+    images: [
+      {
+        url: "/opengraph-image.jpg",
+        width: 1200,
+        height: 630,
+        alt: "SolarDev AI utility-scale solar and BESS development tools",
+      },
+    ],
   },
 
   twitter: {
-    card: "summary",
+    card: "summary_large_image",
     title: SITE_TITLE,
     description: SITE_DESCRIPTION,
+    images: ["/opengraph-image.jpg"],
   },
 
   category: "technology",
@@ -85,7 +115,6 @@ export default function RootLayout({ children }: RootLayoutProps) {
       <body className="bg-slate-950 text-white antialiased">
         {children}
 
-        {/* Google Analytics — loads on every page */}
         <Script
           src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}
           strategy="afterInteractive"
@@ -101,11 +130,8 @@ export default function RootLayout({ children }: RootLayoutProps) {
 
             window.gtag = gtag;
 
-            gtag('js', new Date());
-
-            gtag('config', '${GA_MEASUREMENT_ID}', {
-              anonymize_ip: true
-            });
+            gtag("js", new Date());
+            gtag("config", "${GA_MEASUREMENT_ID}");
           `}
         </Script>
       </body>
