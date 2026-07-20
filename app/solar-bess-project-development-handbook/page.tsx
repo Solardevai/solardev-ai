@@ -133,14 +133,15 @@ const structuredData = {
 export default function HandbookPage() {
   return (
     <main className="min-h-screen bg-slate-950 text-white">
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify(productJsonLd).replace(
-            /</g,
-            "\\u003c"
-          ),
-        }}
+<script
+  type="application/ld+json"
+  dangerouslySetInnerHTML={{
+    __html: JSON.stringify(structuredData).replace(
+      /</g,
+      "\\u003c"
+    ),
+  }}
+/>
       />
 
       <header className="border-b border-white/10">
