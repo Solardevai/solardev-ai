@@ -20,6 +20,9 @@ export const metadata: Metadata = {
   },
 };
 
+const legalLinkClass =
+  "font-semibold text-amber-400 underline decoration-amber-400/40 underline-offset-4 transition hover:text-amber-300";
+
 export default function RefundPolicyPage() {
   return (
     <LegalPageLayout
@@ -29,16 +32,16 @@ export default function RefundPolicyPage() {
     >
       <LegalSection title="1. Digital-product delivery">
         <p>
-          SolarDev AI products are digital content normally made available
-          electronically after successful payment through a download link,
-          confirmation page, email or another delivery method identified
+          {legalConfig.tradingName} products are digital content normally made
+          available electronically after successful payment through a download
+          link, confirmation page, email or another delivery method identified
           during checkout.
         </p>
 
         <p>
-          Stripe processes the payment transaction. SolarDev AI is responsible
-          for making the purchased digital product available to the customer
-          after successful payment.
+          Stripe processes the payment transaction.{" "}
+          {legalConfig.tradingName} is responsible for making the purchased
+          digital product available to the customer after successful payment.
         </p>
 
         <p>
@@ -51,7 +54,7 @@ export default function RefundPolicyPage() {
           Delivery or access problems should be reported promptly to{" "}
           <a
             href={`mailto:${legalConfig.supportEmail}`}
-            className="font-semibold text-amber-400 underline decoration-amber-400/40 underline-offset-4 transition hover:text-amber-300"
+            className={legalLinkClass}
           >
             {legalConfig.supportEmail}
           </a>
@@ -61,7 +64,7 @@ export default function RefundPolicyPage() {
 
       <LegalSection title="2. Seller, payment and refund processing">
         <p>
-          The seller of SolarDev AI digital products is{" "}
+          The seller of {legalConfig.tradingName} digital products is{" "}
           {legalConfig.operatorName}, trading as{" "}
           {legalConfig.tradingName}.
         </p>
@@ -74,59 +77,76 @@ export default function RefundPolicyPage() {
         </p>
 
         <p>
-          SolarDev AI reviews and decides refund requests in accordance with
-          this policy, the applicable Terms of Sale and mandatory consumer law.
+          {legalConfig.tradingName} reviews and decides refund requests in
+          accordance with this Refund Policy, the applicable{" "}
+          <a href="/terms" className={legalLinkClass}>
+            Terms of Sale
+          </a>{" "}
+          and mandatory consumer law.
         </p>
 
         <p>
-          Where a refund is approved, SolarDev AI initiates the refund through
-          Stripe. Stripe then submits the refund to the customer&apos;s bank,
-          card issuer or payment provider.
+          Where a refund is approved, {legalConfig.tradingName} initiates the
+          refund through Stripe. Stripe then submits the refund to the
+          customer&apos;s bank, card issuer or payment provider.
         </p>
       </LegalSection>
 
-      <LegalSection title="3. Statutory withdrawal rights for digital content">
+      <LegalSection title="3. Statutory withdrawal and immediate digital delivery">
         <p>
           Consumers may normally have a statutory withdrawal period for
-          distance contracts. Different rules may apply where paid digital
-          content is supplied immediately and is not provided on a tangible
-          medium.
+          contracts concluded at a distance. Different rules may apply to paid
+          digital content that is not supplied on a tangible medium and is
+          made available immediately.
         </p>
 
         <p>
-          Where permitted by applicable law, the right of withdrawal may be
-          lost after supply begins where the consumer has:
+          Where required by applicable law, the statutory right of withdrawal
+          may be lost after supply begins only where the consumer has:
         </p>
 
         <LegalList>
           <li>
-            Expressly requested that supply of the digital content begin
-            before the end of the applicable withdrawal period.
+            Given prior express consent for supply of the digital content to
+            begin before the end of the applicable withdrawal period.
           </li>
 
           <li>
-            Acknowledged that the right of withdrawal may be lost once supply
-            begins.
+            Expressly acknowledged that the right of withdrawal will be lost
+            once supply begins.
           </li>
 
           <li>
-            Received the legally required confirmation of that consent and
-            acknowledgement.
+            Received confirmation of the contract, including the express
+            consent and acknowledgement, in an email or another durable
+            electronic format.
           </li>
         </LegalList>
 
         <p>
-          Any required consent and acknowledgement must be obtained before
-          immediate access is supplied. This policy does not remove any
-          mandatory consumer right available under applicable law.
+          Acceptance of the Terms of Sale does not, by itself, replace any
+          separate express consent or acknowledgement required by applicable
+          law for immediate digital delivery.
+        </p>
+
+        <p>
+          Where the legally required consent, acknowledgement or confirmation
+          has not been properly obtained, the consumer retains any withdrawal
+          rights and remedies provided by applicable mandatory law.
+        </p>
+
+        <p>
+          This policy does not exclude or restrict mandatory rights concerning
+          digital content that is not supplied, is inaccessible, is defective,
+          is corrupted or does not materially conform to its description.
         </p>
       </LegalSection>
 
       <LegalSection title="4. When a refund or remedy may be approved">
         <p>
           Subject to the available evidence and applicable mandatory law, a
-          full refund, partial refund, replacement or another appropriate
-          remedy may be considered in circumstances such as:
+          full refund, partial refund, replacement, price reduction or another
+          appropriate remedy may be considered in circumstances such as:
         </p>
 
         <LegalList>
@@ -166,15 +186,33 @@ export default function RefundPolicyPage() {
         <p>
           Because a complete digital product can be downloaded, accessed and
           retained after delivery, voluntary change-of-mind refunds are not
-          normally offered once access or supply has begun, where this position
-          is permitted by applicable law and the legally required consent and
-          acknowledgement have been obtained.
+          normally offered once access or supply has begun, where:
         </p>
 
+        <LegalList>
+          <li>This position is permitted by applicable law.</li>
+
+          <li>
+            The consumer expressly requested that digital delivery begin
+            immediately.
+          </li>
+
+          <li>
+            The consumer acknowledged the consequences for the statutory right
+            of withdrawal.
+          </li>
+
+          <li>
+            Any legally required confirmation was provided in a durable
+            electronic format.
+          </li>
+        </LegalList>
+
         <p>
-          SolarDev AI may nevertheless consider a voluntary refund request on
-          a case-by-case basis. Considering or approving one request does not
-          create an obligation to approve similar requests in the future.
+          {legalConfig.tradingName} may nevertheless consider a voluntary
+          refund request on a case-by-case basis. Considering or approving one
+          request does not create an obligation to approve similar requests in
+          the future.
         </p>
 
         <p>
@@ -204,7 +242,7 @@ export default function RefundPolicyPage() {
             Email{" "}
             <a
               href={`mailto:${legalConfig.supportEmail}`}
-              className="font-semibold text-amber-400 underline decoration-amber-400/40 underline-offset-4 transition hover:text-amber-300"
+              className={legalLinkClass}
             >
               {legalConfig.supportEmail}
             </a>{" "}
@@ -240,9 +278,9 @@ export default function RefundPolicyPage() {
       <LegalSection title="8. Troubleshooting and replacement">
         <p>
           Where a delivery, access or file problem can reasonably be corrected,
-          SolarDev AI may first provide troubleshooting assistance, a
-          replacement link, a replacement file or another appropriate method
-          of access.
+          {legalConfig.tradingName} may first provide troubleshooting
+          assistance, a replacement link, a replacement file or another
+          appropriate method of access.
         </p>
 
         <p>
@@ -259,9 +297,9 @@ export default function RefundPolicyPage() {
 
       <LegalSection title="9. Refund method and processing time">
         <p>
-          Approved refunds are initiated by SolarDev AI through Stripe and are
-          normally returned to the original payment method where reasonably
-          possible.
+          Approved refunds are initiated by {legalConfig.tradingName} through
+          Stripe and are normally returned to the original payment method where
+          reasonably possible.
         </p>
 
         <p>
@@ -273,9 +311,9 @@ export default function RefundPolicyPage() {
 
         <p>
           The actual processing time depends on the payment method, bank, card
-          issuer and banking system. SolarDev AI cannot control delays occurring
-          after the refund has been submitted to the relevant financial
-          institution.
+          issuer and banking system. {legalConfig.tradingName} cannot control
+          delays occurring after the refund has been submitted to the relevant
+          financial institution.
         </p>
 
         <p>
@@ -290,7 +328,7 @@ export default function RefundPolicyPage() {
           Customers are encouraged to contact{" "}
           <a
             href={`mailto:${legalConfig.supportEmail}`}
-            className="font-semibold text-amber-400 underline decoration-amber-400/40 underline-offset-4 transition hover:text-amber-300"
+            className={legalLinkClass}
           >
             {legalConfig.supportEmail}
           </a>{" "}
@@ -305,9 +343,9 @@ export default function RefundPolicyPage() {
         </p>
 
         <p>
-          SolarDev AI may provide transaction, delivery, access and
-          correspondence records to Stripe or the relevant payment institution
-          when responding to a payment dispute.
+          {legalConfig.tradingName} may provide transaction, delivery, access
+          and correspondence records to Stripe or the relevant payment
+          institution when responding to a payment dispute.
         </p>
       </LegalSection>
 
@@ -342,27 +380,37 @@ export default function RefundPolicyPage() {
       <LegalSection title="13. Relationship with the Terms of Sale">
         <p>
           This Refund Policy should be read together with the{" "}
-          <a
-            href="/terms"
-            className="font-semibold text-amber-400 underline decoration-amber-400/40 underline-offset-4 transition hover:text-amber-300"
-          >
+          <a href="/terms" className={legalLinkClass}>
             Terms of Sale
           </a>
           .
         </p>
 
         <p>
-          If this policy conflicts with a mandatory consumer right, the
+          If this Refund Policy conflicts with a mandatory consumer right, the
           mandatory legal requirement will prevail.
         </p>
       </LegalSection>
 
-      <LegalSection title="14. Contact">
+      <LegalSection title="14. Changes to this policy">
+        <p>
+          The Refund Policy applicable to a completed purchase is generally
+          the version presented when the order was placed, subject to
+          applicable mandatory law.
+        </p>
+
+        <p>
+          Updated versions may apply to future purchases and will be published
+          with a revised update date.
+        </p>
+      </LegalSection>
+
+      <LegalSection title="15. Contact">
         <p>
           Refund, payment, access and delivery requests:{" "}
           <a
             href={`mailto:${legalConfig.supportEmail}`}
-            className="font-semibold text-amber-400 underline decoration-amber-400/40 underline-offset-4 transition hover:text-amber-300"
+            className={legalLinkClass}
           >
             {legalConfig.supportEmail}
           </a>
@@ -370,7 +418,7 @@ export default function RefundPolicyPage() {
           General product enquiries:{" "}
           <a
             href={`mailto:${legalConfig.generalEmail}`}
-            className="font-semibold text-amber-400 underline decoration-amber-400/40 underline-offset-4 transition hover:text-amber-300"
+            className={legalLinkClass}
           >
             {legalConfig.generalEmail}
           </a>
