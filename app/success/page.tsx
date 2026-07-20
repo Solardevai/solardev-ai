@@ -3,6 +3,9 @@ import Link from "next/link";
 import PurchaseTracker from "@/components/PurchaseTracker";
 import { getStripe } from "@/lib/stripe";
 
+const DOWNLOAD_URL =
+  "/downloads/solardev-ai-volume-1-v4.pdf";
+
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
@@ -220,17 +223,38 @@ export default async function SuccessPage({
           </div>
         </div>
 
-        <p className="mt-8 text-sm leading-6 text-slate-400">
-          Check the email address provided during checkout for your
-          Stripe receipt and product delivery information.
-        </p>
+<p className="mt-8 text-sm leading-6 text-slate-400">
+  Your payment was confirmed. Download your handbook below and
+  keep a backup copy for your records.
+</p>
 
-        <Link
-          href="/"
-          className="mt-8 inline-flex rounded-lg bg-amber-400 px-6 py-3 font-semibold text-slate-950 transition hover:bg-amber-300"
-        >
-          Return to SolarDev AI
-        </Link>
+<div className="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row">
+  <a
+    href={DOWNLOAD_URL}
+    download
+    className="inline-flex w-full items-center justify-center rounded-lg bg-amber-400 px-6 py-3 font-semibold text-slate-950 transition hover:bg-amber-300 sm:w-auto"
+  >
+    Download Volume 1 PDF
+  </a>
+
+  <Link
+    href="/"
+    className="inline-flex w-full items-center justify-center rounded-lg border border-white/20 px-6 py-3 font-semibold text-white transition hover:bg-white/5 sm:w-auto"
+  >
+    Return to SolarDev AI
+  </Link>
+</div>
+
+<p className="mt-6 text-xs leading-5 text-slate-500">
+  Having trouble downloading the handbook? Contact{" "}
+  <a
+    href="mailto:support@solardev.ai"
+    className="text-amber-400 hover:text-amber-300"
+  >
+    support@solardev.ai
+  </a>
+  .
+</p>
       </section>
     </main>
   );
