@@ -22,7 +22,7 @@ export const legalConfig = {
 
   hostingProvider: "VERCEL INC.",
   analyticsProvider: "Google Analytics",
-  merchantOfRecord: "Lemon Squeezy",
+  merchantOfRecord: "Stripe",
 
   privacyRetentionPeriod:
     "support records for 3 years; invoicing records for the statutory period; Analytics data is retained according to the retention period configured within the applicable analytics platform.",

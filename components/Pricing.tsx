@@ -130,7 +130,7 @@ export default function Pricing() {
 
                 <p className="mt-4 text-center text-xs leading-5 text-slate-500">
                   Secure checkout and immediate digital delivery through
-                  Lemon Squeezy.
+                  Stripe.
                 </p>
               </div>
 
