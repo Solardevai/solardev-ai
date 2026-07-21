@@ -74,19 +74,22 @@ function StatusCard({
 }) {
   const styles = {
     success: {
-      container: "border-emerald-400/20 bg-emerald-400/[0.04]",
+      container:
+        "border-emerald-400/20 bg-emerald-400/[0.04]",
       icon: "bg-emerald-400/10 text-emerald-400",
       eyebrow: "text-emerald-300",
       symbol: "✓",
     },
     processing: {
-      container: "border-amber-400/20 bg-amber-400/[0.04]",
+      container:
+        "border-amber-400/20 bg-amber-400/[0.04]",
       icon: "bg-amber-400/10 text-amber-400",
       eyebrow: "text-amber-400",
       symbol: "…",
     },
     error: {
-      container: "border-red-400/20 bg-red-400/[0.04]",
+      container:
+        "border-red-400/20 bg-red-400/[0.04]",
       icon: "bg-red-400/10 text-red-300",
       eyebrow: "text-red-300",
       symbol: "!",
@@ -168,7 +171,9 @@ function OrderReference({
 }: {
   sessionId: string;
 }) {
-  const shortReference = sessionId.slice(-10).toUpperCase();
+  const shortReference = sessionId
+    .slice(-10)
+    .toUpperCase();
 
   return (
     <p className="mt-8 text-center text-sm text-slate-500">
@@ -207,12 +212,13 @@ export default async function SuccessPage({
   try {
     const stripe = getStripe();
 
-    const session = await stripe.checkout.sessions.retrieve(
-      sessionId,
-      {
-        expand: ["line_items"],
-      },
-    );
+    const session =
+      await stripe.checkout.sessions.retrieve(
+        sessionId,
+        {
+          expand: ["line_items"],
+        },
+      );
 
     if (session.payment_status !== "paid") {
       return (
@@ -230,6 +236,11 @@ export default async function SuccessPage({
         </PageShell>
       );
     }
+
+    const downloadUrl =
+      `/api/download?session_id=${encodeURIComponent(
+        session.id,
+      )}`;
 
     const stripeLineItems =
       session.line_items?.data ?? [];
@@ -262,7 +273,8 @@ export default async function SuccessPage({
       (session.amount_subtotal ??
         session.amount_total ??
         0) -
-      (session.total_details?.amount_discount ?? 0);
+      (session.total_details?.amount_discount ??
+        0);
 
     const items =
       analyticsItems.length > 0
@@ -274,7 +286,9 @@ export default async function SuccessPage({
                 "AI for Utility-Scale Solar & BESS Project Development — Volume 1",
               item_category: "Digital Handbook",
               price: Number(
-                (fallbackNetSubtotal / 100).toFixed(2),
+                (
+                  fallbackNetSubtotal / 100
+                ).toFixed(2),
               ),
               quantity: 1,
             },
@@ -296,12 +310,12 @@ export default async function SuccessPage({
     ).toUpperCase();
 
     const tax =
-      (session.total_details?.amount_tax ?? 0) /
-      100;
+      (session.total_details?.amount_tax ??
+        0) / 100;
 
     const shipping =
-      (session.total_details?.amount_shipping ??
-        0) / 100;
+      (session.total_details
+        ?.amount_shipping ?? 0) / 100;
 
     const formattedAmount = formatAmount(
       session.amount_total,
@@ -326,7 +340,8 @@ export default async function SuccessPage({
           )}
           items={items}
           debugMode={
-            process.env.NODE_ENV !== "production"
+            process.env.NODE_ENV !==
+            "production"
           }
         />
 
@@ -389,28 +404,46 @@ export default async function SuccessPage({
           </dl>
         </section>
 
-        <section className="mt-8 rounded-3xl border border-amber-400/20 bg-amber-400/[0.05] p-6 sm:p-8">
+        <section className="mt-8 rounded-3xl border border-amber-400/20 bg-amber-400/[0.05] p-6 text-center sm:p-8">
           <h2 className="text-xl font-bold text-white">
-            What happens next
+            Download your handbook
           </h2>
 
-          <p className="mt-4 leading-7 text-slate-300">
-            Your order has been confirmed. Product
-            access and delivery instructions will be
-            sent to the email address used during
-            checkout.
+          <p className="mx-auto mt-4 max-w-xl leading-7 text-slate-300">
+            Your payment has been confirmed. You
+            can now securely download SolarDev AI
+            Volume 1.
           </p>
 
-          <p className="mt-4 leading-7 text-slate-300">
-            Check your spam, junk and promotional
-            folders if the message does not appear in
-            your main inbox.
+          <a
+            href={downloadUrl}
+            className="mt-7 inline-flex items-center justify-center rounded-xl bg-amber-400 px-7 py-3.5 font-bold text-slate-950 transition hover:bg-amber-300 focus:outline-none focus:ring-2 focus:ring-amber-400 focus:ring-offset-2 focus:ring-offset-slate-950"
+          >
+            Download Volume 1
+          </a>
+
+          <p className="mt-5 text-sm leading-6 text-slate-400">
+            The download is authorised through
+            your confirmed Stripe Checkout
+            Session.
           </p>
 
-          <p className="mt-4 leading-7 text-slate-300">
-            Do not complete another payment if delivery
-            is delayed. Contact SolarDev AI support and
-            include your order reference.
+          {customerEmail && (
+            <p className="mt-3 text-sm leading-6 text-slate-400">
+              Keep your purchase confirmation
+              email for your records.
+            </p>
+          )}
+
+          <p className="mt-4 text-sm leading-6 text-slate-400">
+            Having trouble downloading? Contact{" "}
+            <a
+              href="mailto:support@solardev.ai"
+              className="font-semibold text-amber-400 transition hover:text-amber-300"
+            >
+              support@solardev.ai
+            </a>
+            .
           </p>
         </section>
 
