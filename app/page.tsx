@@ -1,22 +1,5 @@
 import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
-import TrustBar from "@/components/TrustBar";
-import Features from "@/components/Features";
-import VolumeOne from "@/components/VolumeOne";
-import BookPreview from "@/components/BookPreview";
-import Audience from "@/components/AudienceApplications";
-import Roadmap from "@/components/Roadmap";
-import Pricing from "@/components/Pricing";
-import FAQ from "@/components/FAQ";
-import Contact from "@/components/Contact";
-import Footer from "@/components/Footer";
-
-const organizationJsonLd = {
-  "@context": "https://schema.org",
-  "@type": "Organization",
-  "@id": "https://www.solardev.ai/#organization",
-import Navbar from "@/components/Navbar";
-import Hero from "@/components/Hero";
 import Features from "@/components/Features";
 import VolumeOne from "@/components/VolumeOne";
 import BookPreview from "@/components/BookPreview";
@@ -109,81 +92,5 @@ export default function Home() {
 
       <Footer />
     </>
-  );
-}
-  name: "SolarDev AI",
-  alternateName: "SolarDevAI",
-
-  url: "https://www.solardev.ai/",
-
-  logo: {
-    "@type": "ImageObject",
-    url: "https://www.solardev.ai/logo-mark.svg",
-    contentUrl: "https://www.solardev.ai/logo-mark.svg",
-    caption: "SolarDev AI logo",
-  },
-
-  email: "info@solardev.ai",
-
-  description:
-    "SolarDev AI develops professional handbooks, engineering workflows and AI prompt libraries for utility-scale solar PV and battery energy storage project development.",
-
-  founder: {
-    "@type": "Person",
-    name: "Tiago Pires",
-  },
-
-  contactPoint: [
-    {
-      "@type": "ContactPoint",
-      contactType: "general enquiries",
-      email: "info@solardev.ai",
-      url: "https://www.solardev.ai/#contact",
-    },
-    {
-      "@type": "ContactPoint",
-      contactType: "customer support",
-      email: "support@solardev.ai",
-      url: "https://www.solardev.ai/#contact",
-    },
-  ],
-
-  knowsAbout: [
-    "Utility-scale solar PV project development",
-    "Battery energy storage systems",
-    "BESS project development",
-    "Solar project feasibility",
-    "Technical due diligence",
-    "Project development engineering",
-    "Artificial intelligence for engineering workflows",
-  ],
-};
-
-export default function Home() {
-  return (
-    <main className="min-h-screen bg-slate-950 text-white">
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify(organizationJsonLd).replace(
-            /</g,
-            "\\u003c"
-          ),
-        }}
-      />
-
-      <Navbar />
-      <Hero />
-      <TrustBar />
-      <Features />
-      <VolumeOne />
-      <BookPreview />
-      <Audience />
-      <Pricing />
-      <FAQ />
-      <Roadmap />
-      <Contact />
-      <Footer />
-    </main>
   );
 }
