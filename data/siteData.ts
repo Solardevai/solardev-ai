@@ -32,35 +32,35 @@ export const siteConfig = {
 export const navigationItems = [
   {
     label: "Home",
-    href: "#home",
+    href: "/",
   },
   {
     label: "Handbook",
-    href: "#volume-1",
+    href: "/#volume-1",
   },
   {
     label: "Preview",
-    href: "#preview",
+    href: "/#preview",
   },
   {
     label: "Professionals",
-    href: "#audience",
+    href: "/#audience",
   },
   {
     label: "Roadmap",
-    href: "#roadmap",
+    href: "/#roadmap",
   },
   {
     label: "Pricing",
-    href: "#pricing",
+    href: "/#pricing",
   },
   {
     label: "FAQ",
-    href: "#faq",
+    href: "/#faq",
   },
   {
     label: "Contact",
-    href: "#contact",
+    href: "/#contact",
   },
 ];
 
@@ -271,13 +271,11 @@ export const faqItems = [
   {
     question:
       "Can I share the PDF with my company?",
-    answer:
-      `The standard purchase is intended for individual professional use. Team and corporate licensing should be requested through ${siteConfig.infoEmail}.`,
+    answer: `The standard purchase is intended for individual professional use. Team and corporate licensing should be requested through ${siteConfig.infoEmail}.`,
   },
   {
     question:
       "How do I obtain customer support?",
-    answer:
-      `For payment, access or delivery questions, contact ${siteConfig.supportEmail}.`,
+    answer: `For payment, access or delivery questions, contact ${siteConfig.supportEmail}.`,
   },
 ];
