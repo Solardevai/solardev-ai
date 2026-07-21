@@ -1,19 +1,33 @@
 import Stripe from "stripe";
 
-let stripeInstance: Stripe | null = null;
+let stripeClient: Stripe | null = null;
 
 export function getStripe(): Stripe {
   const secretKey = process.env.STRIPE_SECRET_KEY;
 
   if (!secretKey) {
     throw new Error(
-      "STRIPE_SECRET_KEY is missing. Add it to the Vercel environment variables."
+      "STRIPE_SECRET_KEY is not configured. Add it to .env.local.",
     );
   }
 
-  if (!stripeInstance) {
-    stripeInstance = new Stripe(secretKey);
+  const stripeMode = secretKey.startsWith("sk_test_")
+    ? "test"
+    : secretKey.startsWith("sk_live_")
+      ? "live"
+      : "unknown";
+
+  console.info(`[Stripe] Server key mode: ${stripeMode}`);
+
+  if (stripeMode === "unknown") {
+    throw new Error(
+      "STRIPE_SECRET_KEY does not appear to be a valid Stripe secret key.",
+    );
   }
 
-  return stripeInstance;
+  if (!stripeClient) {
+    stripeClient = new Stripe(secretKey);
+  }
+
+  return stripeClient;
 }
