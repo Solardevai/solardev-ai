@@ -4,6 +4,7 @@ import { getStripe } from "@/lib/stripe";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
+export const revalidate = 0;
 
 const PDF_PATHNAME =
   "products/solardev-ai-volume-1-v4.pdf";
@@ -11,15 +12,41 @@ const PDF_PATHNAME =
 const DOWNLOAD_FILENAME =
   "SolarDev-AI-Volume-1-v4.pdf";
 
-export async function GET(request: NextRequest) {
+function errorResponse(
+  message: string,
+  status: number,
+) {
+  return NextResponse.json(
+    {
+      error: message,
+    },
+    {
+      status,
+      headers: {
+        "Cache-Control":
+          "private, no-store, max-age=0",
+        "X-Robots-Tag": "noindex, nofollow",
+      },
+    },
+  );
+}
+
+export async function GET(
+  request: NextRequest,
+) {
   try {
     const sessionId =
-      request.nextUrl.searchParams.get("session_id");
+      request.nextUrl.searchParams.get(
+        "session_id",
+      );
 
-    if (!sessionId || !sessionId.startsWith("cs_")) {
-      return NextResponse.json(
-        { error: "A valid Checkout Session is required." },
-        { status: 400 },
+    if (
+      !sessionId ||
+      !sessionId.startsWith("cs_")
+    ) {
+      return errorResponse(
+        "A valid Stripe Checkout Session is required.",
+        400,
       );
     }
 
@@ -28,76 +55,106 @@ export async function GET(request: NextRequest) {
 
     if (!expectedProductId) {
       console.error(
-        "Missing STRIPE_VOLUME1_PRODUCT_ID",
+        "Missing STRIPE_VOLUME1_PRODUCT_ID environment variable.",
       );
 
-      return NextResponse.json(
-        { error: "Download configuration error." },
-        { status: 500 },
+      return errorResponse(
+        "The product download is not configured correctly.",
+        500,
       );
     }
 
     const stripe = getStripe();
 
+    /*
+     * Verify the Checkout Session directly with
+     * Stripe. Never trust payment information
+     * supplied by the browser.
+     */
     const session =
       await stripe.checkout.sessions.retrieve(
         sessionId,
-        {
-          expand: [
-            "line_items.data.price.product",
-          ],
-        },
       );
 
     if (session.payment_status !== "paid") {
-      return NextResponse.json(
-        { error: "Payment has not been confirmed." },
-        { status: 403 },
+      return errorResponse(
+        "Stripe has not confirmed this payment as paid.",
+        403,
       );
     }
 
+    /*
+     * Retrieve the purchased items directly from
+     * Stripe so that the route can confirm that
+     * this session purchased Volume 1.
+     */
+    const lineItems =
+      await stripe.checkout.sessions.listLineItems(
+        session.id,
+        {
+          limit: 100,
+          expand: ["data.price.product"],
+        },
+      );
+
     const correctProductPurchased =
-      session.line_items?.data.some((item) => {
-        const product = item.price?.product;
+      lineItems.data.some((lineItem) => {
+        const product =
+          lineItem.price?.product;
+
+        if (!product) {
+          return false;
+        }
 
         const productId =
           typeof product === "string"
             ? product
-            : product?.id;
+            : product.id;
 
         return productId === expectedProductId;
       });
 
     if (!correctProductPurchased) {
-      return NextResponse.json(
-        {
-          error:
-            "This purchase does not include Volume 1.",
-        },
-        { status: 403 },
+      return errorResponse(
+        "This Checkout Session does not include SolarDev AI Volume 1.",
+        403,
       );
     }
 
+    /*
+     * Retrieve the PDF from the private Vercel
+     * Blob store only after payment and product
+     * verification have succeeded.
+     */
     const result = await get(PDF_PATHNAME, {
       access: "private",
     });
 
-    if (!result || result.statusCode !== 200) {
+    if (
+      !result ||
+      result.statusCode !== 200 ||
+      !result.stream
+    ) {
       console.error(
-        `Private PDF not found: ${PDF_PATHNAME}`,
+        `Private PDF not found at: ${PDF_PATHNAME}`,
       );
 
-      return NextResponse.json(
-        { error: "The purchased file was not found." },
-        { status: 404 },
+      return errorResponse(
+        "The purchased file could not be found. Please contact support.",
+        404,
       );
     }
 
     return new NextResponse(result.stream, {
+      status: 200,
       headers: {
-        "Content-Type": "application/pdf",
+        "Content-Type":
+          result.blob.contentType ??
+          "application/pdf",
         "Content-Disposition":
           `attachment; filename="${DOWNLOAD_FILENAME}"`,
+        "Content-Length":
+          result.blob.size?.toString() ?? "",
         "Cache-Control":
           "private, no-store, max-age=0",
         "X-Content-Type-Options": "nosniff",
@@ -110,12 +167,9 @@ export async function GET(request: NextRequest) {
       error,
     );
 
-    return NextResponse.json(
-      {
-        error:
-          "The download could not be authorised.",
-      },
-      { status: 500 },
+    return errorResponse(
+      "The download could not be authorised. Please contact support if your payment was completed.",
+      500,
     );
   }
 }
