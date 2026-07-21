@@ -1,7 +1,6 @@
 export const siteConfig = {
   name: "SolarDev AI",
-  tagline:
-    "AI for Utility-Scale Solar & BESS Professionals",
+  tagline: "AI for Utility-Scale Solar & BESS Professionals",
   description:
     "Professional engineering methodologies, controlled AI workflows and consultant-grade prompts for utility-scale Solar PV and BESS project development.",
 
@@ -97,72 +96,63 @@ export const features = [
 export const chapters = [
   {
     number: "01",
-    title:
-      "AI Foundations & Professional Prompting",
+    title: "AI Foundations & Professional Prompting",
     shortTitle: "AI Foundations",
     description:
       "Engineering philosophy, structured prompting, validation and professional accountability.",
   },
   {
     number: "02",
-    title:
-      "Research & Technical Due Diligence",
+    title: "Research & Technical Due Diligence",
     shortTitle: "Due Diligence",
     description:
       "Research strategy, evidence traceability, information gaps and decision-ready findings.",
   },
   {
     number: "03",
-    title:
-      "Site Identification & Feasibility Screening",
+    title: "Site Identification & Feasibility Screening",
     shortTitle: "Site Screening",
     description:
       "Constraint screening, site scoring, fatal flaws and development prioritisation.",
   },
   {
     number: "04",
-    title:
-      "Preliminary Development Roadmap",
+    title: "Preliminary Development Roadmap",
     shortTitle: "Development Roadmap",
     description:
       "Workstreams, dependencies, decision gates and Ready-to-Build planning.",
   },
   {
     number: "05",
-    title:
-      "Landowner Assessment & Land Control",
+    title: "Landowner Assessment & Land Control",
     shortTitle: "Land Strategy",
     description:
       "Ownership evidence, parcel strategy, project rights and ethical land engagement.",
   },
   {
     number: "06",
-    title:
-      "Satellite & Aerial Image Interpretation",
+    title: "Satellite & Aerial Image Interpretation",
     shortTitle: "Remote Imagery",
     description:
       "Access, terrain, drainage, receptors and targeted field verification.",
   },
   {
     number: "07",
-    title:
-      "Site Visit Planning & Field Due Diligence",
+    title: "Site Visit Planning & Field Due Diligence",
     shortTitle: "Field Due Diligence",
     description:
       "Field planning, HSE, evidence capture, issue ownership and reporting.",
   },
   {
     number: "08",
-    title:
-      "Environmental & Social Screening",
+    title: "Environmental & Social Screening",
     shortTitle: "E&S Screening",
     description:
       "Environmental and social baseline, surveys, mitigation and permitting risk.",
   },
   {
     number: "09",
-    title:
-      "Initial Project Risk Register",
+    title: "Initial Project Risk Register",
     shortTitle: "Risk Register",
     description:
       "Risk causes, consequences, ownership, treatment, triggers and residual exposure.",
@@ -177,46 +167,83 @@ export const chapters = [
 ];
 
 export const professionalAudience = [
-  "Project Development Engineers",
-  "Solar Design Engineers",
-  "BESS Engineers",
-  "Owner’s Engineers",
-  "Independent Engineers",
-  "Technical Advisors",
-  "EPC Professionals",
-  "Project Managers",
-  "Developers",
-  "Investors",
-  "Utilities",
-  "Engineering Consultancies",
+  "Project development and design engineers",
+  "Owner’s engineers and technical advisors",
+  "EPC and project-management teams",
+  "Renewable-energy developers and utilities",
+  "Investors and independent engineers",
+  "Engineering consultancies",
+];
+
+export const applications = [
+  {
+    number: "01",
+    title: "Opportunity screening",
+    description:
+      "Compare potential sites, identify fatal flaws and define the next technical actions.",
+    tags: [
+      "Site screening",
+      "Constraints",
+      "Go / No-Go",
+    ],
+  },
+  {
+    number: "02",
+    title: "Technical due diligence",
+    description:
+      "Review project evidence, identify information gaps and structure decision-ready findings.",
+    tags: [
+      "Evidence",
+      "Information gaps",
+      "Technical risk",
+    ],
+  },
+  {
+    number: "03",
+    title: "Development planning",
+    description:
+      "Coordinate workstreams, dependencies, decision gates and Ready-to-Build activities.",
+    tags: [
+      "Roadmap",
+      "Responsibilities",
+      "Programme",
+    ],
+  },
+  {
+    number: "04",
+    title: "Risk and CAPEX",
+    description:
+      "Translate technical findings into accountable risks and transparent initial investment ranges.",
+    tags: [
+      "Risk register",
+      "CAPEX",
+      "Sensitivity",
+    ],
+  },
 ];
 
 export const roadmapItems = [
   {
     volume: "Volume 1",
-    title:
-      "AI Foundations & Professional Prompt Library",
+    title: "AI Foundations & Professional Prompt Library",
     status: "Available",
     active: true,
   },
   {
     volume: "Volume 2",
-    title:
-      "Advanced Project Development Applications",
+    title: "Advanced Project Development Applications",
     status: "In development",
     active: false,
   },
   {
     volume: "Professional Toolkit",
-    title:
-      "Templates, checklists and engineering workflows",
+    title: "Templates, checklists and engineering workflows",
     status: "Planned",
     active: false,
   },
   {
     volume: "Prompt Platform",
-    title:
-      "Searchable professional prompt library",
+    title: "Searchable professional prompt library",
     status: "Planned",
     active: false,
   },
@@ -224,58 +251,39 @@ export const roadmapItems = [
 
 export const pricingFeatures = [
   `${siteConfig.product.pages}-page Publisher Edition PDF`,
-  `${siteConfig.product.chapters} professional chapters`,
-  `${siteConfig.product.prompts}+ professional AI prompts`,
+  `${siteConfig.product.chapters} chapters and ${siteConfig.product.prompts}+ professional prompts`,
   "Quick, Professional and Expert prompt levels",
-  "Worked utility-scale examples",
-  "Engineering review checklists",
-  "Decision-support tables and frameworks",
-  "Minor editorial updates to Publisher Edition v4.0 included",
-  "Secure digital delivery",
+  "Worked examples, review checklists and decision-support frameworks",
+  "Secure Stripe checkout and immediate PDF access",
 ];
 
 export const faqItems = [
   {
-    question:
-      "Who is this handbook designed for?",
-    answer:
-      "It is designed for professionals involved in utility-scale Solar PV and BESS project development, including engineers, developers, technical advisors, EPC professionals, utilities and investors.",
-  },
-  {
     question: "Is this a general AI book?",
     answer:
-      "No. The handbook focuses specifically on applying AI inside controlled utility-scale Solar PV and BESS project-development workflows.",
+      "No. The handbook focuses specifically on applying AI within controlled utility-scale Solar PV and BESS project-development workflows.",
   },
   {
-    question:
-      "Which AI tools can be used with the prompts?",
+    question: "Which AI tools can be used with the prompts?",
     answer:
       "The methodology is model-independent and can be adapted to capable general-purpose AI systems. Outputs must always be reviewed against project information and authoritative sources.",
   },
   {
-    question:
-      "Does AI replace professional engineering judgement?",
+    question: "Does AI replace professional engineering judgement?",
     answer:
       "No. AI is treated as a professional assistant. Responsibility for validation, recommendations and issued deliverables remains with qualified professionals.",
   },
   {
-    question: "What format will I receive?",
-    answer:
-      "After successful payment through Stripe, you will be redirected to a confirmation page where you can immediately download the Volume 1 PDF. A Stripe payment receipt will also be sent to the email address provided during checkout.",
-  },
-  {
     question: "Are updates included?",
     answer:
-      "The purchase includes access to the purchased edition and any minor corrections issued for that edition. Major future volumes or expanded editions may be sold separately.",
+      "The purchase includes the purchased edition and minor corrections issued for that edition. Major future volumes or expanded editions may be sold separately.",
   },
   {
-    question:
-      "Can I share the PDF with my company?",
-    answer: `The standard purchase is intended for individual professional use. Team and corporate licensing should be requested through ${siteConfig.infoEmail}.`,
+    question: "Can I share the PDF with my company?",
+    answer: `The standard purchase is for individual professional use. Team and corporate licensing can be requested through ${siteConfig.infoEmail}.`,
   },
   {
-    question:
-      "How do I obtain customer support?",
+    question: "How do I obtain customer support?",
     answer: `For payment, access or delivery questions, contact ${siteConfig.supportEmail}.`,
   },
 ];
