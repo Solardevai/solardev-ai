@@ -1,129 +1,64 @@
-type Chapter = {
-  number: string;
-  title: string;
-  description: string;
-  deliverables: string[];
-};
+import { chapters } from "@/data/siteData";
 
-const chapters: Chapter[] = [
-  {
-    number: "01",
-    title: "AI Foundations for Engineering Practice",
-    description:
-      "Establishes the principles, controls and professional responsibilities required for reliable AI-assisted engineering work.",
-    deliverables: [
-      "Controlled AI workflow",
-      "Evidence and assumption checks",
-      "Professional validation framework",
-    ],
-  },
-  {
-    number: "02",
-    title: "Technical Due Diligence",
-    description:
-      "Structures multidisciplinary technical reviews for early-stage Solar PV and BESS opportunities.",
-    deliverables: [
-      "Due-diligence workflow",
-      "Evidence register",
-      "Technical findings structure",
-    ],
-  },
-  {
-    number: "03",
-    title: "Site Feasibility and Constraint Screening",
-    description:
-      "Supports the initial identification of technical, environmental, grid, land and development constraints.",
-    deliverables: [
-      "Site-screening matrix",
-      "Constraint register",
-      "Preliminary go/no-go basis",
-    ],
-  },
-  {
-    number: "04",
-    title: "Project Development Roadmap",
-    description:
-      "Converts an early-stage opportunity into a structured sequence of studies, approvals, decisions and development gates.",
-    deliverables: [
-      "Development workplan",
-      "Decision-gate structure",
-      "Responsibility and dependency mapping",
-    ],
-  },
-  {
-    number: "05",
-    title: "Land Strategy and Landowner Engagement",
-    description:
-      "Provides a systematic approach to land requirements, ownership review, access strategy and landowner engagement.",
-    deliverables: [
-      "Land requirements brief",
-      "Landowner engagement plan",
-      "Land-risk register",
-    ],
-  },
-  {
-    number: "06",
-    title: "Satellite and Geospatial Desktop Review",
-    description:
-      "Uses available mapping and imagery to support preliminary site interpretation before field investigations.",
-    deliverables: [
-      "Desktop site assessment",
-      "Terrain and access observations",
-      "Field-verification priorities",
-    ],
-  },
-  {
-    number: "07",
-    title: "Site Visit Planning and Execution",
-    description:
-      "Structures site visits around defined engineering questions, evidence requirements and development risks.",
-    deliverables: [
-      "Site-visit plan",
-      "Inspection checklist",
-      "Observation and action register",
-    ],
-  },
-  {
-    number: "08",
-    title: "Environmental and Social Screening",
-    description:
-      "Supports proportionate early-stage identification of environmental, permitting, community and social constraints.",
-    deliverables: [
-      "Environmental screening matrix",
-      "Stakeholder considerations",
-      "Further-study recommendations",
-    ],
-  },
-  {
-    number: "09",
-    title: "Project Risk Register",
-    description:
-      "Creates a structured process for identifying, evaluating, allocating and monitoring project-development risks.",
-    deliverables: [
-      "Development risk register",
-      "Risk ownership structure",
-      "Mitigation and monitoring actions",
-    ],
-  },
-  {
-    number: "10",
-    title: "Initial CAPEX Benchmarking",
-    description:
-      "Develops a transparent early-stage cost basis for Solar PV and BESS projects before detailed engineering and procurement.",
-    deliverables: [
-      "Initial CAPEX structure",
-      "Assumption register",
-      "Cost sensitivity framework",
-    ],
-  },
-];
+const chapterDeliverables: Record<string, string[]> = {
+  "01": [
+    "Controlled AI workflow",
+    "Evidence and assumption checks",
+    "Professional validation framework",
+  ],
+  "02": [
+    "Due-diligence workflow",
+    "Evidence register",
+    "Technical findings structure",
+  ],
+  "03": [
+    "Site-screening matrix",
+    "Constraint register",
+    "Preliminary go/no-go basis",
+  ],
+  "04": [
+    "Development workplan",
+    "Decision-gate structure",
+    "Responsibility and dependency mapping",
+  ],
+  "05": [
+    "Land requirements brief",
+    "Landowner engagement plan",
+    "Land-risk register",
+  ],
+  "06": [
+    "Desktop site assessment",
+    "Terrain and access observations",
+    "Field-verification priorities",
+  ],
+  "07": [
+    "Site-visit plan",
+    "Inspection checklist",
+    "Observation and action register",
+  ],
+  "08": [
+    "Environmental screening matrix",
+    "Stakeholder considerations",
+    "Further-study recommendations",
+  ],
+  "09": [
+    "Development risk register",
+    "Risk ownership structure",
+    "Mitigation and monitoring actions",
+  ],
+  "10": [
+    "Initial CAPEX structure",
+    "Assumption register",
+    "Cost sensitivity framework",
+  ],
+};
 
 export default function VolumeOne() {
   return (
     <section
-      id="volume-one"
+      id="volume-1"
       aria-labelledby="volume-one-title"
-      className="relative overflow-hidden border-y border-white/10 bg-slate-950 py-20 sm:py-24 lg:py-28"
+      className="relative scroll-mt-24 overflow-hidden border-y border-white/10 bg-slate-950 py-20 sm:py-24 lg:py-28"
     >
       {/* Background decoration */}
       <div
@@ -150,17 +85,18 @@ export default function VolumeOne() {
           </h2>
 
           <p className="mx-auto mt-6 max-w-3xl text-lg leading-8 text-slate-300">
-            A complete ten-chapter methodology for responsible, traceable
-            and decision-focused AI-assisted Solar PV and BESS project
-            development.
+            A complete ten-chapter methodology for responsible,
+            traceable and decision-focused AI-assisted Solar PV and
+            BESS project development.
           </p>
 
           <p className="mx-auto mt-4 max-w-3xl text-base leading-7 text-slate-400">
-            The handbook takes professionals from responsible AI practice
-            and technical due diligence through site screening, development
-            planning, project risk and initial CAPEX assessment. The chapters
-            follow the practical progression of an early-stage utility-scale
-            project toward a decision-ready initial investment basis.
+            The handbook takes professionals from responsible AI
+            practice and technical due diligence through site
+            screening, development planning, project risk and initial
+            CAPEX assessment. The chapters follow the practical
+            progression of an early-stage utility-scale project toward
+            a decision-ready initial investment basis.
           </p>
 
           <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
@@ -176,57 +112,64 @@ export default function VolumeOne() {
 
         {/* Chapter cards */}
         <div className="mt-16 grid gap-6 md:grid-cols-2">
-          {chapters.map((chapter) => (
-            <article
-              key={chapter.number}
-              className="group relative overflow-hidden rounded-2xl border border-white/10 bg-white/[0.035] p-6 transition duration-300 hover:-translate-y-1 hover:border-emerald-400/30 hover:bg-white/[0.055] sm:p-7"
-            >
-              <div
-                aria-hidden="true"
-                className="absolute right-0 top-0 h-24 w-24 rounded-bl-full bg-emerald-400/[0.04] transition duration-300 group-hover:bg-emerald-400/[0.08]"
-              />
+          {chapters.map((chapter) => {
+            const deliverables =
+              chapterDeliverables[chapter.number] ?? [];
 
-              <div className="relative">
-                <div className="flex items-start gap-4">
-                  <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-emerald-400/20 bg-emerald-400/10 text-sm font-bold text-emerald-300">
-                    {chapter.number}
-                  </span>
+            return (
+              <article
+                key={chapter.number}
+                className="group relative overflow-hidden rounded-2xl border border-white/10 bg-white/[0.035] p-6 transition duration-300 hover:-translate-y-1 hover:border-emerald-400/30 hover:bg-white/[0.055] sm:p-7"
+              >
+                <div
+                  aria-hidden="true"
+                  className="absolute right-0 top-0 h-24 w-24 rounded-bl-full bg-emerald-400/[0.04] transition duration-300 group-hover:bg-emerald-400/[0.08]"
+                />
 
-                  <div>
-                    <h3 className="text-xl font-semibold leading-7 text-white">
-                      {chapter.title}
-                    </h3>
+                <div className="relative">
+                  <div className="flex items-start gap-4">
+                    <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-emerald-400/20 bg-emerald-400/10 text-sm font-bold text-emerald-300">
+                      {chapter.number}
+                    </span>
 
-                    <p className="mt-3 text-sm leading-6 text-slate-400 sm:text-base">
-                      {chapter.description}
-                    </p>
+                    <div>
+                      <h3 className="text-xl font-semibold leading-7 text-white">
+                        {chapter.title}
+                      </h3>
+
+                      <p className="mt-3 text-sm leading-6 text-slate-400 sm:text-base">
+                        {chapter.description}
+                      </p>
+                    </div>
                   </div>
+
+                  {deliverables.length > 0 && (
+                    <div className="mt-6 border-t border-white/10 pt-5">
+                      <p className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-500">
+                        Example outputs
+                      </p>
+
+                      <ul className="mt-3 grid gap-2 sm:grid-cols-3">
+                        {deliverables.map((deliverable) => (
+                          <li
+                            key={deliverable}
+                            className="flex items-start gap-2 text-sm leading-5 text-slate-300"
+                          >
+                            <span
+                              aria-hidden="true"
+                              className="mt-[7px] h-1.5 w-1.5 shrink-0 rounded-full bg-emerald-400"
+                            />
+
+                            <span>{deliverable}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
                 </div>
-
-                <div className="mt-6 border-t border-white/10 pt-5">
-                  <p className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-500">
-                    Example outputs
-                  </p>
-
-                  <ul className="mt-3 grid gap-2 sm:grid-cols-3">
-                    {chapter.deliverables.map((deliverable) => (
-                      <li
-                        key={deliverable}
-                        className="flex items-start gap-2 text-sm leading-5 text-slate-300"
-                      >
-                        <span
-                          aria-hidden="true"
-                          className="mt-[7px] h-1.5 w-1.5 shrink-0 rounded-full bg-emerald-400"
-                        />
-
-                        <span>{deliverable}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              </div>
-            </article>
-          ))}
+              </article>
+            );
+          })}
         </div>
       </div>
     </section>
