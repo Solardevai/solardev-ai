@@ -1,3 +1,5 @@
+import { productData } from "@/data/productData";
+
 export const siteConfig = {
   name: "SolarDev AI",
   tagline: "AI for Utility-Scale Solar & BESS Professionals",
@@ -7,8 +9,7 @@ export const siteConfig = {
   infoEmail: "info@solardev.ai",
   supportEmail: "support@solardev.ai",
 
-  checkoutUrl:
-    "https://buy.stripe.com/dRm5kEaLNdcf8id49Ycs800",
+  checkoutUrl: productData.checkoutUrl,
 
   product: {
     name:
@@ -23,7 +24,7 @@ export const siteConfig = {
     prompts: 100,
     promptLevels: 3,
 
-    launchPrice: 39,
+    launchPrice: productData.price,
     standardPrice: 49,
   },
 };

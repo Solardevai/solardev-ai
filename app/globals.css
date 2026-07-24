@@ -30,8 +30,8 @@ html {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
 
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: "Geist", "Segoe UI", Arial, sans-serif;
+  --font-mono: "Geist Mono", Consolas, monospace;
 }
 
 *,
@@ -52,7 +52,8 @@ body {
   color: var(--foreground);
 
   font-family:
-    var(--font-geist-sans),
+    "Geist",
+    "Segoe UI",
     Arial,
     Helvetica,
     sans-serif;
@@ -108,13 +109,17 @@ button {
   margin-inline: auto;
 }
 
-/* Smooth animations */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
 
-* {
-  transition:
-    border-color 0.25s ease,
-    background-color 0.25s ease,
-    color 0.25s ease,
-    transform 0.25s ease,
-    opacity 0.25s ease;
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
 }

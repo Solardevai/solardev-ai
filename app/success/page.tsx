@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import type Stripe from "stripe";
 import PurchaseTracker from "@/components/PurchaseTracker";
 import { getStripe } from "@/lib/stripe";
 
@@ -185,6 +186,26 @@ function OrderReference({
   );
 }
 
+async function retrieveCheckoutSession(
+  sessionId: string,
+): Promise<Stripe.Checkout.Session | null> {
+  try {
+    return await getStripe().checkout.sessions.retrieve(
+      sessionId,
+      {
+        expand: ["line_items"],
+      },
+    );
+  } catch (error) {
+    console.error(
+      "Unable to retrieve Stripe Checkout Session:",
+      error,
+    );
+
+    return null;
+  }
+}
+
 export default async function SuccessPage({
   searchParams,
 }: SuccessPageProps) {
@@ -209,38 +230,47 @@ export default async function SuccessPage({
     );
   }
 
-  try {
-    const stripe = getStripe();
+  const session =
+    await retrieveCheckoutSession(sessionId);
 
-    const session =
-      await stripe.checkout.sessions.retrieve(
-        sessionId,
-        {
-          expand: ["line_items"],
-        },
-      );
+  if (!session) {
+    return (
+      <PageShell>
+        <StatusCard
+          status="error"
+          eyebrow="Verification unavailable"
+          title="Unable to verify the payment"
+          description="We could not verify this Stripe Checkout Session at the moment. If you completed the payment, do not pay again. Contact support and provide the email address used during checkout."
+        />
 
-    if (session.payment_status !== "paid") {
-      return (
-        <PageShell>
-          <StatusCard
-            status="processing"
-            eyebrow="Payment processing"
-            title="Your payment is still being processed"
-            description="Stripe has not yet confirmed this payment as paid. Some payment methods can take longer to complete. Check your email for updates and do not submit another payment."
-          />
+        <OrderReference sessionId={sessionId} />
 
-          <OrderReference sessionId={session.id} />
+        <SupportSection />
+      </PageShell>
+    );
+  }
 
-          <SupportSection />
-        </PageShell>
-      );
-    }
+  if (session.payment_status !== "paid") {
+    return (
+      <PageShell>
+        <StatusCard
+          status="processing"
+          eyebrow="Payment processing"
+          title="Your payment is still being processed"
+          description="Stripe has not yet confirmed this payment as paid. Some payment methods can take longer to complete. Check your email for updates and do not submit another payment."
+        />
 
-    const downloadUrl =
-      `/api/download?session_id=${encodeURIComponent(
-        session.id,
-      )}`;
+        <OrderReference sessionId={session.id} />
+
+        <SupportSection />
+      </PageShell>
+    );
+  }
+
+  const downloadUrl =
+    `/api/download?session_id=${encodeURIComponent(
+      session.id,
+    )}`;
 
     const stripeLineItems =
       session.line_items?.data ?? [];
@@ -326,7 +356,7 @@ export default async function SuccessPage({
       session.customer_details?.email ??
       session.customer_email;
 
-    return (
+  return (
       <PageShell>
         <PurchaseTracker
           transactionId={session.id}
@@ -460,26 +490,5 @@ export default async function SuccessPage({
 
         <SupportSection />
       </PageShell>
-    );
-  } catch (error) {
-    console.error(
-      "Unable to retrieve Stripe Checkout Session:",
-      error,
-    );
-
-    return (
-      <PageShell>
-        <StatusCard
-          status="error"
-          eyebrow="Verification unavailable"
-          title="Unable to verify the payment"
-          description="We could not verify this Stripe Checkout Session at the moment. If you completed the payment, do not pay again. Contact support and provide the email address used during checkout."
-        />
-
-        <OrderReference sessionId={sessionId} />
-
-        <SupportSection />
-      </PageShell>
-    );
-  }
+  );
 }

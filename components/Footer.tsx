@@ -1,4 +1,5 @@
 import { siteConfig } from "@/data/siteData";
+import CookiePreferencesButton from "@/components/CookiePreferencesButton";
 
 const productLinks = [
   {
@@ -160,6 +161,9 @@ export default function Footer() {
                   </a>
                 </li>
               ))}
+              <li>
+                <CookiePreferencesButton />
+              </li>
             </ul>
           </div>
         </div>

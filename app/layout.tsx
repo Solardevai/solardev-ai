@@ -1,11 +1,9 @@
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
-import Script from "next/script";
+import AnalyticsConsent from "@/components/AnalyticsConsent";
 import "./globals.css";
 
 const SITE_URL = "https://www.solardev.ai";
-const GA_MEASUREMENT_ID = "G-MM2D3CS1FS";
-
 const SITE_TITLE =
   "SolarDev AI | Utility-Scale Solar & BESS Development Tools";
 
@@ -114,26 +112,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
     <html lang="en">
       <body className="bg-slate-950 text-white antialiased">
         {children}
-
-        <Script
-          src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}
-          strategy="afterInteractive"
-        />
-
-        <Script id="google-analytics" strategy="afterInteractive">
-          {`
-            window.dataLayer = window.dataLayer || [];
-
-            function gtag() {
-              window.dataLayer.push(arguments);
-            }
-
-            window.gtag = gtag;
-
-            gtag("js", new Date());
-            gtag("config", "${GA_MEASUREMENT_ID}");
-          `}
-        </Script>
+        <AnalyticsConsent />
       </body>
     </html>
   );

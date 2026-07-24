@@ -23,9 +23,9 @@ const organizationJsonLd = {
 
   logo: {
     "@type": "ImageObject",
-    url: "https://www.solardev.ai/logo-mark.svg",
+    url: "https://www.solardev.ai/icon.png",
     contentUrl:
-      "https://www.solardev.ai/logo-mark.svg",
+      "https://www.solardev.ai/icon.png",
     caption: `${siteConfig.name} logo`,
   },
 

@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { useState } from "react";
 import { navigationItems } from "@/data/siteData";
 import { productData } from "@/data/productData";
@@ -21,7 +22,7 @@ export default function Navbar() {
     <header className="sticky top-0 z-50 border-b border-white/10 bg-slate-950/95 backdrop-blur-xl">
       <div className="mx-auto flex h-20 max-w-7xl items-center justify-between px-4 sm:px-6 lg:grid lg:grid-cols-[1fr_auto_1fr]">
         {/* Logo */}
-        <a
+        <Link
           href="/#home"
           aria-label="Go to the SolarDev AI homepage"
           onClick={closeMenu}
@@ -39,7 +40,7 @@ export default function Navbar() {
           <span className="hidden text-xl font-bold tracking-tight text-white sm:inline lg:text-2xl">
             SolarDev <span className="text-amber-400">AI</span>
           </span>
-        </a>
+        </Link>
 
         {/* Desktop navigation */}
         <nav

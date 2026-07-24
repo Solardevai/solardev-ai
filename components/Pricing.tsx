@@ -2,6 +2,8 @@ import {
   pricingFeatures,
   siteConfig,
 } from "@/data/siteData";
+import TrackedCheckoutLink from "@/components/TrackedCheckoutLink";
+import { productData } from "@/data/productData";
 
 export default function Pricing() {
   const {
@@ -115,15 +117,19 @@ export default function Pricing() {
 
               {/* Purchase button */}
               <div className="mt-8">
-                <a
+                <TrackedCheckoutLink
                   href={checkoutUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
+                  buttonLocation="pricing"
+                  itemId={productData.itemId}
+                  itemName={productData.itemName}
+                  itemCategory={productData.itemCategory}
+                  price={productData.price}
+                  currency={productData.currency}
                   aria-label={`Purchase ${product.name} for ${product.launchPrice} euros`}
                   className="inline-flex min-h-12 w-full items-center justify-center rounded-xl bg-amber-400 px-6 py-3 text-base font-bold text-slate-950 transition hover:bg-amber-300 focus:outline-none focus:ring-2 focus:ring-amber-400 focus:ring-offset-2 focus:ring-offset-slate-950"
                 >
                   Get Immediate Access
-                </a>
+                </TrackedCheckoutLink>
 
                 <p className="mt-4 text-center text-xs leading-5 text-slate-500">
                   Secure Stripe checkout. The PDF is
