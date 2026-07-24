@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "upload:handbooks": "node --env-file=.env.local scripts/upload-handbooks.mjs"
   },
   "dependencies": {
     "@vercel/blob": "^2.6.1",

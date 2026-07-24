@@ -8,7 +8,7 @@ import { productData } from "@/data/productData";
 export const metadata: Metadata = {
   title: "Utility-Scale Solar & BESS Project Development Handbook",
   description:
-    "A 218-page professional handbook with AI prompts, engineering workflows, checklists and worked examples for utility-scale Solar PV and BESS project development.",
+    "A 215-page professional handbook with AI prompts, engineering workflows, checklists and worked examples for utility-scale Solar PV and BESS project development.",
   alternates: {
     canonical: "/solar-bess-project-development-handbook",
   },
@@ -20,7 +20,7 @@ export const metadata: Metadata = {
     type: "website",
     images: [
       {
-        url: "/volume-1-cover.png",
+        url: "/volume-1-cover.webp",
         alt: "SolarDev AI Volume 1 handbook cover",
       },
     ],
@@ -53,9 +53,9 @@ const structuredData = {
         "AI for Utility-Scale Solar & BESS Project Development — Volume 1",
 
       description:
-        "A 218-page professional handbook and AI prompt library for utility-scale Solar PV and BESS project development.",
+        "A 215-page professional handbook and AI prompt library for utility-scale Solar PV and BESS project development.",
 
-      image: ["https://www.solardev.ai/volume-1-cover.png"],
+      image: ["https://www.solardev.ai/volume-1-cover.webp"],
 
       sku: "SOLARDEV-VOL1",
 
@@ -116,9 +116,9 @@ const structuredData = {
 
       inLanguage: "en",
 
-      numberOfPages: 218,
+      numberOfPages: 215,
 
-      image: "https://www.solardev.ai/volume-1-cover.png",
+      image: "https://www.solardev.ai/volume-1-cover.webp",
 
       description:
         "A professional digital handbook covering AI-supported workflows for utility-scale Solar PV and BESS project development.",
@@ -155,7 +155,7 @@ export default function HandbookPage() {
         <div>
           <div className="overflow-hidden rounded-xl border border-white/10 bg-white shadow-2xl">
             <Image
-              src="/volume-1-cover.png"
+              src="/volume-1-cover.webp"
               alt="SolarDev AI utility-scale solar and BESS project development handbook cover"
               width={708}
               height={1000}
@@ -183,7 +183,7 @@ export default function HandbookPage() {
           <div className="mt-8 grid grid-cols-2 gap-4 sm:grid-cols-4">
             <div className="rounded-lg border border-white/10 p-4">
               <p className="text-xs uppercase text-slate-500">Pages</p>
-              <p className="mt-1 text-xl font-semibold">218</p>
+              <p className="mt-1 text-xl font-semibold">215</p>
             </div>
 
             <div className="rounded-lg border border-white/10 p-4">

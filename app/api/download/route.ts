@@ -1,16 +1,11 @@
 import { get } from "@vercel/blob";
 import { NextRequest, NextResponse } from "next/server";
 import { getStripe } from "@/lib/stripe";
+import { handbookProducts } from "@/data/productData";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
-
-const PDF_PATHNAME =
-  "products/solardev-ai-volume-1-v4.pdf";
-
-const DOWNLOAD_FILENAME =
-  "SolarDev-AI-Volume-1-v4.pdf";
 
 function errorResponse(
   message: string,
@@ -50,20 +45,6 @@ export async function GET(
       );
     }
 
-    const expectedProductId =
-      process.env.STRIPE_VOLUME1_PRODUCT_ID;
-
-    if (!expectedProductId) {
-      console.error(
-        "Missing STRIPE_VOLUME1_PRODUCT_ID environment variable.",
-      );
-
-      return errorResponse(
-        "The product download is not configured correctly.",
-        500,
-      );
-    }
-
     const stripe = getStripe();
 
     /*
@@ -84,9 +65,8 @@ export async function GET(
     }
 
     /*
-     * Retrieve the purchased items directly from
-     * Stripe so that the route can confirm that
-     * this session purchased Volume 1.
+     * Retrieve the purchased items directly from Stripe,
+     * then match them to the configured handbook catalog.
      */
     const lineItems =
       await stripe.checkout.sessions.listLineItems(
@@ -97,13 +77,13 @@ export async function GET(
         },
       );
 
-    const correctProductPurchased =
-      lineItems.data.some((lineItem) => {
+    const purchasedProductIds = new Set(
+      lineItems.data.flatMap((lineItem) => {
         const product =
           lineItem.price?.product;
 
         if (!product) {
-          return false;
+          return [];
         }
 
         const productId =
@@ -111,12 +91,20 @@ export async function GET(
             ? product
             : product.id;
 
-        return productId === expectedProductId;
-      });
+        return [productId];
+      }),
+    );
 
-    if (!correctProductPurchased) {
+    const purchasedHandbook =
+      handbookProducts.find((product) =>
+        purchasedProductIds.has(
+          product.stripeProductId,
+        ),
+      );
+
+    if (!purchasedHandbook) {
       return errorResponse(
-        "This Checkout Session does not include SolarDev AI Volume 1.",
+        "This Checkout Session does not include a recognised SolarDev AI handbook.",
         403,
       );
     }
@@ -126,9 +114,12 @@ export async function GET(
      * Blob store only after payment and product
      * verification have succeeded.
      */
-    const result = await get(PDF_PATHNAME, {
-      access: "private",
-    });
+    const result = await get(
+      purchasedHandbook.blobPathname,
+      {
+        access: "private",
+      },
+    );
 
     if (
       !result ||
@@ -136,7 +127,7 @@ export async function GET(
       !result.stream
     ) {
       console.error(
-        `Private PDF not found at: ${PDF_PATHNAME}`,
+        `Private PDF not found at: ${purchasedHandbook.blobPathname}`,
       );
 
       return errorResponse(
@@ -152,7 +143,7 @@ export async function GET(
           result.blob.contentType ??
           "application/pdf",
         "Content-Disposition":
-          `attachment; filename="${DOWNLOAD_FILENAME}"`,
+          `attachment; filename="${purchasedHandbook.downloadFilename}"`,
         "Content-Length":
           result.blob.size?.toString() ?? "",
         "Cache-Control":

@@ -1,0 +1,17 @@
+
+> solardev-ai@0.1.0 dev
+> next dev --hostname 127.0.0.1
+
+▲ Next.js 16.2.10 (Turbopack)
+- Local:         http://127.0.0.1:3000
+- Network:       http://127.0.0.1:3000
+- Environments: .env.local
+✓ Ready in 508ms
+Creating turbopack project {
+  dir: 'C:\\Users\\TiagoPires\\Downloads\\Temp TP\\Webdev\\GitHub\\solardev-ai',
+  testMode: true
+}
+
+ GET / 200 in 3.3s (next.js: 2.0s, application-code: 1241ms)
+ GET /handbooks 200 in 665ms (next.js: 380ms, application-code: 285ms)
+ GET /solar-bess-project-development-handbook-volume-2 200 in 708ms (next.js: 393ms, application-code: 315ms)

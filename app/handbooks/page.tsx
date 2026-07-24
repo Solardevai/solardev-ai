@@ -18,7 +18,7 @@ export const metadata: Metadata = {
     type: "website",
     images: [
       {
-        url: "/volume-1-cover.png",
+        url: "/volume-1-cover.webp",
         alt: "SolarDev AI professional handbook series",
       },
     ],

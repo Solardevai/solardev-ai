@@ -1,7 +1,9 @@
-import Link from "next/link";
 import TrackedCheckoutLink from "@/components/TrackedCheckoutLink";
 import { handbookVolumes } from "@/data/handbookData";
-import { productData } from "@/data/productData";
+import {
+  productData,
+  volumeTwoProductData,
+} from "@/data/productData";
 
 export default function Pricing() {
   const [volumeOne, volumeTwo] = handbookVolumes;
@@ -91,7 +93,7 @@ export default function Pricing() {
                 </h3>
               </div>
               <span className="shrink-0 rounded-full border border-amber-400/25 bg-amber-400/10 px-2.5 py-1 text-xs font-bold text-amber-300">
-                Coming soon
+                Available
               </span>
             </div>
 
@@ -105,17 +107,24 @@ export default function Pricing() {
             </div>
 
             <ul className="mt-5 space-y-2 text-sm text-slate-300">
-              <li>Advanced project applications</li>
-              <li>Updated details coming soon</li>
-              <li>Individual digital edition</li>
+              <li>{volumeTwo.pages}-page PDF edition</li>
+              <li>{volumeTwo.chapters} professional chapters</li>
+              <li>Immediate secure download</li>
             </ul>
 
-            <Link
-              href="/handbooks#volume-2"
-              className="mt-6 inline-flex min-h-11 w-full items-center justify-center rounded-xl border border-white/15 px-5 py-2.5 text-sm font-bold text-white transition hover:border-amber-400/30 hover:bg-white/[0.04] focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-400"
+            <TrackedCheckoutLink
+              href={volumeTwoProductData.checkoutUrl}
+              buttonLocation="pricing_volume_2"
+              itemId={volumeTwoProductData.itemId}
+              itemName={volumeTwoProductData.itemName}
+              itemCategory={volumeTwoProductData.itemCategory}
+              price={volumeTwoProductData.price}
+              currency={volumeTwoProductData.currency}
+              ariaLabel={`Purchase Volume 2 for €${volumeTwoProductData.price}`}
+              className="mt-6 inline-flex min-h-11 w-full items-center justify-center rounded-xl bg-amber-400 px-5 py-2.5 text-sm font-bold text-slate-950 transition hover:bg-amber-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-300 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950"
             >
-              Preview Volume 2
-            </Link>
+              Get Volume 2
+            </TrackedCheckoutLink>
           </article>
         </div>
 

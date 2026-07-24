@@ -19,7 +19,7 @@ export const siteConfig = {
     edition: "Edition v1.1",
     author: "Tiago Pires",
 
-    pages: 218,
+    pages: 215,
     chapters: 10,
     prompts: 100,
     promptLevels: 3,
@@ -223,9 +223,9 @@ export const roadmapItems = [
   },
   {
     volume: "Volume 2",
-    title: "Advanced Project Development Applications",
-    status: "In development",
-    active: false,
+    title: "From Development to Operations",
+    status: "Available",
+    active: true,
   },
   {
     volume: "Professional Toolkit",

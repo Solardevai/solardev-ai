@@ -12,7 +12,7 @@ const productLinks = [
   },
   {
     label: "Volume 2",
-    href: "/handbooks#volume-2",
+    href: "/solar-bess-project-development-handbook-volume-2",
   },
   {
     label: "Preview",

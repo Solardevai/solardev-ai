@@ -78,30 +78,29 @@ export default function Hero() {
           <div className="absolute inset-0 rounded-full bg-amber-400/10 blur-3xl" />
 
           <div className="relative w-full max-w-[560px] pb-16 pt-4">
-            {/* Volume 2 reserved space */}
+            {/* Volume 2 */}
             <Link
-              href="/handbooks#volume-2"
-              aria-label="Preview the upcoming SolarDev AI Volume 2"
-              className="absolute right-0 top-0 z-0 flex aspect-[0.708/1] w-[58%] flex-col items-center justify-center rounded-[1.5rem] border border-dashed border-amber-400/30 bg-gradient-to-br from-slate-900 to-slate-950 p-6 text-center shadow-2xl shadow-black/30 transition hover:-translate-y-1 hover:border-amber-400/50"
+              href="/solar-bess-project-development-handbook-volume-2"
+              aria-label="Explore SolarDev AI Volume 2"
+              className="absolute right-0 top-0 z-0 w-[58%] overflow-hidden rounded-[1.5rem] border border-white/10 bg-slate-900 p-3 shadow-2xl shadow-black/30 transition hover:-translate-y-1 hover:border-amber-400/40 sm:p-4"
             >
-              <span className="flex h-16 w-16 items-center justify-center rounded-2xl border border-amber-400/25 bg-amber-400/10 text-2xl font-bold text-amber-400">
-                02
-              </span>
-              <span className="mt-6 text-xs font-bold uppercase tracking-[0.2em] text-amber-400">
-                Volume 2
-              </span>
-              <span className="mt-3 text-lg font-bold text-white">
-                Advanced Project Development
-              </span>
-              <span className="mt-3 text-sm text-slate-400">
-                Coming soon
+              <Image
+                src="/volume-2-cover.webp"
+                alt="AI for Utility-Scale Solar and BESS Project Development Volume 2 cover"
+                width={1224}
+                height={1584}
+                priority
+                className="h-auto w-full rounded-lg"
+              />
+              <span className="absolute right-5 top-5 rounded-full border border-emerald-400/25 bg-slate-950/90 px-3 py-1.5 text-xs font-bold text-emerald-300 backdrop-blur">
+                Available
               </span>
             </Link>
 
             {/* Volume 1 */}
             <div className="relative z-10 w-[68%] rounded-[1.5rem] border border-white/10 bg-slate-900/90 p-4 shadow-2xl shadow-black/50 backdrop-blur sm:p-5">
               <Image
-                src="/volume-1-cover.png"
+                src="/volume-1-cover.webp"
                 alt="AI for Utility-Scale Solar and BESS Project Development Volume 1 cover"
                 width={900}
                 height={1273}

@@ -3,6 +3,7 @@ import Link from "next/link";
 import type Stripe from "stripe";
 import PurchaseTracker from "@/components/PurchaseTracker";
 import { getStripe } from "@/lib/stripe";
+import { handbookProducts } from "@/data/productData";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -193,7 +194,9 @@ async function retrieveCheckoutSession(
     return await getStripe().checkout.sessions.retrieve(
       sessionId,
       {
-        expand: ["line_items"],
+        expand: [
+          "line_items.data.price.product",
+        ],
       },
     );
   } catch (error) {
@@ -275,6 +278,38 @@ export default async function SuccessPage({
     const stripeLineItems =
       session.line_items?.data ?? [];
 
+    const purchasedHandbook =
+      handbookProducts.find((product) =>
+        stripeLineItems.some((lineItem) => {
+          const stripeProduct =
+            lineItem.price?.product;
+          const stripeProductId =
+            typeof stripeProduct === "string"
+              ? stripeProduct
+              : stripeProduct?.id;
+
+          return (
+            stripeProductId ===
+            product.stripeProductId
+          );
+        }),
+      );
+
+    if (!purchasedHandbook) {
+      return (
+        <PageShell>
+          <StatusCard
+            status="error"
+            eyebrow="Product unavailable"
+            title="We could not identify the purchased handbook"
+            description="Your payment was confirmed, but the purchased product could not be matched to the SolarDev AI catalog. Please contact support and do not submit another payment."
+          />
+          <OrderReference sessionId={session.id} />
+          <SupportSection />
+        </PageShell>
+      );
+    }
+
     const analyticsItems = stripeLineItems.map(
       (lineItem) => {
         const quantity = lineItem.quantity ?? 1;
@@ -291,7 +326,7 @@ export default async function SuccessPage({
             lineItem.price?.id ?? lineItem.id,
           item_name:
             lineItem.description ??
-            "AI for Utility-Scale Solar & BESS Project Development — Volume 1",
+            purchasedHandbook.itemName,
           item_category: "Digital Handbook",
           price: Number(unitPrice.toFixed(2)),
           quantity,
@@ -311,9 +346,9 @@ export default async function SuccessPage({
         ? analyticsItems
         : [
             {
-              item_id: "solardev-volume-1",
+              item_id: purchasedHandbook.itemId,
               item_name:
-                "AI for Utility-Scale Solar & BESS Project Development — Volume 1",
+                purchasedHandbook.itemName,
               item_category: "Digital Handbook",
               price: Number(
                 (
@@ -379,7 +414,7 @@ export default async function SuccessPage({
           status="success"
           eyebrow="Payment confirmed"
           title="Thank you for your purchase"
-          description="Stripe has confirmed your payment for SolarDev AI Volume 1."
+          description={`Stripe has confirmed your payment for SolarDev AI Volume ${purchasedHandbook.volume}.`}
         />
 
         <section className="mt-8 rounded-3xl border border-white/10 bg-white/[0.03] p-6 sm:p-8">
@@ -394,7 +429,7 @@ export default async function SuccessPage({
               </dt>
 
               <dd className="font-semibold text-slate-200">
-                SolarDev AI Volume 1
+                SolarDev AI Volume {purchasedHandbook.volume}
               </dd>
             </div>
 
@@ -442,14 +477,14 @@ export default async function SuccessPage({
           <p className="mx-auto mt-4 max-w-xl leading-7 text-slate-300">
             Your payment has been confirmed. You
             can now securely download SolarDev AI
-            Volume 1.
+            Volume {purchasedHandbook.volume}.
           </p>
 
           <a
             href={downloadUrl}
             className="mt-7 inline-flex items-center justify-center rounded-xl bg-amber-400 px-7 py-3.5 font-bold text-slate-950 transition hover:bg-amber-300 focus:outline-none focus:ring-2 focus:ring-amber-400 focus:ring-offset-2 focus:ring-offset-slate-950"
           >
-            Download Volume 1
+            Download Volume {purchasedHandbook.volume}
           </a>
 
           <p className="mt-5 text-sm leading-6 text-slate-400">

@@ -24,6 +24,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.9,
     },
     {
+      url: `${SITE_URL}/solar-bess-project-development-handbook-volume-2`,
+      lastModified: CONTENT_LAST_UPDATED,
+      changeFrequency: "monthly",
+      priority: 0.9,
+    },
+    {
       url: `${SITE_URL}/privacy`,
       lastModified: CONTENT_LAST_UPDATED,
       changeFrequency: "yearly",

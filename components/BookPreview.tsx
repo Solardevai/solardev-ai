@@ -1,11 +1,13 @@
 import Image from "next/image";
 import TrackedCheckoutLink from "@/components/TrackedCheckoutLink";
-import { productData } from "@/data/productData";
-import { siteConfig } from "@/data/siteData";
+import {
+  volumeOneProductData,
+  volumeTwoProductData,
+} from "@/data/productData";
 
-const previewPages = [
+const volumeOnePreviewPages = [
   {
-    src: "/previews/preview-8.png",
+    src: "/previews/volume-1/page-8.webp",
     alt: "Volume 1 contents showing the ten professional chapters",
     label: "Contents",
     title: "Complete early-stage development sequence",
@@ -13,7 +15,7 @@ const previewPages = [
       "Ten chapters covering AI foundations, due diligence, site screening, development planning, land, field evidence, environmental constraints, risk and CAPEX.",
   },
   {
-    src: "/previews/preview-16.png",
+    src: "/previews/volume-1/page-16.webp",
     alt: "AI-assisted engineering workflow from the SolarDev AI handbook",
     label: "Engineering workflow",
     title: "Structured AI-assisted engineering",
@@ -21,7 +23,7 @@ const previewPages = [
       "A repeatable sequence connecting project information, structured prompts, draft analysis, engineering review and final deliverables.",
   },
   {
-    src: "/previews/preview-18.png",
+    src: "/previews/volume-1/page-18.webp",
     alt: "Consultant-grade prompt and engineering commentary example",
     label: "Professional prompting",
     title: "Consultant-grade prompts",
@@ -29,7 +31,7 @@ const previewPages = [
       "Prompts are structured around professional roles, project context, evidence, deliverables, constraints, risks and validation.",
   },
   {
-    src: "/previews/preview-40.png",
+    src: "/previews/volume-1/page-40.webp",
     alt: "Site identification and preliminary feasibility screening chapter",
     label: "Site screening",
     title: "Identify constraints and fatal flaws",
@@ -37,7 +39,7 @@ const previewPages = [
       "Methods for comparing technically plausible sites, identifying fatal flaws and prioritising development opportunities.",
   },
   {
-    src: "/previews/preview-167.png",
+    src: "/previews/volume-1/page-166.webp",
     alt: "Initial project risk register chapter",
     label: "Risk management",
     title: "Build accountable risk registers",
@@ -45,7 +47,7 @@ const previewPages = [
       "Translate multidisciplinary findings into risks with clear causes, consequences, treatment actions, ownership and residual exposure.",
   },
   {
-    src: "/previews/preview-192.png",
+    src: "/previews/volume-1/page-190.webp",
     alt: "Initial CAPEX benchmark chapter",
     label: "CAPEX benchmarking",
     title: "Create transparent initial investment ranges",
@@ -54,7 +56,72 @@ const previewPages = [
   },
 ];
 
-export default function BookPreview() {
+const volumeTwoPreviewPages = [
+  {
+    src: "/previews/volume-2/page-5.webp",
+    alt: "Volume 2 FEED and design basis development chapter",
+    label: "FEED",
+    title: "Develop a bankable design basis",
+    description:
+      "Convert a Ready-to-Build concept into a controlled technical basis for procurement, financing and permitting.",
+  },
+  {
+    src: "/previews/volume-2/page-13.webp",
+    alt: "Volume 2 grid connection studies chapter",
+    label: "Grid connection",
+    title: "Manage grid studies and compliance",
+    description:
+      "Structure the connection programme, technical studies, compliance requirements and interconnection risks.",
+  },
+  {
+    src: "/previews/volume-2/page-25.webp",
+    alt: "Volume 2 procurement and EPC contracting chapter",
+    label: "Procurement",
+    title: "Move from benchmark to contract",
+    description:
+      "Translate the technical basis into comparable bids, executable scopes and accountable risk allocation.",
+  },
+  {
+    src: "/previews/volume-2/page-31.webp",
+    alt: "Volume 2 BESS technical due diligence and safety chapter",
+    label: "BESS diligence",
+    title: "Control technology and safety risk",
+    description:
+      "Review BESS design, degradation, warranties, integration and safety compliance using structured evidence.",
+  },
+  {
+    src: "/previews/volume-2/page-48.webp",
+    alt: "Volume 2 commissioning and energisation chapter",
+    label: "Commissioning",
+    title: "Verify performance at COD",
+    description:
+      "Plan energisation, testing, acceptance and evidence handover from mechanical completion to operation.",
+  },
+  {
+    src: "/previews/volume-2/page-60.webp",
+    alt: "Volume 2 repowering and portfolio risk reporting chapter",
+    label: "Portfolio strategy",
+    title: "Plan augmentation and repowering",
+    description:
+      "Extend the methodology into lifecycle investment decisions, augmentation strategy and portfolio risk reporting.",
+  },
+];
+
+type BookPreviewProps = {
+  volume?: 1 | 2;
+};
+
+export default function BookPreview({
+  volume = 1,
+}: BookPreviewProps) {
+  const isVolumeOne = volume === 1;
+  const previewPages = isVolumeOne
+    ? volumeOnePreviewPages
+    : volumeTwoPreviewPages;
+  const product = isVolumeOne
+    ? volumeOneProductData
+    : volumeTwoProductData;
+
   return (
     <section
       id="preview"
@@ -78,7 +145,7 @@ export default function BookPreview() {
           </div>
 
           <p className="max-w-2xl text-lg leading-8 text-slate-300">
-            Volume 1 combines engineering background, controlled workflows,
+            Volume {volume} combines engineering background, controlled workflows,
             professional tables, worked examples, consultant-grade prompts and
             final quality-control checklists.
           </p>
@@ -124,7 +191,7 @@ export default function BookPreview() {
             </p>
 
             <h3 className="mt-3 text-2xl font-bold text-white">
-              Access all {siteConfig.product.pages} pages and ten professional
+              Access all {product.pages} pages and ten professional
               chapters
             </h3>
 
@@ -136,16 +203,16 @@ export default function BookPreview() {
           </div>
 
           <TrackedCheckoutLink
-            href={productData.checkoutUrl}
-            buttonLocation="handbook_preview"
-            itemId={productData.itemId}
-            itemName={productData.itemName}
-            itemCategory={productData.itemCategory}
-            price={productData.price}
-            currency={productData.currency}
+            href={product.checkoutUrl}
+            buttonLocation={`handbook_preview_volume_${volume}`}
+            itemId={product.itemId}
+            itemName={product.itemName}
+            itemCategory={product.itemCategory}
+            price={product.price}
+            currency={product.currency}
             className="shrink-0 rounded-xl bg-amber-400 px-7 py-4 text-center font-semibold text-slate-950 transition hover:-translate-y-0.5 hover:bg-amber-300"
           >
-            Get Volume 1
+            Get Volume {volume}
           </TrackedCheckoutLink>
         </div>
       </div>

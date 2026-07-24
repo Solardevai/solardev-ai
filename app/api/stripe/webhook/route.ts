@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import Stripe from "stripe";
 import { getStripe } from "@/lib/stripe";
+import { handbookProducts } from "@/data/productData";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -37,15 +38,6 @@ async function verifyPaidOrder(
 ): Promise<FulfilmentResult> {
   const stripe = getStripe();
 
-  const expectedProductId =
-    process.env.STRIPE_VOLUME1_PRODUCT_ID;
-
-  if (!expectedProductId) {
-    throw new Error(
-      "STRIPE_VOLUME1_PRODUCT_ID is not configured.",
-    );
-  }
-
   const session =
     await stripe.checkout.sessions.retrieve(
       sessionId,
@@ -66,19 +58,20 @@ async function verifyPaidOrder(
   const lineItems =
     session.line_items?.data ?? [];
 
-  const containsVolumeOne =
-    lineItems.some((lineItem) => {
-      return (
-        getLineItemProductId(lineItem) ===
-        expectedProductId
-      );
-    });
+  const purchasedHandbook =
+    handbookProducts.find((product) =>
+      lineItems.some(
+        (lineItem) =>
+          getLineItemProductId(lineItem) ===
+          product.stripeProductId,
+      ),
+    );
 
-  if (!containsVolumeOne) {
+  if (!purchasedHandbook) {
     return {
       status: "ignored",
       reason:
-        "The Checkout Session does not contain the configured SolarDev AI Volume 1 product.",
+        "The Checkout Session does not contain a configured SolarDev AI handbook.",
     };
   }
 
@@ -106,7 +99,8 @@ async function verifyPaidOrder(
 
   console.info("Paid SolarDev AI order verified", {
     sessionId: session.id,
-    productId: expectedProductId,
+    productId: purchasedHandbook.stripeProductId,
+    volume: purchasedHandbook.volume,
     amountTotal: session.amount_total,
     currency: session.currency,
   });
