@@ -71,7 +71,7 @@ export default function Navbar() {
 
                   <div className="absolute left-1/2 top-full z-50 mt-4 w-80 -translate-x-1/2 rounded-2xl border border-white/10 bg-slate-900 p-2 shadow-2xl shadow-black/40">
                     <Link
-                      href="/solar-bess-project-development-handbook"
+                      href="/handbooks"
                       className="block rounded-xl px-4 py-3 transition hover:bg-white/[0.06] focus:outline-none focus-visible:bg-white/[0.06]"
                     >
                       <span className="block font-semibold text-white">
@@ -214,7 +214,7 @@ export default function Navbar() {
                       Products
                     </p>
                     <Link
-                      href="/solar-bess-project-development-handbook"
+                      href="/handbooks"
                       onClick={closeMenu}
                       className="flex min-h-12 items-center justify-between rounded-lg px-3 py-3 font-semibold text-white transition hover:bg-white/[0.05] focus:outline-none focus-visible:bg-white/[0.05]"
                     >

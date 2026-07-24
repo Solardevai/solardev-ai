@@ -143,10 +143,10 @@ export default function HandbookPage() {
           </Link>
 
           <Link
-            href="/"
+            href="/handbooks"
             className="text-sm text-slate-300 transition hover:text-white"
           >
-            Back to homepage
+            All handbooks
           </Link>
         </div>
       </header>

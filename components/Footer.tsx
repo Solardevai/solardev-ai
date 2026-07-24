@@ -3,8 +3,16 @@ import CookiePreferencesButton from "@/components/CookiePreferencesButton";
 
 const productLinks = [
   {
+    label: "All Handbooks",
+    href: "/handbooks",
+  },
+  {
     label: "Volume 1",
     href: "/solar-bess-project-development-handbook",
+  },
+  {
+    label: "Volume 2",
+    href: "/handbooks#volume-2",
   },
   {
     label: "Preview",
