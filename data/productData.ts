@@ -9,7 +9,7 @@ export const productData = {
 
   itemCategory: "Digital Handbook",
 
-  price: 39,
+  price: 29,
 
   currency: "EUR",
 } as const;

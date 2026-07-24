@@ -25,7 +25,6 @@ export const siteConfig = {
     promptLevels: 3,
 
     launchPrice: productData.price,
-    standardPrice: 49,
   },
 };
 
@@ -240,14 +239,6 @@ export const roadmapItems = [
     status: "Planned",
     active: false,
   },
-];
-
-export const pricingFeatures = [
-  `${siteConfig.product.pages}-page Publisher Edition PDF`,
-  `${siteConfig.product.chapters} chapters and ${siteConfig.product.prompts}+ professional prompts`,
-  "Quick, Professional and Expert prompt levels",
-  "Worked examples, review checklists and decision-support frameworks",
-  "Secure Stripe checkout and immediate PDF access",
 ];
 
 export const faqItems = [
