@@ -92,9 +92,6 @@ export default function Hero() {
                 priority
                 className="h-auto w-full rounded-lg"
               />
-              <span className="absolute right-5 top-5 rounded-full border border-emerald-400/25 bg-slate-950/90 px-3 py-1.5 text-xs font-bold text-emerald-300 backdrop-blur">
-                Available
-              </span>
             </Link>
 
             {/* Volume 1 */}
@@ -118,9 +115,6 @@ export default function Hero() {
                 </p>
               </div>
 
-              <div className="absolute -right-3 top-8 rounded-xl border border-emerald-400/25 bg-slate-950/90 px-3 py-2 text-xs font-semibold text-emerald-300 shadow-lg backdrop-blur sm:-right-5 sm:px-4 sm:py-3 sm:text-sm">
-                Available now
-              </div>
             </div>
           </div>
         </div>
