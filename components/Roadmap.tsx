@@ -1,7 +1,9 @@
 type RoadmapItem = {
   year: string;
+  number: string;
   title: string;
   description: string;
+  deliverables: string[];
   status: string;
   active?: boolean;
 };
@@ -9,18 +11,22 @@ type RoadmapItem = {
 const roadmapItems: RoadmapItem[] = [
   {
     year: "2026",
+    number: "01",
     title: "Professional Handbook Series",
     description:
-      "Launch Volume 1 and continue developing professional Solar PV and BESS engineering content.",
-    status: "Current phase",
+      "A two-volume field reference covering the full utility-scale Solar PV and BESS project lifecycle.",
+    deliverables: ["Volume 1 available", "Volume 2 available"],
+    status: "Current",
     active: true,
   },
   {
     year: "2027",
+    number: "02",
     title: "SolarDev AI Platform",
     description:
-      "Introduce searchable prompts, engineering templates and interactive project-development workflows.",
-    status: "Planned",
+      "Turn the handbook methodology into practical, searchable tools for everyday project work.",
+    deliverables: ["Prompt library", "Templates & workflows"],
+    status: "In development",
   },
 ];
 
@@ -29,88 +35,99 @@ export default function Roadmap() {
     <section
       id="roadmap"
       aria-labelledby="roadmap-title"
-      className="scroll-mt-24 border-y border-white/10 bg-slate-950 py-16 sm:py-20"
+      className="relative scroll-mt-24 overflow-hidden border-y border-white/10 bg-slate-950 py-16 sm:py-20"
     >
-      <div className="mx-auto max-w-5xl px-6 lg:px-8">
-        {/* Heading */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute left-1/2 top-1/2 h-80 w-80 -translate-x-1/2 -translate-y-1/2 rounded-full bg-amber-400/[0.04] blur-3xl"
+      />
+
+      <div className="relative mx-auto max-w-5xl px-6 lg:px-8">
         <div className="mx-auto max-w-2xl text-center">
           <p className="text-xs font-semibold uppercase tracking-[0.22em] text-amber-400">
             Product Roadmap
           </p>
-
           <h2
             id="roadmap-title"
             className="mt-3 text-3xl font-bold tracking-tight text-white sm:text-4xl"
           >
-            From handbook to platform
+            Built in two focused stages
           </h2>
-
           <p className="mt-4 text-base leading-7 text-slate-400">
-            Building practical AI resources for utility-scale Solar PV and
-            BESS project development.
+            First, trusted professional knowledge. Next, practical tools that
+            put that knowledge to work.
           </p>
         </div>
 
-        {/* Timeline */}
-        <div className="relative mx-auto mt-12 max-w-4xl">
-          {/* Desktop connecting line */}
-          <div
-            aria-hidden="true"
-            className="absolute left-1/4 right-1/4 top-[11px] hidden h-px bg-white/15 md:block"
-          />
-
-          {/* Mobile connecting line */}
-          <div
-            aria-hidden="true"
-            className="absolute bottom-4 left-[5px] top-2 w-px bg-white/15 md:hidden"
-          />
-
-          <div className="grid gap-10 md:grid-cols-2 md:gap-16">
+        <div className="relative mx-auto mt-10 max-w-4xl">
+          <div className="grid gap-4 md:grid-cols-[1fr_auto_1fr] md:items-stretch">
             {roadmapItems.map((item) => (
-              <article
-                key={item.year}
-                className="relative pl-8 md:pl-0 md:text-center"
-              >
-                {/* Marker */}
-                <span
-                  aria-hidden="true"
-                  className={`absolute left-0 top-1 h-3 w-3 rounded-full border md:relative md:left-auto md:top-auto md:mx-auto md:block ${
+              <div key={item.year} className="contents">
+                {item.number === "02" && (
+                  <div
+                    aria-hidden="true"
+                    className="flex items-center justify-center py-1 md:px-1"
+                  >
+                    <span className="h-8 w-px bg-gradient-to-b from-amber-400 to-white/20 md:h-px md:w-10 md:bg-gradient-to-r" />
+                    <span className="-ml-1 h-2 w-2 rotate-45 border-r border-t border-white/30 md:-ml-2" />
+                  </div>
+                )}
+
+                <article
+                  className={`flex min-h-72 flex-col rounded-2xl border p-6 ${
                     item.active
-                      ? "border-amber-400 bg-amber-400"
-                      : "border-slate-500 bg-slate-950"
+                      ? "border-amber-400/30 bg-amber-400/[0.055]"
+                      : "border-white/10 bg-white/[0.025]"
                   }`}
-                />
-
-                <div className="md:mt-5">
-                  <div className="flex flex-wrap items-center gap-3 md:justify-center">
-                    <p
-                      className={`text-2xl font-bold ${
-                        item.active ? "text-amber-400" : "text-white"
-                      }`}
-                    >
-                      {item.year}
-                    </p>
-
+                >
+                  <div className="flex items-start justify-between gap-4">
+                    <div>
+                      <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">
+                        Stage {item.number}
+                      </p>
+                      <p
+                        className={`mt-2 text-3xl font-bold ${
+                          item.active ? "text-amber-400" : "text-white"
+                        }`}
+                      >
+                        {item.year}
+                      </p>
+                    </div>
                     <span
-                      className={`rounded-full border px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.14em] ${
+                      className={`rounded-full border px-3 py-1 text-[10px] font-bold uppercase tracking-[0.14em] ${
                         item.active
-                          ? "border-amber-400/25 text-amber-300"
-                          : "border-white/10 text-slate-500"
+                          ? "border-amber-400/30 bg-amber-400/10 text-amber-300"
+                          : "border-white/10 bg-white/[0.03] text-slate-400"
                       }`}
                     >
                       {item.status}
                     </span>
                   </div>
 
-                  <h3 className="mt-3 text-lg font-semibold text-white">
+                  <h3 className="mt-6 text-xl font-semibold text-white">
                     {item.title}
                   </h3>
-
-                  <p className="mt-2 text-sm leading-6 text-slate-400">
+                  <p className="mt-3 text-sm leading-6 text-slate-400">
                     {item.description}
                   </p>
-                </div>
-              </article>
+
+                  <ul className="mt-auto grid gap-2 pt-6 sm:grid-cols-2 md:grid-cols-1 lg:grid-cols-2">
+                    {item.deliverables.map((deliverable) => (
+                      <li
+                        key={deliverable}
+                        className="flex items-center gap-2 text-xs font-medium text-slate-300"
+                      >
+                        <span
+                          className={`h-1.5 w-1.5 shrink-0 rounded-full ${
+                            item.active ? "bg-amber-400" : "bg-slate-600"
+                          }`}
+                        />
+                        {deliverable}
+                      </li>
+                    ))}
+                  </ul>
+                </article>
+              </div>
             ))}
           </div>
         </div>
