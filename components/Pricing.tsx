@@ -47,7 +47,7 @@ export default function Pricing() {
                   {volumeOne.title}
                 </h3>
               </div>
-              <span className="shrink-0 rounded-full border border-emerald-400/25 bg-emerald-400/10 px-2.5 py-1 text-xs font-bold text-emerald-300">
+              <span className="shrink-0 rounded-full border border-amber-400/25 bg-amber-400/10 px-2.5 py-1 text-xs font-bold text-amber-300">
                 Available
               </span>
             </div>
