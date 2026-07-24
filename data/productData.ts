@@ -1,6 +1,6 @@
 export const productData = {
   checkoutUrl:
-    "https://buy.stripe.com/dRm5kEaLNdcf8id49Ycs800",
+    "https://buy.stripe.com/14A28s079egjcyt7macs801",
 
   itemId: "solardev-volume-1",
 
