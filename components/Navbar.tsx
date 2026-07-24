@@ -47,14 +47,68 @@ export default function Navbar() {
           aria-label="Primary navigation"
           className="hidden items-center gap-8 justify-self-center text-sm lg:flex"
         >
-          {navigationItems.map((item) => (
-            <a
-              key={item.label}
-              href={resolveNavigationHref(item.href)}
-              className="font-medium text-slate-300 transition hover:text-white focus:outline-none focus-visible:text-white"
-            >
-              {item.label}
-            </a>
+          {navigationItems.map((item, index) => (
+            <div key={item.label} className="contents">
+              {index === 1 && (
+                <details className="group relative">
+                  <summary className="flex cursor-pointer list-none items-center gap-1.5 font-medium text-slate-300 transition marker:content-none hover:text-white focus:outline-none focus-visible:text-white">
+                    Products
+                    <svg
+                      aria-hidden="true"
+                      viewBox="0 0 20 20"
+                      fill="none"
+                      className="h-4 w-4 transition group-open:rotate-180"
+                    >
+                      <path
+                        d="M5 7.5L10 12.5L15 7.5"
+                        stroke="currentColor"
+                        strokeWidth="1.75"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                    </svg>
+                  </summary>
+
+                  <div className="absolute left-1/2 top-full z-50 mt-4 w-80 -translate-x-1/2 rounded-2xl border border-white/10 bg-slate-900 p-2 shadow-2xl shadow-black/40">
+                    <Link
+                      href="/solar-bess-project-development-handbook"
+                      className="block rounded-xl px-4 py-3 transition hover:bg-white/[0.06] focus:outline-none focus-visible:bg-white/[0.06]"
+                    >
+                      <span className="block font-semibold text-white">
+                        Professional Handbooks
+                      </span>
+                      <span className="mt-1 block text-xs leading-5 text-slate-400">
+                        Utility-scale Solar and BESS development volumes.
+                      </span>
+                    </Link>
+
+                    <div
+                      aria-disabled="true"
+                      className="mt-1 rounded-xl px-4 py-3 opacity-75"
+                    >
+                      <span className="flex items-center justify-between gap-3">
+                        <span className="font-semibold text-white">
+                          Prompt Library
+                        </span>
+                        <span className="rounded-full border border-amber-400/25 bg-amber-400/10 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-amber-300">
+                          Coming soon
+                        </span>
+                      </span>
+                      <span className="mt-1 block text-xs leading-5 text-slate-400">
+                        Searchable professional prompts and workflows.
+                      </span>
+                    </div>
+                  </div>
+                </details>
+              )}
+
+              <a
+                href={resolveNavigationHref(item.href)}
+                className="font-medium text-slate-300 transition hover:text-white focus:outline-none focus-visible:text-white"
+              >
+                {item.label}
+              </a>
+            </div>
           ))}
         </nav>
 
@@ -152,8 +206,40 @@ export default function Navbar() {
           className="mx-auto max-w-7xl px-4 py-5 sm:px-6"
         >
           <ul className="space-y-1">
-            {navigationItems.map((item) => (
+            {navigationItems.map((item, index) => (
               <li key={item.label}>
+                {index === 1 && (
+                  <div className="mb-2 rounded-xl border border-white/10 bg-white/[0.025] p-2">
+                    <p className="px-2 py-2 text-xs font-bold uppercase tracking-[0.18em] text-slate-500">
+                      Products
+                    </p>
+                    <Link
+                      href="/solar-bess-project-development-handbook"
+                      onClick={closeMenu}
+                      className="flex min-h-12 items-center justify-between rounded-lg px-3 py-3 font-semibold text-white transition hover:bg-white/[0.05] focus:outline-none focus-visible:bg-white/[0.05]"
+                    >
+                      Professional Handbooks
+                      <span
+                        aria-hidden="true"
+                        className="text-amber-400"
+                      >
+                        →
+                      </span>
+                    </Link>
+                    <div
+                      aria-disabled="true"
+                      className="flex min-h-12 items-center justify-between gap-3 rounded-lg px-3 py-3 text-slate-400"
+                    >
+                      <span className="font-semibold">
+                        Prompt Library
+                      </span>
+                      <span className="rounded-full border border-amber-400/25 bg-amber-400/10 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-amber-300">
+                        Coming soon
+                      </span>
+                    </div>
+                  </div>
+                )}
+
                 <a
                   href={resolveNavigationHref(item.href)}
                   onClick={closeMenu}

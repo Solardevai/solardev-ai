@@ -35,10 +35,6 @@ export const navigationItems = [
     href: "/",
   },
   {
-    label: "Handbook",
-    href: "/#volume-1",
-  },
-  {
     label: "Preview",
     href: "/#preview",
   },
