@@ -198,7 +198,7 @@ export default function HandbookPage() {
 
             <div className="rounded-lg border border-white/10 p-4">
               <p className="text-xs uppercase text-slate-500">Edition</p>
-              <p className="mt-1 text-xl font-semibold">v4.0</p>
+              <p className="mt-1 text-xl font-semibold">v1.1</p>
             </div>
           </div>
 

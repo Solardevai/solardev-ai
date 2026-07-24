@@ -1,4 +1,7 @@
 import Image from "next/image";
+import Link from "next/link";
+import TrackedCheckoutLink from "@/components/TrackedCheckoutLink";
+import { productData } from "@/data/productData";
 import { siteConfig } from "@/data/siteData";
 
 export default function Hero() {
@@ -39,21 +42,25 @@ export default function Hero() {
 
 
           <div className="mt-10 flex flex-col gap-4 sm:flex-row">
-            <a
-              href={siteConfig.checkoutUrl}
-              target="_blank"
-              rel="noopener noreferrer"
+            <TrackedCheckoutLink
+              href={productData.checkoutUrl}
+              buttonLocation="hero"
+              itemId={productData.itemId}
+              itemName={productData.itemName}
+              itemCategory={productData.itemCategory}
+              price={productData.price}
+              currency={productData.currency}
               className="rounded-xl bg-amber-400 px-7 py-4 text-center font-semibold text-slate-950 shadow-lg shadow-amber-400/10 transition hover:-translate-y-0.5 hover:bg-amber-300"
             >
-              Get Volume 1 
-            </a>
+              Get Volume 1
+            </TrackedCheckoutLink>
 
-            <a
-              href="#volume-1"
+            <Link
+              href="/handbooks"
               className="rounded-xl border border-white/15 bg-white/[0.03] px-7 py-4 text-center font-semibold text-white transition hover:border-white/25 hover:bg-white/[0.07]"
             >
-              Explore the Handbook
-            </a>
+              Explore the Series
+            </Link>
           </div>
 
           <div className="mt-12 grid max-w-2xl grid-cols-2 gap-6 sm:grid-cols-4">
@@ -70,12 +77,29 @@ export default function Hero() {
         <div className="relative flex justify-center lg:justify-end">
           <div className="absolute inset-0 rounded-full bg-amber-400/10 blur-3xl" />
 
-          <div className="relative w-full max-w-[480px]">
-            {/* Background panel */}
-            <div className="absolute -inset-6 rotate-3 rounded-[2rem] border border-white/10 bg-gradient-to-br from-blue-500/10 to-amber-400/5" />
+          <div className="relative w-full max-w-[560px] pb-16 pt-4">
+            {/* Volume 2 reserved space */}
+            <Link
+              href="/handbooks#volume-2"
+              aria-label="Preview the upcoming SolarDev AI Volume 2"
+              className="absolute right-0 top-0 z-0 flex aspect-[0.708/1] w-[58%] flex-col items-center justify-center rounded-[1.5rem] border border-dashed border-amber-400/30 bg-gradient-to-br from-slate-900 to-slate-950 p-6 text-center shadow-2xl shadow-black/30 transition hover:-translate-y-1 hover:border-amber-400/50"
+            >
+              <span className="flex h-16 w-16 items-center justify-center rounded-2xl border border-amber-400/25 bg-amber-400/10 text-2xl font-bold text-amber-400">
+                02
+              </span>
+              <span className="mt-6 text-xs font-bold uppercase tracking-[0.2em] text-amber-400">
+                Volume 2
+              </span>
+              <span className="mt-3 text-lg font-bold text-white">
+                Advanced Project Development
+              </span>
+              <span className="mt-3 text-sm text-slate-400">
+                Coming soon
+              </span>
+            </Link>
 
-            {/* Book image */}
-            <div className="relative rounded-[1.5rem] border border-white/10 bg-slate-900/80 p-5 shadow-2xl shadow-black/40 backdrop-blur">
+            {/* Volume 1 */}
+            <div className="relative z-10 w-[68%] rounded-[1.5rem] border border-white/10 bg-slate-900/90 p-4 shadow-2xl shadow-black/50 backdrop-blur sm:p-5">
               <Image
                 src="/volume-1-cover.png"
                 alt="AI for Utility-Scale Solar and BESS Project Development Volume 1 cover"
@@ -85,7 +109,7 @@ export default function Hero() {
                 className="h-auto w-full rounded-lg"
               />
 
-              <div className="absolute -bottom-6 -left-6 rounded-2xl border border-white/10 bg-slate-950/95 p-5 shadow-xl backdrop-blur">
+              <div className="absolute -bottom-8 -left-2 rounded-2xl border border-white/10 bg-slate-950/95 p-4 shadow-xl backdrop-blur sm:-left-6 sm:p-5">
                 <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">
                   Volume 1
                 </p>
@@ -95,7 +119,7 @@ export default function Hero() {
                 </p>
               </div>
 
-              <div className="absolute -right-4 top-10 rounded-xl border border-amber-400/25 bg-amber-400/10 px-4 py-3 text-sm font-semibold text-amber-300 shadow-lg backdrop-blur">
+              <div className="absolute -right-3 top-8 rounded-xl border border-emerald-400/25 bg-slate-950/90 px-3 py-2 text-xs font-semibold text-emerald-300 shadow-lg backdrop-blur sm:-right-5 sm:px-4 sm:py-3 sm:text-sm">
                 Available now
               </div>
             </div>

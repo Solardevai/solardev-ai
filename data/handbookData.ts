@@ -8,7 +8,7 @@ export const handbookVolumes = [
     status: "Available now",
     pages: 218,
     chapters: 10,
-    edition: "Publisher Edition v4.0",
+    edition: "Edition v1.1",
     price: 29,
     cover: "/volume-1-cover.png",
     href: "/solar-bess-project-development-handbook",

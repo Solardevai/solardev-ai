@@ -120,7 +120,7 @@ export default function BookPreview() {
         <div className="mt-14 flex flex-col items-start justify-between gap-6 rounded-3xl border border-amber-400/20 bg-amber-400/[0.045] p-7 sm:flex-row sm:items-center sm:p-9">
           <div>
             <p className="text-sm font-semibold uppercase tracking-[0.2em] text-amber-400">
-              Complete Publisher Edition
+              Complete Edition v1.1
             </p>
 
             <h3 className="mt-3 text-2xl font-bold text-white">
