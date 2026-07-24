@@ -4,8 +4,6 @@ import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 import { navigationItems } from "@/data/siteData";
-import { productData } from "@/data/productData";
-import TrackedCheckoutLink from "@/components/TrackedCheckoutLink";
 
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -112,39 +110,8 @@ export default function Navbar() {
           ))}
         </nav>
 
-        {/* Desktop checkout CTA */}
-        <div className="hidden justify-self-end lg:block">
-          <TrackedCheckoutLink
-            href={productData.checkoutUrl}
-            buttonLocation="navbar"
-            itemId={productData.itemId}
-            itemName={productData.itemName}
-            itemCategory={productData.itemCategory}
-            price={productData.price}
-            currency={productData.currency}
-            ariaLabel={`Buy SolarDev AI Volume 1 for €${productData.price}`}
-            className="inline-flex items-center justify-center whitespace-nowrap rounded-lg bg-amber-400 px-4 py-2.5 text-sm font-semibold text-slate-950 transition hover:bg-amber-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-300 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950"
-          >
-            Get Volume 1
-          </TrackedCheckoutLink>
-        </div>
-
         {/* Mobile controls */}
         <div className="flex items-center gap-2 lg:hidden">
-          <TrackedCheckoutLink
-            href={productData.checkoutUrl}
-            buttonLocation="navbar-mobile"
-            itemId={productData.itemId}
-            itemName={productData.itemName}
-            itemCategory={productData.itemCategory}
-            price={productData.price}
-            currency={productData.currency}
-            ariaLabel={`Buy SolarDev AI Volume 1 for €${productData.price}`}
-            className="hidden items-center justify-center whitespace-nowrap rounded-lg bg-amber-400 px-3 py-2.5 text-sm font-semibold text-slate-950 transition hover:bg-amber-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-300 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950 sm:inline-flex"
-          >
-            Get Volume 1
-          </TrackedCheckoutLink>
-
           <button
             type="button"
             aria-label={
@@ -251,22 +218,6 @@ export default function Navbar() {
             ))}
           </ul>
 
-          {/* CTA shown inside menu on very small screens */}
-          <div className="mt-5 border-t border-white/10 pt-5 sm:hidden">
-            <TrackedCheckoutLink
-              href={productData.checkoutUrl}
-              buttonLocation="mobile-menu"
-              itemId={productData.itemId}
-              itemName={productData.itemName}
-              itemCategory={productData.itemCategory}
-              price={productData.price}
-              currency={productData.currency}
-              ariaLabel={`Buy SolarDev AI Volume 1 for €${productData.price}`}
-              className="inline-flex w-full items-center justify-center rounded-xl bg-amber-400 px-5 py-3.5 font-semibold text-slate-950 transition hover:bg-amber-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-300 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950"
-            >
-              Get Volume 1
-            </TrackedCheckoutLink>
-          </div>
         </nav>
       </div>
     </header>
