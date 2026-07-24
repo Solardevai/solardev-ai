@@ -2,7 +2,6 @@ import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
 import Features from "@/components/Features";
 import VolumeOne from "@/components/VolumeOne";
-import BookPreview from "@/components/BookPreview";
 import AudienceApplications from "@/components/Audience";
 import Pricing from "@/components/Pricing";
 import FAQ from "@/components/FAQ";
@@ -82,7 +81,6 @@ export default function Home() {
         <Hero />
         <Features />
         <VolumeOne />
-        <BookPreview />
         <AudienceApplications />
         <Pricing />
         <FAQ />

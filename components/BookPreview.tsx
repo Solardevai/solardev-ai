@@ -1,4 +1,6 @@
 import Image from "next/image";
+import TrackedCheckoutLink from "@/components/TrackedCheckoutLink";
+import { productData } from "@/data/productData";
 import { siteConfig } from "@/data/siteData";
 
 const previewPages = [
@@ -133,14 +135,18 @@ export default function BookPreview() {
             </p>
           </div>
 
-          <a
-            href={siteConfig.checkoutUrl}
-            target="_blank"
-            rel="noopener noreferrer"
+          <TrackedCheckoutLink
+            href={productData.checkoutUrl}
+            buttonLocation="handbook_preview"
+            itemId={productData.itemId}
+            itemName={productData.itemName}
+            itemCategory={productData.itemCategory}
+            price={productData.price}
+            currency={productData.currency}
             className="shrink-0 rounded-xl bg-amber-400 px-7 py-4 text-center font-semibold text-slate-950 transition hover:-translate-y-0.5 hover:bg-amber-300"
           >
-            Get Volume 1 
-          </a>
+            Get Volume 1
+          </TrackedCheckoutLink>
         </div>
       </div>
     </section>

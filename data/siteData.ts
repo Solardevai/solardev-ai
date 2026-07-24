@@ -35,10 +35,6 @@ export const navigationItems = [
     href: "/",
   },
   {
-    label: "Preview",
-    href: "/#preview",
-  },
-  {
     label: "Professionals",
     href: "/#audience",
   },

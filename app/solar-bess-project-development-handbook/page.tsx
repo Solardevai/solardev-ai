@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
+import BookPreview from "@/components/BookPreview";
 import TrackedCheckoutLink from "@/components/TrackedCheckoutLink";
 import { productData } from "@/data/productData";
 
@@ -250,6 +251,8 @@ export default function HandbookPage() {
           </div>
         </div>
       </section>
+
+      <BookPreview />
 
       <section className="mx-auto max-w-4xl px-6 py-16">
         <h2 className="text-3xl font-bold">Who this handbook is for</h2>

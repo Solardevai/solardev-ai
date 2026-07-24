@@ -4,11 +4,11 @@ import CookiePreferencesButton from "@/components/CookiePreferencesButton";
 const productLinks = [
   {
     label: "Volume 1",
-    href: "#volume-1",
+    href: "/solar-bess-project-development-handbook",
   },
   {
     label: "Preview",
-    href: "#preview",
+    href: "/solar-bess-project-development-handbook#preview",
   },
   {
     label: "Roadmap",
