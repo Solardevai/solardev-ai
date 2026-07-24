@@ -30,7 +30,13 @@ html {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
 
-  --font-sans: "Geist", "Segoe UI", Arial, sans-serif;
+  --font-sans:
+    "Futura",
+    "Futura PT",
+    "Avenir Next",
+    "Century Gothic",
+    Arial,
+    sans-serif;
   --font-mono: "Geist Mono", Consolas, monospace;
 }
 
@@ -52,8 +58,10 @@ body {
   color: var(--foreground);
 
   font-family:
-    "Geist",
-    "Segoe UI",
+    "Futura",
+    "Futura PT",
+    "Avenir Next",
+    "Century Gothic",
     Arial,
     Helvetica,
     sans-serif;
