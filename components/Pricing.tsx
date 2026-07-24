@@ -37,7 +37,7 @@ export default function Pricing() {
         </div>
 
         <div className="mt-10 grid gap-5 md:grid-cols-2">
-          <article className="rounded-2xl border border-amber-400/25 bg-white/[0.035] p-6 shadow-xl shadow-black/15">
+          <article className="flex h-full flex-col rounded-2xl border border-amber-400/25 bg-white/[0.035] p-6 shadow-xl shadow-black/15">
             <div className="flex items-start justify-between gap-4">
               <div>
                 <p className="text-sm font-semibold uppercase tracking-[0.18em] text-amber-400">
@@ -61,7 +61,7 @@ export default function Pricing() {
               </span>
             </div>
 
-            <ul className="mt-5 space-y-2 text-sm text-slate-300">
+            <ul className="mt-5 flex-1 space-y-2 text-sm text-slate-300">
               <li>{volumeOne.pages}-page PDF edition</li>
               <li>{volumeOne.chapters} professional chapters</li>
               <li>Immediate secure download</li>
@@ -82,7 +82,7 @@ export default function Pricing() {
             </TrackedCheckoutLink>
           </article>
 
-          <article className="rounded-2xl border border-white/10 bg-white/[0.025] p-6">
+          <article className="flex h-full flex-col rounded-2xl border border-white/10 bg-white/[0.025] p-6">
             <div className="flex items-start justify-between gap-4">
               <div>
                 <p className="text-sm font-semibold uppercase tracking-[0.18em] text-amber-400">
@@ -106,7 +106,7 @@ export default function Pricing() {
               </span>
             </div>
 
-            <ul className="mt-5 space-y-2 text-sm text-slate-300">
+            <ul className="mt-5 flex-1 space-y-2 text-sm text-slate-300">
               <li>{volumeTwo.pages}-page PDF edition</li>
               <li>{volumeTwo.chapters} professional chapters</li>
               <li>Immediate secure download</li>
