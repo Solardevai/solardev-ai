@@ -151,6 +151,40 @@ button {
   animation-play-state: paused;
 }
 
+.maplibregl-popup-content {
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 12px;
+  background: rgba(2, 6, 23, 0.96);
+  color: #f8fafc;
+  box-shadow: 0 18px 45px rgba(0, 0, 0, 0.35);
+}
+
+.maplibregl-popup-tip {
+  border-top-color: rgba(2, 6, 23, 0.96) !important;
+  border-bottom-color: rgba(2, 6, 23, 0.96) !important;
+}
+
+.maplibregl-popup-close-button {
+  color: #cbd5e1;
+  padding: 4px 8px;
+}
+
+.infrastructure-popup {
+  padding-right: 14px;
+}
+
+.infrastructure-popup strong {
+  display: block;
+  font-size: 13px;
+}
+
+.infrastructure-popup p {
+  margin: 5px 0 0;
+  color: #94a3b8;
+  font-size: 11px;
+  line-height: 1.5;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .renewables-ticker-track {
     animation: none;

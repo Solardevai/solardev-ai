@@ -6,6 +6,7 @@ import {
   type GeoJSONSource,
   Map as MapLibreMap,
   NavigationControl,
+  Popup,
   ScaleControl,
 } from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
@@ -20,6 +21,46 @@ type SolarResult = {
 };
 type Basemap = "streets" | "satellite";
 type ExportFormat = "geojson" | "kml" | "kmz";
+type InfrastructureLayer =
+  | "roads"
+  | "mv"
+  | "hv"
+  | "ehv"
+  | "substations"
+  | "unknown";
+
+const INFRASTRUCTURE_LAYER_IDS: Record<InfrastructureLayer, string[]> = {
+  roads: ["infrastructure-roads"],
+  mv: ["infrastructure-mv"],
+  hv: ["infrastructure-hv"],
+  ehv: ["infrastructure-ehv"],
+  substations: ["infrastructure-substations", "infrastructure-substation-fill"],
+  unknown: ["infrastructure-unknown"],
+};
+
+const INFRASTRUCTURE_OPTIONS: Array<{
+  id: InfrastructureLayer;
+  label: string;
+  color: string;
+}> = [
+  { id: "roads", label: "Main roads", color: "#f8fafc" },
+  { id: "mv", label: "MV 1–<45 kV", color: "#fb923c" },
+  { id: "hv", label: "HV 45–<220 kV", color: "#ef4444" },
+  { id: "ehv", label: "EHV ≥220 kV", color: "#a855f7" },
+  { id: "substations", label: "Substations", color: "#22d3ee" },
+  { id: "unknown", label: "Voltage unknown", color: "#94a3b8" },
+];
+
+function createInfrastructureLayerState(): Record<InfrastructureLayer, boolean> {
+  return {
+    roads: false,
+    mv: false,
+    hv: false,
+    ehv: false,
+    substations: false,
+    unknown: false,
+  };
+}
 
 const EMPTY_COLLECTION: GeoJSON.FeatureCollection = {
   type: "FeatureCollection",
@@ -43,6 +84,10 @@ export default function SolarSiteScreeningMap() {
   const drawingOverlayRef = useRef<SVGSVGElement>(null);
   const mapRef = useRef<MapLibreMap | null>(null);
   const pointsRef = useRef<Coordinate[]>([]);
+  const infrastructureAbortRef = useRef<AbortController | null>(null);
+  const infrastructureLayersRef = useRef<Record<InfrastructureLayer, boolean>>(
+    createInfrastructureLayerState(),
+  );
   const [points, setPoints] = useState<Coordinate[]>([]);
   const [isDrawing, setIsDrawing] = useState(false);
   const [query, setQuery] = useState("");
@@ -54,11 +99,102 @@ export default function SolarSiteScreeningMap() {
   const [exportFormat, setExportFormat] =
     useState<ExportFormat>("geojson");
   const [isExporting, setIsExporting] = useState(false);
+  const [infrastructureLayers, setInfrastructureLayers] = useState(
+    createInfrastructureLayerState,
+  );
+  const [isLoadingInfrastructure, setIsLoadingInfrastructure] =
+    useState(false);
+  const [infrastructureNote, setInfrastructureNote] = useState(
+    "Switch on a layer and zoom to local scale.",
+  );
 
   const closedRing = points.length >= 3 ? [...points, points[0]] : null;
   const sitePolygon = closedRing ? polygon([closedRing]) : null;
   const siteArea = sitePolygon ? area(sitePolygon) : 0;
   const sitePerimeter = closedRing ? length(lineString(closedRing)) : 0;
+
+  async function loadInfrastructure(map = mapRef.current) {
+    if (
+      !map ||
+      !Object.values(infrastructureLayersRef.current).some(Boolean)
+    ) {
+      return;
+    }
+    if (map.getZoom() < 8) {
+      setInfrastructureNote("Zoom to level 8 or closer to load infrastructure.");
+      return;
+    }
+
+    const bounds = map.getBounds();
+    const parameters = new URLSearchParams({
+      south: bounds.getSouth().toFixed(5),
+      west: bounds.getWest().toFixed(5),
+      north: bounds.getNorth().toFixed(5),
+      east: bounds.getEast().toFixed(5),
+      layers: Object.entries(infrastructureLayersRef.current)
+        .filter(([, enabled]) => enabled)
+        .map(([layer]) => layer)
+        .join(","),
+    });
+
+    infrastructureAbortRef.current?.abort();
+    const controller = new AbortController();
+    infrastructureAbortRef.current = controller;
+    setIsLoadingInfrastructure(true);
+    setInfrastructureNote("Loading visible infrastructure…");
+    try {
+      const response = await fetch(`/api/infrastructure?${parameters}`, {
+        signal: controller.signal,
+      });
+      const result = await response.json();
+      if (!response.ok) {
+        throw new Error(result.error || "Infrastructure data is unavailable.");
+      }
+      (map.getSource("infrastructure") as GeoJSONSource | undefined)?.setData({
+        type: "FeatureCollection",
+        features: result.features ?? [],
+      });
+      const sourceDate = result.metadata?.sourceTimestamp
+        ? new Date(result.metadata.sourceTimestamp).toLocaleDateString()
+        : "latest available";
+      setInfrastructureNote(
+        `${(result.features ?? []).length.toLocaleString()} features · OSM ${sourceDate}`,
+      );
+    } catch (error) {
+      if (error instanceof DOMException && error.name === "AbortError") return;
+      setInfrastructureNote(
+        error instanceof Error
+          ? error.message
+          : "Infrastructure data is unavailable.",
+      );
+    } finally {
+      if (infrastructureAbortRef.current === controller) {
+        setIsLoadingInfrastructure(false);
+      }
+    }
+  }
+
+  function toggleInfrastructureLayer(layer: InfrastructureLayer) {
+    const next = {
+      ...infrastructureLayersRef.current,
+      [layer]: !infrastructureLayersRef.current[layer],
+    };
+    infrastructureLayersRef.current = next;
+    setInfrastructureLayers(next);
+
+    const map = mapRef.current;
+    if (!map) return;
+    for (const layerId of INFRASTRUCTURE_LAYER_IDS[layer]) {
+      if (map.getLayer(layerId)) {
+        map.setLayoutProperty(
+          layerId,
+          "visibility",
+          next[layer] ? "visible" : "none",
+        );
+      }
+    }
+    if (next[layer]) void loadInfrastructure(map);
+  }
 
   function updateDrawingOverlay(nextPoints: Coordinate[]) {
     const map = mapRef.current;
@@ -195,6 +331,77 @@ export default function SolarSiteScreeningMap() {
     map.addControl(new AttributionControl({ compact: true }), "bottom-right");
 
     map.on("load", () => {
+      map.addSource("infrastructure", {
+        type: "geojson",
+        data: EMPTY_COLLECTION,
+        attribution: "© OpenStreetMap contributors",
+      });
+      const lineLayer = (
+        id: string,
+        kind: string,
+        color: string,
+        width: number,
+        dasharray?: number[],
+      ) => {
+        map.addLayer({
+          id,
+          type: "line",
+          source: "infrastructure",
+          filter: ["==", ["get", "kind"], kind],
+          layout: { visibility: "none", "line-cap": "round" },
+          paint: {
+            "line-color": color,
+            "line-width": width,
+            "line-opacity": 0.9,
+            ...(dasharray ? { "line-dasharray": dasharray } : {}),
+          },
+        });
+      };
+      lineLayer("infrastructure-roads", "road", "#f8fafc", 1.5);
+      lineLayer("infrastructure-mv", "mv", "#fb923c", 2);
+      lineLayer("infrastructure-hv", "hv", "#ef4444", 2.5);
+      lineLayer("infrastructure-ehv", "ehv", "#a855f7", 3);
+      lineLayer(
+        "infrastructure-unknown",
+        "power-unknown",
+        "#94a3b8",
+        1.5,
+        [2, 2],
+      );
+      map.addLayer({
+        id: "infrastructure-substation-fill",
+        type: "fill",
+        source: "infrastructure",
+        filter: [
+          "all",
+          ["==", ["get", "kind"], "substation"],
+          ["==", ["geometry-type"], "Polygon"],
+        ],
+        layout: { visibility: "none" },
+        paint: {
+          "fill-color": "#22d3ee",
+          "fill-opacity": 0.25,
+          "fill-outline-color": "#67e8f9",
+        },
+      });
+      map.addLayer({
+        id: "infrastructure-substations",
+        type: "circle",
+        source: "infrastructure",
+        filter: [
+          "all",
+          ["==", ["get", "kind"], "substation"],
+          ["==", ["geometry-type"], "Point"],
+        ],
+        layout: { visibility: "none" },
+        paint: {
+          "circle-radius": 6,
+          "circle-color": "#22d3ee",
+          "circle-stroke-color": "#082f49",
+          "circle-stroke-width": 2,
+        },
+      });
+
       map.addSource("site-polygon", {
         type: "geojson",
         data: EMPTY_COLLECTION,
@@ -243,7 +450,40 @@ export default function SolarSiteScreeningMap() {
     });
 
     map.on("click", (event) => {
-      if (!map.getCanvas().dataset.drawing) return;
+      if (!map.getCanvas().dataset.drawing) {
+        const features = map.queryRenderedFeatures(event.point, {
+          layers: Object.values(INFRASTRUCTURE_LAYER_IDS)
+            .flat()
+            .filter((layerId) => map.getLayer(layerId)),
+        });
+        const feature = features[0];
+        if (!feature?.properties) return;
+        const voltage = feature.properties.voltage
+          ? `${(Number(feature.properties.voltage) / 1_000).toLocaleString()} kV`
+          : "Not mapped";
+        const title =
+          feature.properties.name ||
+          (feature.properties.kind === "road"
+            ? `${feature.properties.roadClass ?? "Road"}`
+            : feature.properties.kind === "substation"
+              ? "Substation"
+              : "Power route");
+        const popupContent = document.createElement("div");
+        popupContent.className = "infrastructure-popup";
+        const heading = document.createElement("strong");
+        heading.textContent = String(title);
+        const details = document.createElement("p");
+        details.textContent =
+          feature.properties.kind === "road"
+            ? `Road class: ${feature.properties.roadClass ?? "unknown"}`
+            : `Voltage: ${voltage} · Operator: ${feature.properties.operator ?? "not mapped"}`;
+        popupContent.append(heading, details);
+        new Popup({ closeButton: true, maxWidth: "280px" })
+          .setLngLat(event.lngLat)
+          .setDOMContent(popupContent)
+          .addTo(map);
+        return;
+      }
       const nextPoints: Coordinate[] = [
         ...pointsRef.current,
         [event.lngLat.lng, event.lngLat.lat],
@@ -260,7 +500,13 @@ export default function SolarSiteScreeningMap() {
     });
     const refreshDrawingOverlay = () =>
       updateDrawingOverlay(pointsRef.current);
+    const refreshInfrastructure = () => {
+      if (Object.values(infrastructureLayersRef.current).some(Boolean)) {
+        void loadInfrastructure(map);
+      }
+    };
     map.on("move", refreshDrawingOverlay);
+    map.on("moveend", refreshInfrastructure);
     map.on("resize", refreshDrawingOverlay);
 
     mapRef.current = map;
@@ -274,7 +520,9 @@ export default function SolarSiteScreeningMap() {
     return () => {
       cancelAnimationFrame(resizeFrame);
       resizeObserver.disconnect();
+      infrastructureAbortRef.current?.abort();
       map.off("move", refreshDrawingOverlay);
+      map.off("moveend", refreshInfrastructure);
       map.off("resize", refreshDrawingOverlay);
       map.remove();
       mapRef.current = null;
@@ -616,6 +864,47 @@ export default function SolarSiteScreeningMap() {
         <div className="pointer-events-none absolute left-4 top-4 rounded-xl border border-white/15 bg-slate-950/85 px-3 py-2 text-xs text-white shadow-lg backdrop-blur">
           {isDrawing ? "Drawing mode · click to add points" : "Pan and zoom to explore"}
         </div>
+        <details className="absolute right-4 top-32 z-10 w-56 overflow-hidden rounded-xl border border-white/15 bg-slate-950/92 text-white shadow-xl backdrop-blur">
+          <summary className="flex cursor-pointer list-none items-center justify-between px-3 py-2.5 text-xs font-bold marker:content-none">
+            Infrastructure layers
+            <span className="text-[10px] font-semibold text-slate-400">
+              OSM beta
+            </span>
+          </summary>
+          <div className="border-t border-white/10 p-3">
+            <div className="space-y-1">
+              {INFRASTRUCTURE_OPTIONS.map((option) => (
+                <label
+                  key={option.id}
+                  className="flex cursor-pointer items-center gap-2 rounded-lg px-2 py-1.5 text-[11px] text-slate-200 transition hover:bg-white/[0.06]"
+                >
+                  <input
+                    type="checkbox"
+                    checked={infrastructureLayers[option.id]}
+                    onChange={() => toggleInfrastructureLayer(option.id)}
+                    className="h-3.5 w-3.5 accent-emerald-400"
+                  />
+                  <span
+                    aria-hidden="true"
+                    className="h-0.5 w-4 shrink-0 rounded-full"
+                    style={{ backgroundColor: option.color }}
+                  />
+                  <span>{option.label}</span>
+                </label>
+              ))}
+            </div>
+            <p
+              aria-live="polite"
+              className="mt-2 border-t border-white/10 pt-2 text-[9px] leading-4 text-slate-400"
+            >
+              {isLoadingInfrastructure ? "Loading…" : infrastructureNote}
+            </p>
+            <p className="mt-2 text-[9px] leading-4 text-slate-500">
+              Coverage varies. Proximity does not indicate connection capacity,
+              availability or feasibility.
+            </p>
+          </div>
+        </details>
         <div
           className="absolute bottom-9 left-4 z-10 flex rounded-xl border border-white/15 bg-slate-950/90 p-1 shadow-xl backdrop-blur"
           aria-label="Basemap style"
