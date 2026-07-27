@@ -35,15 +35,19 @@ export default function RenewableNewsTicker({
   return (
     <aside
       aria-label="Renewable energy industry headlines"
-      className="border-b border-emerald-400/20 bg-emerald-400 text-slate-950"
+      className="relative overflow-hidden border-b border-cyan-200/70 bg-gradient-to-r from-emerald-300 via-cyan-300 to-emerald-300 text-slate-950 shadow-[0_0_24px_rgba(34,211,238,0.22)]"
     >
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 bg-[linear-gradient(110deg,transparent_15%,rgba(255,255,255,0.38)_45%,transparent_70%)] opacity-50"
+      />
       <div className="flex h-8 items-center overflow-hidden">
-        <div className="flex h-full shrink-0 items-center border-r border-slate-950/20 bg-slate-950 px-3 text-[10px] font-bold uppercase tracking-[0.16em] text-emerald-300 sm:px-4">
-          <span className="mr-2 h-1.5 w-1.5 rounded-full bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.9)]" />
+        <div className="relative z-10 flex h-full shrink-0 items-center border-r border-cyan-100/30 bg-slate-950/95 px-3 text-[10px] font-bold uppercase tracking-[0.16em] text-cyan-200 shadow-[8px_0_18px_rgba(2,6,23,0.22)] sm:px-4">
+          <span className="mr-2 h-1.5 w-1.5 rounded-full bg-cyan-300 shadow-[0_0_10px_rgba(103,232,249,1)]" />
           Renewables Live
         </div>
 
-        <div className="hidden min-w-0 flex-1 overflow-hidden md:block">
+        <div className="relative z-10 hidden min-w-0 flex-1 overflow-hidden md:block">
           <div className="renewables-ticker-track flex w-max items-center whitespace-nowrap">
             {repeatedHeadlines.map((headline, index) => (
               <a
@@ -78,7 +82,7 @@ export default function RenewableNewsTicker({
           href={activeHeadline.href}
           target="_blank"
           rel="noopener noreferrer"
-          className="min-w-0 flex-1 px-3 text-[11px] font-semibold md:hidden"
+          className="relative z-10 min-w-0 flex-1 px-3 text-[11px] font-bold md:hidden"
         >
           <span className="mr-2 font-black uppercase">
             {activeHeadline.category}
