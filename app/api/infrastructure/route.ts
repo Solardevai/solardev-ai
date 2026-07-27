@@ -17,6 +17,12 @@ type OverpassResponse = {
   elements?: OverpassElement[];
 };
 
+const OVERPASS_ENDPOINTS = [
+  "https://overpass-api.de/api/interpreter",
+  "https://overpass.kumi.systems/api/interpreter",
+  "https://maps.mail.ru/osm/tools/overpass/api/interpreter",
+];
+
 function parseVoltage(value?: string) {
   if (!value) return null;
   const voltages = value
@@ -153,31 +159,58 @@ export async function GET(request: NextRequest) {
   ]
     .filter(Boolean)
     .join("\n  ");
-  const query = `[out:json][timeout:20];
+  const query = `[out:json][timeout:15];
 (
   ${clauses}
 );
-out geom center tags;`;
+out body geom qt;`;
 
   try {
-    const response = await fetch("https://overpass-api.de/api/interpreter", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8",
-        "User-Agent": "SolarDev.ai Site Check infrastructure beta",
-      },
-      body: new URLSearchParams({ data: query }),
-      next: { revalidate: 3600 },
-    });
+    let data: OverpassResponse | null = null;
+    let successfulEndpoint: string | null = null;
+    const failures: string[] = [];
 
-    if (!response.ok) {
+    for (const endpoint of OVERPASS_ENDPOINTS) {
+      try {
+        const response = await fetch(endpoint, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8",
+            "User-Agent": "SolarDev.ai Site Check infrastructure beta",
+          },
+          body: new URLSearchParams({ data: query }),
+          cache: "no-store",
+          signal: AbortSignal.timeout(18_000),
+        });
+        if (!response.ok) {
+          failures.push(`${new URL(endpoint).hostname}: HTTP ${response.status}`);
+          continue;
+        }
+        data = (await response.json()) as OverpassResponse;
+        successfulEndpoint = new URL(endpoint).hostname;
+        break;
+      } catch (error) {
+        failures.push(
+          `${new URL(endpoint).hostname}: ${
+            error instanceof Error ? error.name : "request failed"
+          }`,
+        );
+      }
+    }
+
+    if (!data) {
+      console.error("[api/infrastructure] all Overpass endpoints failed", {
+        failures,
+      });
       return NextResponse.json(
-        { error: "Infrastructure data is temporarily unavailable." },
-        { status: 502 },
+        {
+          error:
+            "Live infrastructure sources are busy. Wait a moment, zoom in and try again.",
+        },
+        { status: 503, headers: { "Retry-After": "20" } },
       );
     }
 
-    const data = (await response.json()) as OverpassResponse;
     const features: GeoJSON.Feature[] = [];
 
     for (const element of data.elements ?? []) {
@@ -225,20 +258,33 @@ out geom center tags;`;
       }
     }
 
-    return NextResponse.json({
-      type: "FeatureCollection",
-      features,
-      metadata: {
-        source: "OpenStreetMap contributors via Overpass API",
-        sourceTimestamp: data.osm3s?.timestamp_osm_base ?? null,
-        retrievedAt: new Date().toISOString(),
-        classification:
-          "MV 1–<45 kV; HV 45–<220 kV; EHV ≥220 kV; missing voltage shown as unclassified.",
-      },
-    });
-  } catch {
     return NextResponse.json(
-      { error: "Infrastructure data is temporarily unavailable." },
+      {
+        type: "FeatureCollection",
+        features,
+        metadata: {
+          source: "OpenStreetMap contributors via Overpass API",
+          sourceEndpoint: successfulEndpoint,
+          sourceTimestamp: data.osm3s?.timestamp_osm_base ?? null,
+          retrievedAt: new Date().toISOString(),
+          classification:
+            "MV 1–<45 kV; HV 45–<220 kV; EHV ≥220 kV; missing voltage shown as unclassified.",
+        },
+      },
+      {
+        headers: {
+          "Cache-Control":
+            "public, s-maxage=1800, stale-while-revalidate=86400",
+        },
+      },
+    );
+  } catch (error) {
+    console.error("[api/infrastructure] unexpected failure", error);
+    return NextResponse.json(
+      {
+        error:
+          "Live infrastructure sources are busy. Wait a moment, zoom in and try again.",
+      },
       { status: 502 },
     );
   }
