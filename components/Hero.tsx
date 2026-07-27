@@ -1,12 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
-import TrackedCheckoutLink from "@/components/TrackedCheckoutLink";
-import { productData } from "@/data/productData";
-import { siteConfig } from "@/data/siteData";
 
 export default function Hero() {
-  const { product } = siteConfig;
-
   return (
     <section
       id="home"
@@ -23,54 +18,62 @@ export default function Hero() {
         <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-slate-950 to-transparent" />
       </div>
 
-      <div className="relative mx-auto grid min-h-[820px] max-w-7xl items-center gap-16 px-6 py-20 lg:grid-cols-[1.05fr_0.95fr] lg:py-28">
+      <div className="relative mx-auto grid min-h-[860px] max-w-7xl items-center gap-16 px-6 py-20 lg:grid-cols-[1.08fr_0.92fr] lg:py-28">
         {/* Hero copy */}
         <div>
           <div className="inline-flex items-center gap-3 rounded-full border border-amber-400/25 bg-amber-400/10 px-4 py-2 text-sm font-semibold text-amber-300">
             <span className="h-2 w-2 rounded-full bg-amber-400" />
-            {product.edition}
+            Professional resources for Solar PV &amp; BESS
           </div>
 
           <p className="mt-8 text-sm font-semibold uppercase tracking-[0.28em] text-amber-400">
-            Professional Handbook &amp; Prompt Library
+            Knowledge · Workflows · Site Intelligence
           </p>
 
           <h1 className="mt-5 max-w-4xl text-5xl font-bold leading-[1.04] tracking-[-0.04em] text-white sm:text-6xl lg:text-7xl">
-            AI for Utility-Scale Solar &amp; BESS Project Development
+            Practical tools for better solar &amp; BESS development
           </h1>
 
-
+          <p className="mt-6 max-w-2xl text-lg leading-8 text-slate-300">
+            Professional handbooks, reusable AI workflows and early-stage GIS
+            screening tools—built around the real decisions that shape
+            utility-scale projects.
+          </p>
 
           <div className="mt-10 flex flex-col gap-4 sm:flex-row">
-            <TrackedCheckoutLink
-              href={productData.checkoutUrl}
-              buttonLocation="hero"
-              itemId={productData.itemId}
-              itemName={productData.itemName}
-              itemCategory={productData.itemCategory}
-              price={productData.price}
-              currency={productData.currency}
-              className="rounded-xl bg-amber-400 px-7 py-4 text-center font-semibold text-slate-950 shadow-lg shadow-amber-400/10 transition hover:-translate-y-0.5 hover:bg-amber-300"
-            >
-              Get Volume 1
-            </TrackedCheckoutLink>
-
             <Link
               href="/handbooks"
+              className="rounded-xl bg-amber-400 px-7 py-4 text-center font-semibold text-slate-950 shadow-lg shadow-amber-400/10 transition hover:-translate-y-0.5 hover:bg-amber-300"
+            >
+              Explore the Handbooks
+            </Link>
+
+            <Link
+              href="/tools/solar-site-screening"
               className="rounded-xl border border-white/15 bg-white/[0.03] px-7 py-4 text-center font-semibold text-white transition hover:border-white/25 hover:bg-white/[0.07]"
             >
-              Explore the Series
+              Try the Free Site Check
             </Link>
           </div>
 
-          <div className="mt-12 grid max-w-2xl grid-cols-2 gap-6 sm:grid-cols-4">
-            <Stat value={`${product.pages}`} label="Pages" />
-            <Stat value={`${product.chapters}`} label="Chapters" />
-            <Stat value={`${product.promptLevels}`} label="Prompt levels" />
-            <Stat value="Solar + BESS" label="Utility-scale focus" />
+          <div className="mt-12 grid max-w-3xl gap-3 sm:grid-cols-3">
+            <ProductSummary
+              eyebrow="Available"
+              title="Professional Handbooks"
+              description="Two field-focused volumes covering development through operations."
+            />
+            <ProductSummary
+              eyebrow="2026 · Ongoing"
+              title="Prompts & Templates"
+              description="Reusable AI workflows, checklists and professional project templates."
+            />
+            <ProductSummary
+              eyebrow="Free tool"
+              title="Solar Site Quick Check"
+              description="Draw a boundary and check site area and preliminary solar resource."
+              href="/tools/solar-site-screening"
+            />
           </div>
-
-          
         </div>
 
         {/* Visual */}
@@ -116,6 +119,22 @@ export default function Hero() {
               </div>
 
             </div>
+
+            <Link
+              href="/tools/solar-site-screening"
+              className="absolute -bottom-2 right-0 z-20 max-w-56 rounded-2xl border border-emerald-400/25 bg-slate-950/95 p-4 shadow-2xl backdrop-blur transition hover:-translate-y-1 hover:border-emerald-400/50 sm:right-2 sm:p-5"
+            >
+              <span className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.16em] text-emerald-300">
+                <span className="h-2 w-2 rounded-full bg-emerald-400" />
+                Live free tool
+              </span>
+              <strong className="mt-2 block text-sm leading-5 text-white">
+                Solar Site Quick Check
+              </strong>
+              <span className="mt-1 block text-xs leading-5 text-slate-400">
+                Map, draw and screen a potential site.
+              </span>
+            </Link>
           </div>
         </div>
       </div>
@@ -123,16 +142,45 @@ export default function Hero() {
   );
 }
 
-type StatProps = {
-  value: string;
-  label: string;
+type ProductSummaryProps = {
+  eyebrow: string;
+  title: string;
+  description: string;
+  href?: string;
 };
 
-function Stat({ value, label }: StatProps) {
+function ProductSummary({
+  eyebrow,
+  title,
+  description,
+  href,
+}: ProductSummaryProps) {
+  const content = (
+    <>
+      <span className="text-[10px] font-bold uppercase tracking-[0.16em] text-amber-300">
+        {eyebrow}
+      </span>
+      <strong className="mt-2 block text-sm text-white">{title}</strong>
+      <span className="mt-2 block text-xs leading-5 text-slate-400">
+        {description}
+      </span>
+    </>
+  );
+
+  if (href) {
+    return (
+      <Link
+        href={href}
+        className="rounded-2xl border border-white/10 bg-white/[0.035] p-4 transition hover:-translate-y-0.5 hover:border-amber-400/30 hover:bg-amber-400/[0.06]"
+      >
+        {content}
+      </Link>
+    );
+  }
+
   return (
-    <div className="border-l border-white/10 pl-4">
-      <strong className="block text-xl font-bold text-white">{value}</strong>
-      <span className="mt-1 block text-sm text-slate-500">{label}</span>
+    <div className="rounded-2xl border border-white/10 bg-white/[0.035] p-4">
+      {content}
     </div>
   );
 }
