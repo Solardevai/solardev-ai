@@ -107,7 +107,7 @@ export default function SolarSiteScreeningMap() {
   const [isLoadingInfrastructure, setIsLoadingInfrastructure] =
     useState(false);
   const [infrastructureNote, setInfrastructureNote] = useState(
-    "Switch on a layer and zoom to local scale.",
+    "Substations appear as dots from zoom level 5 and gain detail as you zoom in.",
   );
 
   const closedRing = points.length >= 3 ? [...points, points[0]] : null;
@@ -122,8 +122,8 @@ export default function SolarSiteScreeningMap() {
     ) {
       return;
     }
-    if (map.getZoom() < 8) {
-      setInfrastructureNote("Zoom to level 8 or closer to load infrastructure.");
+    if (map.getZoom() < 5) {
+      setInfrastructureNote("Zoom to level 5 or closer to load infrastructure.");
       return;
     }
 
@@ -406,7 +406,7 @@ export default function SolarSiteScreeningMap() {
           ["==", ["get", "kind"], "substation"],
           ["==", ["geometry-type"], "Polygon"],
         ],
-        minzoom: 8,
+        minzoom: 10,
         layout: { visibility: "visible" },
         paint: {
           "fill-color": "#22d3ee",
@@ -423,12 +423,32 @@ export default function SolarSiteScreeningMap() {
           ["==", ["get", "kind"], "substation"],
           ["==", ["geometry-type"], "Point"],
         ],
-        minzoom: 8,
+        minzoom: 5,
         layout: { visibility: "visible" },
         paint: {
-          "circle-radius": ["interpolate", ["linear"], ["zoom"], 8, 18, 14, 28],
+          "circle-radius": [
+            "interpolate",
+            ["linear"],
+            ["zoom"],
+            5,
+            5,
+            8,
+            12,
+            14,
+            28,
+          ],
           "circle-color": "#22d3ee",
-          "circle-opacity": 0.38,
+          "circle-opacity": [
+            "interpolate",
+            ["linear"],
+            ["zoom"],
+            5,
+            0.18,
+            8,
+            0.3,
+            14,
+            0.38,
+          ],
           "circle-stroke-color": "#ffffff",
           "circle-stroke-width": 1.5,
           "circle-stroke-opacity": 0.8,
@@ -443,13 +463,33 @@ export default function SolarSiteScreeningMap() {
           ["==", ["get", "kind"], "substation"],
           ["==", ["geometry-type"], "Point"],
         ],
-        minzoom: 8,
+        minzoom: 5,
         layout: { visibility: "visible" },
         paint: {
-          "circle-radius": ["interpolate", ["linear"], ["zoom"], 8, 8, 14, 13],
+          "circle-radius": [
+            "interpolate",
+            ["linear"],
+            ["zoom"],
+            5,
+            3,
+            8,
+            6,
+            14,
+            13,
+          ],
           "circle-color": "#22d3ee",
           "circle-stroke-color": "#ffffff",
-          "circle-stroke-width": 4,
+          "circle-stroke-width": [
+            "interpolate",
+            ["linear"],
+            ["zoom"],
+            5,
+            1,
+            8,
+            2,
+            14,
+            4,
+          ],
         },
       });
 

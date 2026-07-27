@@ -125,13 +125,6 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: "A valid map bounding box is required." }, { status: 400 });
   }
 
-  if (north - south > 2.5 || east - west > 3.5) {
-    return NextResponse.json(
-      { error: "Zoom in further to load infrastructure layers." },
-      { status: 400 },
-    );
-  }
-
   const allowedLayers = new Set([
     "roads",
     "mv",
@@ -145,6 +138,24 @@ export async function GET(request: NextRequest) {
       .split(",")
       .filter((layer) => allowedLayers.has(layer)),
   );
+  const latitudeSpan = north - south;
+  const longitudeSpan = east - west;
+  const isSubstationsOnly =
+    requestedLayers.size === 1 && requestedLayers.has("substations");
+  const isCoarseSubstationQuery =
+    isSubstationsOnly && (latitudeSpan > 2.5 || longitudeSpan > 3.5);
+  const exceedsDetailedLimit = latitudeSpan > 2.5 || longitudeSpan > 3.5;
+  const exceedsCoarseLimit = latitudeSpan > 14 || longitudeSpan > 22;
+
+  if (
+    (exceedsDetailedLimit && !isSubstationsOnly) ||
+    (isCoarseSubstationQuery && exceedsCoarseLimit)
+  ) {
+    return NextResponse.json(
+      { error: "Zoom in further to load infrastructure layers." },
+      { status: 400 },
+    );
+  }
   if (!requestedLayers.size) {
     return NextResponse.json({
       type: "FeatureCollection",
@@ -177,7 +188,7 @@ export async function GET(request: NextRequest) {
 (
   ${clauses}
 );
-out body geom qt;`;
+${isCoarseSubstationQuery ? "out center qt;" : "out body geom qt;"}`;
 
   try {
     let data: OverpassResponse | null = null;
@@ -254,7 +265,7 @@ out body geom qt;`;
         roadClass: tags.highway ?? null,
         powerType: tags.power ?? null,
         location: tags.location ?? null,
-        marker: false,
+        marker: geometry.type === "Point",
       };
       features.push({
         type: "Feature",
@@ -263,7 +274,7 @@ out body geom qt;`;
       });
 
       const point = representativePoint(geometry);
-      if (point) {
+      if (point && geometry.type !== "Point") {
         features.push({
           type: "Feature",
           geometry: { type: "Point", coordinates: point },
