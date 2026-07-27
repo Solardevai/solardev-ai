@@ -1,0 +1,18 @@
+
+> solardev-ai@0.1.0 dev
+> next dev -p 3045
+
+▲ Next.js 16.2.10 (Turbopack)
+- Local:         http://localhost:3045
+- Network:       http://192.168.1.33:3045
+- Environments: .env.local
+✓ Ready in 450ms
+Creating turbopack project {
+  dir: 'C:\\Users\\TiagoPires\\Downloads\\Temp TP\\Webdev\\GitHub\\solardev-ai',
+  testMode: true
+}
+
+ GET /tools/solar-site-screening 200 in 2.7s (next.js: 1657ms, application-code: 1087ms)
+ GET /api/infrastructure?south=40.88&west=0.75&north=41.03&east=0.98&layers=substations 200 in 4.5s (next.js: 289ms, application-code: 4.2s)
+ GET /api/infrastructure?south=36&west=-4&north=43&east=7&layers=substations 200 in 15.8s (next.js: 67ms, application-code: 15.7s)
+ GET /api/infrastructure?south=39&west=-1&north=43&east=5&layers=ehv 503 in 44s (next.js: 4ms, application-code: 44s)

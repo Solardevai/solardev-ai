@@ -1,0 +1,7 @@
+[api/infrastructure] all Overpass endpoints failed {
+  failures: [
+    'overpass-api.de: HTTP 504',
+    'overpass.kumi.systems: TimeoutError',
+    'maps.mail.ru: TimeoutError'
+  ]
+}

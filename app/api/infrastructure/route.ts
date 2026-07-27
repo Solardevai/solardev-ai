@@ -146,9 +146,17 @@ export async function GET(request: NextRequest) {
     isSubstationsOnly && (latitudeSpan > 2.5 || longitudeSpan > 3.5);
   const exceedsDetailedLimit = latitudeSpan > 2.5 || longitudeSpan > 3.5;
   const exceedsCoarseLimit = latitudeSpan > 14 || longitudeSpan > 22;
+  const isPowerOnly =
+    !requestedLayers.has("roads") &&
+    !requestedLayers.has("substations") &&
+    requestedLayers.size > 0;
+  const exceedsPowerOverviewLimit =
+    latitudeSpan > 7 || longitudeSpan > 11;
 
   if (
-    (exceedsDetailedLimit && !isSubstationsOnly) ||
+    (requestedLayers.has("roads") && exceedsDetailedLimit) ||
+    (isPowerOnly && exceedsPowerOverviewLimit) ||
+    (exceedsDetailedLimit && !isSubstationsOnly && !isPowerOnly) ||
     (isCoarseSubstationQuery && exceedsCoarseLimit)
   ) {
     return NextResponse.json(
