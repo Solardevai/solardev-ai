@@ -44,7 +44,7 @@ export default function Navbar() {
               {index === 1 && (
                 <details className="group relative">
                   <summary className="flex cursor-pointer list-none items-center gap-1.5 font-medium text-slate-300 transition marker:content-none hover:text-white focus:outline-none focus-visible:text-white">
-                    Products
+                    Tools
                     <svg
                       aria-hidden="true"
                       viewBox="0 0 20 20"
@@ -200,7 +200,7 @@ export default function Navbar() {
                 {index === 1 && (
                   <div className="mb-2 rounded-xl border border-white/10 bg-white/[0.025] p-2">
                     <p className="px-2 py-2 text-xs font-bold uppercase tracking-[0.18em] text-slate-500">
-                      Products
+                      Tools
                     </p>
                     <Link
                       href="/handbooks"
