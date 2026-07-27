@@ -1,4 +1,5 @@
 import { chromium } from "playwright";
+import JSZip from "jszip";
 
 const browser = await chromium.launch({ headless: true });
 const page = await browser.newPage({ viewport: { width: 1440, height: 1000 } });
@@ -52,6 +53,16 @@ if (mapBox) {
   await page.mouse.click(mapBox.x + mapBox.width * 0.55, mapBox.y + mapBox.height * 0.65);
 }
 
+await page.locator("#boundary-format").selectOption("kmz");
+const [kmzDownload] = await Promise.all([
+  page.waitForEvent("download"),
+  page.getByRole("button", { name: "Download boundary" }).click(),
+]);
+const kmzPath = await kmzDownload.path();
+const kmzArchive = kmzPath
+  ? await JSZip.loadAsync(await import("node:fs").then((fs) => fs.readFileSync(kmzPath)))
+  : null;
+
 const mapState = await page.evaluate(() => {
   const canvas = document.querySelector(".maplibregl-canvas");
   return {
@@ -84,6 +95,8 @@ const mapState = await page.evaluate(() => {
       .filter((name) => name.includes("tile.openstreetmap.org")),
   };
 });
+mapState.kmzFilename = kmzDownload.suggestedFilename();
+mapState.kmzContainsKml = Boolean(kmzArchive?.file("doc.kml"));
 
 console.log(
   JSON.stringify(
