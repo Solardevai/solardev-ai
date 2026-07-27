@@ -8,7 +8,7 @@ const SITE_TITLE =
   "SolarDev AI | Utility-Scale Solar & BESS Development Tools";
 
 const SITE_DESCRIPTION =
-  "Professional handbooks, engineering workflows and AI prompt libraries for utility-scale solar PV and battery energy storage project development.";
+  "Engineering-led handbooks, controlled AI workflows and early-stage tools for utility-scale solar PV and battery energy storage project development.";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),

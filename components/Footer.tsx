@@ -78,9 +78,9 @@ export default function Footer() {
             </a>
 
             <p className="mt-6 max-w-md leading-7 text-slate-400">
-              Professional handbooks, reusable AI workflows and early-stage
-              site intelligence for utility-scale Solar PV and BESS project
-              development.
+              Engineering-led handbooks, controlled AI workflows and
+              deterministic early-stage tools for utility-scale Solar PV and
+              BESS project development.
             </p>
 
             <div className="mt-7 space-y-3 text-sm">

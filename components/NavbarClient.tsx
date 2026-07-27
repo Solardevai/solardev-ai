@@ -81,11 +81,11 @@ export default function Navbar() {
                       <span className="flex items-center justify-between gap-3">
                         <span className="font-semibold text-white">Site Check</span>
                         <span className="rounded-full border border-emerald-400/25 bg-emerald-400/10 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-emerald-300">
-                          Free
+                          Beta
                         </span>
                       </span>
                       <span className="mt-1 block text-xs leading-5 text-slate-400">
-                        Draw a site and check area and solar resource.
+                        Measure a boundary and run a PVGIS solar pre-check.
                       </span>
                     </Link>
 
@@ -98,7 +98,7 @@ export default function Navbar() {
                           Prompt Library
                         </span>
                         <span className="rounded-full border border-emerald-400/25 bg-emerald-400/10 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-emerald-300">
-                          Coming soon
+                          In development
                         </span>
                       </span>
                       <span className="mt-1 block text-xs leading-5 text-slate-400">
@@ -208,7 +208,7 @@ export default function Navbar() {
                       className="flex min-h-12 items-center justify-between rounded-lg px-3 py-3 font-semibold text-white transition hover:bg-white/[0.05] focus:outline-none focus-visible:bg-white/[0.05]"
                     >
                       Site Check
-                      <span className="text-xs font-bold text-emerald-300">FREE</span>
+                      <span className="text-xs font-bold text-emerald-300">BETA</span>
                     </Link>
                     <div
                       aria-disabled="true"
@@ -218,7 +218,7 @@ export default function Navbar() {
                         Prompt Library
                       </span>
                       <span className="rounded-full border border-emerald-400/25 bg-emerald-400/10 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-emerald-300">
-                        Coming soon
+                        In development
                       </span>
                     </div>
                   </div>

@@ -14,9 +14,9 @@ const roadmapItems: RoadmapItem[] = [
     number: "01",
     title: "Professional Handbook Series",
     description:
-      "A two-volume field reference covering the full utility-scale Solar PV and BESS project lifecycle.",
+      "Two complementary references addressing key decisions from early development through operations.",
     deliverables: ["Volume 1 available", "Volume 2 available"],
-    status: "Available",
+    status: "Delivered",
     active: true,
   },
   {
@@ -24,20 +24,19 @@ const roadmapItems: RoadmapItem[] = [
     number: "02",
     title: "Prompt Library & Templates",
     description:
-      "Turning the handbook methodology into reusable AI workflows and professional project resources.",
+      "Development started on reusable AI workflows and structured professional project resources.",
     deliverables: ["Searchable prompt library", "Templates & checklists"],
-    status: "Ongoing",
+    status: "In development",
     active: true,
   },
   {
     year: "2026 · Q4",
     number: "03",
-    title: "Site Check",
+    title: "Site Check Expansion",
     description:
-      "Expanding early-stage site screening through interactive mapping, solar-resource checks and boundary exports.",
-    deliverables: ["Interactive GIS screening", "GeoJSON, KML & KMZ exports"],
-    status: "Beta",
-    active: true,
+      "Build on the public beta with environmental and terrain constraints and a structured screening summary.",
+    deliverables: ["Public beta available", "Constraint screening planned"],
+    status: "Planned",
   },
 ];
 
@@ -65,8 +64,8 @@ export default function Roadmap() {
             Built across three 2026 milestones
           </h2>
           <p className="mt-4 text-base leading-7 text-slate-400">
-            Professional knowledge first, followed by reusable workflows and
-            progressively more capable site-intelligence tools.
+            Delivered professional knowledge, followed by reusable workflows
+            and a progressively more capable Site Check.
           </p>
         </div>
 

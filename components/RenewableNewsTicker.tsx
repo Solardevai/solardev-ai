@@ -34,7 +34,7 @@ export default function RenewableNewsTicker({
 
   return (
     <aside
-      aria-label="Renewable energy industry headlines"
+      aria-label="Renewable energy industry headlines, updated hourly"
       className="relative overflow-hidden border-b border-white/80 bg-gradient-to-r from-slate-200 via-white to-slate-200 text-slate-950 shadow-[0_0_24px_rgba(255,255,255,0.14)]"
     >
       <div
@@ -44,7 +44,7 @@ export default function RenewableNewsTicker({
       <div className="flex h-8 items-center overflow-hidden">
         <div className="relative z-10 flex h-full shrink-0 items-center border-r border-white/15 bg-slate-900 px-3 text-[10px] font-bold uppercase tracking-[0.16em] text-white shadow-[8px_0_18px_rgba(2,6,23,0.2)] sm:px-4">
           <span className="mr-2 h-1.5 w-1.5 rounded-full bg-white shadow-[0_0_10px_rgba(255,255,255,0.9)]" />
-          Renewables Live
+          Industry Updates · Hourly
         </div>
 
         <div className="relative z-10 hidden min-w-0 flex-1 overflow-hidden md:block">

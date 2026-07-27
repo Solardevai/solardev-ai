@@ -55,7 +55,7 @@ export default function VolumeOne() {
             From early development to operations
           </h2>
           <p className="mt-5 text-lg leading-8 text-slate-400">
-            Two complementary volumes covering the complete
+            Two complementary volumes addressing key decisions across the
             utility-scale Solar PV and BESS project lifecycle.
           </p>
         </div>

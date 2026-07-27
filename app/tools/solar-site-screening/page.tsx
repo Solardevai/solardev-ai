@@ -20,20 +20,21 @@ export default function SolarSiteScreeningPage() {
           <div className="relative mx-auto max-w-7xl">
             <div className="mx-auto mb-10 max-w-3xl text-center">
               <span className="inline-flex rounded-full border border-emerald-400/25 bg-emerald-400/10 px-4 py-1.5 text-xs font-bold uppercase tracking-[0.18em] text-emerald-300">
-                Free early-stage tool
+                Free public beta
               </span>
               <h1 className="mt-5 text-4xl font-bold tracking-tight sm:text-5xl lg:text-6xl">
                 Site <span className="text-emerald-400">Check</span>
               </h1>
               <p className="mx-auto mt-5 max-w-2xl text-base leading-7 text-slate-300 sm:text-lg">
-                Locate a potential site, draw its boundary and obtain an instant area calculation and preliminary PVGIS solar resource estimate.
+                Locate a potential site, measure its boundary and obtain an
+                indicative PVGIS specific-yield estimate at the site centroid.
               </p>
             </div>
             <SolarSiteScreeningMap />
             <div className="mt-6 grid gap-4 text-sm text-slate-400 sm:grid-cols-3">
               <p><strong className="block text-white">1. Find</strong>Search by address, place name or coordinates.</p>
               <p><strong className="block text-white">2. Draw</strong>Click around the site to calculate gross area.</p>
-              <p><strong className="block text-white">3. Check</strong>Retrieve a preliminary PVGIS yield estimate.</p>
+              <p><strong className="block text-white">3. Check</strong>Calculate an indicative PVGIS specific-yield estimate.</p>
             </div>
           </div>
         </section>

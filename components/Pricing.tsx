@@ -64,6 +64,7 @@ export default function Pricing() {
             <ul className="mt-5 flex-1 space-y-2 text-sm text-slate-300">
               <li>{volumeOne.pages}-page PDF edition</li>
               <li>{volumeOne.chapters} professional chapters</li>
+              <li>Individual professional-use licence</li>
               <li>Immediate secure download</li>
             </ul>
 
@@ -109,6 +110,7 @@ export default function Pricing() {
             <ul className="mt-5 flex-1 space-y-2 text-sm text-slate-300">
               <li>{volumeTwo.pages}-page PDF edition</li>
               <li>{volumeTwo.chapters} professional chapters</li>
+              <li>Individual professional-use licence</li>
               <li>Immediate secure download</li>
             </ul>
 

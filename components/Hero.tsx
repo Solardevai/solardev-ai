@@ -36,7 +36,7 @@ export default function Hero() {
 
           <p className="mt-6 max-w-2xl text-lg leading-8 text-slate-300">
             Professional handbooks, reusable AI workflows and early-stage GIS
-            screening tools—built around the real decisions that shape
+            tools—built around the real decisions that shape
             utility-scale projects.
           </p>
 
@@ -63,14 +63,14 @@ export default function Hero() {
               description="Two field-focused volumes covering development through operations."
             />
             <ProductSummary
-              eyebrow="2026 · Ongoing"
+              eyebrow="In development"
               title="Prompts & Templates"
-              description="Reusable AI workflows, checklists and professional project templates."
+              description="Reusable prompts, checklists and structured deliverable templates."
             />
             <ProductSummary
-              eyebrow="Free tool"
+              eyebrow="Free public beta"
               title="Site Check"
-              description="Draw a boundary and check site area and preliminary solar resource."
+              description="Measure a boundary, estimate indicative PV yield and export GIS files."
               href="/tools/solar-site-screening"
             />
           </div>
@@ -126,13 +126,13 @@ export default function Hero() {
             >
               <span className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.16em] text-emerald-300">
                 <span className="h-2 w-2 rounded-full bg-emerald-400" />
-                Live free tool
+                Free public beta
               </span>
               <strong className="mt-2 block text-sm leading-5 text-white">
                 Site Check
               </strong>
               <span className="mt-1 block text-xs leading-5 text-slate-400">
-                Map, draw and screen a potential site.
+                Measure a boundary and run a solar pre-check.
               </span>
             </Link>
           </div>

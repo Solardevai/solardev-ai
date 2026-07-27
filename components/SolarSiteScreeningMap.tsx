@@ -356,7 +356,7 @@ export default function SolarSiteScreeningMap() {
       const result = await response.json();
       if (!response.ok) throw new Error(result.error || "Solar data is unavailable.");
       setSolar(result);
-      setMessage("Preliminary solar resource check complete.");
+      setMessage("Indicative PVGIS calculation complete.");
     } catch (error) {
       setMessage(error instanceof Error ? error.message : "PVGIS query failed.");
     } finally {
@@ -515,21 +515,39 @@ export default function SolarSiteScreeningMap() {
           disabled={!sitePolygon || isLoadingSolar}
           className="mt-4 rounded-xl bg-white px-4 py-3 text-sm font-bold text-slate-950 transition hover:bg-slate-200 disabled:cursor-not-allowed disabled:opacity-40"
         >
-          {isLoadingSolar ? "Checking PVGIS…" : "Run solar resource check"}
+          {isLoadingSolar
+            ? "Calculating with PVGIS…"
+            : "Calculate indicative PV yield"}
         </button>
 
         {solar && (
           <div className="mt-4 rounded-2xl border border-emerald-400/20 bg-emerald-400/[0.07] p-4">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-bold uppercase tracking-[0.15em] text-emerald-300">PVGIS result</span>
-              <span className="rounded-full bg-emerald-400/15 px-2 py-1 text-[10px] font-bold text-emerald-300">RESOURCE FOUND</span>
+              <span className="text-xs font-bold uppercase tracking-[0.15em] text-emerald-300">Indicative PVGIS result</span>
+              <span className="rounded-full bg-emerald-400/15 px-2 py-1 text-[10px] font-bold text-emerald-300">MODEL OUTPUT</span>
             </div>
             <p className="mt-4 text-3xl font-bold text-white">{Math.round(solar.specificYield).toLocaleString()}</p>
-            <p className="text-xs text-slate-400">kWh/kWp per year · fixed, optimum angle</p>
+            <p className="text-xs text-slate-400">
+              kWh/kWp per year at the boundary centroid
+            </p>
             <div className="mt-3 flex justify-between border-t border-white/10 pt-3 text-xs">
               <span className="text-slate-400">Monthly average</span>
               <strong>{Math.round(solar.monthlyAverage).toLocaleString()} kWh/kWp</strong>
             </div>
+            <dl className="mt-3 space-y-1 border-t border-white/10 pt-3 text-[10px] leading-4">
+              <div className="flex justify-between gap-3">
+                <dt className="text-slate-400">System basis</dt>
+                <dd className="text-right text-slate-200">1 kWp nominal</dd>
+              </div>
+              <div className="flex justify-between gap-3">
+                <dt className="text-slate-400">Mounting</dt>
+                <dd className="text-right text-slate-200">Fixed, optimum inclination</dd>
+              </div>
+              <div className="flex justify-between gap-3">
+                <dt className="text-slate-400">System losses</dt>
+                <dd className="text-right text-slate-200">14% assumed</dd>
+              </div>
+            </dl>
           </div>
         )}
 
@@ -561,7 +579,10 @@ export default function SolarSiteScreeningMap() {
         </div>
 
         <p className="mt-auto pt-6 text-[10px] leading-4 text-slate-500">
-          Preliminary desktop screening using third-party datasets. Results do not replace environmental, planning, grid, legal or technical due diligence.
+          Preliminary boundary measurement and modelled solar pre-check using
+          third-party data. It does not assess environmental, planning, land,
+          terrain, grid, legal or technical constraints and does not replace
+          professional due diligence.
         </p>
       </aside>
 

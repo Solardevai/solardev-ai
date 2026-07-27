@@ -8,35 +8,35 @@ type Feature = {
 const features: Feature[] = [
   {
     number: "01",
-    title: "Engineering First",
+    title: "Engineering-Led Knowledge",
     description:
-      "Professional engineering methodology remains the foundation of every workflow, prompt and decision-support framework.",
+      "Professional project-development methodology remains the foundation of every resource, workflow and decision framework.",
     points: [
-      "Structured project-development workflows",
-      "Clear assumptions and evidence requirements",
-      "Decision-focused engineering outputs",
+      "Lifecycle decision frameworks",
+      "Evidence and information requirements",
+      "Practitioner-focused review guidance",
     ],
   },
   {
     number: "02",
-    title: "AI With Control",
+    title: "Controlled AI Workflows",
     description:
       "AI is used inside controlled professional workflows rather than as an unverified source of technical conclusions.",
     points: [
-      "Traceable inputs and assumptions",
+      "Traceable inputs, sources and assumptions",
       "Uncertainty and limitation checks",
       "Mandatory professional validation",
     ],
   },
   {
     number: "03",
-    title: "Practitioner-Led",
+    title: "Deterministic Project Tools",
     description:
-      "The handbook is built around real utility-scale Solar PV and BESS project-development activities and deliverables.",
+      "Calculations and external data services produce defined outputs that can be reviewed independently of AI interpretation.",
     points: [
-      "Utility-scale project context",
-      "Consultant-grade prompt structures",
-      "Practical engineering review checklists",
+      "Transparent calculation assumptions",
+      "Reproducible boundary measurements",
+      "GIS-compatible project data exports",
     ],
   },
 ];
@@ -69,13 +69,13 @@ export default function Features() {
             id="features-title"
             className="mt-4 text-3xl font-bold tracking-tight text-white sm:text-4xl lg:text-5xl"
           >
-            Engineering workflows, not isolated prompts
+            Engineering knowledge, controlled AI and traceable tools
           </h2>
 
           <p className="mx-auto mt-6 max-w-2xl text-lg leading-8 text-slate-300">
-            SolarDev AI combines professional engineering methodology with
-            controlled AI assistance to support reliable, traceable and
-            decision-ready project-development work.
+            SolarDev AI separates professional methodology, AI-assisted
+            workflows and deterministic calculations so each output can be
+            reviewed at the appropriate level.
           </p>
         </div>
 

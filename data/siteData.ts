@@ -4,7 +4,7 @@ export const siteConfig = {
   name: "SolarDev AI",
   tagline: "AI for Utility-Scale Solar & BESS Professionals",
   description:
-    "Professional engineering methodologies, controlled AI workflows and consultant-grade prompts for utility-scale Solar PV and BESS project development.",
+    "Engineering-led knowledge, controlled AI workflows and deterministic early-stage tools for utility-scale Solar PV and BESS project development.",
 
   infoEmail: "info@solardev.ai",
   supportEmail: "support@solardev.ai",
@@ -216,32 +216,36 @@ export const applications = [
 
 export const roadmapItems = [
   {
-    volume: "Volume 1",
-    title: "AI Foundations & Professional Prompt Library",
-    status: "Available",
+    volume: "2026 · Q1",
+    title: "Professional Handbook Series",
+    status: "Delivered",
     active: true,
   },
   {
-    volume: "Volume 2",
-    title: "From Development to Operations",
-    status: "Available",
+    volume: "2026 · Q2",
+    title: "Prompt Library & Templates",
+    status: "In development",
     active: true,
   },
   {
-    volume: "Professional Toolkit",
-    title: "Templates, checklists and engineering workflows",
-    status: "Planned",
-    active: false,
-  },
-  {
-    volume: "Prompt Platform",
-    title: "Searchable professional prompt library",
+    volume: "2026 · Q4",
+    title: "Site Check Expansion",
     status: "Planned",
     active: false,
   },
 ];
 
 export const faqItems = [
+  {
+    question: "What does the Site Check currently assess?",
+    answer:
+      "The public beta measures a user-defined boundary, calculates gross area and perimeter, retrieves an indicative PVGIS specific-yield estimate at the boundary centroid, and exports GeoJSON, KML or KMZ. It does not yet assess environmental, planning, land, terrain, grid or permitting constraints.",
+  },
+  {
+    question: "When will the Prompt Library & Templates be available?",
+    answer:
+      "Development started in Q2 2026. The first release date will be confirmed after the professional workflows and templates have completed internal review.",
+  },
   {
     question: "Is this a general AI book?",
     answer:
