@@ -300,13 +300,6 @@ export default function SolarSiteScreeningMap() {
       style: {
         version: 8,
         sources: {
-          osm: {
-            type: "raster",
-            tiles: ["https://tile.openstreetmap.org/{z}/{x}/{y}.png"],
-            tileSize: 256,
-            attribution:
-              '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-          },
           satellite: {
             type: "raster",
             tiles: [
@@ -318,12 +311,10 @@ export default function SolarSiteScreeningMap() {
           },
         },
         layers: [
-          { id: "osm", type: "raster", source: "osm" },
           {
             id: "satellite",
             type: "raster",
             source: "satellite",
-            layout: { visibility: "none" },
           },
         ],
       },
@@ -416,10 +407,10 @@ export default function SolarSiteScreeningMap() {
           ["==", ["geometry-type"], "Polygon"],
         ],
         minzoom: 8,
-        layout: { visibility: "none" },
+        layout: { visibility: "visible" },
         paint: {
           "fill-color": "#22d3ee",
-          "fill-opacity": 0.42,
+          "fill-opacity": 0.62,
           "fill-outline-color": "#ffffff",
         },
       });
@@ -430,14 +421,14 @@ export default function SolarSiteScreeningMap() {
         filter: [
           "all",
           ["==", ["get", "kind"], "substation"],
-          ["==", ["get", "marker"], true],
+          ["==", ["geometry-type"], "Point"],
         ],
         minzoom: 8,
-        layout: { visibility: "none" },
+        layout: { visibility: "visible" },
         paint: {
-          "circle-radius": ["interpolate", ["linear"], ["zoom"], 8, 13, 14, 20],
+          "circle-radius": ["interpolate", ["linear"], ["zoom"], 8, 18, 14, 28],
           "circle-color": "#22d3ee",
-          "circle-opacity": 0.24,
+          "circle-opacity": 0.38,
           "circle-stroke-color": "#ffffff",
           "circle-stroke-width": 1.5,
           "circle-stroke-opacity": 0.8,
@@ -450,15 +441,15 @@ export default function SolarSiteScreeningMap() {
         filter: [
           "all",
           ["==", ["get", "kind"], "substation"],
-          ["==", ["get", "marker"], true],
+          ["==", ["geometry-type"], "Point"],
         ],
         minzoom: 8,
-        layout: { visibility: "none" },
+        layout: { visibility: "visible" },
         paint: {
-          "circle-radius": ["interpolate", ["linear"], ["zoom"], 8, 6, 14, 10],
+          "circle-radius": ["interpolate", ["linear"], ["zoom"], 8, 8, 14, 13],
           "circle-color": "#22d3ee",
           "circle-stroke-color": "#ffffff",
-          "circle-stroke-width": 3,
+          "circle-stroke-width": 4,
         },
       });
 
@@ -599,49 +590,6 @@ export default function SolarSiteScreeningMap() {
     map.getCanvas().dataset.drawing = next ? "true" : "";
     map.getCanvas().style.cursor = next ? "crosshair" : "";
     setMessage(next ? "Click the map to add boundary points." : "Drawing paused.");
-  }
-
-  function selectBasemap(nextBasemap: Basemap) {
-    const map = mapRef.current;
-    if (!map?.getLayer("osm") || !map.getLayer("satellite")) return;
-    map.setLayoutProperty(
-      "osm",
-      "visibility",
-      nextBasemap === "streets" ? "visible" : "none",
-    );
-    map.setLayoutProperty(
-      "satellite",
-      "visibility",
-      nextBasemap === "satellite" ? "visible" : "none",
-    );
-    basemapRef.current = nextBasemap;
-    setBasemap(nextBasemap);
-
-    const substationsEnabled = nextBasemap === "satellite";
-    const nextInfrastructure = {
-      ...infrastructureLayersRef.current,
-      substations: substationsEnabled,
-    };
-    infrastructureLayersRef.current = nextInfrastructure;
-    setInfrastructureLayers(nextInfrastructure);
-    for (const layerId of INFRASTRUCTURE_LAYER_IDS.substations) {
-      if (map.getLayer(layerId)) {
-        map.setLayoutProperty(
-          layerId,
-          "visibility",
-          substationsEnabled ? "visible" : "none",
-        );
-      }
-    }
-    if (substationsEnabled) {
-      if (map.getZoom() < 8) {
-        setInfrastructureNote(
-          "Substations appear on satellite imagery from zoom level 8. Zoom in to load them.",
-        );
-      } else {
-        void loadInfrastructure(map);
-      }
-    }
   }
 
   function clearSite() {
@@ -992,26 +940,6 @@ export default function SolarSiteScreeningMap() {
             </p>
           </div>
         </details>
-        <div
-          className="absolute bottom-9 left-4 z-10 flex rounded-xl border border-white/15 bg-slate-950/90 p-1 shadow-xl backdrop-blur"
-          aria-label="Basemap style"
-        >
-          {(["streets", "satellite"] as const).map((option) => (
-            <button
-              key={option}
-              type="button"
-              aria-pressed={basemap === option}
-              onClick={() => selectBasemap(option)}
-              className={`rounded-lg px-3 py-2 text-xs font-bold capitalize transition ${
-                basemap === option
-                  ? "bg-emerald-400 text-slate-950"
-                  : "text-slate-300 hover:bg-white/10 hover:text-white"
-              }`}
-            >
-              {option}
-            </button>
-          ))}
-        </div>
       </div>
     </section>
   );

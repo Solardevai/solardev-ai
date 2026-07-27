@@ -89,8 +89,22 @@ function representativePoint(
     geometry.type === "Polygon" ? geometry.coordinates[0] : geometry.coordinates;
   if (!coordinates.length) return null;
 
-  const middle = coordinates[Math.floor((coordinates.length - 1) / 2)];
-  return middle;
+  if (geometry.type === "Polygon") {
+    const uniqueCoordinates = coordinates.slice(
+      0,
+      coordinates.length > 1 ? -1 : undefined,
+    );
+    const total = uniqueCoordinates.reduce(
+      (sum, coordinate) => [sum[0] + coordinate[0], sum[1] + coordinate[1]],
+      [0, 0],
+    );
+    return [
+      total[0] / uniqueCoordinates.length,
+      total[1] / uniqueCoordinates.length,
+    ];
+  }
+
+  return coordinates[Math.floor((coordinates.length - 1) / 2)];
 }
 
 export async function GET(request: NextRequest) {
