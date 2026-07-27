@@ -216,7 +216,7 @@ export default function SolarSiteScreeningMap() {
         source: "site-line",
         paint: {
           "line-color": "#020617",
-          "line-width": 7,
+          "line-width": 4,
           "line-opacity": 0.8,
         },
       });
@@ -226,7 +226,7 @@ export default function SolarSiteScreeningMap() {
         source: "site-line",
         paint: {
           "line-color": "#34d399",
-          "line-width": 4,
+          "line-width": 2,
         },
       });
       map.addLayer({
@@ -384,7 +384,7 @@ export default function SolarSiteScreeningMap() {
   <Document>
     <name>SolarDev Site Boundary</name>
     <Style id="site-boundary">
-      <LineStyle><color>ff99d334</color><width>3</width></LineStyle>
+      <LineStyle><color>ff99d334</color><width>2</width></LineStyle>
       <PolyStyle><color>4099d334</color></PolyStyle>
     </Style>
     <Placemark>
@@ -578,16 +578,16 @@ export default function SolarSiteScreeningMap() {
         >
           <path
             data-site-path
-            fill="rgba(251, 191, 36, 0.24)"
+            fill="rgba(52, 211, 153, 0.2)"
             stroke="#020617"
-            strokeWidth="8"
+            strokeWidth="5"
             strokeLinejoin="round"
           />
           <path
             data-site-path
             fill="transparent"
             stroke="#34d399"
-            strokeWidth="4"
+            strokeWidth="2"
             strokeLinejoin="round"
           />
           <g data-site-vertices />
