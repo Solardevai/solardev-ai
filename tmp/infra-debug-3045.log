@@ -16,3 +16,6 @@ Creating turbopack project {
  GET /api/infrastructure?south=40.88&west=0.75&north=41.03&east=0.98&layers=substations 200 in 4.5s (next.js: 289ms, application-code: 4.2s)
  GET /api/infrastructure?south=36&west=-4&north=43&east=7&layers=substations 200 in 15.8s (next.js: 67ms, application-code: 15.7s)
  GET /api/infrastructure?south=39&west=-1&north=43&east=5&layers=ehv 503 in 44s (next.js: 4ms, application-code: 44s)
+ GET /api/infrastructure?south=40.88&west=0.75&north=41.03&east=0.98&layers=substations 200 in 1314ms (next.js: 3ms, application-code: 1311ms)
+ GET /api/infrastructure?south=36&west=-4&north=43&east=7&layers=substations 200 in 38.9s (next.js: 6ms, application-code: 38.9s)
+ GET /api/infrastructure?south=36&west=-4&north=43&east=7&layers=substations 200 in 50s (next.js: 66ms, application-code: 49s)

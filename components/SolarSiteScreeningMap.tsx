@@ -118,69 +118,6 @@ export default function SolarSiteScreeningMap() {
   const siteArea = sitePolygon ? area(sitePolygon) : 0;
   const sitePerimeter = closedRing ? length(lineString(closedRing)) : 0;
 
-  async function loadInfrastructureLegacy(map = mapRef.current) {
-    if (
-      !map ||
-      !Object.values(infrastructureLayersRef.current).some(Boolean)
-    ) {
-      return;
-    }
-    if (map.getZoom() < 5) {
-      setInfrastructureNote("Zoom to level 5 or closer to load infrastructure.");
-      return;
-    }
-
-    const bounds = map.getBounds();
-    const parameters = new URLSearchParams({
-      south: bounds.getSouth().toFixed(5),
-      west: bounds.getWest().toFixed(5),
-      north: bounds.getNorth().toFixed(5),
-      east: bounds.getEast().toFixed(5),
-      layers: Object.entries(infrastructureLayersRef.current)
-        .filter(([, enabled]) => enabled)
-        .map(([layer]) => layer)
-        .join(","),
-    });
-
-    infrastructureAbortRef.current?.abort();
-    const controller = new AbortController();
-    infrastructureAbortRef.current = controller;
-    setIsLoadingInfrastructure(true);
-    setInfrastructureNote("Loading visible infrastructure…");
-    try {
-      const response = await fetch(`/api/infrastructure?${parameters}`, {
-        signal: controller.signal,
-      });
-      const result = await response.json();
-      if (!response.ok) {
-        throw new Error(result.error || "Infrastructure data is unavailable.");
-      }
-      (map.getSource("infrastructure") as GeoJSONSource | undefined)?.setData({
-        type: "FeatureCollection",
-        features: result.features ?? [],
-      });
-      infrastructureFeaturesRef.current = result.features ?? [];
-      updateInfrastructureOverlay(result.features ?? []);
-      const sourceDate = result.metadata?.sourceTimestamp
-        ? new Date(result.metadata.sourceTimestamp).toLocaleDateString()
-        : "latest available";
-      setInfrastructureNote(
-        `${(result.features ?? []).length.toLocaleString()} features · OSM ${sourceDate}`,
-      );
-    } catch (error) {
-      if (error instanceof DOMException && error.name === "AbortError") return;
-      setInfrastructureNote(
-        error instanceof Error
-          ? error.message
-          : "Infrastructure data is unavailable.",
-      );
-    } finally {
-      if (infrastructureAbortRef.current === controller) {
-        setIsLoadingInfrastructure(false);
-      }
-    }
-  }
-
   async function loadInfrastructure(map = mapRef.current) {
     if (!map) return;
 
@@ -286,6 +223,7 @@ export default function SolarSiteScreeningMap() {
           detailedInfrastructureFeaturesRef.current = result.value.features;
         }
       }
+      if (infrastructureAbortRef.current !== controller) return;
 
       const features = [
         ...substationFeaturesRef.current,
@@ -346,6 +284,7 @@ export default function SolarSiteScreeningMap() {
       road: "#f8fafc",
     };
     const elements: SVGElement[] = [];
+    const occupiedPointCells = new Set<string>();
     const stateLayer: Record<string, InfrastructureLayer> = {
       substation: "substations",
       ehv: "ehv",
@@ -365,6 +304,12 @@ export default function SolarSiteScreeningMap() {
       if (geometry.type === "Point") {
         if (feature.properties?.marker !== true) continue;
         const point = map.project(geometry.coordinates as Coordinate);
+        const cellSize = zoom < 6 ? 20 : zoom < 7 ? 12 : 0;
+        if (cellSize) {
+          const cell = `${kind}-${Math.round(point.x / cellSize)}-${Math.round(point.y / cellSize)}`;
+          if (occupiedPointCells.has(cell)) continue;
+          occupiedPointCells.add(cell);
+        }
         const halo = document.createElementNS(
           "http://www.w3.org/2000/svg",
           "circle",

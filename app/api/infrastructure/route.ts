@@ -187,7 +187,9 @@ export async function GET(request: NextRequest) {
       ? `way["power"~"^(line|minor_line|cable)$"](${bbox});`
       : "",
     requestedLayers.has("substations")
-      ? `nwr["power"="substation"](${bbox});`
+      ? isCoarseSubstationQuery
+        ? `nwr["power"="substation"]["voltage"](${bbox});`
+        : `nwr["power"="substation"](${bbox});`
       : "",
   ]
     .filter(Boolean)
@@ -248,6 +250,10 @@ ${isCoarseSubstationQuery ? "out center qt;" : "out body geom qt;"}`;
 
     for (const element of data.elements ?? []) {
       const tags = element.tags ?? {};
+      if (isCoarseSubstationQuery) {
+        const overviewVoltage = parseVoltage(tags.voltage);
+        if (!overviewVoltage || overviewVoltage < 45_000) continue;
+      }
       const geometry = geometryFor(element);
       if (!geometry) continue;
 
