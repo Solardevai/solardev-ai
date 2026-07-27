@@ -131,3 +131,28 @@ button {
     animation-iteration-count: 1 !important;
   }
 }
+
+@keyframes renewables-ticker-scroll {
+  from {
+    transform: translateX(0);
+  }
+
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.renewables-ticker-track {
+  animation: renewables-ticker-scroll 80s linear infinite;
+}
+
+.renewables-ticker-track:hover,
+.renewables-ticker-track:focus-within {
+  animation-play-state: paused;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .renewables-ticker-track {
+    animation: none;
+  }
+}

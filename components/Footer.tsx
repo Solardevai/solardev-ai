@@ -3,43 +3,39 @@ import CookiePreferencesButton from "@/components/CookiePreferencesButton";
 
 const productLinks = [
   {
-    label: "All Handbooks",
+    label: "Handbooks",
     href: "/handbooks",
   },
   {
-    label: "Volume 1",
-    href: "/solar-bess-project-development-handbook",
+    label: "Prompt Library & Templates",
+    href: "/#roadmap",
   },
   {
-    label: "Volume 2",
-    href: "/solar-bess-project-development-handbook-volume-2",
-  },
-  {
-    label: "Preview",
-    href: "/solar-bess-project-development-handbook#preview",
-  },
-  {
-    label: "Roadmap",
-    href: "#roadmap",
-  },
-  {
-    label: "Pricing",
-    href: "#pricing",
+    label: "Solar Site Quick Check",
+    href: "/tools/solar-site-screening",
   },
 ];
 
 const companyLinks = [
   {
     label: "Professionals",
-    href: "#audience",
+    href: "/#audience",
+  },
+  {
+    label: "Roadmap",
+    href: "/#roadmap",
+  },
+  {
+    label: "Pricing",
+    href: "/#pricing",
   },
   {
     label: "FAQ",
-    href: "#faq",
+    href: "/#faq",
   },
   {
     label: "Contact",
-    href: "#contact",
+    href: "/#contact",
   },
 ];
 
@@ -82,9 +78,9 @@ export default function Footer() {
             </a>
 
             <p className="mt-6 max-w-md leading-7 text-slate-400">
-              Professional AI methodologies, engineering workflows and
-              consultant-grade prompts for utility-scale Solar PV and BESS
-              project development.
+              Professional handbooks, reusable AI workflows and early-stage
+              site intelligence for utility-scale Solar PV and BESS project
+              development.
             </p>
 
             <div className="mt-7 space-y-3 text-sm">
