@@ -94,11 +94,11 @@ export default function Navbar() {
                       className="mt-1 block rounded-xl px-4 py-3 transition hover:bg-white/[0.06] focus:outline-none focus-visible:bg-white/[0.06]"
                     >
                       <span className="flex items-center justify-between gap-3">
-                        <span className="font-semibold text-white">Sun Path & Shadows</span>
+                        <span className="font-semibold text-white">Sun Position & Shadings</span>
                         <span className="rounded-full border border-amber-400/25 bg-amber-400/10 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-amber-300">New</span>
                       </span>
                       <span className="mt-1 block text-xs leading-5 text-slate-400">
-                        Explore solar angles and indicative shadow geometry.
+                        Explore solar angles and indicative shading geometry.
                       </span>
                     </Link>
 
@@ -228,7 +228,7 @@ export default function Navbar() {
                       onClick={closeMenu}
                       className="flex min-h-12 items-center justify-between rounded-lg px-3 py-3 font-semibold text-white transition hover:bg-white/[0.05] focus:outline-none focus-visible:bg-white/[0.05]"
                     >
-                      Sun Path & Shadows
+                      Sun Position & Shadings
                       <span className="text-xs font-bold text-amber-300">NEW</span>
                     </Link>
                     <div

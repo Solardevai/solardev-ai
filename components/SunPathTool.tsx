@@ -13,17 +13,22 @@ import { FormEvent, useEffect, useMemo, useRef, useState } from "react";
 type Point = { latitude: number; longitude: number };
 type SunPoint = { minute: number; azimuth: number; elevation: number };
 
-const STREET_STYLE = {
+const SATELLITE_STYLE = {
   version: 8 as const,
   sources: {
-    osm: {
+    satellite: {
       type: "raster" as const,
-      tiles: ["https://tile.openstreetmap.org/{z}/{x}/{y}.png"],
+      tiles: [
+        "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+      ],
       tileSize: 256,
-      attribution: "© OpenStreetMap contributors",
+      attribution:
+        "Sources: Esri, Maxar, Earthstar Geographics, and the GIS User Community",
     },
   },
-  layers: [{ id: "osm", type: "raster" as const, source: "osm" }],
+  layers: [
+    { id: "satellite", type: "raster" as const, source: "satellite" },
+  ],
 };
 
 const DEFAULT_POINT = { latitude: 41.3874, longitude: 2.1686 };
@@ -163,7 +168,7 @@ export default function SunPathTool() {
     if (!mapContainer.current || mapRef.current) return;
     const map = new MapLibreMap({
       container: mapContainer.current,
-      style: STREET_STYLE,
+      style: SATELLITE_STYLE,
       center: [point.longitude, point.latitude],
       zoom: 16,
       attributionControl: false,
@@ -335,14 +340,14 @@ export default function SunPathTool() {
             </svg>
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,transparent,rgba(2,6,23,.3))]" />
           </div>
-          <div ref={mapContainer} className="absolute inset-0 z-10 h-full w-full" aria-label="Interactive map showing sun and shadow directions" />
+          <div ref={mapContainer} className="absolute inset-0 z-10 h-full w-full" aria-label="Interactive satellite map showing sun and shading directions" />
           <div className="pointer-events-none absolute left-4 top-4 z-20 max-w-[calc(100%-2rem)] rounded-xl border border-white/10 bg-slate-950/90 px-4 py-3 backdrop-blur">
             <p className="truncate text-xs font-bold uppercase tracking-[0.14em] text-slate-400">{label}</p>
             <p className="mt-1 font-mono text-xs text-slate-300">{point.latitude.toFixed(4)}°, {point.longitude.toFixed(4)}°</p>
           </div>
           <div className="pointer-events-none absolute bottom-5 right-4 z-20 flex gap-2 text-xs font-semibold">
             <span className="rounded-full border border-amber-400/25 bg-slate-950/90 px-3 py-2 text-amber-300">↗ Sun {sun.azimuth.toFixed(1)}°</span>
-            <span className="rounded-full border border-cyan-400/25 bg-slate-950/90 px-3 py-2 text-cyan-300">↙ Shadow {(sun.azimuth + 180) % 360 | 0}°</span>
+            <span className="rounded-full border border-cyan-400/25 bg-slate-950/90 px-3 py-2 text-cyan-300">↙ Shading {(sun.azimuth + 180) % 360 | 0}°</span>
           </div>
         </div>
 
@@ -366,7 +371,7 @@ export default function SunPathTool() {
           </div>
           <div className="mt-6 border-t border-white/10 pt-5">
             <div className="flex items-center justify-between">
-              <p className="text-xs font-bold uppercase tracking-[0.18em] text-cyan-300">Shadow</p>
+              <p className="text-xs font-bold uppercase tracking-[0.18em] text-cyan-300">Shading</p>
               <span className="font-mono text-xl text-white">{shadowLength ? `${shadowLength.toFixed(1)} m` : "Below horizon"}</span>
             </div>
             <label className="mt-4 block text-xs text-slate-400">Object height: <strong className="text-white">{height.toFixed(1)} m</strong>

@@ -4,9 +4,9 @@ import Navbar from "@/components/Navbar";
 import SunPathTool from "@/components/SunPathTool";
 
 export const metadata: Metadata = {
-  title: "Sun Path & Shadow Tool",
+  title: "Sun Position & Shadings",
   description:
-    "Explore solar azimuth, elevation, sunrise, sunset and flat-ground shadow length on an interactive map.",
+    "Explore solar azimuth, elevation, sunrise, sunset and indicative shading on an interactive satellite map.",
   alternates: { canonical: "/tools/sun-path" },
 };
 
@@ -24,17 +24,17 @@ export default function SunPathPage() {
                 <span className="text-xs text-slate-500">Public beta</span>
               </div>
               <h1 className="mt-5 text-4xl font-bold tracking-tight sm:text-5xl lg:text-6xl">
-                See the sun. <span className="text-amber-400">Read the shadow.</span>
+                Sun position. <span className="text-amber-400">See the shadings.</span>
               </h1>
               <p className="mt-5 max-w-2xl text-base leading-7 text-slate-300 sm:text-lg">
-                Explore solar position and indicative flat-ground shadows at any
-                location, date and time—built for early-stage PV decisions.
+                Explore sun position and indicative flat-ground shadings at any
+                location, date and time on satellite imagery—built for early-stage PV decisions.
               </p>
             </div>
             <SunPathTool />
             <div className="mt-6 grid gap-4 text-sm text-slate-400 sm:grid-cols-3">
               <p><strong className="block text-white">1. Locate</strong>Search an address, paste coordinates or click the map.</p>
-              <p><strong className="block text-white">2. Explore</strong>Move the time slider to animate sun and shadow direction.</p>
+              <p><strong className="block text-white">2. Explore</strong>Move the time slider to animate sun and shading direction.</p>
               <p><strong className="block text-white">3. Export</strong>Share the scenario or download the full daily solar path.</p>
             </div>
           </div>
