@@ -74,6 +74,19 @@ function geometryFor(element: OverpassElement) {
   return null;
 }
 
+function representativePoint(
+  geometry: NonNullable<ReturnType<typeof geometryFor>>,
+) {
+  if (geometry.type === "Point") return geometry.coordinates;
+
+  const coordinates =
+    geometry.type === "Polygon" ? geometry.coordinates[0] : geometry.coordinates;
+  if (!coordinates.length) return null;
+
+  const middle = coordinates[Math.floor((coordinates.length - 1) / 2)];
+  return middle;
+}
+
 export async function GET(request: NextRequest) {
   const values = ["south", "west", "north", "east"].map((key) =>
     Number(request.nextUrl.searchParams.get(key)),
@@ -183,22 +196,33 @@ out geom center tags;`;
               ? requestedLayers.has("unknown")
               : requestedLayers.has(kind);
       if (!requestedKind) continue;
+      const properties = {
+        kind,
+        osmType: element.type,
+        osmId: element.id,
+        voltage: parseVoltage(tags.voltage),
+        voltageRaw: tags.voltage ?? null,
+        operator: tags.operator ?? null,
+        name: tags.name ?? tags.ref ?? null,
+        roadClass: tags.highway ?? null,
+        powerType: tags.power ?? null,
+        location: tags.location ?? null,
+        marker: false,
+      };
       features.push({
         type: "Feature",
         geometry,
-        properties: {
-          kind,
-          osmType: element.type,
-          osmId: element.id,
-          voltage: parseVoltage(tags.voltage),
-          voltageRaw: tags.voltage ?? null,
-          operator: tags.operator ?? null,
-          name: tags.name ?? tags.ref ?? null,
-          roadClass: tags.highway ?? null,
-          powerType: tags.power ?? null,
-          location: tags.location ?? null,
-        },
+        properties,
       });
+
+      const point = representativePoint(geometry);
+      if (point) {
+        features.push({
+          type: "Feature",
+          geometry: { type: "Point", coordinates: point },
+          properties: { ...properties, marker: true },
+        });
+      }
     }
 
     return NextResponse.json({

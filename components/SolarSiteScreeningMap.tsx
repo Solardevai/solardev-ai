@@ -30,12 +30,12 @@ type InfrastructureLayer =
   | "unknown";
 
 const INFRASTRUCTURE_LAYER_IDS: Record<InfrastructureLayer, string[]> = {
-  roads: ["infrastructure-roads"],
-  mv: ["infrastructure-mv"],
-  hv: ["infrastructure-hv"],
-  ehv: ["infrastructure-ehv"],
+  roads: ["infrastructure-roads", "infrastructure-roads-markers"],
+  mv: ["infrastructure-mv", "infrastructure-mv-markers"],
+  hv: ["infrastructure-hv", "infrastructure-hv-markers"],
+  ehv: ["infrastructure-ehv", "infrastructure-ehv-markers"],
   substations: ["infrastructure-substations", "infrastructure-substation-fill"],
-  unknown: ["infrastructure-unknown"],
+  unknown: ["infrastructure-unknown", "infrastructure-unknown-markers"],
 };
 
 const INFRASTRUCTURE_OPTIONS: Array<{
@@ -357,6 +357,31 @@ export default function SolarSiteScreeningMap() {
           },
         });
       };
+      const markerLayer = (
+        id: string,
+        kind: string,
+        color: string,
+        radius: number,
+      ) => {
+        map.addLayer({
+          id,
+          type: "circle",
+          source: "infrastructure",
+          filter: [
+            "all",
+            ["==", ["get", "kind"], kind],
+            ["==", ["get", "marker"], true],
+          ],
+          layout: { visibility: "none" },
+          paint: {
+            "circle-radius": radius,
+            "circle-color": color,
+            "circle-opacity": 0.95,
+            "circle-stroke-color": "#020617",
+            "circle-stroke-width": 2,
+          },
+        });
+      };
       lineLayer("infrastructure-roads", "road", "#f8fafc", 1.5);
       lineLayer("infrastructure-mv", "mv", "#fb923c", 2);
       lineLayer("infrastructure-hv", "hv", "#ef4444", 2.5);
@@ -367,6 +392,16 @@ export default function SolarSiteScreeningMap() {
         "#94a3b8",
         1.5,
         [2, 2],
+      );
+      markerLayer("infrastructure-roads-markers", "road", "#f8fafc", 3);
+      markerLayer("infrastructure-mv-markers", "mv", "#fb923c", 5);
+      markerLayer("infrastructure-hv-markers", "hv", "#ef4444", 6);
+      markerLayer("infrastructure-ehv-markers", "ehv", "#a855f7", 7);
+      markerLayer(
+        "infrastructure-unknown-markers",
+        "power-unknown",
+        "#94a3b8",
+        4,
       );
       map.addLayer({
         id: "infrastructure-substation-fill",
@@ -391,14 +426,14 @@ export default function SolarSiteScreeningMap() {
         filter: [
           "all",
           ["==", ["get", "kind"], "substation"],
-          ["==", ["geometry-type"], "Point"],
+          ["==", ["get", "marker"], true],
         ],
         layout: { visibility: "none" },
         paint: {
-          "circle-radius": 6,
+          "circle-radius": 7,
           "circle-color": "#22d3ee",
-          "circle-stroke-color": "#082f49",
-          "circle-stroke-width": 2,
+          "circle-stroke-color": "#020617",
+          "circle-stroke-width": 2.5,
         },
       });
 
