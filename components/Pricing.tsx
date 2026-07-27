@@ -16,12 +16,12 @@ export default function Pricing() {
     >
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute left-1/2 top-0 h-72 w-72 -translate-x-1/2 rounded-full bg-amber-400/5 blur-3xl"
+        className="pointer-events-none absolute left-1/2 top-0 h-72 w-72 -translate-x-1/2 rounded-full bg-emerald-400/5 blur-3xl"
       />
 
       <div className="relative mx-auto max-w-5xl px-6 lg:px-8">
         <div className="text-center">
-          <p className="text-sm font-semibold uppercase tracking-[0.22em] text-amber-400">
+          <p className="text-sm font-semibold uppercase tracking-[0.22em] text-emerald-400">
             Professional handbook series
           </p>
           <h2
@@ -37,17 +37,17 @@ export default function Pricing() {
         </div>
 
         <div className="mt-10 grid gap-5 md:grid-cols-2">
-          <article className="flex h-full flex-col rounded-2xl border border-amber-400/25 bg-white/[0.035] p-6 shadow-xl shadow-black/15">
+          <article className="flex h-full flex-col rounded-2xl border border-emerald-400/25 bg-white/[0.035] p-6 shadow-xl shadow-black/15">
             <div className="flex items-start justify-between gap-4">
               <div>
-                <p className="text-sm font-semibold uppercase tracking-[0.18em] text-amber-400">
+                <p className="text-sm font-semibold uppercase tracking-[0.18em] text-emerald-400">
                   {volumeOne.volume}
                 </p>
                 <h3 className="mt-2 text-xl font-bold text-white">
                   {volumeOne.title}
                 </h3>
               </div>
-              <span className="shrink-0 rounded-full border border-amber-400/25 bg-amber-400/10 px-2.5 py-1 text-xs font-bold text-amber-300">
+              <span className="shrink-0 rounded-full border border-emerald-400/25 bg-emerald-400/10 px-2.5 py-1 text-xs font-bold text-emerald-300">
                 Available
               </span>
             </div>
@@ -76,7 +76,7 @@ export default function Pricing() {
               price={productData.price}
               currency={productData.currency}
               ariaLabel={`Purchase Volume 1 for €${productData.price}`}
-              className="mt-6 inline-flex min-h-11 w-full items-center justify-center rounded-xl bg-amber-400 px-5 py-2.5 text-sm font-bold text-slate-950 transition hover:bg-amber-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-300 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950"
+              className="mt-6 inline-flex min-h-11 w-full items-center justify-center rounded-xl bg-emerald-400 px-5 py-2.5 text-sm font-bold text-slate-950 transition hover:bg-emerald-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-300 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950"
             >
               Get Volume 1
             </TrackedCheckoutLink>
@@ -85,14 +85,14 @@ export default function Pricing() {
           <article className="flex h-full flex-col rounded-2xl border border-white/10 bg-white/[0.025] p-6">
             <div className="flex items-start justify-between gap-4">
               <div>
-                <p className="text-sm font-semibold uppercase tracking-[0.18em] text-amber-400">
+                <p className="text-sm font-semibold uppercase tracking-[0.18em] text-emerald-400">
                   {volumeTwo.volume}
                 </p>
                 <h3 className="mt-2 text-xl font-bold text-white">
                   {volumeTwo.title}
                 </h3>
               </div>
-              <span className="shrink-0 rounded-full border border-amber-400/25 bg-amber-400/10 px-2.5 py-1 text-xs font-bold text-amber-300">
+              <span className="shrink-0 rounded-full border border-emerald-400/25 bg-emerald-400/10 px-2.5 py-1 text-xs font-bold text-emerald-300">
                 Available
               </span>
             </div>
@@ -121,7 +121,7 @@ export default function Pricing() {
               price={volumeTwoProductData.price}
               currency={volumeTwoProductData.currency}
               ariaLabel={`Purchase Volume 2 for €${volumeTwoProductData.price}`}
-              className="mt-6 inline-flex min-h-11 w-full items-center justify-center rounded-xl bg-amber-400 px-5 py-2.5 text-sm font-bold text-slate-950 transition hover:bg-amber-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-300 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950"
+              className="mt-6 inline-flex min-h-11 w-full items-center justify-center rounded-xl bg-emerald-400 px-5 py-2.5 text-sm font-bold text-slate-950 transition hover:bg-emerald-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-300 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950"
             >
               Get Volume 2
             </TrackedCheckoutLink>

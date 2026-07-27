@@ -57,7 +57,7 @@ export default function HandbooksPage() {
       <header className="border-b border-white/10">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-5">
           <Link href="/" className="text-lg font-bold">
-            SolarDev <span className="text-amber-400">AI</span>
+            SolarDev <span className="text-emerald-400">AI</span>
           </Link>
           <Link
             href="/"
@@ -70,7 +70,7 @@ export default function HandbooksPage() {
 
       <section className="border-b border-white/10 px-6 py-20 sm:py-24">
         <div className="mx-auto max-w-4xl text-center">
-          <p className="text-sm font-semibold uppercase tracking-[0.22em] text-amber-400">
+          <p className="text-sm font-semibold uppercase tracking-[0.22em] text-emerald-400">
             Professional handbook series
           </p>
           <h1 className="mt-5 text-4xl font-bold tracking-tight sm:text-6xl">
@@ -119,13 +119,13 @@ export default function HandbooksPage() {
                       />
                     </div>
                   ) : (
-                    <div className="mx-auto flex aspect-[0.708/1] max-w-sm flex-col items-center justify-center overflow-hidden rounded-2xl border border-amber-400/20 bg-gradient-to-br from-slate-900 to-slate-950 p-8 text-center shadow-2xl shadow-black/30">
-                      <div className="flex h-20 w-20 items-center justify-center rounded-2xl border border-amber-400/25 bg-amber-400/10">
-                        <span className="text-3xl font-bold text-amber-400">
+                    <div className="mx-auto flex aspect-[0.708/1] max-w-sm flex-col items-center justify-center overflow-hidden rounded-2xl border border-emerald-400/20 bg-gradient-to-br from-slate-900 to-slate-950 p-8 text-center shadow-2xl shadow-black/30">
+                      <div className="flex h-20 w-20 items-center justify-center rounded-2xl border border-emerald-400/25 bg-emerald-400/10">
+                        <span className="text-3xl font-bold text-emerald-400">
                           02
                         </span>
                       </div>
-                      <p className="mt-8 text-sm font-bold uppercase tracking-[0.22em] text-amber-400">
+                      <p className="mt-8 text-sm font-bold uppercase tracking-[0.22em] text-emerald-400">
                         SolarDev AI
                       </p>
                       <p className="mt-3 text-3xl font-bold">
@@ -147,14 +147,14 @@ export default function HandbooksPage() {
                   }
                 >
                   <div className="flex flex-wrap items-center gap-3">
-                    <p className="text-sm font-semibold uppercase tracking-[0.2em] text-amber-400">
+                    <p className="text-sm font-semibold uppercase tracking-[0.2em] text-emerald-400">
                       {handbook.volume}
                     </p>
                     <span
                       className={`rounded-full border px-3 py-1 text-xs font-bold ${
                         handbook.available
-                          ? "border-amber-400/25 bg-amber-400/10 text-amber-300"
-                          : "border-amber-400/25 bg-amber-400/10 text-amber-300"
+                          ? "border-emerald-400/25 bg-emerald-400/10 text-emerald-300"
+                          : "border-emerald-400/25 bg-emerald-400/10 text-emerald-300"
                       }`}
                     >
                       {handbook.status}
@@ -202,7 +202,7 @@ export default function HandbooksPage() {
                   {handbook.href && handbook.cta ? (
                     <Link
                       href={handbook.href}
-                      className="mt-8 inline-flex min-h-12 items-center justify-center rounded-xl bg-amber-400 px-6 py-3 font-bold text-slate-950 transition hover:bg-amber-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-300 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950"
+                      className="mt-8 inline-flex min-h-12 items-center justify-center rounded-xl bg-emerald-400 px-6 py-3 font-bold text-slate-950 transition hover:bg-emerald-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-300 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950"
                     >
                       {handbook.cta}
                     </Link>

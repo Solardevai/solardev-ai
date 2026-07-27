@@ -51,7 +51,7 @@ function PageShell({
       <div className="mx-auto max-w-3xl">
         <Link
           href="/"
-          className="inline-flex items-center gap-2 text-sm font-semibold text-slate-400 transition hover:text-amber-400"
+          className="inline-flex items-center gap-2 text-sm font-semibold text-slate-400 transition hover:text-emerald-400"
         >
           <span aria-hidden="true">←</span>
           Return to SolarDev AI
@@ -84,9 +84,9 @@ function StatusCard({
     },
     processing: {
       container:
-        "border-amber-400/20 bg-amber-400/[0.04]",
-      icon: "bg-amber-400/10 text-amber-400",
-      eyebrow: "text-amber-400",
+        "border-emerald-400/20 bg-emerald-400/[0.04]",
+      icon: "bg-emerald-400/10 text-emerald-400",
+      eyebrow: "text-emerald-400",
       symbol: "…",
     },
     error: {
@@ -137,7 +137,7 @@ function SupportSection() {
 
       <a
         href="mailto:support@solardev.ai"
-        className="mt-2 inline-block font-semibold text-amber-400 transition hover:text-amber-300"
+        className="mt-2 inline-block font-semibold text-emerald-400 transition hover:text-emerald-300"
       >
         support@solardev.ai
       </a>
@@ -469,7 +469,7 @@ export default async function SuccessPage({
           </dl>
         </section>
 
-        <section className="mt-8 rounded-3xl border border-amber-400/20 bg-amber-400/[0.05] p-6 text-center sm:p-8">
+        <section className="mt-8 rounded-3xl border border-emerald-400/20 bg-emerald-400/[0.05] p-6 text-center sm:p-8">
           <h2 className="text-xl font-bold text-white">
             Download your handbook
           </h2>
@@ -482,7 +482,7 @@ export default async function SuccessPage({
 
           <a
             href={downloadUrl}
-            className="mt-7 inline-flex items-center justify-center rounded-xl bg-amber-400 px-7 py-3.5 font-bold text-slate-950 transition hover:bg-amber-300 focus:outline-none focus:ring-2 focus:ring-amber-400 focus:ring-offset-2 focus:ring-offset-slate-950"
+            className="mt-7 inline-flex items-center justify-center rounded-xl bg-emerald-400 px-7 py-3.5 font-bold text-slate-950 transition hover:bg-emerald-300 focus:outline-none focus:ring-2 focus:ring-emerald-400 focus:ring-offset-2 focus:ring-offset-slate-950"
           >
             Download Volume {purchasedHandbook.volume}
           </a>
@@ -504,7 +504,7 @@ export default async function SuccessPage({
             Having trouble downloading? Contact{" "}
             <a
               href="mailto:support@solardev.ai"
-              className="font-semibold text-amber-400 transition hover:text-amber-300"
+              className="font-semibold text-emerald-400 transition hover:text-emerald-300"
             >
               support@solardev.ai
             </a>

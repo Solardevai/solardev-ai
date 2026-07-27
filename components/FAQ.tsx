@@ -26,13 +26,13 @@ export default function FAQ() {
       >
         <div className="absolute -left-40 top-20 h-96 w-96 rounded-full bg-blue-500/5 blur-3xl" />
 
-        <div className="absolute -right-40 bottom-0 h-96 w-96 rounded-full bg-amber-400/5 blur-3xl" />
+        <div className="absolute -right-40 bottom-0 h-96 w-96 rounded-full bg-emerald-400/5 blur-3xl" />
       </div>
 
       <div className="relative mx-auto max-w-4xl px-6 lg:px-8">
         {/* Section heading */}
         <div className="text-center">
-          <p className="text-sm font-semibold uppercase tracking-[0.22em] text-amber-400">
+          <p className="text-sm font-semibold uppercase tracking-[0.22em] text-emerald-400">
             Frequently asked questions
           </p>
 
@@ -64,7 +64,7 @@ export default function FAQ() {
                 key={item.question}
                 className={`overflow-hidden rounded-2xl border bg-white/[0.025] transition ${
                   isOpen
-                    ? "border-amber-400/25 bg-white/[0.04]"
+                    ? "border-emerald-400/25 bg-white/[0.04]"
                     : "border-white/10 hover:border-white/20"
                 }`}
               >
@@ -75,7 +75,7 @@ export default function FAQ() {
                     onClick={() => toggleItem(index)}
                     aria-expanded={isOpen}
                     aria-controls={answerId}
-                    className="flex w-full items-center justify-between gap-6 px-6 py-5 text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-amber-400 sm:px-7 sm:py-6"
+                    className="flex w-full items-center justify-between gap-6 px-6 py-5 text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-emerald-400 sm:px-7 sm:py-6"
                   >
                     <span className="text-base font-semibold leading-7 text-white sm:text-lg">
                       {item.question}
@@ -85,7 +85,7 @@ export default function FAQ() {
                       aria-hidden="true"
                       className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full border text-xl transition duration-200 ${
                         isOpen
-                          ? "rotate-45 border-amber-400/30 bg-amber-400/10 text-amber-300"
+                          ? "rotate-45 border-emerald-400/30 bg-emerald-400/10 text-emerald-300"
                           : "border-white/10 bg-white/[0.03] text-slate-400"
                       }`}
                     >
@@ -121,7 +121,7 @@ export default function FAQ() {
           be sent to{" "}
           <a
             href="mailto:support@solardev.ai"
-            className="font-semibold text-amber-400 transition hover:text-amber-300"
+            className="font-semibold text-emerald-400 transition hover:text-emerald-300"
           >
             support@solardev.ai
           </a>

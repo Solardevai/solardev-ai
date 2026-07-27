@@ -11,7 +11,7 @@ export default function Hero() {
       <div className="pointer-events-none absolute inset-0">
         <div className="absolute left-[-12rem] top-[-8rem] h-[34rem] w-[34rem] rounded-full bg-blue-500/10 blur-3xl" />
 
-        <div className="absolute right-[-10rem] top-[4rem] h-[32rem] w-[32rem] rounded-full bg-amber-400/10 blur-3xl" />
+        <div className="absolute right-[-10rem] top-[4rem] h-[32rem] w-[32rem] rounded-full bg-emerald-400/10 blur-3xl" />
 
         <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.025)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.025)_1px,transparent_1px)] bg-[size:48px_48px]" />
 
@@ -21,12 +21,12 @@ export default function Hero() {
       <div className="relative mx-auto grid min-h-[860px] max-w-7xl items-center gap-16 px-6 py-20 lg:grid-cols-[1.08fr_0.92fr] lg:py-28">
         {/* Hero copy */}
         <div>
-          <div className="inline-flex items-center gap-3 rounded-full border border-amber-400/25 bg-amber-400/10 px-4 py-2 text-sm font-semibold text-amber-300">
-            <span className="h-2 w-2 rounded-full bg-amber-400" />
+          <div className="inline-flex items-center gap-3 rounded-full border border-emerald-400/25 bg-emerald-400/10 px-4 py-2 text-sm font-semibold text-emerald-300">
+            <span className="h-2 w-2 rounded-full bg-emerald-400" />
             Professional resources for Solar PV &amp; BESS
           </div>
 
-          <p className="mt-8 text-sm font-semibold uppercase tracking-[0.28em] text-amber-400">
+          <p className="mt-8 text-sm font-semibold uppercase tracking-[0.28em] text-emerald-400">
             Knowledge · Workflows · Site Intelligence
           </p>
 
@@ -43,7 +43,7 @@ export default function Hero() {
           <div className="mt-10 flex flex-col gap-4 sm:flex-row">
             <Link
               href="/handbooks"
-              className="rounded-xl bg-amber-400 px-7 py-4 text-center font-semibold text-slate-950 shadow-lg shadow-amber-400/10 transition hover:-translate-y-0.5 hover:bg-amber-300"
+              className="rounded-xl bg-emerald-400 px-7 py-4 text-center font-semibold text-slate-950 shadow-lg shadow-emerald-400/10 transition hover:-translate-y-0.5 hover:bg-emerald-300"
             >
               Explore the Handbooks
             </Link>
@@ -78,14 +78,14 @@ export default function Hero() {
 
         {/* Visual */}
         <div className="relative flex justify-center lg:justify-end">
-          <div className="absolute inset-0 rounded-full bg-amber-400/10 blur-3xl" />
+          <div className="absolute inset-0 rounded-full bg-emerald-400/10 blur-3xl" />
 
           <div className="relative w-full max-w-[560px] pb-16 pt-4">
             {/* Volume 2 */}
             <Link
               href="/solar-bess-project-development-handbook-volume-2"
               aria-label="Explore SolarDev AI Volume 2"
-              className="absolute right-0 top-0 z-0 w-[58%] overflow-hidden rounded-[1.5rem] border border-white/10 bg-slate-900 p-3 shadow-2xl shadow-black/30 transition hover:-translate-y-1 hover:border-amber-400/40 sm:p-4"
+              className="absolute right-0 top-0 z-0 w-[58%] overflow-hidden rounded-[1.5rem] border border-white/10 bg-slate-900 p-3 shadow-2xl shadow-black/30 transition hover:-translate-y-1 hover:border-emerald-400/40 sm:p-4"
             >
               <Image
                 src="/volume-2-cover.webp"
@@ -157,7 +157,7 @@ function ProductSummary({
 }: ProductSummaryProps) {
   const content = (
     <>
-      <span className="text-[10px] font-bold uppercase tracking-[0.16em] text-amber-300">
+      <span className="text-[10px] font-bold uppercase tracking-[0.16em] text-emerald-300">
         {eyebrow}
       </span>
       <strong className="mt-2 block text-sm text-white">{title}</strong>
@@ -171,7 +171,7 @@ function ProductSummary({
     return (
       <Link
         href={href}
-        className="rounded-2xl border border-white/10 bg-white/[0.035] p-4 transition hover:-translate-y-0.5 hover:border-amber-400/30 hover:bg-amber-400/[0.06]"
+        className="rounded-2xl border border-white/10 bg-white/[0.035] p-4 transition hover:-translate-y-0.5 hover:border-emerald-400/30 hover:bg-emerald-400/[0.06]"
       >
         {content}
       </Link>

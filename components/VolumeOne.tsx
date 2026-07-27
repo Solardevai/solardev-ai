@@ -24,7 +24,7 @@ const volumes = [
       "Progress from FEED, grid connection and consenting through procurement, financing, construction, commissioning, asset management and repowering.",
     detailsHref:
       "/solar-bess-project-development-handbook-volume-2",
-    accent: "amber",
+    accent: "emerald",
   },
 ] as const;
 
@@ -40,12 +40,12 @@ export default function VolumeOne() {
         className="pointer-events-none absolute inset-0"
       >
         <div className="absolute left-1/3 top-0 h-96 w-96 -translate-x-1/2 rounded-full bg-emerald-500/5 blur-3xl" />
-        <div className="absolute right-0 top-20 h-96 w-96 rounded-full bg-amber-400/5 blur-3xl" />
+        <div className="absolute right-0 top-20 h-96 w-96 rounded-full bg-emerald-400/5 blur-3xl" />
       </div>
 
       <div className="relative mx-auto max-w-7xl px-6 lg:px-8">
         <div className="mb-12 max-w-3xl">
-          <p className="text-sm font-semibold uppercase tracking-[0.22em] text-amber-400">
+          <p className="text-sm font-semibold uppercase tracking-[0.22em] text-emerald-400">
             Professional handbook series
           </p>
           <h2
@@ -78,14 +78,14 @@ export default function VolumeOne() {
                   className={`flex h-full flex-col rounded-3xl border bg-white/[0.03] p-7 sm:p-9 ${
                     isEmerald
                       ? "border-emerald-400/20"
-                      : "border-amber-400/20"
+                      : "border-emerald-400/20"
                   }`}
                 >
                   <p
                     className={`text-sm font-semibold uppercase tracking-[0.22em] ${
                       isEmerald
                         ? "text-emerald-400"
-                        : "text-amber-400"
+                        : "text-emerald-400"
                     }`}
                   >
                     Volume {product.volume}
@@ -136,7 +136,7 @@ export default function VolumeOne() {
                       className={`inline-flex min-h-12 flex-1 items-center justify-center rounded-xl border border-white/15 px-5 py-3 text-center font-semibold text-white transition hover:bg-white/5 ${
                         isEmerald
                           ? "hover:border-emerald-400/40"
-                          : "hover:border-amber-400/40"
+                          : "hover:border-emerald-400/40"
                       }`}
                     >
                       View Volume {product.volume}
@@ -154,7 +154,7 @@ export default function VolumeOne() {
                       className={`inline-flex min-h-12 flex-1 items-center justify-center rounded-xl px-5 py-3 text-center font-bold text-slate-950 transition ${
                         isEmerald
                           ? "bg-emerald-400 hover:bg-emerald-300"
-                          : "bg-amber-400 hover:bg-amber-300"
+                          : "bg-emerald-400 hover:bg-emerald-300"
                       }`}
                     >
                       Get Volume {product.volume}

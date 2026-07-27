@@ -4,7 +4,7 @@ export default function NotFound() {
   return (
     <main className="flex min-h-screen items-center justify-center bg-slate-950 px-6 text-white">
       <section className="max-w-xl text-center">
-        <p className="text-sm font-semibold uppercase tracking-[0.22em] text-amber-400">
+        <p className="text-sm font-semibold uppercase tracking-[0.22em] text-emerald-400">
           Error 404
         </p>
         <h1 className="mt-4 text-4xl font-bold tracking-tight sm:text-5xl">
@@ -17,7 +17,7 @@ export default function NotFound() {
         </p>
         <Link
           href="/"
-          className="mt-8 inline-flex min-h-12 items-center justify-center rounded-xl bg-amber-400 px-6 py-3 font-bold text-slate-950 transition hover:bg-amber-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-300 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950"
+          className="mt-8 inline-flex min-h-12 items-center justify-center rounded-xl bg-emerald-400 px-6 py-3 font-bold text-slate-950 transition hover:bg-emerald-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-300 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950"
         >
           Return to homepage
         </Link>

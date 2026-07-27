@@ -26,7 +26,7 @@ export function LegalPageLayout({
         <div className="mx-auto max-w-5xl px-6 py-6 lg:px-8">
           <Link
             href="/"
-            className="inline-flex items-center gap-2 text-sm font-medium text-amber-300 transition hover:text-amber-200"
+            className="inline-flex items-center gap-2 text-sm font-medium text-emerald-300 transition hover:text-emerald-200"
           >
             <span aria-hidden="true">←</span>
             Back to SolarDev AI
@@ -36,7 +36,7 @@ export function LegalPageLayout({
 
       <section className="border-b border-white/10 bg-gradient-to-b from-slate-900 to-slate-950">
         <div className="mx-auto max-w-5xl px-6 py-16 lg:px-8 lg:py-20">
-          <p className="mb-4 text-sm font-semibold uppercase tracking-[0.2em] text-amber-300">
+          <p className="mb-4 text-sm font-semibold uppercase tracking-[0.2em] text-emerald-300">
             {eyebrow}
           </p>
           <h1 className="max-w-4xl text-4xl font-semibold tracking-tight text-white sm:text-5xl">
@@ -71,7 +71,7 @@ export function LegalPageLayout({
                 <dd className="mt-1">
                   <a
                     href={`mailto:${legalConfig.generalEmail}`}
-                    className="text-amber-300 hover:text-amber-200"
+                    className="text-emerald-300 hover:text-emerald-200"
                   >
                     {legalConfig.generalEmail}
                   </a>
@@ -82,7 +82,7 @@ export function LegalPageLayout({
                 <dd className="mt-1">
                   <a
                     href={`mailto:${legalConfig.supportEmail}`}
-                    className="text-amber-300 hover:text-amber-200"
+                    className="text-emerald-300 hover:text-emerald-200"
                   >
                     {legalConfig.supportEmail}
                   </a>
@@ -113,13 +113,13 @@ export function LegalSection({ title, children }: LegalSectionProps) {
 
 export function LegalList({ children }: { children: ReactNode }) {
   return (
-    <ul className="ml-5 list-disc space-y-2 marker:text-amber-300">{children}</ul>
+    <ul className="ml-5 list-disc space-y-2 marker:text-emerald-300">{children}</ul>
   );
 }
 
 export function LegalOrderedList({ children }: { children: ReactNode }) {
   return (
-    <ol className="ml-5 list-decimal space-y-2 marker:font-semibold marker:text-amber-300">
+    <ol className="ml-5 list-decimal space-y-2 marker:font-semibold marker:text-emerald-300">
       {children}
     </ol>
   );
@@ -127,7 +127,7 @@ export function LegalOrderedList({ children }: { children: ReactNode }) {
 
 export function LegalCallout({ children }: { children: ReactNode }) {
   return (
-    <div className="rounded-2xl border border-amber-300/20 bg-amber-300/[0.06] p-5 text-sm leading-6 text-slate-200">
+    <div className="rounded-2xl border border-emerald-300/20 bg-emerald-300/[0.06] p-5 text-sm leading-6 text-slate-200">
       {children}
     </div>
   );

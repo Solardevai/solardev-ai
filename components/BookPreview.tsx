@@ -129,13 +129,13 @@ export default function BookPreview({
     >
       <div className="pointer-events-none absolute inset-0">
         <div className="absolute left-[-12rem] top-20 h-[32rem] w-[32rem] rounded-full bg-blue-500/5 blur-3xl" />
-        <div className="absolute right-[-10rem] bottom-20 h-[30rem] w-[30rem] rounded-full bg-amber-400/5 blur-3xl" />
+        <div className="absolute right-[-10rem] bottom-20 h-[30rem] w-[30rem] rounded-full bg-emerald-400/5 blur-3xl" />
       </div>
 
       <div className="relative mx-auto max-w-7xl px-6 py-24">
         <div className="grid gap-10 lg:grid-cols-[1fr_0.8fr] lg:items-end">
           <div>
-            <p className="text-sm font-semibold uppercase tracking-[0.24em] text-amber-400">
+            <p className="text-sm font-semibold uppercase tracking-[0.24em] text-emerald-400">
               Inside the handbook
             </p>
 
@@ -155,7 +155,7 @@ export default function BookPreview({
           {previewPages.map((page) => (
             <article
               key={page.src}
-              className="group overflow-hidden rounded-3xl border border-white/10 bg-slate-950/75 shadow-xl transition duration-300 hover:-translate-y-1 hover:border-amber-400/25"
+              className="group overflow-hidden rounded-3xl border border-white/10 bg-slate-950/75 shadow-xl transition duration-300 hover:-translate-y-1 hover:border-emerald-400/25"
             >
               <div className="relative aspect-[0.707/1] overflow-hidden bg-white">
                 <Image
@@ -168,7 +168,7 @@ export default function BookPreview({
 
                 <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-slate-950/90 to-transparent" />
 
-                <span className="absolute left-5 top-5 rounded-full border border-white/20 bg-slate-950/85 px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.16em] text-amber-300 backdrop-blur">
+                <span className="absolute left-5 top-5 rounded-full border border-white/20 bg-slate-950/85 px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.16em] text-emerald-300 backdrop-blur">
                   {page.label}
                 </span>
               </div>
@@ -184,9 +184,9 @@ export default function BookPreview({
           ))}
         </div>
 
-        <div className="mt-14 flex flex-col items-start justify-between gap-6 rounded-3xl border border-amber-400/20 bg-amber-400/[0.045] p-7 sm:flex-row sm:items-center sm:p-9">
+        <div className="mt-14 flex flex-col items-start justify-between gap-6 rounded-3xl border border-emerald-400/20 bg-emerald-400/[0.045] p-7 sm:flex-row sm:items-center sm:p-9">
           <div>
-            <p className="text-sm font-semibold uppercase tracking-[0.2em] text-amber-400">
+            <p className="text-sm font-semibold uppercase tracking-[0.2em] text-emerald-400">
               Complete Edition v1.1
             </p>
 
@@ -210,7 +210,7 @@ export default function BookPreview({
             itemCategory={product.itemCategory}
             price={product.price}
             currency={product.currency}
-            className="shrink-0 rounded-xl bg-amber-400 px-7 py-4 text-center font-semibold text-slate-950 transition hover:-translate-y-0.5 hover:bg-amber-300"
+            className="shrink-0 rounded-xl bg-emerald-400 px-7 py-4 text-center font-semibold text-slate-950 transition hover:-translate-y-0.5 hover:bg-emerald-300"
           >
             Get Volume {volume}
           </TrackedCheckoutLink>

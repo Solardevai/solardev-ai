@@ -68,12 +68,12 @@ export default function Footer() {
               aria-label="SolarDev AI homepage"
               className="inline-flex items-center gap-3"
             >
-              <span className="flex h-11 w-11 items-center justify-center rounded-xl border border-amber-400/30 bg-amber-400/10">
-                <span className="h-4 w-4 rounded-full bg-amber-400 shadow-[0_0_20px_rgba(251,191,36,0.7)]" />
+              <span className="flex h-11 w-11 items-center justify-center rounded-xl border border-emerald-400/30 bg-emerald-400/10">
+                <span className="h-4 w-4 rounded-full bg-emerald-400 shadow-[0_0_20px_rgba(52,211,153,0.7)]" />
               </span>
 
               <span className="text-xl font-bold tracking-tight text-white">
-                SolarDev <span className="text-amber-400">AI</span>
+                SolarDev <span className="text-emerald-400">AI</span>
               </span>
             </a>
 
@@ -89,7 +89,7 @@ export default function Footer() {
 
                 <a
                   href={`mailto:${siteConfig.infoEmail}`}
-                  className="font-semibold text-slate-300 transition hover:text-amber-400"
+                  className="font-semibold text-slate-300 transition hover:text-emerald-400"
                 >
                   {siteConfig.infoEmail}
                 </a>
@@ -100,7 +100,7 @@ export default function Footer() {
 
                 <a
                   href={`mailto:${siteConfig.supportEmail}`}
-                  className="font-semibold text-slate-300 transition hover:text-amber-400"
+                  className="font-semibold text-slate-300 transition hover:text-emerald-400"
                 >
                   {siteConfig.supportEmail}
                 </a>
@@ -119,7 +119,7 @@ export default function Footer() {
                 <li key={link.label}>
                   <a
                     href={link.href}
-                    className="text-sm text-slate-400 transition hover:text-amber-400"
+                    className="text-sm text-slate-400 transition hover:text-emerald-400"
                   >
                     {link.label}
                   </a>
@@ -139,7 +139,7 @@ export default function Footer() {
                 <li key={link.label}>
                   <a
                     href={link.href}
-                    className="text-sm text-slate-400 transition hover:text-amber-400"
+                    className="text-sm text-slate-400 transition hover:text-emerald-400"
                   >
                     {link.label}
                   </a>
@@ -159,7 +159,7 @@ export default function Footer() {
                 <li key={link.label}>
                   <a
                     href={link.href}
-                    className="text-sm text-slate-400 transition hover:text-amber-400"
+                    className="text-sm text-slate-400 transition hover:text-emerald-400"
                   >
                     {link.label}
                   </a>

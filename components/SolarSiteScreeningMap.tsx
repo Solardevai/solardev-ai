@@ -92,7 +92,7 @@ export default function SolarSiteScreeningMap() {
           circle.setAttribute("cy", String(point.y));
           circle.setAttribute("r", "6");
           circle.setAttribute("fill", "#020617");
-          circle.setAttribute("stroke", "#fbbf24");
+          circle.setAttribute("stroke", "#34d399");
           circle.setAttribute("stroke-width", "3");
           return circle;
         }),
@@ -208,7 +208,7 @@ export default function SolarSiteScreeningMap() {
         id: "site-fill",
         type: "fill",
         source: "site-polygon",
-        paint: { "fill-color": "#fbbf24", "fill-opacity": 0.25 },
+        paint: { "fill-color": "#34d399", "fill-opacity": 0.25 },
       });
       map.addLayer({
         id: "site-line-casing",
@@ -225,7 +225,7 @@ export default function SolarSiteScreeningMap() {
         type: "line",
         source: "site-line",
         paint: {
-          "line-color": "#fbbf24",
+          "line-color": "#34d399",
           "line-width": 4,
         },
       });
@@ -236,7 +236,7 @@ export default function SolarSiteScreeningMap() {
         paint: {
           "circle-radius": 6,
           "circle-color": "#0f172a",
-          "circle-stroke-color": "#fbbf24",
+          "circle-stroke-color": "#34d399",
           "circle-stroke-width": 3,
         },
       });
@@ -384,8 +384,8 @@ export default function SolarSiteScreeningMap() {
   <Document>
     <name>SolarDev Site Boundary</name>
     <Style id="site-boundary">
-      <LineStyle><color>ff24bffb</color><width>3</width></LineStyle>
-      <PolyStyle><color>4024bffb</color></PolyStyle>
+      <LineStyle><color>ff99d334</color><width>3</width></LineStyle>
+      <PolyStyle><color>4099d334</color></PolyStyle>
     </Style>
     <Placemark>
       <name>SolarDev Site Boundary</name>
@@ -459,12 +459,12 @@ export default function SolarSiteScreeningMap() {
               value={query}
               onChange={(event) => setQuery(event.target.value)}
               placeholder="Address or lat, lon"
-              className="min-w-0 flex-1 rounded-xl border border-white/10 bg-white/[0.05] px-3 py-2.5 text-sm text-white outline-none placeholder:text-slate-500 focus:border-amber-400"
+              className="min-w-0 flex-1 rounded-xl border border-white/10 bg-white/[0.05] px-3 py-2.5 text-sm text-white outline-none placeholder:text-slate-500 focus:border-emerald-400"
             />
             <button
               type="submit"
               disabled={isSearching}
-              className="rounded-xl bg-amber-400 px-4 text-sm font-bold text-slate-950 transition hover:bg-amber-300 disabled:opacity-60"
+              className="rounded-xl bg-emerald-400 px-4 text-sm font-bold text-slate-950 transition hover:bg-emerald-300 disabled:opacity-60"
             >
               {isSearching ? "…" : "Go"}
             </button>
@@ -478,8 +478,8 @@ export default function SolarSiteScreeningMap() {
             onClick={toggleDrawing}
             className={`mt-2 w-full rounded-xl px-4 py-3 text-sm font-bold transition ${
               isDrawing
-                ? "bg-amber-400 text-slate-950"
-                : "border border-amber-400/40 bg-amber-400/10 text-amber-300 hover:bg-amber-400/20"
+                ? "bg-emerald-400 text-slate-950"
+                : "border border-emerald-400/40 bg-emerald-400/10 text-emerald-300 hover:bg-emerald-400/20"
             }`}
           >
             {isDrawing ? "Finish drawing" : points.length ? "Continue drawing" : "Start drawing"}
@@ -544,7 +544,7 @@ export default function SolarSiteScreeningMap() {
               setExportFormat(event.target.value as ExportFormat)
             }
             disabled={!sitePolygon || isExporting}
-            className="rounded-xl border border-white/10 bg-slate-900 px-3 text-sm font-semibold uppercase text-slate-300 outline-none focus:border-amber-400 disabled:opacity-40"
+            className="rounded-xl border border-white/10 bg-slate-900 px-3 text-sm font-semibold uppercase text-slate-300 outline-none focus:border-emerald-400 disabled:opacity-40"
           >
             <option value="geojson">GeoJSON</option>
             <option value="kml">KML</option>
@@ -586,7 +586,7 @@ export default function SolarSiteScreeningMap() {
           <path
             data-site-path
             fill="transparent"
-            stroke="#fbbf24"
+            stroke="#34d399"
             strokeWidth="4"
             strokeLinejoin="round"
           />
@@ -607,7 +607,7 @@ export default function SolarSiteScreeningMap() {
               onClick={() => selectBasemap(option)}
               className={`rounded-lg px-3 py-2 text-xs font-bold capitalize transition ${
                 basemap === option
-                  ? "bg-amber-400 text-slate-950"
+                  ? "bg-emerald-400 text-slate-950"
                   : "text-slate-300 hover:bg-white/10 hover:text-white"
               }`}
             >

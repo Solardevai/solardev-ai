@@ -12,7 +12,7 @@ export default function TrustBar() {
           {trustAudiences.map((audience) => (
             <div
               key={audience}
-              className="flex min-h-16 items-center justify-center rounded-xl border border-white/10 bg-white/[0.025] px-4 text-center text-sm font-medium text-slate-300 transition hover:border-amber-400/25 hover:bg-amber-400/[0.04] hover:text-white"
+              className="flex min-h-16 items-center justify-center rounded-xl border border-white/10 bg-white/[0.025] px-4 text-center text-sm font-medium text-slate-300 transition hover:border-emerald-400/25 hover:bg-emerald-400/[0.04] hover:text-white"
             >
               {audience}
             </div>

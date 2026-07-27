@@ -36,7 +36,7 @@ export default function Navbar() {
           />
 
           <span className="hidden text-xl font-bold tracking-tight text-white sm:inline lg:text-2xl">
-            SolarDev <span className="text-amber-400">AI</span>
+            SolarDev <span className="text-emerald-400">AI</span>
           </span>
         </Link>
 
@@ -103,7 +103,7 @@ export default function Navbar() {
                         <span className="font-semibold text-white">
                           Prompt Library
                         </span>
-                        <span className="rounded-full border border-amber-400/25 bg-amber-400/10 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-amber-300">
+                        <span className="rounded-full border border-emerald-400/25 bg-emerald-400/10 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-emerald-300">
                           Coming soon
                         </span>
                       </span>
@@ -139,7 +139,7 @@ export default function Navbar() {
             onClick={() =>
               setIsMenuOpen((currentValue) => !currentValue)
             }
-            className="flex h-11 w-11 items-center justify-center rounded-xl border border-white/10 bg-white/[0.04] text-white transition hover:border-amber-400/30 hover:bg-amber-400/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-400"
+            className="flex h-11 w-11 items-center justify-center rounded-xl border border-white/10 bg-white/[0.04] text-white transition hover:border-emerald-400/30 hover:bg-emerald-400/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400"
           >
             {isMenuOpen ? (
               <svg
@@ -203,7 +203,7 @@ export default function Navbar() {
                       Professional Handbooks
                       <span
                         aria-hidden="true"
-                        className="text-amber-400"
+                        className="text-emerald-400"
                       >
                         →
                       </span>
@@ -223,7 +223,7 @@ export default function Navbar() {
                       <span className="font-semibold">
                         Prompt Library
                       </span>
-                      <span className="rounded-full border border-amber-400/25 bg-amber-400/10 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-amber-300">
+                      <span className="rounded-full border border-emerald-400/25 bg-emerald-400/10 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-emerald-300">
                         Coming soon
                       </span>
                     </div>

@@ -35,11 +35,11 @@ export default function RenewableNewsTicker({
   return (
     <aside
       aria-label="Renewable energy industry headlines"
-      className="border-b border-amber-400/20 bg-amber-400 text-slate-950"
+      className="border-b border-emerald-400/20 bg-emerald-400 text-slate-950"
     >
       <div className="flex h-8 items-center overflow-hidden">
-        <div className="flex h-full shrink-0 items-center border-r border-slate-950/20 bg-slate-950 px-3 text-[10px] font-bold uppercase tracking-[0.16em] text-amber-300 sm:px-4">
-          <span className="mr-2 h-1.5 w-1.5 rounded-full bg-amber-400 shadow-[0_0_8px_rgba(251,191,36,0.9)]" />
+        <div className="flex h-full shrink-0 items-center border-r border-slate-950/20 bg-slate-950 px-3 text-[10px] font-bold uppercase tracking-[0.16em] text-emerald-300 sm:px-4">
+          <span className="mr-2 h-1.5 w-1.5 rounded-full bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.9)]" />
           Renewables Live
         </div>
 

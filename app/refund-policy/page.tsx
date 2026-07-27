@@ -21,7 +21,7 @@ export const metadata: Metadata = {
 };
 
 const legalLinkClass =
-  "font-semibold text-amber-400 underline decoration-amber-400/40 underline-offset-4 transition hover:text-amber-300";
+  "font-semibold text-emerald-400 underline decoration-emerald-400/40 underline-offset-4 transition hover:text-emerald-300";
 
 export default function RefundPolicyPage() {
   return (

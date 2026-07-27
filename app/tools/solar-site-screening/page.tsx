@@ -16,14 +16,14 @@ export default function SolarSiteScreeningPage() {
       <Navbar />
       <main className="min-h-screen bg-slate-950 text-white">
         <section className="relative overflow-hidden px-4 pb-16 pt-14 sm:px-6 lg:px-8">
-          <div className="absolute inset-x-0 top-0 h-80 bg-[radial-gradient(circle_at_50%_0%,rgba(251,191,36,0.14),transparent_65%)]" />
+          <div className="absolute inset-x-0 top-0 h-80 bg-[radial-gradient(circle_at_50%_0%,rgba(52,211,153,0.14),transparent_65%)]" />
           <div className="relative mx-auto max-w-7xl">
             <div className="mx-auto mb-10 max-w-3xl text-center">
-              <span className="inline-flex rounded-full border border-amber-400/25 bg-amber-400/10 px-4 py-1.5 text-xs font-bold uppercase tracking-[0.18em] text-amber-300">
+              <span className="inline-flex rounded-full border border-emerald-400/25 bg-emerald-400/10 px-4 py-1.5 text-xs font-bold uppercase tracking-[0.18em] text-emerald-300">
                 Free early-stage tool
               </span>
               <h1 className="mt-5 text-4xl font-bold tracking-tight sm:text-5xl lg:text-6xl">
-                Solar Site <span className="text-amber-400">Quick Check</span>
+                Solar Site <span className="text-emerald-400">Quick Check</span>
               </h1>
               <p className="mx-auto mt-5 max-w-2xl text-base leading-7 text-slate-300 sm:text-lg">
                 Locate a potential site, draw its boundary and obtain an instant area calculation and preliminary PVGIS solar resource estimate.

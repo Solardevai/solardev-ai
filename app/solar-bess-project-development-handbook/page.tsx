@@ -139,7 +139,7 @@ export default function HandbookPage() {
       <header className="border-b border-white/10">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-5">
           <Link href="/" className="text-lg font-bold">
-            SolarDev <span className="text-amber-400">AI</span>
+            SolarDev <span className="text-emerald-400">AI</span>
           </Link>
 
           <Link
@@ -166,7 +166,7 @@ export default function HandbookPage() {
         </div>
 
         <div>
-          <p className="text-sm font-semibold uppercase tracking-[0.2em] text-amber-400">
+          <p className="text-sm font-semibold uppercase tracking-[0.2em] text-emerald-400">
             SolarDev AI · Volume 1
           </p>
 
@@ -218,7 +218,7 @@ export default function HandbookPage() {
               price={productData.price}
               currency={productData.currency}
               ariaLabel={`Buy SolarDev AI Volume 1 for €${productData.price}`}
-              className="mt-6 inline-flex w-full items-center justify-center rounded-lg bg-amber-400 px-6 py-3 font-semibold text-slate-950 transition hover:bg-amber-300"
+              className="mt-6 inline-flex w-full items-center justify-center rounded-lg bg-emerald-400 px-6 py-3 font-semibold text-slate-950 transition hover:bg-emerald-300"
             >
               Buy Volume 1 — €{productData.price}
             </TrackedCheckoutLink>
@@ -241,7 +241,7 @@ export default function HandbookPage() {
                 key={chapter}
                 className="rounded-lg border border-white/10 bg-slate-950 p-5"
               >
-                <p className="text-sm font-semibold text-amber-400">
+                <p className="text-sm font-semibold text-emerald-400">
                   Chapter {index + 1}
                 </p>
 

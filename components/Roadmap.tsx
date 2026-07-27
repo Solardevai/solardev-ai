@@ -40,12 +40,12 @@ export default function Roadmap() {
     >
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute left-1/2 top-1/2 h-80 w-80 -translate-x-1/2 -translate-y-1/2 rounded-full bg-amber-400/[0.04] blur-3xl"
+        className="pointer-events-none absolute left-1/2 top-1/2 h-80 w-80 -translate-x-1/2 -translate-y-1/2 rounded-full bg-emerald-400/[0.04] blur-3xl"
       />
 
       <div className="relative mx-auto max-w-5xl px-6 lg:px-8">
         <div className="mx-auto max-w-2xl text-center">
-          <p className="text-xs font-semibold uppercase tracking-[0.22em] text-amber-400">
+          <p className="text-xs font-semibold uppercase tracking-[0.22em] text-emerald-400">
             Product Roadmap
           </p>
           <h2
@@ -69,7 +69,7 @@ export default function Roadmap() {
                     aria-hidden="true"
                     className="flex items-center justify-center py-1 md:px-1"
                   >
-                    <span className="h-8 w-px bg-gradient-to-b from-amber-400 to-white/20 md:h-px md:w-10 md:bg-gradient-to-r" />
+                    <span className="h-8 w-px bg-gradient-to-b from-emerald-400 to-white/20 md:h-px md:w-10 md:bg-gradient-to-r" />
                     <span className="-ml-1 h-2 w-2 rotate-45 border-r border-t border-white/30 md:-ml-2" />
                   </div>
                 )}
@@ -77,7 +77,7 @@ export default function Roadmap() {
                 <article
                   className={`flex min-h-72 flex-col rounded-2xl border p-6 ${
                     item.active
-                      ? "border-amber-400/30 bg-amber-400/[0.055]"
+                      ? "border-emerald-400/30 bg-emerald-400/[0.055]"
                       : "border-white/10 bg-white/[0.025]"
                   }`}
                 >
@@ -88,7 +88,7 @@ export default function Roadmap() {
                       </p>
                       <p
                         className={`mt-2 text-3xl font-bold ${
-                          item.active ? "text-amber-400" : "text-white"
+                          item.active ? "text-emerald-400" : "text-white"
                         }`}
                       >
                         {item.year}
@@ -97,7 +97,7 @@ export default function Roadmap() {
                     <span
                       className={`rounded-full border px-3 py-1 text-[10px] font-bold uppercase tracking-[0.14em] ${
                         item.active
-                          ? "border-amber-400/30 bg-amber-400/10 text-amber-300"
+                          ? "border-emerald-400/30 bg-emerald-400/10 text-emerald-300"
                           : "border-white/10 bg-white/[0.03] text-slate-400"
                       }`}
                     >
@@ -120,7 +120,7 @@ export default function Roadmap() {
                       >
                         <span
                           className={`h-1.5 w-1.5 shrink-0 rounded-full ${
-                            item.active ? "bg-amber-400" : "bg-slate-600"
+                            item.active ? "bg-emerald-400" : "bg-slate-600"
                           }`}
                         />
                         {deliverable}

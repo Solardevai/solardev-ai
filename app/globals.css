@@ -12,8 +12,8 @@ html {
   --background: #020617;
   --foreground: #f8fafc;
 
-  --primary: #fbbf24;
-  --primary-hover: #f59e0b;
+  --primary: #34d399;
+  --primary-hover: #6ee7b7;
 
   --secondary: #0f172a;
 
@@ -87,7 +87,7 @@ button {
 }
 
 ::selection {
-  background: #fbbf24;
+  background: #34d399;
   color: #020617;
 }
 
