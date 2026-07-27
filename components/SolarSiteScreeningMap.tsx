@@ -19,7 +19,6 @@ type SolarResult = {
   specificYield: number;
   location: { latitude: number; longitude: number; elevation?: number };
 };
-type Basemap = "streets" | "satellite";
 type ExportFormat = "geojson" | "kml" | "kmz";
 type InfrastructureLayer =
   | "roads"
@@ -61,7 +60,7 @@ function createInfrastructureLayerState(): Record<InfrastructureLayer, boolean> 
     mv: false,
     hv: false,
     ehv: false,
-    substations: false,
+    substations: true,
     unknown: false,
   };
 }
@@ -87,7 +86,6 @@ export default function SolarSiteScreeningMap() {
   const containerRef = useRef<HTMLDivElement>(null);
   const drawingOverlayRef = useRef<SVGSVGElement>(null);
   const mapRef = useRef<MapLibreMap | null>(null);
-  const basemapRef = useRef<Basemap>("streets");
   const pointsRef = useRef<Coordinate[]>([]);
   const infrastructureAbortRef = useRef<AbortController | null>(null);
   const infrastructureLayersRef = useRef<Record<InfrastructureLayer, boolean>>(
@@ -100,7 +98,6 @@ export default function SolarSiteScreeningMap() {
   const [isSearching, setIsSearching] = useState(false);
   const [isLoadingSolar, setIsLoadingSolar] = useState(false);
   const [solar, setSolar] = useState<SolarResult | null>(null);
-  const [basemap, setBasemap] = useState<Basemap>("streets");
   const [exportFormat, setExportFormat] =
     useState<ExportFormat>("geojson");
   const [isExporting, setIsExporting] = useState(false);
@@ -189,8 +186,7 @@ export default function SolarSiteScreeningMap() {
 
     const map = mapRef.current;
     if (!map) return;
-    const isVisible =
-      next[layer] && (layer !== "substations" || basemapRef.current === "satellite");
+    const isVisible = next[layer];
     for (const layerId of INFRASTRUCTURE_LAYER_IDS[layer]) {
       if (map.getLayer(layerId)) {
         map.setLayoutProperty(
