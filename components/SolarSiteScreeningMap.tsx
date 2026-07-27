@@ -99,7 +99,7 @@ export default function SolarSiteScreeningMap() {
   const [isLoadingSolar, setIsLoadingSolar] = useState(false);
   const [solar, setSolar] = useState<SolarResult | null>(null);
   const [exportFormat, setExportFormat] =
-    useState<ExportFormat>("geojson");
+    useState<ExportFormat>("kmz");
   const [isExporting, setIsExporting] = useState(false);
   const [infrastructureLayers, setInfrastructureLayers] = useState(
     createInfrastructureLayerState,
@@ -847,9 +847,9 @@ export default function SolarSiteScreeningMap() {
             disabled={!sitePolygon || isExporting}
             className="rounded-xl border border-white/10 bg-slate-900 px-3 text-sm font-semibold uppercase text-slate-300 outline-none focus:border-emerald-400 disabled:opacity-40"
           >
-            <option value="geojson">GeoJSON</option>
-            <option value="kml">KML</option>
             <option value="kmz">KMZ</option>
+            <option value="kml">KML</option>
+            <option value="geojson">GeoJSON</option>
           </select>
           <button
             type="button"
