@@ -79,7 +79,7 @@ export default function Navbar() {
                       className="mt-1 block rounded-xl px-4 py-3 transition hover:bg-white/[0.06] focus:outline-none focus-visible:bg-white/[0.06]"
                     >
                       <span className="flex items-center justify-between gap-3">
-                        <span className="font-semibold text-white">Solar Site Quick Check</span>
+                        <span className="font-semibold text-white">Site Check</span>
                         <span className="rounded-full border border-emerald-400/25 bg-emerald-400/10 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-emerald-300">
                           Free
                         </span>
@@ -207,7 +207,7 @@ export default function Navbar() {
                       onClick={closeMenu}
                       className="flex min-h-12 items-center justify-between rounded-lg px-3 py-3 font-semibold text-white transition hover:bg-white/[0.05] focus:outline-none focus-visible:bg-white/[0.05]"
                     >
-                      Solar Site Quick Check
+                      Site Check
                       <span className="text-xs font-bold text-emerald-300">FREE</span>
                     </Link>
                     <div

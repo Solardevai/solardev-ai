@@ -4,7 +4,7 @@ import Navbar from "@/components/Navbar";
 import SolarSiteScreeningMap from "@/components/SolarSiteScreeningMap";
 
 export const metadata: Metadata = {
-  title: "Free Solar Site Screening Map",
+  title: "Free Site Check",
   description:
     "Draw a potential solar site, calculate its area and retrieve a preliminary PVGIS solar resource estimate.",
   alternates: { canonical: "/tools/solar-site-screening" },
@@ -23,7 +23,7 @@ export default function SolarSiteScreeningPage() {
                 Free early-stage tool
               </span>
               <h1 className="mt-5 text-4xl font-bold tracking-tight sm:text-5xl lg:text-6xl">
-                Solar Site <span className="text-emerald-400">Quick Check</span>
+                Site <span className="text-emerald-400">Check</span>
               </h1>
               <p className="mx-auto mt-5 max-w-2xl text-base leading-7 text-slate-300 sm:text-lg">
                 Locate a potential site, draw its boundary and obtain an instant area calculation and preliminary PVGIS solar resource estimate.

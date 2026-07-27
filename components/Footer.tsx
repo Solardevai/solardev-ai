@@ -11,7 +11,7 @@ const productLinks = [
     href: "/#roadmap",
   },
   {
-    label: "Solar Site Quick Check",
+    label: "Site Check",
     href: "/tools/solar-site-screening",
   },
 ];

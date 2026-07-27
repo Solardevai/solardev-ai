@@ -69,7 +69,7 @@ export default function Hero() {
             />
             <ProductSummary
               eyebrow="Free tool"
-              title="Solar Site Quick Check"
+              title="Site Check"
               description="Draw a boundary and check site area and preliminary solar resource."
               href="/tools/solar-site-screening"
             />
@@ -129,7 +129,7 @@ export default function Hero() {
                 Live free tool
               </span>
               <strong className="mt-2 block text-sm leading-5 text-white">
-                Solar Site Quick Check
+                Site Check
               </strong>
               <span className="mt-1 block text-xs leading-5 text-slate-400">
                 Map, draw and screen a potential site.

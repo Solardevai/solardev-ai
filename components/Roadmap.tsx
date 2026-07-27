@@ -25,7 +25,7 @@ const roadmapItems: RoadmapItem[] = [
     title: "SolarDev AI Platform",
     description:
       "Turning the handbook methodology into practical tools for everyday solar and BESS project work.",
-    deliverables: ["Prompt library & templates", "Solar Site Quick Check"],
+    deliverables: ["Prompt library & templates", "Site Check"],
     status: "Ongoing",
     active: true,
   },
