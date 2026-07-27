@@ -1,0 +1,8 @@
+
+> solardev-ai@0.1.0 start
+> next start --hostname 127.0.0.1 --port 3013
+
+▲ Next.js 16.2.10
+- Local:         http://127.0.0.1:3013
+- Network:       http://127.0.0.1:3013
+✓ Ready in 149ms

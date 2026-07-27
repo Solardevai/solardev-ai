@@ -20,13 +20,14 @@ const roadmapItems: RoadmapItem[] = [
     active: true,
   },
   {
-    year: "2027",
+    year: "2026",
     number: "02",
     title: "SolarDev AI Platform",
     description:
-      "Turn the handbook methodology into practical, searchable tools for everyday project work.",
-    deliverables: ["Prompt library", "Templates & workflows"],
-    status: "In development",
+      "Turning the handbook methodology into practical tools for everyday solar and BESS project work.",
+    deliverables: ["Prompt library & templates", "Solar Site Quick Check"],
+    status: "Ongoing",
+    active: true,
   },
 ];
 
@@ -62,7 +63,7 @@ export default function Roadmap() {
         <div className="relative mx-auto mt-10 max-w-4xl">
           <div className="grid gap-4 md:grid-cols-[1fr_auto_1fr] md:items-stretch">
             {roadmapItems.map((item) => (
-              <div key={item.year} className="contents">
+              <div key={item.number} className="contents">
                 {item.number === "02" && (
                   <div
                     aria-hidden="true"

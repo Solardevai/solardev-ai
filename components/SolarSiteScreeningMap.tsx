@@ -18,6 +18,7 @@ type SolarResult = {
   specificYield: number;
   location: { latitude: number; longitude: number; elevation?: number };
 };
+type Basemap = "streets" | "satellite";
 
 const EMPTY_COLLECTION: GeoJSON.FeatureCollection = {
   type: "FeatureCollection",
@@ -47,6 +48,7 @@ export default function SolarSiteScreeningMap() {
   const [isSearching, setIsSearching] = useState(false);
   const [isLoadingSolar, setIsLoadingSolar] = useState(false);
   const [solar, setSolar] = useState<SolarResult | null>(null);
+  const [basemap, setBasemap] = useState<Basemap>("streets");
 
   const closedRing = points.length >= 3 ? [...points, points[0]] : null;
   const sitePolygon = closedRing ? polygon([closedRing]) : null;
@@ -55,34 +57,50 @@ export default function SolarSiteScreeningMap() {
 
   function updateMap(nextPoints: Coordinate[]) {
     const map = mapRef.current;
-    if (!map?.isStyleLoaded()) return;
+    if (!map?.getSource("site-line")) return;
 
-    const features: GeoJSON.Feature[] = [];
-    if (nextPoints.length > 0) {
-      features.push({
-        type: "Feature",
-        properties: {},
-        geometry: { type: "LineString", coordinates: nextPoints },
-      });
-      features.push({
-        type: "Feature",
-        properties: {},
-        geometry: { type: "MultiPoint", coordinates: nextPoints },
-      });
-    }
-    if (nextPoints.length >= 3) {
-      features.unshift({
-        type: "Feature",
-        properties: {},
-        geometry: {
-          type: "Polygon",
-          coordinates: [[...nextPoints, nextPoints[0]]],
-        },
-      });
-    }
-    (map.getSource("site") as GeoJSONSource | undefined)?.setData({
+    const lineCoordinates =
+      nextPoints.length >= 3 ? [...nextPoints, nextPoints[0]] : nextPoints;
+
+    (map.getSource("site-line") as GeoJSONSource | undefined)?.setData({
       type: "FeatureCollection",
-      features,
+      features:
+        lineCoordinates.length >= 2
+          ? [
+              {
+                type: "Feature",
+                properties: {},
+                geometry: {
+                  type: "LineString",
+                  coordinates: lineCoordinates,
+                },
+              },
+            ]
+          : [],
+    });
+    (map.getSource("site-points") as GeoJSONSource | undefined)?.setData({
+      type: "FeatureCollection",
+      features: nextPoints.map((coordinates, index) => ({
+        type: "Feature",
+        properties: { index },
+        geometry: { type: "Point", coordinates },
+      })),
+    });
+    (map.getSource("site-polygon") as GeoJSONSource | undefined)?.setData({
+      type: "FeatureCollection",
+      features:
+        nextPoints.length >= 3
+          ? [
+              {
+                type: "Feature",
+                properties: {},
+                geometry: {
+                  type: "Polygon",
+                  coordinates: [[...nextPoints, nextPoints[0]]],
+                },
+              },
+            ]
+          : [],
     });
   }
 
@@ -104,8 +122,25 @@ export default function SolarSiteScreeningMap() {
             attribution:
               '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
           },
+          satellite: {
+            type: "raster",
+            tiles: [
+              "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+            ],
+            tileSize: 256,
+            attribution:
+              "Sources: Esri, Maxar, Earthstar Geographics, and the GIS User Community",
+          },
         },
-        layers: [{ id: "osm", type: "raster", source: "osm" }],
+        layers: [
+          { id: "osm", type: "raster", source: "osm" },
+          {
+            id: "satellite",
+            type: "raster",
+            source: "satellite",
+            layout: { visibility: "none" },
+          },
+        ],
       },
     });
 
@@ -114,28 +149,46 @@ export default function SolarSiteScreeningMap() {
     map.addControl(new AttributionControl({ compact: true }), "bottom-right");
 
     map.on("load", () => {
-      map.addSource("site", { type: "geojson", data: EMPTY_COLLECTION });
+      map.addSource("site-polygon", {
+        type: "geojson",
+        data: EMPTY_COLLECTION,
+      });
+      map.addSource("site-line", { type: "geojson", data: EMPTY_COLLECTION });
+      map.addSource("site-points", {
+        type: "geojson",
+        data: EMPTY_COLLECTION,
+      });
       map.addLayer({
         id: "site-fill",
         type: "fill",
-        source: "site",
-        filter: ["==", "$type", "Polygon"],
+        source: "site-polygon",
         paint: { "fill-color": "#fbbf24", "fill-opacity": 0.25 },
+      });
+      map.addLayer({
+        id: "site-line-casing",
+        type: "line",
+        source: "site-line",
+        paint: {
+          "line-color": "#020617",
+          "line-width": 7,
+          "line-opacity": 0.8,
+        },
       });
       map.addLayer({
         id: "site-line",
         type: "line",
-        source: "site",
-        filter: ["in", "$type", "LineString", "Polygon"],
-        paint: { "line-color": "#fbbf24", "line-width": 3 },
+        source: "site-line",
+        paint: {
+          "line-color": "#fbbf24",
+          "line-width": 4,
+        },
       });
       map.addLayer({
         id: "site-points",
         type: "circle",
-        source: "site",
-        filter: ["==", "$type", "Point"],
+        source: "site-points",
         paint: {
-          "circle-radius": 5,
+          "circle-radius": 6,
           "circle-color": "#0f172a",
           "circle-stroke-color": "#fbbf24",
           "circle-stroke-width": 3,
@@ -184,6 +237,22 @@ export default function SolarSiteScreeningMap() {
     map.getCanvas().dataset.drawing = next ? "true" : "";
     map.getCanvas().style.cursor = next ? "crosshair" : "";
     setMessage(next ? "Click the map to add boundary points." : "Drawing paused.");
+  }
+
+  function selectBasemap(nextBasemap: Basemap) {
+    const map = mapRef.current;
+    if (!map?.getLayer("osm") || !map.getLayer("satellite")) return;
+    map.setLayoutProperty(
+      "osm",
+      "visibility",
+      nextBasemap === "streets" ? "visible" : "none",
+    );
+    map.setLayoutProperty(
+      "satellite",
+      "visibility",
+      nextBasemap === "satellite" ? "visible" : "none",
+    );
+    setBasemap(nextBasemap);
   }
 
   function clearSite() {
@@ -363,6 +432,26 @@ export default function SolarSiteScreeningMap() {
         />
         <div className="pointer-events-none absolute left-4 top-4 rounded-xl border border-white/15 bg-slate-950/85 px-3 py-2 text-xs text-white shadow-lg backdrop-blur">
           {isDrawing ? "Drawing mode · click to add points" : "Pan and zoom to explore"}
+        </div>
+        <div
+          className="absolute bottom-9 left-4 z-10 flex rounded-xl border border-white/15 bg-slate-950/90 p-1 shadow-xl backdrop-blur"
+          aria-label="Basemap style"
+        >
+          {(["streets", "satellite"] as const).map((option) => (
+            <button
+              key={option}
+              type="button"
+              aria-pressed={basemap === option}
+              onClick={() => selectBasemap(option)}
+              className={`rounded-lg px-3 py-2 text-xs font-bold capitalize transition ${
+                basemap === option
+                  ? "bg-amber-400 text-slate-950"
+                  : "text-slate-300 hover:bg-white/10 hover:text-white"
+              }`}
+            >
+              {option}
+            </button>
+          ))}
         </div>
       </div>
     </section>

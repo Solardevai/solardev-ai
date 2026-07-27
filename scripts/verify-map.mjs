@@ -16,7 +16,10 @@ page.on("requestfailed", (request) => {
   failedRequests.push({ url: request.url(), error: request.failure()?.errorText });
 });
 page.on("response", (response) => {
-  if (response.url().includes("tile.openstreetmap.org")) {
+  if (
+    response.url().includes("tile.openstreetmap.org") ||
+    response.url().includes("server.arcgisonline.com")
+  ) {
     tileResponses.push({ url: response.url(), status: response.status() });
   }
 });
@@ -33,6 +36,12 @@ await page.waitForTimeout(3000);
 const rejectAnalytics = page.getByRole("button", { name: "Reject analytics" });
 if (await rejectAnalytics.isVisible().catch(() => false)) {
   await rejectAnalytics.click();
+}
+
+const satelliteButton = page.getByRole("button", { name: "satellite" });
+if (await satelliteButton.isVisible().catch(() => false)) {
+  await satelliteButton.click();
+  await page.waitForTimeout(1500);
 }
 
 await page.getByRole("button", { name: "Start drawing" }).click();
@@ -55,6 +64,11 @@ const mapState = await page.evaluate(() => {
         }
       : null,
     controls: document.querySelectorAll(".maplibregl-ctrl").length,
+    satelliteSelected:
+      document
+        .querySelector('button[aria-pressed="true"]')
+        ?.textContent?.trim()
+        .toLowerCase() === "satellite",
     drawingStatus: document.body.innerText.includes("Boundary ready."),
     webgl:
       Boolean(document.createElement("canvas").getContext("webgl2")) ||
@@ -73,4 +87,8 @@ console.log(
     2,
   ),
 );
+await page.screenshot({
+  path: "tmp/map-drawing-verification.png",
+  fullPage: true,
+});
 await browser.close();
