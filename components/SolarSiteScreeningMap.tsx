@@ -161,7 +161,16 @@ export default function SolarSiteScreeningMap() {
     });
 
     mapRef.current = map;
+
+    const resizeObserver = new ResizeObserver(() => {
+      map.resize();
+    });
+    resizeObserver.observe(containerRef.current);
+    const resizeFrame = requestAnimationFrame(() => map.resize());
+
     return () => {
+      cancelAnimationFrame(resizeFrame);
+      resizeObserver.disconnect();
       map.remove();
       mapRef.current = null;
     };
@@ -346,8 +355,12 @@ export default function SolarSiteScreeningMap() {
         </p>
       </aside>
 
-      <div className="relative order-1 min-h-[480px] lg:order-2 lg:min-h-[720px]">
-        <div ref={containerRef} className="absolute inset-0" aria-label="Interactive solar site screening map" />
+      <div className="relative order-1 h-[480px] min-h-0 lg:order-2 lg:h-[720px]">
+        <div
+          ref={containerRef}
+          className="absolute inset-0 h-full w-full"
+          aria-label="Interactive solar site screening map"
+        />
         <div className="pointer-events-none absolute left-4 top-4 rounded-xl border border-white/15 bg-slate-950/85 px-3 py-2 text-xs text-white shadow-lg backdrop-blur">
           {isDrawing ? "Drawing mode · click to add points" : "Pan and zoom to explore"}
         </div>
