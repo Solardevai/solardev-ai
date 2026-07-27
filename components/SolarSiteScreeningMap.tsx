@@ -34,7 +34,11 @@ const INFRASTRUCTURE_LAYER_IDS: Record<InfrastructureLayer, string[]> = {
   mv: ["infrastructure-mv", "infrastructure-mv-markers"],
   hv: ["infrastructure-hv", "infrastructure-hv-markers"],
   ehv: ["infrastructure-ehv", "infrastructure-ehv-markers"],
-  substations: ["infrastructure-substations", "infrastructure-substation-fill"],
+  substations: [
+    "infrastructure-substation-halo",
+    "infrastructure-substations",
+    "infrastructure-substation-fill",
+  ],
   unknown: ["infrastructure-unknown", "infrastructure-unknown-markers"],
 };
 
@@ -83,6 +87,7 @@ export default function SolarSiteScreeningMap() {
   const containerRef = useRef<HTMLDivElement>(null);
   const drawingOverlayRef = useRef<SVGSVGElement>(null);
   const mapRef = useRef<MapLibreMap | null>(null);
+  const basemapRef = useRef<Basemap>("streets");
   const pointsRef = useRef<Coordinate[]>([]);
   const infrastructureAbortRef = useRef<AbortController | null>(null);
   const infrastructureLayersRef = useRef<Record<InfrastructureLayer, boolean>>(
@@ -184,12 +189,14 @@ export default function SolarSiteScreeningMap() {
 
     const map = mapRef.current;
     if (!map) return;
+    const isVisible =
+      next[layer] && (layer !== "substations" || basemapRef.current === "satellite");
     for (const layerId of INFRASTRUCTURE_LAYER_IDS[layer]) {
       if (map.getLayer(layerId)) {
         map.setLayoutProperty(
           layerId,
           "visibility",
-          next[layer] ? "visible" : "none",
+          isVisible ? "visible" : "none",
         );
       }
     }
@@ -412,11 +419,32 @@ export default function SolarSiteScreeningMap() {
           ["==", ["get", "kind"], "substation"],
           ["==", ["geometry-type"], "Polygon"],
         ],
+        minzoom: 8,
         layout: { visibility: "none" },
         paint: {
           "fill-color": "#22d3ee",
-          "fill-opacity": 0.25,
-          "fill-outline-color": "#67e8f9",
+          "fill-opacity": 0.42,
+          "fill-outline-color": "#ffffff",
+        },
+      });
+      map.addLayer({
+        id: "infrastructure-substation-halo",
+        type: "circle",
+        source: "infrastructure",
+        filter: [
+          "all",
+          ["==", ["get", "kind"], "substation"],
+          ["==", ["get", "marker"], true],
+        ],
+        minzoom: 8,
+        layout: { visibility: "none" },
+        paint: {
+          "circle-radius": ["interpolate", ["linear"], ["zoom"], 8, 13, 14, 20],
+          "circle-color": "#22d3ee",
+          "circle-opacity": 0.24,
+          "circle-stroke-color": "#ffffff",
+          "circle-stroke-width": 1.5,
+          "circle-stroke-opacity": 0.8,
         },
       });
       map.addLayer({
@@ -428,12 +456,13 @@ export default function SolarSiteScreeningMap() {
           ["==", ["get", "kind"], "substation"],
           ["==", ["get", "marker"], true],
         ],
+        minzoom: 8,
         layout: { visibility: "none" },
         paint: {
-          "circle-radius": 7,
+          "circle-radius": ["interpolate", ["linear"], ["zoom"], 8, 6, 14, 10],
           "circle-color": "#22d3ee",
-          "circle-stroke-color": "#020617",
-          "circle-stroke-width": 2.5,
+          "circle-stroke-color": "#ffffff",
+          "circle-stroke-width": 3,
         },
       });
 
@@ -589,7 +618,34 @@ export default function SolarSiteScreeningMap() {
       "visibility",
       nextBasemap === "satellite" ? "visible" : "none",
     );
+    basemapRef.current = nextBasemap;
     setBasemap(nextBasemap);
+
+    const substationsEnabled = nextBasemap === "satellite";
+    const nextInfrastructure = {
+      ...infrastructureLayersRef.current,
+      substations: substationsEnabled,
+    };
+    infrastructureLayersRef.current = nextInfrastructure;
+    setInfrastructureLayers(nextInfrastructure);
+    for (const layerId of INFRASTRUCTURE_LAYER_IDS.substations) {
+      if (map.getLayer(layerId)) {
+        map.setLayoutProperty(
+          layerId,
+          "visibility",
+          substationsEnabled ? "visible" : "none",
+        );
+      }
+    }
+    if (substationsEnabled) {
+      if (map.getZoom() < 8) {
+        setInfrastructureNote(
+          "Substations appear on satellite imagery from zoom level 8. Zoom in to load them.",
+        );
+      } else {
+        void loadInfrastructure(map);
+      }
+    }
   }
 
   function clearSite() {
