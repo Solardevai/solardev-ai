@@ -18,6 +18,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.9,
     },
     {
+      url: `${SITE_URL}/tools/solar-site-screening`,
+      lastModified: new Date("2026-07-27"),
+      changeFrequency: "monthly",
+      priority: 0.9,
+    },
+    {
       url: `${SITE_URL}/solar-bess-project-development-handbook`,
       lastModified: CONTENT_LAST_UPDATED,
       changeFrequency: "monthly",
