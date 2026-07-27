@@ -89,6 +89,19 @@ export default function Navbar() {
                       </span>
                     </Link>
 
+                    <Link
+                      href="/tools/sun-path"
+                      className="mt-1 block rounded-xl px-4 py-3 transition hover:bg-white/[0.06] focus:outline-none focus-visible:bg-white/[0.06]"
+                    >
+                      <span className="flex items-center justify-between gap-3">
+                        <span className="font-semibold text-white">Sun Path & Shadows</span>
+                        <span className="rounded-full border border-amber-400/25 bg-amber-400/10 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-amber-300">New</span>
+                      </span>
+                      <span className="mt-1 block text-xs leading-5 text-slate-400">
+                        Explore solar angles and indicative shadow geometry.
+                      </span>
+                    </Link>
+
                     <div
                       aria-disabled="true"
                       className="mt-1 rounded-xl px-4 py-3 opacity-75"
@@ -209,6 +222,14 @@ export default function Navbar() {
                     >
                       Site Check
                       <span className="text-xs font-bold text-emerald-300">BETA</span>
+                    </Link>
+                    <Link
+                      href="/tools/sun-path"
+                      onClick={closeMenu}
+                      className="flex min-h-12 items-center justify-between rounded-lg px-3 py-3 font-semibold text-white transition hover:bg-white/[0.05] focus:outline-none focus-visible:bg-white/[0.05]"
+                    >
+                      Sun Path & Shadows
+                      <span className="text-xs font-bold text-amber-300">NEW</span>
                     </Link>
                     <div
                       aria-disabled="true"
