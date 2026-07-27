@@ -10,23 +10,33 @@ type RoadmapItem = {
 
 const roadmapItems: RoadmapItem[] = [
   {
-    year: "2026",
+    year: "2026 · Q1",
     number: "01",
     title: "Professional Handbook Series",
     description:
       "A two-volume field reference covering the full utility-scale Solar PV and BESS project lifecycle.",
     deliverables: ["Volume 1 available", "Volume 2 available"],
-    status: "Current",
+    status: "Available",
     active: true,
   },
   {
-    year: "2026",
+    year: "2026 · Q2",
     number: "02",
-    title: "SolarDev AI Platform",
+    title: "Prompt Library & Templates",
     description:
-      "Turning the handbook methodology into practical tools for everyday solar and BESS project work.",
-    deliverables: ["Prompt library & templates", "Site Check"],
+      "Turning the handbook methodology into reusable AI workflows and professional project resources.",
+    deliverables: ["Searchable prompt library", "Templates & checklists"],
     status: "Ongoing",
+    active: true,
+  },
+  {
+    year: "2026 · Q4",
+    number: "03",
+    title: "Site Check",
+    description:
+      "Expanding early-stage site screening through interactive mapping, solar-resource checks and boundary exports.",
+    deliverables: ["Interactive GIS screening", "GeoJSON, KML & KMZ exports"],
+    status: "Beta",
     active: true,
   },
 ];
@@ -43,7 +53,7 @@ export default function Roadmap() {
         className="pointer-events-none absolute left-1/2 top-1/2 h-80 w-80 -translate-x-1/2 -translate-y-1/2 rounded-full bg-emerald-400/[0.04] blur-3xl"
       />
 
-      <div className="relative mx-auto max-w-5xl px-6 lg:px-8">
+      <div className="relative mx-auto max-w-7xl px-6 lg:px-8">
         <div className="mx-auto max-w-2xl text-center">
           <p className="text-xs font-semibold uppercase tracking-[0.22em] text-emerald-400">
             Product Roadmap
@@ -52,30 +62,20 @@ export default function Roadmap() {
             id="roadmap-title"
             className="mt-3 text-3xl font-bold tracking-tight text-white sm:text-4xl"
           >
-            Built in two focused stages
+            Built across three 2026 milestones
           </h2>
           <p className="mt-4 text-base leading-7 text-slate-400">
-            First, trusted professional knowledge. Next, practical tools that
-            put that knowledge to work.
+            Professional knowledge first, followed by reusable workflows and
+            progressively more capable site-intelligence tools.
           </p>
         </div>
 
-        <div className="relative mx-auto mt-10 max-w-4xl">
-          <div className="grid gap-4 md:grid-cols-[1fr_auto_1fr] md:items-stretch">
+        <div className="relative mx-auto mt-10 max-w-6xl">
+          <div className="grid gap-4 md:grid-cols-3 md:items-stretch">
             {roadmapItems.map((item) => (
               <div key={item.number} className="contents">
-                {item.number === "02" && (
-                  <div
-                    aria-hidden="true"
-                    className="flex items-center justify-center py-1 md:px-1"
-                  >
-                    <span className="h-8 w-px bg-gradient-to-b from-emerald-400 to-white/20 md:h-px md:w-10 md:bg-gradient-to-r" />
-                    <span className="-ml-1 h-2 w-2 rotate-45 border-r border-t border-white/30 md:-ml-2" />
-                  </div>
-                )}
-
                 <article
-                  className={`flex min-h-72 flex-col rounded-2xl border p-6 ${
+                  className={`flex min-h-80 flex-col rounded-2xl border p-6 ${
                     item.active
                       ? "border-emerald-400/30 bg-emerald-400/[0.055]"
                       : "border-white/10 bg-white/[0.025]"
@@ -112,7 +112,7 @@ export default function Roadmap() {
                     {item.description}
                   </p>
 
-                  <ul className="mt-auto grid gap-2 pt-6 sm:grid-cols-2 md:grid-cols-1 lg:grid-cols-2">
+                  <ul className="mt-auto grid gap-2 pt-6">
                     {item.deliverables.map((deliverable) => (
                       <li
                         key={deliverable}
