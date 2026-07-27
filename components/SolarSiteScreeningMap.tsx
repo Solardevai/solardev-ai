@@ -39,6 +39,7 @@ function formatDistance(kilometres: number) {
 
 export default function SolarSiteScreeningMap() {
   const containerRef = useRef<HTMLDivElement>(null);
+  const drawingOverlayRef = useRef<SVGSVGElement>(null);
   const mapRef = useRef<MapLibreMap | null>(null);
   const pointsRef = useRef<Coordinate[]>([]);
   const [points, setPoints] = useState<Coordinate[]>([]);
@@ -54,6 +55,46 @@ export default function SolarSiteScreeningMap() {
   const sitePolygon = closedRing ? polygon([closedRing]) : null;
   const siteArea = sitePolygon ? area(sitePolygon) : 0;
   const sitePerimeter = closedRing ? length(lineString(closedRing)) : 0;
+
+  function updateDrawingOverlay(nextPoints: Coordinate[]) {
+    const map = mapRef.current;
+    const overlay = drawingOverlayRef.current;
+    if (!map || !overlay) return;
+
+    const projectedPoints = nextPoints.map((coordinate) =>
+      map.project(coordinate),
+    );
+    const path = projectedPoints
+      .map((point, index) => `${index === 0 ? "M" : "L"}${point.x},${point.y}`)
+      .join(" ");
+    const closedPath =
+      projectedPoints.length >= 3 ? `${path} Z` : path;
+
+    overlay
+      .querySelectorAll<SVGPathElement>("[data-site-path]")
+      .forEach((element) => element.setAttribute("d", closedPath));
+
+    const vertices = overlay.querySelector<SVGGElement>(
+      "[data-site-vertices]",
+    );
+    if (vertices) {
+      vertices.replaceChildren(
+        ...projectedPoints.map((point) => {
+          const circle = document.createElementNS(
+            "http://www.w3.org/2000/svg",
+            "circle",
+          );
+          circle.setAttribute("cx", String(point.x));
+          circle.setAttribute("cy", String(point.y));
+          circle.setAttribute("r", "6");
+          circle.setAttribute("fill", "#020617");
+          circle.setAttribute("stroke", "#fbbf24");
+          circle.setAttribute("stroke-width", "3");
+          return circle;
+        }),
+      );
+    }
+  }
 
   function updateMap(nextPoints: Coordinate[]) {
     const map = mapRef.current;
@@ -102,6 +143,7 @@ export default function SolarSiteScreeningMap() {
             ]
           : [],
     });
+    updateDrawingOverlay(nextPoints);
   }
 
   useEffect(() => {
@@ -212,6 +254,10 @@ export default function SolarSiteScreeningMap() {
           : "Boundary ready. Add more points or finish drawing.",
       );
     });
+    const refreshDrawingOverlay = () =>
+      updateDrawingOverlay(pointsRef.current);
+    map.on("move", refreshDrawingOverlay);
+    map.on("resize", refreshDrawingOverlay);
 
     mapRef.current = map;
 
@@ -224,9 +270,13 @@ export default function SolarSiteScreeningMap() {
     return () => {
       cancelAnimationFrame(resizeFrame);
       resizeObserver.disconnect();
+      map.off("move", refreshDrawingOverlay);
+      map.off("resize", refreshDrawingOverlay);
       map.remove();
       mapRef.current = null;
     };
+    // MapLibre owns this imperative instance for the component lifetime.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   function toggleDrawing() {
@@ -430,6 +480,27 @@ export default function SolarSiteScreeningMap() {
           className="absolute inset-0 h-full w-full"
           aria-label="Interactive solar site screening map"
         />
+        <svg
+          ref={drawingOverlayRef}
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-0 z-[5] h-full w-full overflow-hidden"
+        >
+          <path
+            data-site-path
+            fill="rgba(251, 191, 36, 0.24)"
+            stroke="#020617"
+            strokeWidth="8"
+            strokeLinejoin="round"
+          />
+          <path
+            data-site-path
+            fill="transparent"
+            stroke="#fbbf24"
+            strokeWidth="4"
+            strokeLinejoin="round"
+          />
+          <g data-site-vertices />
+        </svg>
         <div className="pointer-events-none absolute left-4 top-4 rounded-xl border border-white/15 bg-slate-950/85 px-3 py-2 text-xs text-white shadow-lg backdrop-blur">
           {isDrawing ? "Drawing mode · click to add points" : "Pan and zoom to explore"}
         </div>

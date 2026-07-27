@@ -70,6 +70,11 @@ const mapState = await page.evaluate(() => {
         ?.textContent?.trim()
         .toLowerCase() === "satellite",
     drawingStatus: document.body.innerText.includes("Boundary ready."),
+    overlayPath:
+      document.querySelector("[data-site-path]")?.getAttribute("d") ?? "",
+    overlayVertices: document.querySelectorAll(
+      "[data-site-vertices] circle",
+    ).length,
     webgl:
       Boolean(document.createElement("canvas").getContext("webgl2")) ||
       Boolean(document.createElement("canvas").getContext("webgl")),
