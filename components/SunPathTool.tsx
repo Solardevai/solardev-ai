@@ -312,13 +312,35 @@ export default function SunPathTool() {
       </div>
 
       <div className="grid lg:grid-cols-[minmax(0,1fr)_340px]">
-        <div className="relative min-h-[480px] overflow-hidden border-b border-white/10 lg:border-b-0 lg:border-r">
-          <div ref={mapContainer} className="absolute inset-0" aria-label="Interactive map showing sun and shadow directions" />
-          <div className="pointer-events-none absolute left-4 top-4 max-w-[calc(100%-2rem)] rounded-xl border border-white/10 bg-slate-950/90 px-4 py-3 backdrop-blur">
+        <div className="relative h-[480px] overflow-hidden border-b border-white/10 bg-[#142036] lg:h-auto lg:min-h-[560px] lg:border-b-0 lg:border-r">
+          <div aria-hidden="true" className="absolute inset-0 overflow-hidden bg-[#142036]">
+            <svg viewBox="0 0 900 620" preserveAspectRatio="xMidYMid slice" className="h-full w-full opacity-80">
+              <rect width="900" height="620" fill="#142036" />
+              <path d="M-40 130C120 75 205 180 345 135S575 35 940 115V-20H-40Z" fill="#1b2a42" />
+              <path d="M-20 560C145 480 245 525 365 475S650 400 930 455V650H-20Z" fill="#192b39" />
+              <g fill="none" strokeLinecap="round">
+                <path d="M-40 485C110 440 170 310 315 315S470 420 605 340S710 135 940 80" stroke="#4a5b70" strokeWidth="18" />
+                <path d="M-40 485C110 440 170 310 315 315S470 420 605 340S710 135 940 80" stroke="#94a3b8" strokeWidth="2" strokeDasharray="12 10" opacity=".7" />
+                <path d="M75 -20C120 155 240 200 230 390S145 540 115 650M520 -20C485 120 500 215 650 265S845 310 930 375" stroke="#3d4e63" strokeWidth="10" />
+                <path d="M75 -20C120 155 240 200 230 390S145 540 115 650M520 -20C485 120 500 215 650 265S845 310 930 375" stroke="#64748b" strokeWidth="1.5" strokeDasharray="8 9" />
+                <path d="M-20 210L165 225L255 145L430 205L555 160L690 205L930 175M350 650L385 510L485 445L510 290L625 215" stroke="#273a52" strokeWidth="5" />
+                <path d="M-20 75L165 125L300 75L445 110L610 65L770 105L930 45M-20 390L130 355L280 405L425 370L560 410L720 365L930 415" stroke="#20334b" strokeWidth="3" />
+              </g>
+              <g fill="#22384e" stroke="#304a61" strokeWidth="2">
+                <path d="M285 230L380 210L405 275L312 292Z" />
+                <path d="M428 238L505 222L525 275L450 292Z" />
+                <path d="M550 390L650 360L680 425L575 451Z" />
+                <path d="M680 110L775 92L795 145L700 163Z" />
+              </g>
+            </svg>
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,transparent,rgba(2,6,23,.3))]" />
+          </div>
+          <div ref={mapContainer} className="absolute inset-0 z-10 h-full w-full" aria-label="Interactive map showing sun and shadow directions" />
+          <div className="pointer-events-none absolute left-4 top-4 z-20 max-w-[calc(100%-2rem)] rounded-xl border border-white/10 bg-slate-950/90 px-4 py-3 backdrop-blur">
             <p className="truncate text-xs font-bold uppercase tracking-[0.14em] text-slate-400">{label}</p>
             <p className="mt-1 font-mono text-xs text-slate-300">{point.latitude.toFixed(4)}°, {point.longitude.toFixed(4)}°</p>
           </div>
-          <div className="pointer-events-none absolute bottom-5 right-4 flex gap-2 text-xs font-semibold">
+          <div className="pointer-events-none absolute bottom-5 right-4 z-20 flex gap-2 text-xs font-semibold">
             <span className="rounded-full border border-amber-400/25 bg-slate-950/90 px-3 py-2 text-amber-300">↗ Sun {sun.azimuth.toFixed(1)}°</span>
             <span className="rounded-full border border-cyan-400/25 bg-slate-950/90 px-3 py-2 text-cyan-300">↙ Shadow {(sun.azimuth + 180) % 360 | 0}°</span>
           </div>
