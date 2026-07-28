@@ -5,7 +5,7 @@ type RoadmapItem = {
   description: string;
   deliverables: string[];
   status: string;
-  active?: boolean;
+  state: "complete" | "current" | "upcoming";
 };
 
 const roadmapItems: RoadmapItem[] = [
@@ -17,7 +17,7 @@ const roadmapItems: RoadmapItem[] = [
       "Two complementary references addressing key decisions from early development through operations.",
     deliverables: ["Volume 1 available", "Volume 2 available"],
     status: "Delivered",
-    active: true,
+    state: "complete",
   },
   {
     year: "2026 · Q2",
@@ -27,7 +27,7 @@ const roadmapItems: RoadmapItem[] = [
       "Development started on reusable AI workflows and structured professional project resources.",
     deliverables: ["Searchable prompt library", "Templates & checklists"],
     status: "In development",
-    active: true,
+    state: "current",
   },
   {
     year: "2026 · Q4",
@@ -37,8 +37,83 @@ const roadmapItems: RoadmapItem[] = [
       "Build on the public beta with environmental and terrain constraints and a structured screening summary.",
     deliverables: ["Public beta available", "Constraint screening planned"],
     status: "Planned",
+    state: "upcoming",
   },
 ];
+
+const stateStyles = {
+  complete: {
+    marker:
+      "border-emerald-300 bg-emerald-400 text-slate-950 shadow-[0_0_0_6px_rgba(52,211,153,0.1)]",
+    status:
+      "border-emerald-400/25 bg-emerald-400/10 text-emerald-300",
+    card: "border-emerald-400/20 bg-emerald-400/[0.045]",
+    bullet: "bg-emerald-400",
+  },
+  current: {
+    marker:
+      "border-emerald-300 bg-slate-950 text-emerald-300 shadow-[0_0_0_6px_rgba(52,211,153,0.12)]",
+    status:
+      "border-emerald-400/30 bg-emerald-400/10 text-emerald-300",
+    card:
+      "border-emerald-400/35 bg-gradient-to-b from-emerald-400/[0.075] to-white/[0.025] shadow-2xl shadow-emerald-950/20",
+    bullet: "bg-emerald-300",
+  },
+  upcoming: {
+    marker:
+      "border-white/20 bg-slate-950 text-slate-400 shadow-[0_0_0_6px_rgba(255,255,255,0.035)]",
+    status: "border-white/10 bg-white/[0.035] text-slate-400",
+    card: "border-white/10 bg-white/[0.025]",
+    bullet: "bg-slate-600",
+  },
+} as const;
+
+function StageMarker({ item }: { item: RoadmapItem }) {
+  const styles = stateStyles[item.state];
+
+  if (item.state === "complete") {
+    return (
+      <span
+        aria-hidden="true"
+        className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full border ${styles.marker}`}
+      >
+        <svg
+          viewBox="0 0 20 20"
+          fill="none"
+          className="h-4 w-4"
+        >
+          <path
+            d="m4.5 10.5 3.25 3.25 7.75-8"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+        </svg>
+      </span>
+    );
+  }
+
+  if (item.state === "current") {
+    return (
+      <span
+        aria-hidden="true"
+        className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full border ${styles.marker}`}
+      >
+        <span className="h-2.5 w-2.5 rounded-full bg-emerald-300 shadow-[0_0_14px_rgba(110,231,183,0.85)]" />
+      </span>
+    );
+  }
+
+  return (
+    <span
+      aria-hidden="true"
+      className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full border text-[10px] font-bold ${styles.marker}`}
+    >
+      {item.number}
+    </span>
+  );
+}
 
 export default function Roadmap() {
   return (
@@ -69,66 +144,80 @@ export default function Roadmap() {
           </p>
         </div>
 
-        <div className="relative mx-auto mt-10 max-w-6xl">
-          <div className="grid gap-4 md:grid-cols-3 md:items-stretch">
-            {roadmapItems.map((item) => (
-              <div key={item.number} className="contents">
-                <article
-                  className={`flex min-h-80 flex-col rounded-2xl border p-6 ${
-                    item.active
-                      ? "border-emerald-400/30 bg-emerald-400/[0.055]"
-                      : "border-white/10 bg-white/[0.025]"
-                  }`}
+        <div className="relative mx-auto mt-12 max-w-6xl">
+          <div
+            aria-hidden="true"
+            className="absolute bottom-5 left-[17px] top-5 w-px bg-white/10 md:bottom-auto md:left-[16.666%] md:right-[16.666%] md:top-[17px] md:h-px md:w-auto"
+          />
+          <div
+            aria-hidden="true"
+            className="absolute left-[17px] top-5 h-[calc(50%-4px)] w-px bg-emerald-400/70 md:left-[16.666%] md:top-[17px] md:h-0.5 md:w-[33.333%]"
+          />
+
+          <ol className="relative grid gap-9 md:grid-cols-3 md:gap-5">
+            {roadmapItems.map((item) => {
+              const styles = stateStyles[item.state];
+
+              return (
+                <li
+                  key={item.number}
+                  className="relative pl-14 md:pl-0"
                 >
-                  <div className="flex items-start justify-between gap-4">
-                    <div>
-                      <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">
-                        Stage {item.number}
-                      </p>
-                      <p
-                        className={`mt-2 text-3xl font-bold ${
-                          item.active ? "text-emerald-400" : "text-white"
-                        }`}
+                  <div className="relative z-10 flex items-center gap-4 md:flex-col md:gap-3">
+                    <StageMarker item={item} />
+
+                    <div className="flex min-w-0 flex-1 items-center justify-between gap-3 md:w-full md:flex-col md:justify-start md:text-center">
+                      <div>
+                        <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-slate-500">
+                          Stage {item.number}
+                        </p>
+                        <p className="mt-1 text-lg font-bold tracking-tight text-white">
+                          {item.year}
+                        </p>
+                      </div>
+
+                      <span
+                        className={`shrink-0 rounded-full border px-3 py-1 text-[10px] font-bold uppercase tracking-[0.14em] ${styles.status}`}
                       >
-                        {item.year}
-                      </p>
+                        {item.status}
+                      </span>
                     </div>
-                    <span
-                      className={`rounded-full border px-3 py-1 text-[10px] font-bold uppercase tracking-[0.14em] ${
-                        item.active
-                          ? "border-emerald-400/30 bg-emerald-400/10 text-emerald-300"
-                          : "border-white/10 bg-white/[0.03] text-slate-400"
-                      }`}
-                    >
-                      {item.status}
-                    </span>
                   </div>
 
-                  <h3 className="mt-6 text-xl font-semibold text-white">
-                    {item.title}
-                  </h3>
-                  <p className="mt-3 text-sm leading-6 text-slate-400">
-                    {item.description}
-                  </p>
+                  <article
+                    className={`mt-5 flex min-h-64 flex-col rounded-2xl border p-5 transition duration-300 md:mt-6 md:p-6 ${styles.card}`}
+                  >
+                    <h3 className="text-xl font-semibold text-white">
+                      {item.title}
+                    </h3>
+                    <p className="mt-3 text-sm leading-6 text-slate-400">
+                      {item.description}
+                    </p>
 
-                  <ul className="mt-auto grid gap-2 pt-6">
-                    {item.deliverables.map((deliverable) => (
-                      <li
-                        key={deliverable}
-                        className="flex items-center gap-2 text-xs font-medium text-slate-300"
-                      >
-                        <span
-                          className={`h-1.5 w-1.5 shrink-0 rounded-full ${
-                            item.active ? "bg-emerald-400" : "bg-slate-600"
-                          }`}
-                        />
-                        {deliverable}
-                      </li>
-                    ))}
-                  </ul>
-                </article>
-              </div>
-            ))}
+                    <ul className="mt-auto grid gap-2 border-t border-white/[0.08] pt-5">
+                      {item.deliverables.map((deliverable) => (
+                        <li
+                          key={deliverable}
+                          className="flex items-start gap-2.5 text-xs font-medium leading-5 text-slate-300"
+                        >
+                          <span
+                            aria-hidden="true"
+                            className={`mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full ${styles.bullet}`}
+                          />
+                          {deliverable}
+                        </li>
+                      ))}
+                    </ul>
+                  </article>
+                </li>
+              );
+            })}
+          </ol>
+
+          <div className="mt-9 flex items-center justify-center gap-3 text-xs text-slate-500">
+            <span className="h-px w-10 bg-gradient-to-r from-transparent to-emerald-400/60" />
+            <span>Knowledge → workflows → project tools</span>
+            <span className="h-px w-10 bg-gradient-to-l from-transparent to-emerald-400/60" />
           </div>
         </div>
       </div>
