@@ -24,8 +24,13 @@ const roadmapItems: RoadmapItem[] = [
     number: "02",
     title: "Prompt Library & Templates",
     description:
-      "Development started on reusable AI workflows and structured professional project resources.",
-    deliverables: ["Searchable prompt library", "Templates & checklists"],
+      "Reusable AI workflows and structured project resources, supported by practical early-stage solar tools.",
+    deliverables: [
+      "Searchable prompt library",
+      "Templates & checklists",
+      "Site Check tool",
+      "Solar Angle tool",
+    ],
     status: "In development",
     state: "current",
   },
@@ -34,8 +39,12 @@ const roadmapItems: RoadmapItem[] = [
     number: "03",
     title: "Site Check Expansion",
     description:
-      "Build on the public beta with environmental and terrain constraints and a structured screening summary.",
-    deliverables: ["Public beta available", "Constraint screening planned"],
+      "Expand early-stage project assessment with constraint intelligence, automated reporting and a unified GIS workspace.",
+    deliverables: [
+      "Site screening - constraints",
+      "Automatic reports",
+      "GIS platform",
+    ],
     status: "Planned",
     state: "upcoming",
   },
@@ -140,7 +149,7 @@ export default function Roadmap() {
           </h2>
           <p className="mt-4 text-base leading-7 text-slate-400">
             Delivered professional knowledge, followed by reusable workflows
-            and a progressively more capable Site Check.
+            and progressively more capable project tools.
           </p>
         </div>
 
