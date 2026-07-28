@@ -1,10 +1,158 @@
 "use client";
 
+import { UserButton, useAuth } from "@clerk/nextjs";
 import Link from "next/link";
 import { useState } from "react";
 import { navigationItems } from "@/data/siteData";
 
-export default function Navbar() {
+type NavbarClientProps = {
+  authEnabled: boolean;
+};
+
+type AuthControlsProps = {
+  authEnabled: boolean;
+  mobile?: boolean;
+  onNavigate?: () => void;
+};
+
+function SignedOutControls({
+  mobile = false,
+  onNavigate,
+}: Omit<AuthControlsProps, "authEnabled">) {
+  if (mobile) {
+    return (
+      <div className="grid grid-cols-2 gap-3">
+        <Link
+          href="/sign-in"
+          onClick={onNavigate}
+          className="flex min-h-12 items-center justify-center rounded-xl border border-white/10 px-4 py-3 text-sm font-semibold text-white transition hover:bg-white/[0.05] focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400"
+        >
+          Sign in
+        </Link>
+        <Link
+          href="/sign-up"
+          onClick={onNavigate}
+          className="flex min-h-12 items-center justify-center rounded-xl bg-amber-400 px-4 py-3 text-sm font-bold text-slate-950 transition hover:bg-amber-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-200"
+        >
+          Start free
+        </Link>
+      </div>
+    );
+  }
+
+  return (
+    <>
+      <Link
+        href="/sign-in"
+        className="rounded-lg px-3 py-2 text-sm font-semibold text-slate-300 transition hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400"
+      >
+        Sign in
+      </Link>
+      <Link
+        href="/sign-up"
+        className="rounded-xl bg-amber-400 px-4 py-2.5 text-sm font-bold text-slate-950 transition hover:bg-amber-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-200"
+      >
+        Start free
+      </Link>
+    </>
+  );
+}
+
+function ClerkAuthControls({
+  mobile = false,
+  onNavigate,
+}: Omit<AuthControlsProps, "authEnabled">) {
+  const { isLoaded, isSignedIn } = useAuth();
+
+  if (!isLoaded) {
+    return (
+      <div
+        aria-label="Loading account controls"
+        className={
+          mobile
+            ? "h-12 animate-pulse rounded-xl bg-white/[0.05]"
+            : "h-10 w-40 animate-pulse rounded-xl bg-white/[0.05]"
+        }
+      />
+    );
+  }
+
+  if (!isSignedIn) {
+    return (
+      <SignedOutControls
+        mobile={mobile}
+        onNavigate={onNavigate}
+      />
+    );
+  }
+
+  if (mobile) {
+    return (
+      <div className="flex items-center gap-3">
+        <Link
+          href="/dashboard"
+          onClick={onNavigate}
+          className="flex min-h-12 flex-1 items-center justify-center rounded-xl bg-amber-400 px-4 py-3 text-sm font-bold text-slate-950 transition hover:bg-amber-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-200"
+        >
+          Dashboard
+        </Link>
+        <div className="flex h-12 w-12 items-center justify-center rounded-xl border border-white/10 bg-white/[0.04]">
+          <UserButton
+            appearance={{
+              elements: {
+                avatarBox: "h-8 w-8",
+              },
+            }}
+          />
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <>
+      <Link
+        href="/dashboard"
+        className="rounded-lg px-3 py-2 text-sm font-semibold text-slate-200 transition hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400"
+      >
+        Dashboard
+      </Link>
+      <UserButton
+        appearance={{
+          elements: {
+            avatarBox: "h-9 w-9",
+          },
+        }}
+      />
+    </>
+  );
+}
+
+function AuthControls({
+  authEnabled,
+  mobile = false,
+  onNavigate,
+}: AuthControlsProps) {
+  if (!authEnabled) {
+    return (
+      <SignedOutControls
+        mobile={mobile}
+        onNavigate={onNavigate}
+      />
+    );
+  }
+
+  return (
+    <ClerkAuthControls
+      mobile={mobile}
+      onNavigate={onNavigate}
+    />
+  );
+}
+
+export default function Navbar({
+  authEnabled,
+}: NavbarClientProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   function closeMenu() {
@@ -145,6 +293,11 @@ export default function Navbar() {
           ))}
         </nav>
 
+        {/* Desktop account controls */}
+        <div className="hidden items-center gap-2 justify-self-end lg:flex">
+          <AuthControls authEnabled={authEnabled} />
+        </div>
+
         {/* Mobile controls */}
         <div className="flex items-center gap-2 lg:hidden">
           <button
@@ -197,10 +350,10 @@ export default function Navbar() {
       {/* Mobile navigation */}
       <div
         id="mobile-navigation"
-        className={`overflow-hidden bg-slate-950 transition-all duration-300 lg:hidden ${
+        className={`bg-slate-950 transition-[max-height,opacity] duration-300 lg:hidden ${
           isMenuOpen
-            ? "max-h-[650px] border-t border-white/10 opacity-100"
-            : "max-h-0 border-t border-transparent opacity-0"
+            ? "max-h-[80vh] overflow-y-auto border-t border-white/10 opacity-100"
+            : "max-h-0 overflow-hidden border-t border-transparent opacity-0"
         }`}
       >
         <nav
@@ -278,6 +431,13 @@ export default function Navbar() {
             ))}
           </ul>
 
+          <div className="mt-5 border-t border-white/10 pt-5">
+            <AuthControls
+              authEnabled={authEnabled}
+              mobile
+              onNavigate={closeMenu}
+            />
+          </div>
         </nav>
       </div>
     </header>

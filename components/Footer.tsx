@@ -54,7 +54,7 @@ const legalLinks = [
     href: "/privacy",
   },
   {
-    label: "Terms of Sale",
+    label: "Terms of Service and Sale",
     href: "/terms",
   },
   {

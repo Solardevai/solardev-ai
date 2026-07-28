@@ -28,7 +28,7 @@ export const legalConfig = {
     "support records for 3 years; invoicing records for the statutory period; Analytics data is retained according to the retention period configured within the applicable analytics platform.",
 
   refundRequestWindowDays: 14,
-  lastUpdated: "16 July 2026",
+  lastUpdated: "28 July 2026",
 } as const;
 
 export type LegalConfig = typeof legalConfig;

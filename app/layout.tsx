@@ -1,6 +1,8 @@
+import { ClerkProvider } from "@clerk/nextjs";
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
 import AnalyticsConsent from "@/components/AnalyticsConsent";
+import { isAuthenticationAvailable } from "@/lib/auth-config";
 import "./globals.css";
 
 const SITE_URL = "https://www.solardev.ai";
@@ -108,11 +110,46 @@ type RootLayoutProps = Readonly<{
 }>;
 
 export default function RootLayout({ children }: RootLayoutProps) {
+  const content = (
+    <>
+      {children}
+      <AnalyticsConsent />
+    </>
+  );
+
   return (
     <html lang="en">
       <body className="bg-slate-950 text-white antialiased">
-        {children}
-        <AnalyticsConsent />
+        {isAuthenticationAvailable() ? (
+          <ClerkProvider
+            signInUrl="/sign-in"
+            signUpUrl="/sign-up"
+            signInFallbackRedirectUrl="/dashboard"
+            signUpFallbackRedirectUrl="/dashboard"
+            appearance={{
+              variables: {
+                colorPrimary: "#fbbf24",
+                colorBackground: "#0f172a",
+                colorForeground: "#f8fafc",
+                colorMutedForeground: "#94a3b8",
+                borderRadius: "0.875rem",
+              },
+              elements: {
+                card: "border border-white/10 shadow-2xl shadow-black/30",
+                footerActionLink:
+                  "text-amber-400 hover:text-amber-300",
+                formButtonPrimary:
+                  "bg-amber-400 text-slate-950 hover:bg-amber-300",
+                socialButtonsBlockButton:
+                  "border-white/10 bg-white/[0.04] text-white hover:bg-white/[0.08]",
+              },
+            }}
+          >
+            {content}
+          </ClerkProvider>
+        ) : (
+          content
+        )}
       </body>
     </html>
   );

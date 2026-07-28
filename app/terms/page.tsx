@@ -7,9 +7,9 @@ import {
 import { legalConfig } from "../../lib/legal-config";
 
 export const metadata: Metadata = {
-  title: "Terms of Sale",
+  title: "Terms of Service and Sale",
   description:
-    "Terms governing the purchase, delivery, licensing and professional use of SolarDev AI digital products.",
+    "Terms governing SolarDev AI accounts, services, purchases, delivery, licensing and professional use.",
   alternates: {
     canonical: "/terms",
   },
@@ -26,8 +26,8 @@ export default function TermsOfSalePage() {
   return (
     <LegalPageLayout
       eyebrow="Legal"
-      title="Terms of Sale"
-      introduction="These terms govern the purchase, delivery, licensing and use of SolarDev AI digital products. Stripe's separate terms may apply to payment processing."
+      title="Terms of Service and Sale"
+      introduction="These terms govern SolarDev AI accounts and services, together with the purchase, delivery, licensing and use of digital products. Stripe's separate terms may apply to payment processing."
     >
       <LegalSection title="1. Operator information">
         <LegalList>
@@ -60,12 +60,42 @@ export default function TermsOfSalePage() {
         </LegalList>
       </LegalSection>
 
+      <LegalSection title="Account and service use">
+        <p>
+          By creating an account or using a protected SolarDev AI workspace,
+          you agree to provide accurate registration information, keep your
+          account access secure and notify us promptly if you believe your
+          account has been compromised.
+        </p>
+
+        <p>
+          Authentication is provided through a specialist identity provider.
+          You must not attempt to access another user&apos;s account, bypass
+          access controls, interfere with service security or use the service
+          for unlawful, abusive or misleading activity.
+        </p>
+
+        <p>
+          We may temporarily restrict or suspend account access where
+          reasonably necessary to protect the service, investigate suspected
+          misuse, comply with law or address a material breach of these terms.
+        </p>
+
+        <p>
+          Creating a free account does not guarantee that every planned
+          workspace, project-storage, reporting, billing or collaboration
+          feature is already available. Current functionality is identified
+          within the service.
+        </p>
+      </LegalSection>
+
       <LegalSection title="2. Scope and acceptance">
         <p>
-          These Terms of Sale apply to digital publications, prompt libraries,
-          templates, training materials and related professional resources
-          offered under the {legalConfig.tradingName} name, unless a separate
-          written agreement applies.
+          These Terms of Service and Sale apply to accounts, website services,
+          digital publications, prompt libraries, templates, training
+          materials and related professional resources offered under the{" "}
+          {legalConfig.tradingName} name, unless a separate written agreement
+          applies.
         </p>
 
         <p>

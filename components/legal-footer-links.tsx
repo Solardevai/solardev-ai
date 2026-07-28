@@ -13,7 +13,7 @@ export function LegalFooterLinks() {
       </li>
       <li>
         <Link href="/terms" className="transition hover:text-white">
-          Terms of Sale
+          Terms of Service and Sale
         </Link>
       </li>
       <li>

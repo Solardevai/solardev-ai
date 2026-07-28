@@ -27,7 +27,7 @@ export default function PrivacyPolicyPage() {
     <LegalPageLayout
       eyebrow="Legal"
       title="Privacy Policy"
-      introduction="This policy explains how personal data is processed when you visit SolarDev AI, contact us, request support, enquire about corporate licensing or purchase a digital product through Stripe."
+      introduction="This policy explains how personal data is processed when you visit SolarDev AI, create or use an account, contact us, request support, enquire about corporate licensing or purchase a digital product through Stripe."
     >
       <LegalSection title="1. Data controller">
         <p>
@@ -87,6 +87,12 @@ export default function PrivacyPolicyPage() {
           </li>
 
           <li>
+            Account and authentication information, such as your account
+            identifier, email-verification status, sign-in activity, session
+            information and security-related device or network data.
+          </li>
+
+          <li>
             Enquiry and support information contained in messages sent to us.
           </li>
 
@@ -126,6 +132,12 @@ export default function PrivacyPolicyPage() {
           checkout. SolarDev AI does not receive or store complete payment-card
           numbers, card security codes or complete bank-account credentials.
         </p>
+
+        <p>
+          Account credentials and authentication sessions are managed by
+          Clerk. SolarDev AI does not receive or store users&apos; plaintext
+          passwords.
+        </p>
       </LegalSection>
 
       <LegalSection title="3. Purposes and legal bases">
@@ -147,6 +159,18 @@ export default function PrivacyPolicyPage() {
             </thead>
 
             <tbody className="divide-y divide-white/10 text-slate-300">
+              <tr>
+                <td className="px-4 py-3">
+                  Creating, verifying, authenticating and managing user
+                  accounts and protected workspace access
+                </td>
+
+                <td className="px-4 py-3">
+                  Steps requested before entering a contract, contract
+                  performance and legitimate interests in service security
+                </td>
+              </tr>
+
               <tr>
                 <td className="px-4 py-3">
                   Responding to enquiries and support requests
@@ -287,9 +311,9 @@ export default function PrivacyPolicyPage() {
       <LegalSection title="5. Cookies and analytics">
         <p>
           The website may use strictly necessary technologies for security,
-          navigation, fraud prevention and core website functionality. These
-          technologies may operate without consent where permitted by
-          applicable law.
+          authentication sessions, navigation, fraud prevention and core
+          website functionality. These technologies may operate without
+          consent where permitted by applicable law.
         </p>
 
         <p>
@@ -339,6 +363,10 @@ export default function PrivacyPolicyPage() {
           </li>
 
           <li>Checkout and payment-processing provider: Stripe</li>
+
+          <li>
+            Identity, authentication and account-management provider: Clerk
+          </li>
 
           <li>
             Analytics provider: {legalConfig.analyticsProvider}
@@ -429,6 +457,7 @@ export default function PrivacyPolicyPage() {
         </p>
 
         <LegalList>
+          <li>Account administration and authentication security.</li>
           <li>Contract and order administration.</li>
           <li>Product delivery, licence management and customer support.</li>
           <li>Accounting, tax and regulatory record keeping.</li>
