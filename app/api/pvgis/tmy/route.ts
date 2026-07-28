@@ -56,10 +56,9 @@ export async function GET(request: NextRequest) {
     return new Response(response.body, {
       headers: {
         "Content-Type":
-          response.headers.get("content-type") ??
-          (format === "csv"
+          format === "csv"
             ? "text/csv; charset=utf-8"
-            : "text/plain; charset=utf-8"),
+            : "text/plain; charset=utf-8",
         "Content-Disposition": `attachment; filename="solardev-pvgis-tmy-${coordinateLabel}.${format}"`,
         "Cache-Control": "private, no-store",
         "X-Content-Type-Options": "nosniff",
