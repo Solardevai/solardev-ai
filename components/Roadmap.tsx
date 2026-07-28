@@ -22,26 +22,26 @@ const roadmapItems: RoadmapItem[] = [
   {
     year: "2026 · Q2",
     number: "02",
-    title: "Prompt Library & Templates",
+    title: "SolarDev AI Tools",
     description:
-      "Reusable AI workflows and structured project resources, supported by practical early-stage solar tools.",
+      "Practical early-stage tools for solar site assessment and solar-angle analysis.",
     deliverables: [
-      "Searchable prompt library",
-      "Templates & checklists",
       "Site Check tool",
       "Markets: Portugal, Spain, Italy and Germany",
       "Solar Angle tool",
     ],
-    status: "In development",
-    state: "current",
+    status: "Available",
+    state: "complete",
   },
   {
     year: "2026 · Q4",
     number: "03",
-    title: "Site Check Expansion",
+    title: "SolarDev AI Platform",
     description:
-      "Expand early-stage project assessment with constraint intelligence, automated reporting and a unified GIS workspace.",
+      "Unify professional AI resources and project-screening capabilities in a structured GIS workspace.",
     deliverables: [
+      "Searchable prompt library",
+      "Templates & checklists",
       "Site screening - constraints",
       "Automatic reports",
       "GIS platform",
@@ -149,8 +149,8 @@ export default function Roadmap() {
             Built across three 2026 milestones
           </h2>
           <p className="mt-4 text-base leading-7 text-slate-400">
-            Delivered professional knowledge, followed by reusable workflows
-            and progressively more capable project tools.
+            Delivered professional knowledge and practical tools, followed by
+            an integrated project-development platform.
           </p>
         </div>
 
@@ -226,7 +226,7 @@ export default function Roadmap() {
 
           <div className="mt-9 flex items-center justify-center gap-3 text-xs text-slate-500">
             <span className="h-px w-10 bg-gradient-to-r from-transparent to-emerald-400/60" />
-            <span>Knowledge → workflows → project tools</span>
+            <span>Knowledge → tools → platform</span>
             <span className="h-px w-10 bg-gradient-to-l from-transparent to-emerald-400/60" />
           </div>
         </div>
