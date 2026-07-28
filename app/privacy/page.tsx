@@ -49,20 +49,6 @@ export default function PrivacyPolicyPage() {
           </li>
 
           <li>
-            Tax identification: <strong>{legalConfig.taxId}</strong>
-          </li>
-
-          <li>
-            Registered address:{" "}
-            <strong>{legalConfig.businessAddress}</strong>
-          </li>
-
-          <li>
-            Country of establishment:{" "}
-            <strong>{legalConfig.countryOfEstablishment}</strong>
-          </li>
-
-          <li>
             Privacy contact:{" "}
             <a
               href={`mailto:${legalConfig.privacyEmail}`}
@@ -409,7 +395,7 @@ export default function PrivacyPolicyPage() {
         <p>
           Some service providers, including providers of payment, hosting,
           analytics or communications services, may process personal data
-          outside Portugal or the European Economic Area.
+          outside the European Economic Area.
         </p>
 
         <p>

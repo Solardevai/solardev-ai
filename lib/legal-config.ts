@@ -10,9 +10,6 @@ export const legalConfig = {
 
   operatorName: "SOLARDEV AI",
   legalForm: "INDIVIDUAL PROFESSIONAL",
-  taxId: "231631693",
-  businessAddress: "Lisbon",
-  countryOfEstablishment: "Portugal",
   commercialRegistryDetails:
     "NOT APPLICABLE",
 

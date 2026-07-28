@@ -34,8 +34,6 @@ export default function TermsOfSalePage() {
           <li>Trading name: {legalConfig.tradingName}</li>
           <li>Legal operator: {legalConfig.operatorName}</li>
           <li>Legal form: {legalConfig.legalForm}</li>
-          <li>Tax identification: {legalConfig.taxId}</li>
-          <li>Registered address: {legalConfig.businessAddress}</li>
           <li>
             Commercial registry: {legalConfig.commercialRegistryDetails}
           </li>
@@ -520,9 +518,9 @@ export default function TermsOfSalePage() {
 
       <LegalSection title="18. Governing law and disputes">
         <p>
-          These terms are governed by the laws of{" "}
-          {legalConfig.countryOfEstablishment}, without depriving consumers of
-          mandatory protections available under the law applicable to them.
+          These terms are governed by applicable law, without depriving
+          consumers of mandatory protections available under the law
+          applicable to them.
         </p>
 
         <p>
@@ -538,8 +536,8 @@ export default function TermsOfSalePage() {
 
         <p>
           For customers acting in the course of business, disputes shall be
-          subject to the competent courts of Lisbon, Portugal, unless otherwise
-          agreed in writing.
+          subject to the competent courts determined under applicable law,
+          unless otherwise agreed in writing.
         </p>
       </LegalSection>
 
