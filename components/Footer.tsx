@@ -8,7 +8,7 @@ const productLinks = [
     href: "/handbooks",
   },
   {
-    label: "Prompt Library & Templates",
+    label: "Templates & Workflows",
     href: "/#roadmap",
   },
   {

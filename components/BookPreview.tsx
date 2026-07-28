@@ -197,7 +197,7 @@ export default function BookPreview({
 
             <p className="mt-3 max-w-3xl leading-7 text-slate-300">
               The purchased edition includes the full handbook, professional
-              prompt library, worked examples, review checklists and engineering
+              workflows, worked examples, review checklists and engineering
               decision-support frameworks.
             </p>
           </div>

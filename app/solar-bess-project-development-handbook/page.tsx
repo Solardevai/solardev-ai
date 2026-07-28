@@ -15,7 +15,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Utility-Scale Solar & BESS Development Handbook — Volume 1",
     description:
-      "Professional handbook and AI prompt library for utility-scale Solar PV and BESS project development.",
+      "Professional handbook and structured AI workflows for utility-scale Solar PV and BESS project development.",
     url: "https://www.solardev.ai/solar-bess-project-development-handbook",
     type: "website",
     images: [
@@ -29,7 +29,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Utility-Scale Solar & BESS Development Handbook — Volume 1",
     description:
-      "Professional handbook and AI prompt library for utility-scale Solar PV and BESS project development.",
+      "Professional handbook and structured AI workflows for utility-scale Solar PV and BESS project development.",
     images: ["/volume-1-cover.webp"],
   },
 };
@@ -59,7 +59,7 @@ const structuredData = {
       name: productData.itemName,
 
       description:
-        `A ${productData.pages}-page professional handbook and AI prompt library for utility-scale Solar PV and BESS project development.`,
+        `A ${productData.pages}-page professional handbook with structured AI workflows for utility-scale Solar PV and BESS project development.`,
 
       image: ["https://www.solardev.ai/volume-1-cover.webp"],
 
@@ -206,7 +206,7 @@ export default function HandbookPage() {
           </h1>
 
           <p className="mt-6 max-w-3xl text-lg leading-8 text-slate-300">
-            A professional handbook and AI prompt library designed for
+            A professional handbook with structured AI workflows designed for
             utility-scale Solar PV and battery energy storage project
             development.
           </p>

@@ -40,7 +40,7 @@ const roadmapItems: RoadmapItem[] = [
     description:
       "Unify professional AI resources and project-screening capabilities in a structured GIS workspace.",
     deliverables: [
-      "Searchable prompt library",
+      "Searchable workflow library",
       "Templates & checklists",
       "Site screening - constraints",
       "Automatic reports",

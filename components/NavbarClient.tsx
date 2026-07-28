@@ -252,7 +252,7 @@ export default function Navbar({
                     >
                       <span className="flex items-center justify-between gap-3">
                         <span className="font-semibold text-white">
-                          Prompt Library
+                          Templates & Workflows
                         </span>
                         <span className="rounded-full border border-emerald-400/25 bg-emerald-400/10 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-emerald-300">
                           In development
@@ -400,7 +400,7 @@ export default function Navbar({
                       className="flex min-h-12 items-center justify-between gap-3 rounded-lg px-3 py-3 text-slate-400"
                     >
                       <span className="font-semibold">
-                        Prompt Library
+                        Templates & Workflows
                       </span>
                       <span className="rounded-full border border-emerald-400/25 bg-emerald-400/10 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-emerald-300">
                         In development

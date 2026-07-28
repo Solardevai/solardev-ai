@@ -17,7 +17,7 @@ export const metadata: Metadata = {
     title:
       "Solar & BESS Project Development Handbook — Volume 2",
     description:
-      "From Development to Operations: a professional handbook and AI prompt library for utility-scale Solar PV and BESS projects.",
+      "From Development to Operations: a professional handbook with structured AI workflows for utility-scale Solar PV and BESS projects.",
     url:
       "https://www.solardev.ai/solar-bess-project-development-handbook-volume-2",
     type: "website",
@@ -32,7 +32,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Solar & BESS Project Development Handbook — Volume 2",
     description:
-      "From Development to Operations: a professional handbook and AI prompt library for utility-scale Solar PV and BESS projects.",
+      "From Development to Operations: a professional handbook with structured AI workflows for utility-scale Solar PV and BESS projects.",
     images: ["/volume-2-cover.webp"],
   },
 };
@@ -59,7 +59,7 @@ const structuredData = {
         "https://www.solardev.ai/solar-bess-project-development-handbook-volume-2#product",
       name: volumeTwoProductData.itemName,
       description:
-        `A ${volumeTwoProductData.pages}-page professional handbook and AI prompt library covering the project lifecycle from development to operations.`,
+        `A ${volumeTwoProductData.pages}-page professional handbook with structured AI workflows covering the project lifecycle from development to operations.`,
       image: [
         "https://www.solardev.ai/volume-2-cover.webp",
       ],
@@ -188,7 +188,7 @@ export default function VolumeTwoPage() {
             Utility-Scale Solar &amp; BESS: From Development to Operations
           </h1>
           <p className="mt-6 max-w-3xl text-lg leading-8 text-slate-300">
-            A professional handbook and AI prompt library covering
+            A professional handbook with structured AI workflows covering
             the transition from FEED and financial close through
             construction, commissioning, operations and portfolio
             strategy.

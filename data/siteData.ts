@@ -15,7 +15,7 @@ export const siteConfig = {
     name:
       "AI for Utility-Scale Solar & BESS Project Development",
     subtitle:
-      "AI Foundations & Professional Prompt Library",
+      "AI Foundations & Professional Workflows",
     edition: productData.edition,
     author: "SolarDev AI",
 
@@ -223,7 +223,7 @@ export const roadmapItems = [
   },
   {
     volume: "2026 · Q2",
-    title: "Prompt Library & Templates",
+    title: "SolarDev AI Tools",
     status: "In development",
     active: true,
   },
@@ -242,7 +242,7 @@ export const faqItems = [
       "The public beta measures a user-defined boundary, calculates gross area and perimeter, retrieves an indicative PVGIS specific-yield estimate at the boundary centroid, and exports GeoJSON, KML or KMZ. It does not yet assess environmental, planning, land, terrain, grid or permitting constraints.",
   },
   {
-    question: "When will the Prompt Library & Templates be available?",
+    question: "When will the SolarDev AI Platform be available?",
     answer:
       "Development started in Q2 2026. The first release date will be confirmed after the professional workflows and templates have completed internal review.",
   },

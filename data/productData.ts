@@ -7,7 +7,7 @@ export const volumeOneProductData = {
   itemName:
     "AI for Utility-Scale Solar & BESS Project Development - Volume 1",
   itemCategory: "Digital Handbook",
-  title: "AI Foundations & Professional Prompt Library",
+  title: "AI Foundations & Professional Workflows",
   pages: 215,
   chapters: 10,
   edition: "Edition v1.1",

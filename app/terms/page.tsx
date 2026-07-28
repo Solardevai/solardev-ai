@@ -284,7 +284,8 @@ export default function TermsOfSalePage() {
 
           <li>
             Copy, extract or reproduce a substantial part of the publication
-            to create a competing product, prompt library, course, database or
+            to create a competing product, workflow collection, course,
+            database or
             service.
           </li>
 
