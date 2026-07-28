@@ -246,39 +246,6 @@ export default function Navbar({
                       </span>
                     </Link>
 
-                    <div
-                      aria-disabled="true"
-                      className="mt-1 rounded-xl px-4 py-3 opacity-75"
-                    >
-                      <span className="flex items-center justify-between gap-3">
-                        <span className="font-semibold text-white">
-                          Templates & Workflows
-                        </span>
-                        <span className="rounded-full border border-emerald-400/25 bg-emerald-400/10 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-emerald-300">
-                          In development
-                        </span>
-                      </span>
-                      <span className="mt-1 block text-xs leading-5 text-slate-400">
-                        Searchable professional prompts and workflows.
-                      </span>
-                    </div>
-
-                    <div
-                      aria-disabled="true"
-                      className="mt-1 rounded-xl px-4 py-3 opacity-75"
-                    >
-                      <span className="flex items-center justify-between gap-3">
-                        <span className="font-semibold text-white">
-                          Templates
-                        </span>
-                        <span className="rounded-full border border-emerald-400/25 bg-emerald-400/10 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-emerald-300">
-                          In development
-                        </span>
-                      </span>
-                      <span className="mt-1 block text-xs leading-5 text-slate-400">
-                        Reusable engineering templates and checklists.
-                      </span>
-                    </div>
                   </div>
                 </details>
               )}
@@ -395,28 +362,6 @@ export default function Navbar({
                     >
                       Solar Angle
                     </Link>
-                    <div
-                      aria-disabled="true"
-                      className="flex min-h-12 items-center justify-between gap-3 rounded-lg px-3 py-3 text-slate-400"
-                    >
-                      <span className="font-semibold">
-                        Templates & Workflows
-                      </span>
-                      <span className="rounded-full border border-emerald-400/25 bg-emerald-400/10 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-emerald-300">
-                        In development
-                      </span>
-                    </div>
-                    <div
-                      aria-disabled="true"
-                      className="flex min-h-12 items-center justify-between gap-3 rounded-lg px-3 py-3 text-slate-400"
-                    >
-                      <span className="font-semibold">
-                        Templates
-                      </span>
-                      <span className="rounded-full border border-emerald-400/25 bg-emerald-400/10 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-emerald-300">
-                        In development
-                      </span>
-                    </div>
                   </div>
                 )}
 

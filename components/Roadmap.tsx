@@ -26,8 +26,7 @@ const roadmapItems: RoadmapItem[] = [
     description:
       "Practical early-stage tools for solar site assessment and solar-angle analysis.",
     deliverables: [
-      "Site Check tool",
-      "Markets: Portugal, Spain, Italy and Germany",
+      "Site Check tool - Markets: Portugal, Spain, Italy and Germany",
       "Solar Angle tool",
     ],
     status: "Available",
@@ -40,7 +39,6 @@ const roadmapItems: RoadmapItem[] = [
     description:
       "Unify professional AI resources and project-screening capabilities in a structured GIS workspace.",
     deliverables: [
-      "Searchable workflow library",
       "Templates & checklists",
       "Site screening - constraints",
       "Automatic reports",
