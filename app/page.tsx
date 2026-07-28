@@ -27,9 +27,6 @@ const homeStructuredData = {
       },
       email: siteConfig.infoEmail,
       description: siteConfig.description,
-      founder: {
-        "@id": "https://www.solardev.ai/about-tiago-pires#person",
-      },
       contactPoint: [
         {
           "@type": "ContactPoint",

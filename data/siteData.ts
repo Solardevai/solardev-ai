@@ -17,7 +17,7 @@ export const siteConfig = {
     subtitle:
       "AI Foundations & Professional Prompt Library",
     edition: productData.edition,
-    author: "Tiago Pires",
+    author: "SolarDev AI",
 
     pages: productData.pages,
     chapters: productData.chapters,

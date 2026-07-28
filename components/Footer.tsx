@@ -23,10 +23,6 @@ const productLinks = [
 
 const companyLinks = [
   {
-    label: "About Tiago Pires",
-    href: "/about-tiago-pires",
-  },
-  {
     label: "Professionals",
     href: "/#audience",
   },

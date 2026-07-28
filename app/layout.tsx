@@ -26,12 +26,12 @@ export const metadata: Metadata = {
 
   authors: [
     {
-      name: "Tiago Pires",
-      url: `${SITE_URL}/about-tiago-pires`,
+      name: "SolarDev AI",
+      url: SITE_URL,
     },
   ],
 
-  creator: "Tiago Pires",
+  creator: "SolarDev AI",
   publisher: "SolarDev AI",
 
   alternates: {

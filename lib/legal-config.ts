@@ -8,7 +8,7 @@ export const legalConfig = {
   tradingName: "SolarDev AI",
   websiteUrl: "https://www.solardev.ai",
 
-  operatorName: "TIAGO PIRES",
+  operatorName: "SOLARDEV AI",
   legalForm: "INDIVIDUAL PROFESSIONAL",
   taxId: "231631693",
   businessAddress: "Lisbon",

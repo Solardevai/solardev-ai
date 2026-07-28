@@ -30,12 +30,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.9,
     },
     {
-      url: `${SITE_URL}/about-tiago-pires`,
-      lastModified: CONTENT_LAST_UPDATED,
-      changeFrequency: "yearly",
-      priority: 0.6,
-    },
-    {
       url: `${SITE_URL}/solar-bess-project-development-handbook`,
       lastModified: CONTENT_LAST_UPDATED,
       changeFrequency: "monthly",

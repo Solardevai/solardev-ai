@@ -95,10 +95,9 @@ const structuredData = {
         "https://www.solardev.ai/solar-bess-project-development-handbook-volume-2#book",
       name: volumeTwoProductData.itemName,
       author: {
-        "@type": "Person",
-        "@id": "https://www.solardev.ai/about-tiago-pires#person",
-        name: "Tiago Pires",
-        url: "https://www.solardev.ai/about-tiago-pires",
+        "@type": "Organization",
+        name: "SolarDev AI",
+        url: "https://www.solardev.ai",
       },
       publisher: {
         "@type": "Organization",
@@ -195,15 +194,7 @@ export default function VolumeTwoPage() {
             strategy.
           </p>
           <p className="mt-3 text-sm text-slate-400">
-            Written by{" "}
-            <Link
-              href="/about-tiago-pires"
-              rel="author"
-              className="font-semibold text-emerald-300 hover:text-emerald-200"
-            >
-              Tiago Pires
-            </Link>
-            .
+            Written by SolarDev AI.
           </p>
 
           <div className="mt-8 grid grid-cols-2 gap-4 sm:grid-cols-4">
