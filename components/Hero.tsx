@@ -43,7 +43,7 @@ export default function Hero() {
             </Link>
             <Link
               href="/tools/sun-path"
-              className="rounded-xl border border-amber-400/25 bg-amber-400/[0.07] px-7 py-4 text-center font-semibold text-amber-200 transition hover:-translate-y-0.5 hover:border-amber-400/45 hover:bg-amber-400/10"
+              className="rounded-xl bg-amber-400 px-7 py-4 text-center font-semibold text-slate-950 shadow-lg shadow-amber-400/10 transition hover:-translate-y-0.5 hover:bg-amber-300"
             >
               Open Solar Angle
             </Link>
@@ -95,8 +95,8 @@ export default function Hero() {
                     <circle cx="294" cy="73" r="15" fill="rgba(34,211,238,.25)" stroke="#fff" strokeWidth="2" />
                     <circle cx="294" cy="73" r="6" fill="#22d3ee" />
                   </svg>
-                  <span className="absolute left-3 top-3 rounded-lg border border-white/10 bg-slate-950/85 px-3 py-2 text-[10px] font-bold uppercase tracking-wide text-white">
-                    Satellite site view
+                  <span className="absolute left-4 top-4 rounded-lg border border-emerald-400/20 bg-slate-950/85 px-3 py-2 text-[10px] font-bold uppercase tracking-[0.16em] text-emerald-300">
+                    Site Check
                   </span>
                   <div className="absolute bottom-3 left-3 right-3 grid grid-cols-3 gap-2">
                     <Metric label="Area" value="42.8 ha" />
@@ -105,10 +105,7 @@ export default function Hero() {
                   </div>
                 </div>
                 <div className="p-4">
-                  <span className="text-[10px] font-bold uppercase tracking-[0.16em] text-emerald-300">
-                    Site Check
-                  </span>
-                  <strong className="mt-1.5 block text-base text-white group-hover:text-emerald-200">
+                  <strong className="block text-base text-white group-hover:text-emerald-200">
                     Define and quantify a candidate site
                   </strong>
                   <span className="mt-2 block text-xs leading-5 text-slate-400">
