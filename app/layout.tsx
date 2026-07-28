@@ -142,6 +142,10 @@ export default function RootLayout({ children }: RootLayoutProps) {
                   "bg-amber-400 text-slate-950 hover:bg-amber-300",
                 socialButtonsBlockButton:
                   "border-white/10 bg-white/[0.04] text-white hover:bg-white/[0.08]",
+                userButtonPopoverActionButton:
+                  "!text-white hover:bg-white/[0.08]",
+                userButtonPopoverActionButtonIcon:
+                  "!text-white",
               },
             }}
           >
