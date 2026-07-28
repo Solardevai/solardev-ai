@@ -29,6 +29,7 @@ const roadmapItems: RoadmapItem[] = [
       "Searchable prompt library",
       "Templates & checklists",
       "Site Check tool",
+      "Markets: Portugal, Spain, Italy and Germany",
       "Solar Angle tool",
     ],
     status: "In development",
