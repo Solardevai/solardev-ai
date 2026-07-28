@@ -54,6 +54,12 @@ export default function RenewableNewsTicker({
   const repeatedHeadlines = [...visibleHeadlines, ...visibleHeadlines];
   const activeHeadline = visibleHeadlines[activeIndex];
 
+  if (!activeHeadline) return null;
+
+  function showNextHeadline() {
+    setActiveIndex((current) => (current + 1) % visibleHeadlines.length);
+  }
+
   return (
     <aside
       aria-label="Renewable energy industry headlines, updated hourly"
@@ -63,10 +69,11 @@ export default function RenewableNewsTicker({
         aria-hidden="true"
         className="pointer-events-none absolute inset-0 bg-[linear-gradient(110deg,transparent_15%,rgba(255,255,255,0.8)_45%,transparent_70%)] opacity-60"
       />
-      <div className="flex h-8 items-center overflow-hidden">
-        <div className="relative z-10 flex h-full shrink-0 items-center border-r border-white/15 bg-slate-900 px-3 text-[10px] font-bold uppercase tracking-[0.16em] text-white shadow-[8px_0_18px_rgba(2,6,23,0.2)] sm:px-4">
+      <div className="flex h-10 items-center overflow-hidden md:h-8">
+        <div className="relative z-10 flex h-full shrink-0 items-center border-r border-white/15 bg-slate-900 px-2.5 text-[10px] font-bold uppercase tracking-[0.14em] text-white shadow-[8px_0_18px_rgba(2,6,23,0.2)] sm:px-4 sm:tracking-[0.16em]">
           <span className="mr-2 h-1.5 w-1.5 rounded-full bg-white shadow-[0_0_10px_rgba(255,255,255,0.9)]" />
-          Industry Updates · Hourly
+          <span className="sm:hidden">Updates</span>
+          <span className="hidden sm:inline">Industry Updates · Hourly</span>
         </div>
 
         <div className="relative z-10 hidden min-w-0 flex-1 overflow-hidden md:block">
@@ -100,15 +107,25 @@ export default function RenewableNewsTicker({
           href={activeHeadline.href}
           target="_blank"
           rel="nofollow noopener noreferrer"
-          className="relative z-10 min-w-0 flex-1 px-3 text-[11px] font-bold md:hidden"
+          className="relative z-10 flex h-full min-w-0 flex-1 items-center gap-2 px-2.5 text-[11px] font-bold md:hidden"
+          aria-label={`${activeHeadline.category}: ${activeHeadline.title}, ${activeHeadline.source}`}
         >
-          <span className="mr-2 font-black uppercase">
+          <span className="shrink-0 text-[9px] font-black uppercase tracking-wide text-slate-700">
             {activeHeadline.category}
           </span>
-          <span className="inline-block max-w-[62vw] overflow-hidden text-ellipsis whitespace-nowrap align-bottom">
+          <span className="min-w-0 flex-1 truncate text-slate-950">
             {activeHeadline.title}
           </span>
         </a>
+
+        <button
+          type="button"
+          onClick={showNextHeadline}
+          className="relative z-10 flex h-full w-10 shrink-0 items-center justify-center border-l border-slate-900/10 text-lg font-bold text-slate-700 transition hover:bg-slate-900/5 focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-slate-900 md:hidden"
+          aria-label="Show next renewable energy headline"
+        >
+          <span aria-hidden="true">›</span>
+        </button>
       </div>
     </aside>
   );

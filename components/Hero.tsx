@@ -13,7 +13,7 @@ export default function Hero() {
         <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-slate-950 to-transparent" />
       </div>
 
-      <div className="relative mx-auto grid min-h-[820px] max-w-7xl items-center gap-14 px-6 py-20 lg:grid-cols-[0.95fr_1.05fr] lg:py-24">
+      <div className="relative mx-auto grid min-h-[820px] max-w-7xl items-center gap-14 px-6 py-20 lg:grid-cols-[0.82fr_1.18fr] lg:py-24">
         <div>
           <div className="inline-flex items-center gap-3 rounded-full border border-emerald-400/25 bg-emerald-400/10 px-4 py-2 text-sm font-semibold text-emerald-300">
             <span className="h-2 w-2 rounded-full bg-emerald-400 shadow-[0_0_12px_rgba(52,211,153,.8)]" />
@@ -45,7 +45,7 @@ export default function Hero() {
               href="/tools/sun-path"
               className="rounded-xl border border-amber-400/25 bg-amber-400/[0.07] px-7 py-4 text-center font-semibold text-amber-200 transition hover:-translate-y-0.5 hover:border-amber-400/45 hover:bg-amber-400/10"
             >
-              Check Sun Position
+              Open Solar Angle
             </Link>
           </div>
 
@@ -65,7 +65,7 @@ export default function Hero() {
 
         <div className="relative">
           <div className="absolute inset-8 rounded-full bg-emerald-400/10 blur-3xl" />
-          <div className="relative overflow-hidden rounded-[28px] border border-white/10 bg-slate-900/85 p-3 shadow-2xl shadow-black/40 backdrop-blur sm:p-4">
+          <div className="relative">
             <div className="flex items-center justify-between px-2 pb-4 pt-1">
               <div>
                 <p className="text-xs font-bold uppercase tracking-[0.18em] text-slate-500">
@@ -80,7 +80,7 @@ export default function Hero() {
               </span>
             </div>
 
-            <div className="grid gap-3 sm:grid-cols-[1.12fr_0.88fr]">
+            <div className="grid gap-3 sm:grid-cols-3">
               <Link
                 href="/tools/solar-site-screening"
                 className="group overflow-hidden rounded-2xl border border-white/10 bg-slate-950 transition hover:border-emerald-400/35"
@@ -113,12 +113,12 @@ export default function Hero() {
                   </strong>
                   <span className="mt-2 block text-xs leading-5 text-slate-400">
                     Draw the boundary, inspect grid context, run an indicative
-                    PVGIS check and export KMZ.
+                    PVGIS check and export boundary or TMY files.
                   </span>
                 </div>
               </Link>
 
-              <div className="grid gap-3">
+              <div className="contents">
                 <Link
                   href="/tools/sun-path"
                   className="group rounded-2xl border border-white/10 bg-[radial-gradient(circle_at_75%_15%,rgba(251,191,36,.14),transparent_48%),#020617] p-4 transition hover:border-amber-400/35"
@@ -126,7 +126,7 @@ export default function Hero() {
                   <div className="flex items-start justify-between">
                     <div>
                       <span className="text-[10px] font-bold uppercase tracking-[0.16em] text-amber-300">
-                        Sun Position &amp; Shadings
+                        Solar Angle
                       </span>
                       <strong className="mt-2 block text-sm leading-5 text-white group-hover:text-amber-200">
                         Test solar geometry at a point
@@ -151,7 +151,7 @@ export default function Hero() {
                   className="group rounded-2xl border border-white/10 bg-white/[0.035] p-4 transition hover:border-blue-400/30 hover:bg-blue-400/[0.05]"
                 >
                   <span className="text-[10px] font-bold uppercase tracking-[0.16em] text-blue-300">
-                    Professional handbooks
+                    Handbooks
                   </span>
                   <strong className="mt-2 block text-sm leading-5 text-white group-hover:text-blue-200">
                     Apply the outputs within controlled workflows
