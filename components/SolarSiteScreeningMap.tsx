@@ -20,6 +20,7 @@ type SolarResult = {
   location: { latitude: number; longitude: number; elevation?: number };
 };
 type ExportFormat = "geojson" | "kml" | "kmz";
+type MeteoFormat = "csv" | "epw";
 type InfrastructureLayer =
   | "roads"
   | "mv"
@@ -104,6 +105,8 @@ export default function SolarSiteScreeningMap() {
   const [exportFormat, setExportFormat] =
     useState<ExportFormat>("kmz");
   const [isExporting, setIsExporting] = useState(false);
+  const [meteoFormat, setMeteoFormat] = useState<MeteoFormat>("csv");
+  const [isDownloadingMeteo, setIsDownloadingMeteo] = useState(false);
   const [infrastructureLayers, setInfrastructureLayers] = useState(
     createInfrastructureLayerState,
   );
@@ -1025,9 +1028,49 @@ export default function SolarSiteScreeningMap() {
     }
   }
 
+  async function downloadMeteoFile() {
+    if (!sitePolygon) return;
+
+    const [longitude, latitude] = centroid(sitePolygon).geometry.coordinates;
+    setIsDownloadingMeteo(true);
+    setMessage(`Preparing the PVGIS TMY ${meteoFormat.toUpperCase()} file…`);
+
+    try {
+      const response = await fetch(
+        `/api/pvgis/tmy?lat=${latitude.toFixed(6)}&lon=${longitude.toFixed(6)}&format=${meteoFormat}`,
+      );
+
+      if (!response.ok) {
+        const result = (await response.json().catch(() => null)) as {
+          error?: string;
+        } | null;
+        throw new Error(
+          result?.error || "The PVGIS meteo file could not be downloaded.",
+        );
+      }
+
+      const blob = await response.blob();
+      downloadBlob(
+        blob,
+        `solardev-pvgis-tmy-${latitude.toFixed(4)}_${longitude.toFixed(4)}.${meteoFormat}`,
+      );
+      setMessage(
+        `PVGIS TMY ${meteoFormat.toUpperCase()} file downloaded for the site centroid.`,
+      );
+    } catch (error) {
+      setMessage(
+        error instanceof Error
+          ? error.message
+          : "The PVGIS meteo file download failed.",
+      );
+    } finally {
+      setIsDownloadingMeteo(false);
+    }
+  }
+
   return (
     <section className="grid min-h-[720px] overflow-hidden rounded-3xl border border-white/10 bg-slate-900 shadow-2xl shadow-black/30 lg:grid-cols-[340px_1fr]">
-      <aside className="order-2 flex flex-col border-t border-white/10 bg-slate-950/90 p-5 lg:order-1 lg:border-r lg:border-t-0">
+      <aside className="order-2 flex flex-col border-t border-white/10 bg-slate-950/90 p-5 lg:order-1 lg:max-h-[720px] lg:overflow-y-auto lg:border-r lg:border-t-0">
         <form onSubmit={searchLocation}>
           <label htmlFor="site-search" className="text-xs font-bold uppercase tracking-[0.16em] text-slate-400">
             Find a location
@@ -1155,6 +1198,45 @@ export default function SolarSiteScreeningMap() {
           >
             {isExporting ? "Preparing…" : "Download boundary"}
           </button>
+        </div>
+
+        <div className="mt-5 border-t border-white/10 pt-5">
+          <p className="text-xs font-bold uppercase tracking-[0.16em] text-slate-400">
+            PVGIS meteo file
+          </p>
+          <p className="mt-1 text-[10px] leading-4 text-slate-500">
+            Hourly Typical Meteorological Year data at the site centroid,
+            including the PVGIS horizon model.
+          </p>
+          <div className="mt-3 flex gap-2">
+            <label htmlFor="meteo-format" className="sr-only">
+              Meteo file format
+            </label>
+            <select
+              id="meteo-format"
+              value={meteoFormat}
+              onChange={(event) =>
+                setMeteoFormat(event.target.value as MeteoFormat)
+              }
+              disabled={!sitePolygon || isDownloadingMeteo}
+              className="rounded-xl border border-white/10 bg-slate-900 px-3 text-sm font-semibold uppercase text-slate-300 outline-none focus:border-emerald-400 disabled:opacity-40"
+            >
+              <option value="csv">CSV</option>
+              <option value="epw">EPW</option>
+            </select>
+            <button
+              type="button"
+              onClick={downloadMeteoFile}
+              disabled={!sitePolygon || isDownloadingMeteo}
+              className="min-w-0 flex-1 rounded-xl border border-emerald-400/30 bg-emerald-400/10 px-4 py-3 text-sm font-semibold text-emerald-300 transition hover:bg-emerald-400/20 disabled:cursor-not-allowed disabled:opacity-40"
+            >
+              {isDownloadingMeteo ? "Preparing…" : "Download TMY"}
+            </button>
+          </div>
+          <p className="mt-2 text-[10px] leading-4 text-slate-500">
+            CSV is suited to data review. EPW is compatible with
+            EnergyPlus-based workflows.
+          </p>
         </div>
 
         <p className="mt-auto pt-6 text-[10px] leading-4 text-slate-500">

@@ -9,7 +9,7 @@ const SITE_URL = "https://www.solardev.ai/tools/solar-site-screening";
 export const metadata: Metadata = {
   title: "Free Solar Site Screening & PVGIS Yield Tool",
   description:
-    "Measure a solar-site boundary, calculate area and perimeter, review indicative grid context, estimate PVGIS specific yield and export the boundary as KMZ, KML or GeoJSON.",
+    "Measure a solar-site boundary, estimate PVGIS specific yield, review indicative grid context and download the boundary or a free PVGIS TMY meteo file.",
   alternates: { canonical: "/tools/solar-site-screening" },
   openGraph: {
     title: "Free Solar Site Screening & PVGIS Yield Tool",
@@ -52,6 +52,11 @@ const faqs = [
       "Yes. The drawn boundary can be downloaded as KMZ, KML or GeoJSON. KMZ is selected by default for convenient use in common GIS and virtual-globe workflows.",
   },
   {
+    question: "Can I download a meteorological file for the site?",
+    answer:
+      "Yes. Site Check can request a free PVGIS Typical Meteorological Year file at the boundary centroid in CSV or EPW format. The hourly file is intended for preliminary analysis and simulation workflows and is not a measured site dataset.",
+  },
+  {
     question: "Do the infrastructure layers confirm grid capacity?",
     answer:
       "No. Roads, power lines and substations are indicative OpenStreetMap context only. Proximity does not demonstrate capacity, a viable connection point, ownership, availability or connection feasibility.",
@@ -79,6 +84,7 @@ const structuredData = {
         "Indicative PVGIS specific-yield estimate",
         "Indicative OpenStreetMap infrastructure context",
         "KMZ, KML and GeoJSON boundary export",
+        "PVGIS Typical Meteorological Year download in CSV or EPW",
       ],
       offers: {
         "@type": "Offer",
@@ -147,7 +153,8 @@ export default function SolarSiteScreeningPage() {
                 measure its boundary and obtain an indicative PVGIS
                 specific-yield result at the site centroid. Review mapped
                 infrastructure context and export the boundary for further GIS
-                screening.
+                screening. You can also download an hourly PVGIS Typical
+                Meteorological Year file at the site centroid.
               </p>
             </div>
 
@@ -164,7 +171,8 @@ export default function SolarSiteScreeningPage() {
               </p>
               <p>
                 <strong className="block text-white">3. Check and export</strong>
-                Run the PVGIS pre-check and download KMZ, KML or GeoJSON.
+                Run the PVGIS pre-check, export the boundary or download TMY
+                weather data.
               </p>
             </div>
           </div>
@@ -193,6 +201,7 @@ export default function SolarSiteScreeningPage() {
                 ["Specific yield", "Modelled annual kWh/kWp at the centroid using the assumptions shown in the tool."],
                 ["Infrastructure context", "Indicative mapped roads, voltage-class lines and substations at scale-dependent zooms."],
                 ["GIS-ready exports", "Download the boundary as KMZ, KML or GeoJSON for continued screening."],
+                ["TMY weather file", "Download hourly PVGIS Typical Meteorological Year data at the centroid as CSV or EPW."],
               ].map(([title, description]) => (
                 <article key={title} className="rounded-2xl border border-white/10 bg-slate-950 p-5">
                   <h3 className="font-semibold text-white">{title}</h3>
@@ -221,6 +230,12 @@ export default function SolarSiteScreeningPage() {
                   system, optimum inclination and 14% assumed system losses.
                   The displayed result is a modelled screening value, not a P50
                   or bankable energy-yield assessment.
+                </p>
+                <p>
+                  The optional meteo download is a separate PVGIS v5.3 Typical
+                  Meteorological Year request at the same centroid with the
+                  PVGIS horizon model enabled. CSV supports data review, while
+                  EPW supports EnergyPlus-compatible workflows.
                 </p>
                 <p>
                   Infrastructure overlays are derived from OpenStreetMap and
