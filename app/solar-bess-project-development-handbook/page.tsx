@@ -6,14 +6,14 @@ import TrackedCheckoutLink from "@/components/TrackedCheckoutLink";
 import { productData } from "@/data/productData";
 
 export const metadata: Metadata = {
-  title: "Utility-Scale Solar & BESS Project Development Handbook",
+  title: "Utility-Scale Solar & BESS Development Handbook — Volume 1",
   description:
-    "A 215-page professional handbook with AI prompts, engineering workflows, checklists and worked examples for utility-scale Solar PV and BESS project development.",
+    `A ${productData.pages}-page professional handbook covering AI-assisted due diligence, solar site screening, development planning, environmental risk, project risk registers and initial CAPEX benchmarking.`,
   alternates: {
     canonical: "/solar-bess-project-development-handbook",
   },
   openGraph: {
-    title: "Utility-Scale Solar & BESS Project Development Handbook",
+    title: "Utility-Scale Solar & BESS Development Handbook — Volume 1",
     description:
       "Professional handbook and AI prompt library for utility-scale Solar PV and BESS project development.",
     url: "https://www.solardev.ai/solar-bess-project-development-handbook",
@@ -24,6 +24,13 @@ export const metadata: Metadata = {
         alt: "SolarDev AI Volume 1 handbook cover",
       },
     ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Utility-Scale Solar & BESS Development Handbook — Volume 1",
+    description:
+      "Professional handbook and AI prompt library for utility-scale Solar PV and BESS project development.",
+    images: ["/volume-1-cover.webp"],
   },
 };
 
@@ -49,17 +56,17 @@ const structuredData = {
       "@id":
         "https://www.solardev.ai/solar-bess-project-development-handbook#product",
 
-      name:
-        "AI for Utility-Scale Solar & BESS Project Development — Volume 1",
+      name: productData.itemName,
 
       description:
-        "A 215-page professional handbook and AI prompt library for utility-scale Solar PV and BESS project development.",
+        `A ${productData.pages}-page professional handbook and AI prompt library for utility-scale Solar PV and BESS project development.`,
 
       image: ["https://www.solardev.ai/volume-1-cover.webp"],
 
       sku: "SOLARDEV-VOL1",
 
       category: "Digital engineering handbook",
+      model: productData.edition,
 
       brand: {
         "@type": "Brand",
@@ -98,12 +105,13 @@ const structuredData = {
       "@id":
         "https://www.solardev.ai/solar-bess-project-development-handbook#book",
 
-      name:
-        "AI for Utility-Scale Solar & BESS Project Development — Volume 1",
+      name: productData.itemName,
 
       author: {
         "@type": "Person",
+        "@id": "https://www.solardev.ai/about-tiago-pires#person",
         name: "Tiago Pires",
+        url: "https://www.solardev.ai/about-tiago-pires",
       },
 
       publisher: {
@@ -113,15 +121,39 @@ const structuredData = {
       },
 
       bookFormat: "https://schema.org/EBook",
+      bookEdition: productData.edition,
 
       inLanguage: "en",
 
-      numberOfPages: 215,
+      numberOfPages: productData.pages,
 
       image: "https://www.solardev.ai/volume-1-cover.webp",
 
       description:
         "A professional digital handbook covering AI-supported workflows for utility-scale Solar PV and BESS project development.",
+    },
+    {
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        {
+          "@type": "ListItem",
+          position: 1,
+          name: "Home",
+          item: "https://www.solardev.ai/",
+        },
+        {
+          "@type": "ListItem",
+          position: 2,
+          name: "Handbooks",
+          item: "https://www.solardev.ai/handbooks",
+        },
+        {
+          "@type": "ListItem",
+          position: 3,
+          name: "Volume 1",
+          item: "https://www.solardev.ai/solar-bess-project-development-handbook",
+        },
+      ],
     },
   ],
 };
@@ -171,7 +203,7 @@ export default function HandbookPage() {
           </p>
 
           <h1 className="mt-5 text-4xl font-bold leading-tight tracking-tight sm:text-5xl">
-            Utility-Scale Solar &amp; BESS Project Development Handbook
+            Utility-Scale Solar &amp; BESS Project Development Handbook — Volume 1
           </h1>
 
           <p className="mt-6 max-w-3xl text-lg leading-8 text-slate-300">
@@ -179,16 +211,27 @@ export default function HandbookPage() {
             utility-scale Solar PV and battery energy storage project
             development.
           </p>
+          <p className="mt-3 text-sm text-slate-400">
+            Written by{" "}
+            <Link
+              href="/about-tiago-pires"
+              rel="author"
+              className="font-semibold text-emerald-300 hover:text-emerald-200"
+            >
+              Tiago Pires
+            </Link>
+            .
+          </p>
 
           <div className="mt-8 grid grid-cols-2 gap-4 sm:grid-cols-4">
             <div className="rounded-lg border border-white/10 p-4">
               <p className="text-xs uppercase text-slate-500">Pages</p>
-              <p className="mt-1 text-xl font-semibold">215</p>
+              <p className="mt-1 text-xl font-semibold">{productData.pages}</p>
             </div>
 
             <div className="rounded-lg border border-white/10 p-4">
               <p className="text-xs uppercase text-slate-500">Chapters</p>
-              <p className="mt-1 text-xl font-semibold">10</p>
+              <p className="mt-1 text-xl font-semibold">{productData.chapters}</p>
             </div>
 
             <div className="rounded-lg border border-white/10 p-4">
@@ -198,7 +241,9 @@ export default function HandbookPage() {
 
             <div className="rounded-lg border border-white/10 p-4">
               <p className="text-xs uppercase text-slate-500">Edition</p>
-              <p className="mt-1 text-xl font-semibold">v1.1</p>
+              <p className="mt-1 text-xl font-semibold">
+                {productData.edition.replace("Edition ", "")}
+              </p>
             </div>
           </div>
 

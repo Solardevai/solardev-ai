@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { handbookVolumes } from "@/data/handbookData";
+import { handbookProducts } from "@/data/productData";
 
 export const metadata: Metadata = {
   title: "Professional Solar & BESS Handbooks",
@@ -23,6 +24,13 @@ export const metadata: Metadata = {
       },
     ],
   },
+  twitter: {
+    card: "summary_large_image",
+    title: "Professional Solar & BESS Handbooks",
+    description:
+      "The SolarDev AI professional handbook series for utility-scale renewable-energy project development.",
+    images: ["/volume-1-cover.webp"],
+  },
 };
 
 const structuredData = {
@@ -32,13 +40,21 @@ const structuredData = {
   url: "https://www.solardev.ai/handbooks",
   description:
     "Professional handbooks for AI-assisted utility-scale Solar PV and BESS project development.",
-  hasPart: handbookVolumes.map((handbook) => ({
+  hasPart: handbookVolumes.map((handbook, index) => ({
     "@type": "Book",
-    name: `${handbook.volume}: ${handbook.title}`,
-    url: handbook.href
-      ? `https://www.solardev.ai${handbook.href}`
-      : "https://www.solardev.ai/handbooks#volume-2",
+    "@id": `https://www.solardev.ai${handbook.href}#book`,
+    name: handbookProducts[index].itemName,
+    url: `https://www.solardev.ai${handbook.href}`,
   })),
+  mainEntity: {
+    "@type": "ItemList",
+    itemListElement: handbookVolumes.map((handbook, index) => ({
+      "@type": "ListItem",
+      position: index + 1,
+      name: handbookProducts[index].itemName,
+      url: `https://www.solardev.ai${handbook.href}`,
+    })),
+  },
 };
 
 export default function HandbooksPage() {

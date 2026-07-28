@@ -8,58 +8,75 @@ import FAQ from "@/components/FAQ";
 import Roadmap from "@/components/Roadmap";
 import Contact from "@/components/Contact";
 import Footer from "@/components/Footer";
-import { siteConfig } from "@/data/siteData";
+import { faqItems, siteConfig } from "@/data/siteData";
 
-const organizationJsonLd = {
+const homeStructuredData = {
   "@context": "https://schema.org",
-  "@type": "Organization",
-  "@id": "https://www.solardev.ai/#organization",
-
-  name: siteConfig.name,
-  alternateName: "SolarDevAI",
-
-  url: "https://www.solardev.ai/",
-
-  logo: {
-    "@type": "ImageObject",
-    url: "https://www.solardev.ai/icon.png",
-    contentUrl:
-      "https://www.solardev.ai/icon.png",
-    caption: `${siteConfig.name} logo`,
-  },
-
-  email: siteConfig.infoEmail,
-
-  description: siteConfig.description,
-
-  founder: {
-    "@type": "Person",
-    name: siteConfig.product.author,
-  },
-
-  contactPoint: [
+  "@graph": [
     {
-      "@type": "ContactPoint",
-      contactType: "general enquiries",
+      "@type": "Organization",
+      "@id": "https://www.solardev.ai/#organization",
+      name: siteConfig.name,
+      alternateName: "SolarDevAI",
+      url: "https://www.solardev.ai/",
+      logo: {
+        "@type": "ImageObject",
+        url: "https://www.solardev.ai/icon.png",
+        contentUrl: "https://www.solardev.ai/icon.png",
+        caption: `${siteConfig.name} logo`,
+      },
       email: siteConfig.infoEmail,
-      url: "https://www.solardev.ai/#contact",
+      description: siteConfig.description,
+      founder: {
+        "@id": "https://www.solardev.ai/about-tiago-pires#person",
+      },
+      contactPoint: [
+        {
+          "@type": "ContactPoint",
+          contactType: "general enquiries",
+          email: siteConfig.infoEmail,
+          url: "https://www.solardev.ai/#contact",
+        },
+        {
+          "@type": "ContactPoint",
+          contactType: "customer support",
+          email: siteConfig.supportEmail,
+          url: "https://www.solardev.ai/#contact",
+        },
+      ],
+      knowsAbout: [
+        "Utility-scale Solar PV project development",
+        "Battery energy storage systems",
+        "BESS project development",
+        "Solar project feasibility",
+        "Technical due diligence",
+        "Project development engineering",
+        "Artificial intelligence for engineering workflows",
+      ],
     },
     {
-      "@type": "ContactPoint",
-      contactType: "customer support",
-      email: siteConfig.supportEmail,
-      url: "https://www.solardev.ai/#contact",
+      "@type": "WebSite",
+      "@id": "https://www.solardev.ai/#website",
+      url: "https://www.solardev.ai/",
+      name: "SolarDev AI",
+      description: siteConfig.description,
+      publisher: {
+        "@id": "https://www.solardev.ai/#organization",
+      },
+      inLanguage: "en",
     },
-  ],
-
-  knowsAbout: [
-    "Utility-scale Solar PV project development",
-    "Battery energy storage systems",
-    "BESS project development",
-    "Solar project feasibility",
-    "Technical due diligence",
-    "Project development engineering",
-    "Artificial intelligence for engineering workflows",
+    {
+      "@type": "FAQPage",
+      "@id": "https://www.solardev.ai/#faq-schema",
+      mainEntity: faqItems.map((item) => ({
+        "@type": "Question",
+        name: item.question,
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: item.answer,
+        },
+      })),
+    },
   ],
 };
 
@@ -70,7 +87,7 @@ export default function Home() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{
           __html: JSON.stringify(
-            organizationJsonLd,
+            homeStructuredData,
           ).replace(/</g, "\\u003c"),
         }}
       />

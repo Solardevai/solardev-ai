@@ -1,15 +1,20 @@
+import {
+  volumeOneProductData,
+  volumeTwoProductData,
+} from "@/data/productData";
+
 export const handbookVolumes = [
   {
     id: "volume-1",
     volume: "Volume 1",
-    title: "AI Foundations & Professional Prompt Library",
+    title: volumeOneProductData.title,
     description:
       "A professional methodology for responsible, traceable and decision-focused AI-assisted Solar PV and BESS project development.",
     status: "Available now",
-    pages: 215,
-    chapters: 10,
-    edition: "Edition v1.1",
-    price: 29,
+    pages: volumeOneProductData.pages,
+    chapters: volumeOneProductData.chapters,
+    edition: volumeOneProductData.edition,
+    price: volumeOneProductData.price,
     cover: "/volume-1-cover.webp",
     href: "/solar-bess-project-development-handbook",
     cta: "Explore Volume 1",
@@ -18,14 +23,14 @@ export const handbookVolumes = [
   {
     id: "volume-2",
     volume: "Volume 2",
-    title: "From Development to Operations",
+    title: volumeTwoProductData.title,
     description:
       "A professional methodology spanning FEED, grid connection, consenting, procurement, financing, construction, commissioning, operations and portfolio strategy.",
     status: "Available now",
-    pages: 64,
-    chapters: 10,
-    edition: "Edition v1.1",
-    price: 29,
+    pages: volumeTwoProductData.pages,
+    chapters: volumeTwoProductData.chapters,
+    edition: volumeTwoProductData.edition,
+    price: volumeTwoProductData.price,
     cover: "/volume-2-cover.webp",
     href: "/solar-bess-project-development-handbook-volume-2",
     cta: "Explore Volume 2",

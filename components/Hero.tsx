@@ -25,13 +25,13 @@ export default function Hero() {
           </p>
 
           <h1 className="mt-5 max-w-3xl text-5xl font-bold leading-[1.03] tracking-[-0.045em] text-white sm:text-6xl lg:text-7xl">
-            Move early-stage projects forward with better site intelligence
+            Utility-Scale Solar &amp; BESS Project Development Tools
           </h1>
 
           <p className="mt-6 max-w-2xl text-lg leading-8 text-slate-300">
-            Fast, transparent tools for boundary assessment, solar-resource
-            screening and sun geometry—supported by practitioner-led
-            development guidance.
+            Move early-stage projects forward with better site intelligence,
+            transparent calculations and practitioner-led engineering
+            workflows.
           </p>
 
           <div className="mt-9 flex flex-col gap-3 sm:flex-row">

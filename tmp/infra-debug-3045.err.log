@@ -5,3 +5,43 @@
     'maps.mail.ru: TimeoutError'
   ]
 }
+
+<--- Last few GCs --->
+
+[4036:0000025EDBB5F000]  4945282 ms: Scavenge (interleaved) 16084.8 (16144.3) -> 16078.9 (16180.3) MB, pooled: 0 MB, 130.90 / 0.00 ms  (average mu = 0.319, current mu = 0.299) allocation failure; 
+[4036:0000025EDBB5F000]  4967417 ms: Mark-Compact (reduce) 16144.5 (16218.3) -> 16060.1 (16108.2) MB, pooled: 0 MB, 13767.08 / 107.48 ms  (+ 4813.1 ms in 932 steps since start of marking, biggest step 7.3 ms, walltime since start of marking 21202 ms) (ave
+FATAL ERROR: Ineffective mark-compacts near heap limit Allocation failed - JavaScript heap out of memory
+----- Native stack trace -----
+
+ 1: 00007FF77D173D9F node::OnFatalError+1343
+ 2: 00007FF77BDBDCB7 v8::Function::NewInstance+423
+ 3: 00007FF77BBBE4F7 uv_udp_get_send_queue_count+54423
+ 4: 00007FF77BBC2204 uv_udp_get_send_queue_count+70052
+ 5: 00007FF77BBD116C v8::internal::StrongRootAllocatorBase::deallocate_impl+16604
+ 6: 00007FF77BBD09AB v8::internal::StrongRootAllocatorBase::deallocate_impl+14619
+ 7: 00007FF77D4A24AD node::AsyncResource::CallbackScope::CallbackScope+2184429
+ 8: 00007FF77BBBBFC0 uv_udp_get_send_queue_count+44896
+ 9: 00007FF77BBD681A X509_STORE_set_cleanup+5098
+10: 00007FF77BBE299F uv_timer_set_repeat+19903
+11: 00007FF77BBF0C4C uv_timer_set_repeat+77932
+12: 00007FF77BDDEC37 v8::Object::New+119
+13: 00007FF77D1EAA50 napi_create_object+80
+14: 00007FFC39ABBAB8 napi_register_module_v1+17898680
+15: 00007FFC39A6781A napi_register_module_v1+17553946
+16: 00007FFC39A76D11 napi_register_module_v1+17616657
+17: 00007FFC39AB6378 napi_register_module_v1+17876344
+18: 00007FFC39BD8911 napi_register_module_v1+19065617
+19: 00007FFC39A4FB44 napi_register_module_v1+17456452
+20: 00007FFC39A5C50A napi_register_module_v1+17508106
+21: 00007FFC39BD3B07 napi_register_module_v1+19045639
+22: 00007FFC39A81098 napi_register_module_v1+17658520
+23: 00007FF77D1CFC17 node_api_create_buffer_from_arraybuffer+6919
+24: 00007FF77BE23EEB uv_run+1851
+25: 00007FF77BE23A5F uv_run+687
+26: 00007FF77D28A04F node::DecodeWrite+351
+27: 00007FF77D1038F6 node::MultiIsolatePlatform::DisposeIsolate+291894
+28: 00007FF77D1D5E87 node::Start+3895
+29: 00007FF77D28D222 node::AsyncResource::CallbackScope::CallbackScope+610
+30: 00007FF77D4ABBB4 node::AsyncResource::CallbackScope::CallbackScope+2223092
+31: 00007FFD4898E957 BaseThreadInitThunk+23
+32: 00007FFD4A50AD6C RtlUserThreadStart+44

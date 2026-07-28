@@ -16,21 +16,43 @@ function formatDate(value: string) {
   }).format(date);
 }
 
+function TickerHeadlineContent({ headline }: { headline: RenewableNewsItem }) {
+  const publishedDate = formatDate(headline.publishedAt);
+  return (
+    <>
+      <span className="mx-3 font-black uppercase tracking-[0.12em] text-slate-900">
+        {headline.category}
+      </span>
+      <span className="max-w-[32rem] overflow-hidden text-ellipsis text-slate-950 group-hover:underline">
+        {headline.title}
+      </span>
+      <span className="mx-2 font-normal text-slate-700">
+        {headline.source}
+        {publishedDate ? ` · ${publishedDate}` : ""}
+      </span>
+      <span aria-hidden="true" className="mx-4 text-slate-700">
+        •
+      </span>
+    </>
+  );
+}
+
 export default function RenewableNewsTicker({
   headlines,
 }: RenewableNewsTickerProps) {
+  const visibleHeadlines = headlines.slice(0, 8);
   const [activeIndex, setActiveIndex] = useState(0);
 
   useEffect(() => {
-    if (headlines.length < 2) return;
+    if (visibleHeadlines.length < 2) return;
     const interval = window.setInterval(() => {
-      setActiveIndex((current) => (current + 1) % headlines.length);
+      setActiveIndex((current) => (current + 1) % visibleHeadlines.length);
     }, 6000);
     return () => window.clearInterval(interval);
-  }, [headlines.length]);
+  }, [visibleHeadlines.length]);
 
-  const repeatedHeadlines = [...headlines, ...headlines];
-  const activeHeadline = headlines[activeIndex];
+  const repeatedHeadlines = [...visibleHeadlines, ...visibleHeadlines];
+  const activeHeadline = visibleHeadlines[activeIndex];
 
   return (
     <aside
@@ -49,39 +71,35 @@ export default function RenewableNewsTicker({
 
         <div className="relative z-10 hidden min-w-0 flex-1 overflow-hidden md:block">
           <div className="renewables-ticker-track flex w-max items-center whitespace-nowrap">
-            {repeatedHeadlines.map((headline, index) => (
-              <a
-                key={`${headline.href}-${index}`}
-                href={headline.href}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="group flex h-8 items-center text-[11px] font-semibold"
-                aria-label={`${headline.category}: ${headline.title}, ${headline.source}`}
-              >
-                <span className="mx-3 font-black uppercase tracking-[0.12em] text-slate-900">
-                  {headline.category}
+            {repeatedHeadlines.map((headline, index) =>
+              index < visibleHeadlines.length ? (
+                <a
+                  key={`${headline.href}-${index}`}
+                  href={headline.href}
+                  target="_blank"
+                  rel="nofollow noopener noreferrer"
+                  className="group flex h-8 items-center text-[11px] font-semibold"
+                  aria-label={`${headline.category}: ${headline.title}, ${headline.source}`}
+                >
+                  <TickerHeadlineContent headline={headline} />
+                </a>
+              ) : (
+                <span
+                  key={`${headline.href}-${index}`}
+                  aria-hidden="true"
+                  className="group flex h-8 items-center text-[11px] font-semibold"
+                >
+                  <TickerHeadlineContent headline={headline} />
                 </span>
-                <span className="max-w-[32rem] overflow-hidden text-ellipsis text-slate-950 group-hover:underline">
-                  {headline.title}
-                </span>
-                <span className="mx-2 font-normal text-slate-700">
-                  {headline.source}
-                  {formatDate(headline.publishedAt)
-                    ? ` · ${formatDate(headline.publishedAt)}`
-                    : ""}
-                </span>
-                <span aria-hidden="true" className="mx-4 text-slate-700">
-                  •
-                </span>
-              </a>
-            ))}
+              ),
+            )}
           </div>
         </div>
 
         <a
           href={activeHeadline.href}
           target="_blank"
-          rel="noopener noreferrer"
+          rel="nofollow noopener noreferrer"
           className="relative z-10 min-w-0 flex-1 px-3 text-[11px] font-bold md:hidden"
         >
           <span className="mr-2 font-black uppercase">

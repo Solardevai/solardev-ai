@@ -7,7 +7,7 @@ const nextConfig: NextConfig = {
   async headers() {
     return [
       {
-        source: "/downloads/:path*",
+        source: "/api/:path*",
         headers: [
           {
             key: "X-Robots-Tag",

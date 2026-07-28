@@ -5,10 +5,10 @@ import "./globals.css";
 
 const SITE_URL = "https://www.solardev.ai";
 const SITE_TITLE =
-  "SolarDev AI | Utility-Scale Solar & BESS Development Tools";
+  "Utility-Scale Solar & BESS Development Tools | SolarDev AI";
 
 const SITE_DESCRIPTION =
-  "Engineering-led handbooks, controlled AI workflows and early-stage tools for utility-scale solar PV and battery energy storage project development.";
+  "Engineering-led tools, professional handbooks and controlled AI workflows for utility-scale Solar PV and BESS project development, screening and due diligence.";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -25,7 +25,7 @@ export const metadata: Metadata = {
   authors: [
     {
       name: "Tiago Pires",
-      url: SITE_URL,
+      url: `${SITE_URL}/about-tiago-pires`,
     },
   ],
 

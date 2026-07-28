@@ -1,7 +1,7 @@
 import type { MetadataRoute } from "next";
 
 const SITE_URL = "https://www.solardev.ai";
-const CONTENT_LAST_UPDATED = new Date("2026-07-24");
+const CONTENT_LAST_UPDATED = new Date("2026-07-28");
 
 export default function sitemap(): MetadataRoute.Sitemap {
   return [
@@ -19,15 +19,21 @@ export default function sitemap(): MetadataRoute.Sitemap {
     },
     {
       url: `${SITE_URL}/tools/solar-site-screening`,
-      lastModified: new Date("2026-07-27"),
+      lastModified: CONTENT_LAST_UPDATED,
       changeFrequency: "monthly",
       priority: 0.9,
     },
     {
       url: `${SITE_URL}/tools/sun-path`,
-      lastModified: new Date("2026-07-27"),
+      lastModified: CONTENT_LAST_UPDATED,
       changeFrequency: "monthly",
       priority: 0.9,
+    },
+    {
+      url: `${SITE_URL}/about-tiago-pires`,
+      lastModified: CONTENT_LAST_UPDATED,
+      changeFrequency: "yearly",
+      priority: 0.6,
     },
     {
       url: `${SITE_URL}/solar-bess-project-development-handbook`,

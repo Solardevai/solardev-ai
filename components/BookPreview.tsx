@@ -187,11 +187,11 @@ export default function BookPreview({
         <div className="mt-14 flex flex-col items-start justify-between gap-6 rounded-3xl border border-emerald-400/20 bg-emerald-400/[0.045] p-7 sm:flex-row sm:items-center sm:p-9">
           <div>
             <p className="text-sm font-semibold uppercase tracking-[0.2em] text-emerald-400">
-              Complete Edition v1.1
+              Complete {product.edition}
             </p>
 
             <h3 className="mt-3 text-2xl font-bold text-white">
-              Access all {product.pages} pages and ten professional
+              Access all {product.pages} pages and {product.chapters} professional
               chapters
             </h3>
 

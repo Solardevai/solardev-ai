@@ -125,7 +125,7 @@ export default function VolumeOne() {
                         Edition
                       </dt>
                       <dd className="mt-1 font-bold text-white">
-                        v1.1
+                        {product.edition.replace("Edition ", "")}
                       </dd>
                     </div>
                   </dl>

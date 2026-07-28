@@ -147,21 +147,42 @@ export default function SunPathTool() {
   const [message, setMessage] = useState("Click anywhere on the map to reposition the analysis.");
 
   useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    const latitude = Number(params.get("lat"));
-    const longitude = Number(params.get("lng"));
-    const nextDate = params.get("date");
-    const nextTime = params.get("time");
-    if (Number.isFinite(latitude) && Number.isFinite(longitude) && params.has("lat")) {
-      setPoint({ latitude, longitude });
-      setLabel(`${latitude.toFixed(4)}, ${longitude.toFixed(4)}`);
-      setQuery(`${latitude.toFixed(4)}, ${longitude.toFixed(4)}`);
-    }
-    if (nextDate && /^\d{4}-\d{2}-\d{2}$/.test(nextDate)) setDate(nextDate);
-    if (nextTime && /^\d{2}:\d{2}$/.test(nextTime)) {
-      const [hours, minutes] = nextTime.split(":").map(Number);
-      setMinute(hours * 60 + minutes);
-    }
+    const frame = window.requestAnimationFrame(() => {
+      const params = new URLSearchParams(window.location.search);
+      const latitude = Number(params.get("lat"));
+      const longitude = Number(params.get("lng"));
+      const nextDate = params.get("date");
+      const nextTime = params.get("time");
+      const nextHeight = Number(params.get("height"));
+      const nextTimezone = Number(params.get("utc"));
+      if (
+        Number.isFinite(latitude) &&
+        Number.isFinite(longitude) &&
+        params.has("lat")
+      ) {
+        const nextPoint = { latitude, longitude };
+        setPoint(nextPoint);
+        setLabel(`${latitude.toFixed(4)}, ${longitude.toFixed(4)}`);
+        setQuery(`${latitude.toFixed(4)}, ${longitude.toFixed(4)}`);
+        mapRef.current?.jumpTo({ center: [longitude, latitude], zoom: 16 });
+      }
+      if (nextDate && /^\d{4}-\d{2}-\d{2}$/.test(nextDate)) setDate(nextDate);
+      if (nextTime && /^\d{2}:\d{2}$/.test(nextTime)) {
+        const [hours, minutes] = nextTime.split(":").map(Number);
+        setMinute(hours * 60 + minutes);
+      }
+      if (Number.isFinite(nextHeight) && nextHeight >= 0.5 && nextHeight <= 30) {
+        setHeight(nextHeight);
+      }
+      if (
+        Number.isFinite(nextTimezone) &&
+        nextTimezone >= -12 &&
+        nextTimezone <= 14
+      ) {
+        setTimezone(nextTimezone);
+      }
+    });
+    return () => window.cancelAnimationFrame(frame);
   }, []);
 
   useEffect(() => {
@@ -169,14 +190,14 @@ export default function SunPathTool() {
     const map = new MapLibreMap({
       container: mapContainer.current,
       style: SATELLITE_STYLE,
-      center: [point.longitude, point.latitude],
+      center: [DEFAULT_POINT.longitude, DEFAULT_POINT.latitude],
       zoom: 16,
       attributionControl: false,
     });
     map.addControl(new NavigationControl({ showCompass: true }), "top-right");
     map.addControl(new AttributionControl({ compact: true }), "bottom-left");
     markerRef.current = new Marker({ color: "#fbbf24" })
-      .setLngLat([point.longitude, point.latitude])
+      .setLngLat([DEFAULT_POINT.longitude, DEFAULT_POINT.latitude])
       .addTo(map);
     map.on("load", () => {
       map.addSource("solar-vectors", {
@@ -224,8 +245,10 @@ export default function SunPathTool() {
   );
   const sun = solarPosition(date, minute, point, timezone);
   const daylight = path.filter((item) => item.elevation >= 0);
-  const sunrise = daylight[0]?.minute ?? 0;
-  const sunset = daylight.at(-1)?.minute ?? 1439;
+  const sunAboveHorizonAllDay = daylight.length === path.length;
+  const sunBelowHorizonAllDay = daylight.length === 0;
+  const sunrise = daylight[0]?.minute;
+  const sunset = daylight.at(-1)?.minute;
   const shadowLength =
     sun.elevation > 0 ? height / Math.tan(radians(sun.elevation)) : null;
 
@@ -279,6 +302,8 @@ export default function SunPathTool() {
       lng: point.longitude.toFixed(5),
       date,
       time: formatTime(minute),
+      height: height.toFixed(1),
+      utc: String(timezone),
     });
     navigator.clipboard.writeText(`${window.location.origin}${window.location.pathname}?${params}`);
     setMessage("Shareable link copied to clipboard.");
@@ -387,9 +412,19 @@ export default function SunPathTool() {
 
       <div className="border-t border-white/10 bg-slate-950/80 px-5 py-5">
         <div className="flex items-center justify-between text-xs font-semibold text-slate-400">
-          <span>Sunrise {formatTime(sunrise)}</span>
+          <span>
+            {sunAboveHorizonAllDay
+              ? "Sun above horizon all day"
+              : sunBelowHorizonAllDay
+                ? "Sun below horizon all day"
+                : `Sunrise ${formatTime(sunrise ?? 0)}`}
+          </span>
           <span className="rounded-lg bg-amber-400/10 px-3 py-1.5 font-mono text-amber-300">{formatTime(minute)}</span>
-          <span>Sunset {formatTime(sunset)}</span>
+          <span>
+            {sunAboveHorizonAllDay || sunBelowHorizonAllDay
+              ? date
+              : `Sunset ${formatTime(sunset ?? 1439)}`}
+          </span>
         </div>
         <input aria-label="Local time of day" type="range" min="0" max="1439" step="5" value={minute} onChange={(event) => setMinute(Number(event.target.value))} className="mt-3 w-full accent-amber-400" />
       </div>

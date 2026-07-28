@@ -6,16 +6,16 @@ import TrackedCheckoutLink from "@/components/TrackedCheckoutLink";
 import { volumeTwoProductData } from "@/data/productData";
 
 export const metadata: Metadata = {
-  title: "Solar & BESS Project Development - Volume 2",
+  title: "Solar & BESS Project Development Handbook — Volume 2",
   description:
-    "A 64-page professional handbook covering FEED, grid connection, consenting, procurement, financing, construction, commissioning and operations for utility-scale Solar PV and BESS projects.",
+    `A ${volumeTwoProductData.pages}-page professional handbook covering FEED, grid connection, consenting, procurement, financing, construction, commissioning and operations for utility-scale Solar PV and BESS projects.`,
   alternates: {
     canonical:
       "/solar-bess-project-development-handbook-volume-2",
   },
   openGraph: {
     title:
-      "AI for Utility-Scale Solar & BESS Project Development - Volume 2",
+      "Solar & BESS Project Development Handbook — Volume 2",
     description:
       "From Development to Operations: a professional handbook and AI prompt library for utility-scale Solar PV and BESS projects.",
     url:
@@ -27,6 +27,13 @@ export const metadata: Metadata = {
         alt: "SolarDev AI Volume 2 handbook cover",
       },
     ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Solar & BESS Project Development Handbook — Volume 2",
+    description:
+      "From Development to Operations: a professional handbook and AI prompt library for utility-scale Solar PV and BESS projects.",
+    images: ["/volume-2-cover.webp"],
   },
 };
 
@@ -50,15 +57,19 @@ const structuredData = {
       "@type": "Product",
       "@id":
         "https://www.solardev.ai/solar-bess-project-development-handbook-volume-2#product",
-      name:
-        "AI for Utility-Scale Solar & BESS Project Development - Volume 2",
+      name: volumeTwoProductData.itemName,
       description:
-        "A 64-page professional handbook and AI prompt library covering the project lifecycle from development to operations.",
+        `A ${volumeTwoProductData.pages}-page professional handbook and AI prompt library covering the project lifecycle from development to operations.`,
       image: [
         "https://www.solardev.ai/volume-2-cover.webp",
       ],
       sku: "SOLARDEV-VOL2",
       category: "Digital engineering handbook",
+      model: volumeTwoProductData.edition,
+      isRelatedTo: {
+        "@id":
+          "https://www.solardev.ai/solar-bess-project-development-handbook-volume-2#book",
+      },
       brand: {
         "@type": "Brand",
         name: "SolarDev AI",
@@ -80,11 +91,14 @@ const structuredData = {
     },
     {
       "@type": "Book",
-      name:
-        "AI for Utility-Scale Solar & BESS Project Development - Volume 2",
+      "@id":
+        "https://www.solardev.ai/solar-bess-project-development-handbook-volume-2#book",
+      name: volumeTwoProductData.itemName,
       author: {
         "@type": "Person",
+        "@id": "https://www.solardev.ai/about-tiago-pires#person",
         name: "Tiago Pires",
+        url: "https://www.solardev.ai/about-tiago-pires",
       },
       publisher: {
         "@type": "Organization",
@@ -92,12 +106,36 @@ const structuredData = {
         url: "https://www.solardev.ai",
       },
       bookFormat: "https://schema.org/EBook",
+      bookEdition: volumeTwoProductData.edition,
       inLanguage: "en",
-      numberOfPages: 64,
+      numberOfPages: volumeTwoProductData.pages,
       image:
         "https://www.solardev.ai/volume-2-cover.webp",
       description:
-        "From Development to Operations - Edition v1.1.",
+        `From Development to Operations — ${volumeTwoProductData.edition}.`,
+    },
+    {
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        {
+          "@type": "ListItem",
+          position: 1,
+          name: "Home",
+          item: "https://www.solardev.ai/",
+        },
+        {
+          "@type": "ListItem",
+          position: 2,
+          name: "Handbooks",
+          item: "https://www.solardev.ai/handbooks",
+        },
+        {
+          "@type": "ListItem",
+          position: 3,
+          name: "Volume 2",
+          item: "https://www.solardev.ai/solar-bess-project-development-handbook-volume-2",
+        },
+      ],
     },
   ],
 };
@@ -148,7 +186,7 @@ export default function VolumeTwoPage() {
             SolarDev AI · Volume 2
           </p>
           <h1 className="mt-5 text-4xl font-bold leading-tight tracking-tight sm:text-5xl">
-            From Development to Operations
+            Utility-Scale Solar &amp; BESS: From Development to Operations
           </h1>
           <p className="mt-6 max-w-3xl text-lg leading-8 text-slate-300">
             A professional handbook and AI prompt library covering
@@ -156,13 +194,24 @@ export default function VolumeTwoPage() {
             construction, commissioning, operations and portfolio
             strategy.
           </p>
+          <p className="mt-3 text-sm text-slate-400">
+            Written by{" "}
+            <Link
+              href="/about-tiago-pires"
+              rel="author"
+              className="font-semibold text-emerald-300 hover:text-emerald-200"
+            >
+              Tiago Pires
+            </Link>
+            .
+          </p>
 
           <div className="mt-8 grid grid-cols-2 gap-4 sm:grid-cols-4">
             {[
-              ["Pages", "64"],
-              ["Chapters", "10"],
+              ["Pages", String(volumeTwoProductData.pages)],
+              ["Chapters", String(volumeTwoProductData.chapters)],
               ["Format", "PDF"],
-              ["Edition", "v1.1"],
+              ["Edition", volumeTwoProductData.edition.replace("Edition ", "")],
             ].map(([label, value]) => (
               <div
                 key={label}

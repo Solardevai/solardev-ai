@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { siteConfig } from "@/data/siteData";
 import CookiePreferencesButton from "@/components/CookiePreferencesButton";
 
@@ -14,9 +15,17 @@ const productLinks = [
     label: "Site Check",
     href: "/tools/solar-site-screening",
   },
+  {
+    label: "Sun Position & Shadings",
+    href: "/tools/sun-path",
+  },
 ];
 
 const companyLinks = [
+  {
+    label: "About Tiago Pires",
+    href: "/about-tiago-pires",
+  },
   {
     label: "Professionals",
     href: "/#audience",
@@ -63,8 +72,8 @@ export default function Footer() {
         <div className="grid gap-12 lg:grid-cols-[1.4fr_0.8fr_0.8fr_0.8fr]">
           {/* Brand */}
           <div>
-            <a
-              href="#home"
+            <Link
+              href="/#home"
               aria-label="SolarDev AI homepage"
               className="inline-flex items-center gap-3"
             >
@@ -75,7 +84,7 @@ export default function Footer() {
               <span className="text-xl font-bold tracking-tight text-white">
                 SolarDev <span className="text-yellow-400">AI</span>
               </span>
-            </a>
+            </Link>
 
             <p className="mt-6 max-w-md leading-7 text-slate-400">
               Engineering-led handbooks, controlled AI workflows and

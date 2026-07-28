@@ -16,11 +16,11 @@ export const siteConfig = {
       "AI for Utility-Scale Solar & BESS Project Development",
     subtitle:
       "AI Foundations & Professional Prompt Library",
-    edition: "Edition v1.1",
+    edition: productData.edition,
     author: "Tiago Pires",
 
-    pages: 215,
-    chapters: 10,
+    pages: productData.pages,
+    chapters: productData.chapters,
     prompts: 100,
     promptLevels: 3,
 

@@ -1096,7 +1096,7 @@ export default function SolarSiteScreeningMap() {
         >
           {isLoadingSolar
             ? "Calculating with PVGIS…"
-            : "Calculate indicative PV yield"}
+            : "Calculate indicative specific yield"}
         </button>
 
         {solar && (
@@ -1110,7 +1110,7 @@ export default function SolarSiteScreeningMap() {
               kWh/kWp per year at the boundary centroid
             </p>
             <div className="mt-3 flex justify-between border-t border-white/10 pt-3 text-xs">
-              <span className="text-slate-400">Monthly average</span>
+              <span className="text-slate-400">Annual value ÷ 12</span>
               <strong>{Math.round(solar.monthlyAverage).toLocaleString()} kWh/kWp</strong>
             </div>
             <dl className="mt-3 space-y-1 border-t border-white/10 pt-3 text-[10px] leading-4">
