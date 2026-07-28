@@ -67,7 +67,7 @@ export default function Navbar() {
                       className="block rounded-xl px-4 py-3 transition hover:bg-white/[0.06] focus:outline-none focus-visible:bg-white/[0.06]"
                     >
                       <span className="block font-semibold text-white">
-                        Professional Handbooks
+                        Handbooks
                       </span>
                       <span className="mt-1 block text-xs leading-5 text-slate-400">
                         Utility-scale Solar and BESS development volumes.
@@ -78,11 +78,8 @@ export default function Navbar() {
                       href="/tools/solar-site-screening"
                       className="mt-1 block rounded-xl px-4 py-3 transition hover:bg-white/[0.06] focus:outline-none focus-visible:bg-white/[0.06]"
                     >
-                      <span className="flex items-center justify-between gap-3">
-                        <span className="font-semibold text-white">Site Check</span>
-                        <span className="rounded-full border border-emerald-400/25 bg-emerald-400/10 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-emerald-300">
-                          Beta
-                        </span>
+                      <span className="block font-semibold text-white">
+                        Site Check
                       </span>
                       <span className="mt-1 block text-xs leading-5 text-slate-400">
                         Measure a boundary and run a PVGIS solar pre-check.
@@ -93,9 +90,8 @@ export default function Navbar() {
                       href="/tools/sun-path"
                       className="mt-1 block rounded-xl px-4 py-3 transition hover:bg-white/[0.06] focus:outline-none focus-visible:bg-white/[0.06]"
                     >
-                      <span className="flex items-center justify-between gap-3">
-                        <span className="font-semibold text-white">Sun Position & Shadings</span>
-                        <span className="rounded-full border border-amber-400/25 bg-amber-400/10 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-amber-300">New</span>
+                      <span className="block font-semibold text-white">
+                        Solar Angle
                       </span>
                       <span className="mt-1 block text-xs leading-5 text-slate-400">
                         Explore solar angles and indicative shading geometry.
@@ -116,6 +112,23 @@ export default function Navbar() {
                       </span>
                       <span className="mt-1 block text-xs leading-5 text-slate-400">
                         Searchable professional prompts and workflows.
+                      </span>
+                    </div>
+
+                    <div
+                      aria-disabled="true"
+                      className="mt-1 rounded-xl px-4 py-3 opacity-75"
+                    >
+                      <span className="flex items-center justify-between gap-3">
+                        <span className="font-semibold text-white">
+                          Templates
+                        </span>
+                        <span className="rounded-full border border-emerald-400/25 bg-emerald-400/10 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-emerald-300">
+                          In development
+                        </span>
+                      </span>
+                      <span className="mt-1 block text-xs leading-5 text-slate-400">
+                        Reusable engineering templates and checklists.
                       </span>
                     </div>
                   </div>
@@ -207,7 +220,7 @@ export default function Navbar() {
                       onClick={closeMenu}
                       className="flex min-h-12 items-center justify-between rounded-lg px-3 py-3 font-semibold text-white transition hover:bg-white/[0.05] focus:outline-none focus-visible:bg-white/[0.05]"
                     >
-                      Professional Handbooks
+                      Handbooks
                       <span
                         aria-hidden="true"
                         className="text-emerald-400"
@@ -221,15 +234,13 @@ export default function Navbar() {
                       className="flex min-h-12 items-center justify-between rounded-lg px-3 py-3 font-semibold text-white transition hover:bg-white/[0.05] focus:outline-none focus-visible:bg-white/[0.05]"
                     >
                       Site Check
-                      <span className="text-xs font-bold text-emerald-300">BETA</span>
                     </Link>
                     <Link
                       href="/tools/sun-path"
                       onClick={closeMenu}
                       className="flex min-h-12 items-center justify-between rounded-lg px-3 py-3 font-semibold text-white transition hover:bg-white/[0.05] focus:outline-none focus-visible:bg-white/[0.05]"
                     >
-                      Sun Position & Shadings
-                      <span className="text-xs font-bold text-amber-300">NEW</span>
+                      Solar Angle
                     </Link>
                     <div
                       aria-disabled="true"
@@ -237,6 +248,17 @@ export default function Navbar() {
                     >
                       <span className="font-semibold">
                         Prompt Library
+                      </span>
+                      <span className="rounded-full border border-emerald-400/25 bg-emerald-400/10 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-emerald-300">
+                        In development
+                      </span>
+                    </div>
+                    <div
+                      aria-disabled="true"
+                      className="flex min-h-12 items-center justify-between gap-3 rounded-lg px-3 py-3 text-slate-400"
+                    >
+                      <span className="font-semibold">
+                        Templates
                       </span>
                       <span className="rounded-full border border-emerald-400/25 bg-emerald-400/10 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-emerald-300">
                         In development
