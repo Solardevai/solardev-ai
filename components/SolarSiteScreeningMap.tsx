@@ -897,6 +897,23 @@ export default function SolarSiteScreeningMap() {
           : "Boundary ready. Add more points or finish drawing.",
       );
     });
+    const undoWithRightClick = (event: {
+      originalEvent: MouseEvent;
+    }) => {
+      if (!map.getCanvas().dataset.drawing || !pointsRef.current.length) return;
+      event.originalEvent.preventDefault();
+      const nextPoints = pointsRef.current.slice(0, -1);
+      pointsRef.current = nextPoints;
+      setPoints(nextPoints);
+      setSolar(null);
+      updateMap(nextPoints);
+      setMessage(
+        nextPoints.length
+          ? "Last point removed. Right-click again to undo another point."
+          : "Boundary cleared.",
+      );
+    };
+    map.on("contextmenu", undoWithRightClick);
     const refreshDrawingOverlay = () => {
       updateDrawingOverlay(pointsRef.current);
       updateInfrastructureOverlay();
@@ -925,6 +942,7 @@ export default function SolarSiteScreeningMap() {
       map.off("move", refreshDrawingOverlay);
       map.off("moveend", refreshInfrastructure);
       map.off("resize", refreshDrawingOverlay);
+      map.off("contextmenu", undoWithRightClick);
       map.remove();
       mapRef.current = null;
     };
@@ -939,7 +957,11 @@ export default function SolarSiteScreeningMap() {
     setIsDrawing(next);
     map.getCanvas().dataset.drawing = next ? "true" : "";
     map.getCanvas().style.cursor = next ? "crosshair" : "";
-    setMessage(next ? "Click the map to add boundary points." : "Drawing paused.");
+    setMessage(
+      next
+        ? "Left-click to add points. Right-click to undo the last point."
+        : "Drawing paused.",
+    );
   }
 
   function clearSite() {
@@ -1425,7 +1447,9 @@ export default function SolarSiteScreeningMap() {
           <g data-site-vertices />
         </svg>
         <div className="pointer-events-none absolute left-4 top-4 rounded-xl border border-white/15 bg-slate-950/85 px-3 py-2 text-xs text-white shadow-lg backdrop-blur">
-          {isDrawing ? "Drawing mode · click to add points" : "Pan and zoom to explore"}
+          {isDrawing
+            ? "Drawing mode · left-click to add · right-click to undo"
+            : "Pan and zoom to explore"}
         </div>
         <details className="absolute right-4 top-32 z-10 w-56 overflow-hidden rounded-xl border border-white/15 bg-slate-950/92 text-white shadow-xl backdrop-blur">
           <summary className="flex cursor-pointer list-none items-center justify-between px-3 py-2.5 text-xs font-bold marker:content-none">

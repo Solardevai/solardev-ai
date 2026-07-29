@@ -23,6 +23,18 @@ const FEEDS: Feed[] = [
     name: "Energy-Storage.news",
     url: "https://www.energy-storage.news/feed/",
   },
+  {
+    name: "PV Tech",
+    url: "https://www.pv-tech.org/feed/",
+  },
+  {
+    name: "Solar Power World",
+    url: "https://www.solarpowerworldonline.com/feed/",
+  },
+  {
+    name: "CleanTechnica",
+    url: "https://cleantechnica.com/feed/",
+  },
 ];
 
 const PRIORITY_KEYWORDS: Array<[string, number, string]> = [
@@ -127,11 +139,23 @@ export async function getRenewableNews(): Promise<RenewableNewsItem[]> {
     if (!unique.has(key)) unique.set(key, item);
   }
 
-  return [...unique.values()]
+  const ranked = [...unique.values()]
     .sort((a, b) => {
-      const dateDifference =
-        new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime();
-      return b.score - a.score || dateDifference;
-    })
-    .slice(0, 8);
+      const aPublished = new Date(a.publishedAt).getTime() || 0;
+      const bPublished = new Date(b.publishedAt).getTime() || 0;
+      const dateDifference = bPublished - aPublished;
+      return dateDifference || b.score - a.score;
+    });
+
+  const sourceCounts = new Map<string, number>();
+  const diverseHeadlines: RenewableNewsItem[] = [];
+  for (const item of ranked) {
+    const sourceCount = sourceCounts.get(item.source) ?? 0;
+    if (sourceCount >= 3) continue;
+    diverseHeadlines.push(item);
+    sourceCounts.set(item.source, sourceCount + 1);
+    if (diverseHeadlines.length === 8) break;
+  }
+
+  return diverseHeadlines;
 }
