@@ -122,7 +122,7 @@ export default function Hero() {
                 >
                   <div className="flex items-start justify-between">
                     <div>
-                      <span className="text-[10px] font-bold uppercase tracking-[0.16em] text-amber-300">
+                      <span className="inline-flex rounded-lg border border-amber-400/20 bg-amber-400/10 px-3 py-2 text-[10px] font-bold uppercase tracking-[0.16em] text-amber-300">
                         Solar Angle
                       </span>
                       <strong className="mt-2 block text-sm leading-5 text-white group-hover:text-amber-200">
@@ -147,7 +147,7 @@ export default function Hero() {
                   href="/handbooks"
                   className="group rounded-2xl border border-white/10 bg-white/[0.035] p-4 transition hover:border-blue-400/30 hover:bg-blue-400/[0.05]"
                 >
-                  <span className="text-[10px] font-bold uppercase tracking-[0.16em] text-blue-300">
+                  <span className="inline-flex rounded-lg border border-blue-400/20 bg-blue-400/10 px-3 py-2 text-[10px] font-bold uppercase tracking-[0.16em] text-blue-300">
                     Handbooks
                   </span>
                   <strong className="mt-2 block text-sm leading-5 text-white group-hover:text-blue-200">
