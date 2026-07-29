@@ -10,7 +10,13 @@ import {
   ScaleControl,
 } from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
-import { FormEvent, useEffect, useRef, useState } from "react";
+import {
+  ChangeEvent,
+  FormEvent,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 
 type Coordinate = [number, number];
 type SolarResult = {
@@ -83,9 +89,53 @@ function formatDistance(kilometres: number) {
     : `${Math.round(kilometres * 1_000)} m`;
 }
 
+function parseKmlPolygons(kml: string): Coordinate[][] {
+  const document = new DOMParser().parseFromString(kml, "application/xml");
+  if (document.querySelector("parsererror")) {
+    throw new Error("The KMZ contains an invalid KML document.");
+  }
+
+  const rings = Array.from(
+    document.getElementsByTagNameNS("*", "outerBoundaryIs"),
+  )
+    .map((boundary) =>
+      boundary.getElementsByTagNameNS("*", "coordinates").item(0)?.textContent,
+    )
+    .filter((coordinates): coordinates is string => Boolean(coordinates))
+    .map((coordinates) =>
+      coordinates
+        .trim()
+        .split(/\s+/)
+        .map((value) => value.split(",").slice(0, 2).map(Number) as Coordinate)
+        .filter(
+          ([longitude, latitude]) =>
+            Number.isFinite(longitude) &&
+            Number.isFinite(latitude) &&
+            longitude >= -180 &&
+            longitude <= 180 &&
+            latitude >= -90 &&
+            latitude <= 90,
+        ),
+    )
+    .map((ring) => {
+      const first = ring[0];
+      const last = ring.at(-1);
+      return first &&
+        last &&
+        first[0] === last[0] &&
+        first[1] === last[1]
+        ? ring.slice(0, -1)
+        : ring;
+    })
+    .filter((ring) => ring.length >= 3);
+
+  return rings;
+}
+
 export default function SolarSiteScreeningMap() {
   const containerRef = useRef<HTMLDivElement>(null);
   const drawingOverlayRef = useRef<SVGSVGElement>(null);
+  const kmzInputRef = useRef<HTMLInputElement>(null);
   const mapRef = useRef<MapLibreMap | null>(null);
   const pointsRef = useRef<Coordinate[]>([]);
   const infrastructureFeaturesRef = useRef<GeoJSON.Feature[]>([]);
@@ -100,6 +150,7 @@ export default function SolarSiteScreeningMap() {
   const [query, setQuery] = useState("");
   const [message, setMessage] = useState("Search for a location, then start drawing your site.");
   const [isSearching, setIsSearching] = useState(false);
+  const [isImportingKmz, setIsImportingKmz] = useState(false);
   const [isLoadingSolar, setIsLoadingSolar] = useState(false);
   const [solar, setSolar] = useState<SolarResult | null>(null);
   const [exportFormat, setExportFormat] =
@@ -908,6 +959,83 @@ export default function SolarSiteScreeningMap() {
     setMessage(nextPoints.length ? "Last point removed." : "Boundary cleared.");
   }
 
+  async function importKmz(event: ChangeEvent<HTMLInputElement>) {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    setIsImportingKmz(true);
+    setMessage("Reading property boundary from KMZ…");
+    try {
+      if (!file.name.toLowerCase().endsWith(".kmz")) {
+        throw new Error("Choose a .kmz file containing a KML property polygon.");
+      }
+      if (file.size > 25 * 1024 * 1024) {
+        throw new Error("The KMZ file is larger than the 25 MB upload limit.");
+      }
+
+      const { default: JSZip } = await import("jszip");
+      const archive = await JSZip.loadAsync(file);
+      const kmlEntries = Object.values(archive.files).filter(
+        (entry) => !entry.dir && entry.name.toLowerCase().endsWith(".kml"),
+      );
+      if (!kmlEntries.length) {
+        throw new Error("No KML document was found inside this KMZ file.");
+      }
+
+      const preferredEntry =
+        kmlEntries.find(
+          (entry) => entry.name.split("/").at(-1)?.toLowerCase() === "doc.kml",
+        ) ?? kmlEntries[0];
+      const rings = parseKmlPolygons(await preferredEntry.async("text"));
+      if (!rings.length) {
+        throw new Error("No valid property polygon was found in this KMZ file.");
+      }
+
+      const rankedRings = rings
+        .map((ring) => ({
+          ring,
+          squareMetres: area(polygon([[...ring, ring[0]]])),
+        }))
+        .sort((a, b) => b.squareMetres - a.squareMetres);
+      const nextPoints = rankedRings[0].ring;
+
+      pointsRef.current = nextPoints;
+      setPoints(nextPoints);
+      setSolar(null);
+      setIsDrawing(false);
+      const map = mapRef.current;
+      if (map) {
+        map.getCanvas().dataset.drawing = "";
+        map.getCanvas().style.cursor = "";
+      }
+      updateMap(nextPoints);
+
+      const longitudes = nextPoints.map(([longitude]) => longitude);
+      const latitudes = nextPoints.map(([, latitude]) => latitude);
+      map?.fitBounds(
+        [
+          [Math.min(...longitudes), Math.min(...latitudes)],
+          [Math.max(...longitudes), Math.max(...latitudes)],
+        ],
+        { padding: 60, maxZoom: 17, duration: 900 },
+      );
+      setMessage(
+        rings.length === 1
+          ? `Property boundary imported from ${file.name}. Existing analyses are ready to run.`
+          : `${rings.length} polygons found in ${file.name}; the largest was imported. Existing analyses are ready to run.`,
+      );
+    } catch (error) {
+      setMessage(
+        error instanceof Error
+          ? error.message
+          : "The property boundary could not be imported.",
+      );
+    } finally {
+      setIsImportingKmz(false);
+      if (kmzInputRef.current) kmzInputRef.current.value = "";
+    }
+  }
+
   async function searchLocation(event: FormEvent) {
     event.preventDefault();
     if (!query.trim()) return;
@@ -1095,10 +1223,31 @@ export default function SolarSiteScreeningMap() {
 
         <div className="mt-6">
           <p className="text-xs font-bold uppercase tracking-[0.16em] text-slate-400">Site boundary</p>
+          <input
+            ref={kmzInputRef}
+            type="file"
+            accept=".kmz,application/vnd.google-earth.kmz"
+            onChange={importKmz}
+            className="sr-only"
+            aria-label="Upload property boundary KMZ"
+          />
+          <button
+            type="button"
+            onClick={() => kmzInputRef.current?.click()}
+            disabled={isImportingKmz}
+            className="mt-2 w-full rounded-xl border border-cyan-400/35 bg-cyan-400/10 px-4 py-3 text-sm font-bold text-cyan-200 transition hover:bg-cyan-400/20 disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            {isImportingKmz ? "Importing KMZ…" : "Upload property KMZ"}
+          </button>
+          <div className="my-3 flex items-center gap-3 text-[10px] font-bold uppercase tracking-[0.14em] text-slate-600">
+            <span className="h-px flex-1 bg-white/10" />
+            or draw manually
+            <span className="h-px flex-1 bg-white/10" />
+          </div>
           <button
             type="button"
             onClick={toggleDrawing}
-            className={`mt-2 w-full rounded-xl px-4 py-3 text-sm font-bold transition ${
+            className={`w-full rounded-xl px-4 py-3 text-sm font-bold transition ${
               isDrawing
                 ? "bg-emerald-400 text-slate-950"
                 : "border border-emerald-400/40 bg-emerald-400/10 text-emerald-300 hover:bg-emerald-400/20"

@@ -52,6 +52,11 @@ const faqs = [
       "Yes. The drawn boundary can be downloaded as KMZ, KML or GeoJSON. KMZ is selected by default for convenient use in common GIS and virtual-globe workflows.",
   },
   {
+    question: "Can I upload an existing property boundary?",
+    answer:
+      "Yes. Upload a KMZ containing a property polygon and Site Check will place the boundary on the map, calculate its geometry and make the existing PVGIS, TMY and export tools available. If the file contains several polygons, the largest valid polygon is used.",
+  },
+  {
     question: "Can I download a meteorological file for the site?",
     answer:
       "Yes. Site Check can request a free PVGIS Typical Meteorological Year file at the boundary centroid in CSV or EPW format. The hourly file is intended for preliminary analysis and simulation workflows and is not a measured site dataset.",
@@ -80,6 +85,7 @@ const structuredData = {
       featureList: [
         "Satellite site map",
         "Boundary area and perimeter calculation",
+        "KMZ property-boundary import",
         "Boundary centroid",
         "Indicative PVGIS specific-yield estimate",
         "Indicative OpenStreetMap infrastructure context",
@@ -149,8 +155,8 @@ export default function SolarSiteScreeningPage() {
                 <span className="text-emerald-400">PVGIS Yield Tool</span>
               </h1>
               <p className="mx-auto mt-5 max-w-3xl text-base leading-7 text-slate-300 sm:text-lg">
-                Draw a candidate utility-scale solar site on satellite imagery,
-                measure its boundary and obtain an indicative PVGIS
+                Upload a known property boundary from KMZ or draw a candidate
+                utility-scale solar site on satellite imagery, measure its boundary and obtain an indicative PVGIS
                 specific-yield result at the site centroid. Review mapped
                 infrastructure context and export the boundary for further GIS
                 screening. You can also download an hourly PVGIS Typical
@@ -162,12 +168,12 @@ export default function SolarSiteScreeningPage() {
 
             <div className="mt-6 grid gap-4 text-sm text-slate-400 sm:grid-cols-3">
               <p>
-                <strong className="block text-white">1. Find</strong>
-                Search by address, place name or coordinates.
+                <strong className="block text-white">1. Locate or upload</strong>
+                Search by location or upload a known property boundary as KMZ.
               </p>
               <p>
-                <strong className="block text-white">2. Draw</strong>
-                Define the site to calculate gross area and perimeter.
+                <strong className="block text-white">2. Define</strong>
+                Import or draw the site to calculate gross area and perimeter.
               </p>
               <p>
                 <strong className="block text-white">3. Check and export</strong>
