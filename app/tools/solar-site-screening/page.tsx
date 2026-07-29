@@ -147,10 +147,7 @@ export default function SolarSiteScreeningPage() {
           <div className="absolute inset-x-0 top-0 h-80 bg-[radial-gradient(circle_at_50%_0%,rgba(52,211,153,0.14),transparent_65%)]" />
           <div className="relative mx-auto max-w-7xl">
             <div className="mx-auto mb-10 max-w-4xl text-center">
-              <span className="inline-flex rounded-full border border-emerald-400/25 bg-emerald-400/10 px-4 py-1.5 text-xs font-bold uppercase tracking-[0.18em] text-emerald-300">
-                Free public beta
-              </span>
-              <h1 className="mt-5 text-4xl font-bold tracking-tight sm:text-5xl lg:text-6xl">
+              <h1 className="text-4xl font-bold tracking-tight sm:text-5xl lg:text-6xl">
                 Free Solar Site Screening and{" "}
                 <span className="text-emerald-400">PVGIS Yield Tool</span>
               </h1>
