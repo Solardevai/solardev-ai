@@ -239,7 +239,7 @@ export const faqItems = [
   {
     question: "What does the Site Check currently assess?",
     answer:
-      "The public beta measures a user-defined boundary, calculates gross area and perimeter, retrieves an indicative PVGIS specific-yield estimate at the boundary centroid, and exports GeoJSON, KML or KMZ. It does not yet assess environmental, planning, land, terrain, grid or permitting constraints.",
+      "Site Check lets you upload a property boundary from KMZ or draw a candidate site on satellite imagery, then calculates its gross area, perimeter and centroid. It provides an indicative PVGIS specific-yield estimate, mapped context for nearby roads, power lines and substations, GIS-ready boundary exports in KMZ, KML or GeoJSON, and hourly PVGIS Typical Meteorological Year data in CSV or EPW. These are early-stage screening outputs and do not assess grid capacity, environmental or planning constraints, terrain suitability, land rights or permitting feasibility.",
   },
   {
     question: "When will the SolarDev AI Platform be available?",

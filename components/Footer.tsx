@@ -8,10 +8,6 @@ const productLinks = [
     href: "/handbooks",
   },
   {
-    label: "Templates & Workflows",
-    href: "/#roadmap",
-  },
-  {
     label: "Site Check",
     href: "/tools/solar-site-screening",
   },
