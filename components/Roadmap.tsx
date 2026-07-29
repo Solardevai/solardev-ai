@@ -137,19 +137,12 @@ export default function Roadmap() {
 
       <div className="relative mx-auto max-w-7xl px-6 lg:px-8">
         <div className="mx-auto max-w-2xl text-center">
-          <p className="text-xs font-semibold uppercase tracking-[0.22em] text-emerald-400">
-            Product Roadmap
-          </p>
           <h2
             id="roadmap-title"
-            className="mt-3 text-3xl font-bold tracking-tight text-white sm:text-4xl"
+            className="text-xs font-semibold uppercase tracking-[0.22em] text-emerald-400"
           >
-            Built across three 2026 milestones
+            Product Roadmap
           </h2>
-          <p className="mt-4 text-base leading-7 text-slate-400">
-            Delivered professional knowledge and practical tools, followed by
-            an integrated project-development platform.
-          </p>
         </div>
 
         <div className="relative mx-auto mt-12 max-w-6xl">
