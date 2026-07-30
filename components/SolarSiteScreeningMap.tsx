@@ -1,7 +1,8 @@
 "use client";
 
 import { useUser } from "@clerk/nextjs";
-import { area, polygon } from "@turf/turf";
+import { area } from "@turf/area";
+import { polygon } from "@turf/helpers";
 import { ChangeEvent, FormEvent, useRef, useState } from "react";
 import { MapCanvas } from "@/components/map/MapCanvas";
 import { useDrawingTools } from "@/components/map/useDrawingTools";

@@ -1,6 +1,9 @@
 "use client";
 
-import { area, centroid, length, lineString, polygon } from "@turf/turf";
+import { area } from "@turf/area";
+import { centroid } from "@turf/centroid";
+import { lineString, polygon } from "@turf/helpers";
+import { length } from "@turf/length";
 import type {
   GeoJSONSource,
   Map as MapLibreMap,
