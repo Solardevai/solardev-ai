@@ -1,24 +1,17 @@
 "use client";
 
-import { area, centroid, length, lineString, polygon } from "@turf/turf";
+import { area, polygon } from "@turf/turf";
+import { ChangeEvent, FormEvent, useRef, useState } from "react";
+import { MapCanvas } from "@/components/map/MapCanvas";
+import { useDrawingTools } from "@/components/map/useDrawingTools";
+import { useMapCanvas } from "@/components/map/useMapCanvas";
 import {
-  AttributionControl,
-  type GeoJSONSource,
-  Map as MapLibreMap,
-  NavigationControl,
-  Popup,
-  ScaleControl,
-} from "maplibre-gl";
-import "maplibre-gl/dist/maplibre-gl.css";
-import {
-  ChangeEvent,
-  FormEvent,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+  INFRASTRUCTURE_OPTIONS,
+  useInfrastructureLayer,
+} from "@/components/map/layers/useInfrastructureLayer";
+import { formatArea, formatDistance } from "@/lib/geo/format";
+import { createKml, parseKmlPolygons } from "@/lib/geo/kml";
 
-type Coordinate = [number, number];
 type SolarResult = {
   annualYield: number;
   monthlyAverage: number;
@@ -27,959 +20,41 @@ type SolarResult = {
 };
 type ExportFormat = "geojson" | "kml" | "kmz";
 type MeteoFormat = "csv" | "epw";
-type InfrastructureLayer =
-  | "roads"
-  | "mv"
-  | "hv"
-  | "ehv"
-  | "substations"
-  | "unknown";
-
-const INFRASTRUCTURE_LAYER_IDS: Record<InfrastructureLayer, string[]> = {
-  roads: ["infrastructure-roads", "infrastructure-roads-markers"],
-  mv: ["infrastructure-mv", "infrastructure-mv-markers"],
-  hv: ["infrastructure-hv", "infrastructure-hv-markers"],
-  ehv: ["infrastructure-ehv", "infrastructure-ehv-markers"],
-  substations: [
-    "infrastructure-substation-halo",
-    "infrastructure-substations",
-    "infrastructure-substation-fill",
-  ],
-  unknown: ["infrastructure-unknown", "infrastructure-unknown-markers"],
-};
-
-const INFRASTRUCTURE_OPTIONS: Array<{
-  id: InfrastructureLayer;
-  label: string;
-  color: string;
-}> = [
-  { id: "roads", label: "Main roads", color: "#f8fafc" },
-  { id: "mv", label: "MV 1–<45 kV", color: "#fb923c" },
-  { id: "hv", label: "HV 45–<220 kV", color: "#ef4444" },
-  { id: "ehv", label: "EHV ≥220 kV", color: "#a855f7" },
-  { id: "substations", label: "Substations", color: "#22d3ee" },
-  { id: "unknown", label: "Voltage unknown", color: "#94a3b8" },
-];
-
-function createInfrastructureLayerState(): Record<InfrastructureLayer, boolean> {
-  return {
-    roads: false,
-    mv: false,
-    hv: false,
-    ehv: false,
-    substations: true,
-    unknown: false,
-  };
-}
-
-const EMPTY_COLLECTION: GeoJSON.FeatureCollection = {
-  type: "FeatureCollection",
-  features: [],
-};
-
-function formatArea(squareMetres: number) {
-  return squareMetres >= 10_000
-    ? `${(squareMetres / 10_000).toFixed(2)} ha`
-    : `${Math.round(squareMetres).toLocaleString()} m²`;
-}
-
-function formatDistance(kilometres: number) {
-  return kilometres >= 1
-    ? `${kilometres.toFixed(2)} km`
-    : `${Math.round(kilometres * 1_000)} m`;
-}
-
-function parseKmlPolygons(kml: string): Coordinate[][] {
-  const document = new DOMParser().parseFromString(kml, "application/xml");
-  if (document.querySelector("parsererror")) {
-    throw new Error("The KMZ contains an invalid KML document.");
-  }
-
-  const rings = Array.from(
-    document.getElementsByTagNameNS("*", "outerBoundaryIs"),
-  )
-    .map((boundary) =>
-      boundary.getElementsByTagNameNS("*", "coordinates").item(0)?.textContent,
-    )
-    .filter((coordinates): coordinates is string => Boolean(coordinates))
-    .map((coordinates) =>
-      coordinates
-        .trim()
-        .split(/\s+/)
-        .map((value) => value.split(",").slice(0, 2).map(Number) as Coordinate)
-        .filter(
-          ([longitude, latitude]) =>
-            Number.isFinite(longitude) &&
-            Number.isFinite(latitude) &&
-            longitude >= -180 &&
-            longitude <= 180 &&
-            latitude >= -90 &&
-            latitude <= 90,
-        ),
-    )
-    .map((ring) => {
-      const first = ring[0];
-      const last = ring.at(-1);
-      return first &&
-        last &&
-        first[0] === last[0] &&
-        first[1] === last[1]
-        ? ring.slice(0, -1)
-        : ring;
-    })
-    .filter((ring) => ring.length >= 3);
-
-  return rings;
-}
 
 export default function SolarSiteScreeningMap() {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const drawingOverlayRef = useRef<SVGSVGElement>(null);
   const kmzInputRef = useRef<HTMLInputElement>(null);
-  const mapRef = useRef<MapLibreMap | null>(null);
-  const pointsRef = useRef<Coordinate[]>([]);
-  const infrastructureFeaturesRef = useRef<GeoJSON.Feature[]>([]);
-  const substationFeaturesRef = useRef<GeoJSON.Feature[]>([]);
-  const detailedInfrastructureFeaturesRef = useRef<GeoJSON.Feature[]>([]);
-  const infrastructureAbortRef = useRef<AbortController | null>(null);
-  const infrastructureLayersRef = useRef<Record<InfrastructureLayer, boolean>>(
-    createInfrastructureLayerState(),
-  );
-  const [points, setPoints] = useState<Coordinate[]>([]);
-  const [isDrawing, setIsDrawing] = useState(false);
+  const { containerRef, drawingOverlayRef, mapRef, map } = useMapCanvas();
+
   const [query, setQuery] = useState("");
-  const [message, setMessage] = useState("Search for a location, then start drawing your site.");
+  const [message, setMessage] = useState(
+    "Search for a location, then start drawing your site.",
+  );
   const [isSearching, setIsSearching] = useState(false);
   const [isImportingKmz, setIsImportingKmz] = useState(false);
   const [isLoadingSolar, setIsLoadingSolar] = useState(false);
   const [solar, setSolar] = useState<SolarResult | null>(null);
-  const [exportFormat, setExportFormat] =
-    useState<ExportFormat>("kmz");
+  const [exportFormat, setExportFormat] = useState<ExportFormat>("kmz");
   const [isExporting, setIsExporting] = useState(false);
   const [meteoFormat, setMeteoFormat] = useState<MeteoFormat>("csv");
   const [isDownloadingMeteo, setIsDownloadingMeteo] = useState(false);
-  const [infrastructureLayers, setInfrastructureLayers] = useState(
-    createInfrastructureLayerState,
-  );
-  const [isLoadingInfrastructure, setIsLoadingInfrastructure] =
-    useState(false);
-  const [infrastructureNote, setInfrastructureNote] = useState(
-    "Substations appear as dots from zoom level 5 and gain detail as you zoom in.",
-  );
 
-  const closedRing = points.length >= 3 ? [...points, points[0]] : null;
-  const sitePolygon = closedRing ? polygon([closedRing]) : null;
-  const siteArea = sitePolygon ? area(sitePolygon) : 0;
-  const sitePerimeter = closedRing ? length(lineString(closedRing)) : 0;
+  const drawing = useDrawingTools({
+    map,
+    drawingOverlayRef,
+    onBoundaryChange: () => setSolar(null),
+    onMessage: setMessage,
+  });
+  const infrastructure = useInfrastructureLayer({ map, drawingOverlayRef });
 
-  async function loadInfrastructure(map = mapRef.current) {
-    if (!map) return;
-
-    const zoom = map.getZoom();
-    const selected = infrastructureLayersRef.current;
-    if (!Object.values(selected).some(Boolean)) {
-      substationFeaturesRef.current = [];
-      detailedInfrastructureFeaturesRef.current = [];
-      infrastructureFeaturesRef.current = [];
-      (map.getSource("infrastructure") as GeoJSONSource | undefined)?.setData(
-        EMPTY_COLLECTION,
-      );
-      updateInfrastructureOverlay([]);
-      return;
-    }
-    if (zoom < 5) {
-      setInfrastructureNote("Zoom to level 5 or closer to load infrastructure.");
-      return;
-    }
-
-    const bounds = map.getBounds();
-    const baseParameters = {
-      south: bounds.getSouth().toFixed(5),
-      west: bounds.getWest().toFixed(5),
-      north: bounds.getNorth().toFixed(5),
-      east: bounds.getEast().toFixed(5),
-    };
-    const minimumZoom: Partial<Record<InfrastructureLayer, number>> = {
-      ehv: 6,
-      hv: 7,
-      mv: 8,
-      unknown: 8,
-      roads: 9,
-    };
-    const detailedLayers = (
-      ["roads", "mv", "hv", "ehv", "unknown"] as InfrastructureLayer[]
-    ).filter(
-      (layer) => selected[layer] && zoom >= (minimumZoom[layer] ?? 8),
-    );
-
-    infrastructureAbortRef.current?.abort();
-    const controller = new AbortController();
-    infrastructureAbortRef.current = controller;
-    setIsLoadingInfrastructure(true);
-    setInfrastructureNote("Loading visible infrastructure…");
-
-    const requestGroup = async (
-      group: "substations" | "details",
-      layers: InfrastructureLayer[],
-    ) => {
-      const parameters = new URLSearchParams({
-        ...baseParameters,
-        layers: layers.join(","),
-      });
-      const response = await fetch(`/api/infrastructure?${parameters}`, {
-        signal: controller.signal,
-      });
-      const result = await response.json();
-      if (!response.ok) {
-        throw new Error(result.error || "Infrastructure data is unavailable.");
-      }
-      return {
-        group,
-        features: (result.features ?? []) as GeoJSON.Feature[],
-        sourceTimestamp: result.metadata?.sourceTimestamp as string | undefined,
-      };
-    };
-
-    try {
-      const requests: Array<ReturnType<typeof requestGroup>> = [];
-      if (selected.substations) {
-        requests.push(requestGroup("substations", ["substations"]));
-      } else {
-        substationFeaturesRef.current = [];
-      }
-      if (detailedLayers.length) {
-        requests.push(requestGroup("details", detailedLayers));
-      } else {
-        detailedInfrastructureFeaturesRef.current = [];
-      }
-
-      const results = await Promise.allSettled(requests);
-      let sourceTimestamp: string | undefined;
-      const failures: string[] = [];
-      for (const result of results) {
-        if (result.status === "rejected") {
-          if (
-            !(result.reason instanceof DOMException) ||
-            result.reason.name !== "AbortError"
-          ) {
-            failures.push(
-              result.reason instanceof Error
-                ? result.reason.message
-                : "A layer request failed.",
-            );
-          }
-          continue;
-        }
-        sourceTimestamp ??= result.value.sourceTimestamp;
-        if (result.value.group === "substations") {
-          substationFeaturesRef.current = result.value.features;
-        } else {
-          detailedInfrastructureFeaturesRef.current = result.value.features;
-        }
-      }
-      if (infrastructureAbortRef.current !== controller) return;
-
-      const features = [
-        ...substationFeaturesRef.current,
-        ...detailedInfrastructureFeaturesRef.current,
-      ];
-      infrastructureFeaturesRef.current = features;
-      (map.getSource("infrastructure") as GeoJSONSource | undefined)?.setData({
-        type: "FeatureCollection",
-        features,
-      });
-      updateInfrastructureOverlay(features);
-
-      const sourceDate = sourceTimestamp
-        ? new Date(sourceTimestamp).toLocaleDateString()
-        : "latest available";
-      const assetCount = new Set(
-        features.map(
-          (feature) =>
-            `${feature.properties?.osmType}-${feature.properties?.osmId}`,
-        ),
-      ).size;
-      setInfrastructureNote(
-        failures.length && assetCount === 0
-          ? failures[0]
-          : `${assetCount.toLocaleString()} mapped assets · OSM ${sourceDate}`,
-      );
-    } finally {
-      if (infrastructureAbortRef.current === controller) {
-        setIsLoadingInfrastructure(false);
-      }
-    }
-  }
-
-  function updateInfrastructureOverlay(
-    features = infrastructureFeaturesRef.current,
-  ) {
-    const map = mapRef.current;
-    const overlay = drawingOverlayRef.current?.querySelector<SVGGElement>(
-      "[data-infrastructure-overlay]",
-    );
-    if (!map || !overlay) return;
-
-    const zoom = map.getZoom();
-    const minimumZoom: Record<string, number> = {
-      substation: 5,
-      ehv: 6,
-      hv: 7,
-      mv: 8,
-      "power-unknown": 8,
-      road: 9,
-    };
-    const colors: Record<string, string> = {
-      substation: "#22d3ee",
-      ehv: "#a855f7",
-      hv: "#ef4444",
-      mv: "#fb923c",
-      "power-unknown": "#94a3b8",
-      road: "#f8fafc",
-    };
-    const elements: SVGElement[] = [];
-    const occupiedPointCells = new Set<string>();
-    const stateLayer: Record<string, InfrastructureLayer> = {
-      substation: "substations",
-      ehv: "ehv",
-      hv: "hv",
-      mv: "mv",
-      "power-unknown": "unknown",
-      road: "roads",
-    };
-
-    for (const feature of features) {
-      const kind = String(feature.properties?.kind ?? "");
-      if (!infrastructureLayersRef.current[stateLayer[kind]]) continue;
-      if (zoom < (minimumZoom[kind] ?? 8)) continue;
-      const color = colors[kind] ?? "#ffffff";
-      const geometry = feature.geometry;
-
-      if (geometry.type === "Point") {
-        if (feature.properties?.marker !== true) continue;
-        const point = map.project(geometry.coordinates as Coordinate);
-        const cellSize = zoom < 6 ? 20 : zoom < 7 ? 12 : 0;
-        if (cellSize) {
-          const cell = `${kind}-${Math.round(point.x / cellSize)}-${Math.round(point.y / cellSize)}`;
-          if (occupiedPointCells.has(cell)) continue;
-          occupiedPointCells.add(cell);
-        }
-        const halo = document.createElementNS(
-          "http://www.w3.org/2000/svg",
-          "circle",
-        );
-        const radius =
-          kind === "substation"
-            ? Math.max(4, Math.min(14, 3 + (zoom - 5) * 1.35))
-            : Math.max(3, Math.min(8, 3 + (zoom - 7) * 0.75));
-        halo.setAttribute("cx", String(point.x));
-        halo.setAttribute("cy", String(point.y));
-        halo.setAttribute("r", String(radius + (kind === "substation" ? 7 : 3)));
-        halo.setAttribute("fill", color);
-        halo.setAttribute("fill-opacity", kind === "substation" ? "0.28" : "0.18");
-        halo.setAttribute("stroke", "#ffffff");
-        halo.setAttribute("stroke-opacity", "0.75");
-        halo.setAttribute("stroke-width", "1");
-        elements.push(halo);
-
-        const marker = document.createElementNS(
-          "http://www.w3.org/2000/svg",
-          "circle",
-        );
-        marker.setAttribute("cx", String(point.x));
-        marker.setAttribute("cy", String(point.y));
-        marker.setAttribute("r", String(radius));
-        marker.setAttribute("fill", color);
-        marker.setAttribute("fill-opacity", "0.98");
-        marker.setAttribute("stroke", "#ffffff");
-        marker.setAttribute("stroke-width", kind === "substation" ? "3" : "2");
-        elements.push(marker);
-        continue;
-      }
-
-      const rings =
-        geometry.type === "Polygon"
-          ? geometry.coordinates
-          : geometry.type === "LineString"
-            ? [geometry.coordinates]
-            : [];
-      if (!rings.length || (kind === "substation" && zoom < 10)) continue;
-
-      for (const ring of rings) {
-        const path = document.createElementNS(
-          "http://www.w3.org/2000/svg",
-          "path",
-        );
-        const projected = ring.map((coordinate) =>
-          map.project(coordinate as Coordinate),
-        );
-        const pathData = projected
-          .map(
-            (point, index) =>
-              `${index === 0 ? "M" : "L"}${point.x},${point.y}`,
-          )
-          .join(" ");
-        path.setAttribute(
-          "d",
-          `${pathData}${geometry.type === "Polygon" ? " Z" : ""}`,
-        );
-        path.setAttribute(
-          "fill",
-          geometry.type === "Polygon" ? color : "none",
-        );
-        path.setAttribute(
-          "fill-opacity",
-          geometry.type === "Polygon" ? "0.42" : "0",
-        );
-        path.setAttribute("stroke", color);
-        path.setAttribute(
-          "stroke-width",
-          kind === "substation" ? "3" : kind === "ehv" ? "4" : "3",
-        );
-        path.setAttribute("stroke-linecap", "round");
-        path.setAttribute("stroke-linejoin", "round");
-        if (kind === "power-unknown") {
-          path.setAttribute("stroke-dasharray", "5 5");
-        }
-        elements.push(path);
-      }
-    }
-
-    overlay.replaceChildren(...elements);
-  }
-
-  function toggleInfrastructureLayer(layer: InfrastructureLayer) {
-    const next = {
-      ...infrastructureLayersRef.current,
-      [layer]: !infrastructureLayersRef.current[layer],
-    };
-    infrastructureLayersRef.current = next;
-    setInfrastructureLayers(next);
-
-    const map = mapRef.current;
-    if (!map) return;
-    const isVisible = next[layer];
-    for (const layerId of INFRASTRUCTURE_LAYER_IDS[layer]) {
-      if (map.getLayer(layerId)) {
-        map.setLayoutProperty(
-          layerId,
-          "visibility",
-          isVisible ? "visible" : "none",
-        );
-      }
-    }
-    if (next[layer]) void loadInfrastructure(map);
-  }
-
-  function updateDrawingOverlay(nextPoints: Coordinate[]) {
-    const map = mapRef.current;
-    const overlay = drawingOverlayRef.current;
-    if (!map || !overlay) return;
-
-    const projectedPoints = nextPoints.map((coordinate) =>
-      map.project(coordinate),
-    );
-    const path = projectedPoints
-      .map((point, index) => `${index === 0 ? "M" : "L"}${point.x},${point.y}`)
-      .join(" ");
-    const closedPath =
-      projectedPoints.length >= 3 ? `${path} Z` : path;
-
-    overlay
-      .querySelectorAll<SVGPathElement>("[data-site-path]")
-      .forEach((element) => element.setAttribute("d", closedPath));
-
-    const vertices = overlay.querySelector<SVGGElement>(
-      "[data-site-vertices]",
-    );
-    if (vertices) {
-      vertices.replaceChildren(
-        ...projectedPoints.map((point) => {
-          const circle = document.createElementNS(
-            "http://www.w3.org/2000/svg",
-            "circle",
-          );
-          circle.setAttribute("cx", String(point.x));
-          circle.setAttribute("cy", String(point.y));
-          circle.setAttribute("r", "6");
-          circle.setAttribute("fill", "#020617");
-          circle.setAttribute("stroke", "#34d399");
-          circle.setAttribute("stroke-width", "3");
-          return circle;
-        }),
-      );
-    }
-  }
-
-  function updateMap(nextPoints: Coordinate[]) {
-    const map = mapRef.current;
-    if (!map?.getSource("site-line")) return;
-
-    const lineCoordinates =
-      nextPoints.length >= 3 ? [...nextPoints, nextPoints[0]] : nextPoints;
-
-    (map.getSource("site-line") as GeoJSONSource | undefined)?.setData({
-      type: "FeatureCollection",
-      features:
-        lineCoordinates.length >= 2
-          ? [
-              {
-                type: "Feature",
-                properties: {},
-                geometry: {
-                  type: "LineString",
-                  coordinates: lineCoordinates,
-                },
-              },
-            ]
-          : [],
-    });
-    (map.getSource("site-points") as GeoJSONSource | undefined)?.setData({
-      type: "FeatureCollection",
-      features: nextPoints.map((coordinates, index) => ({
-        type: "Feature",
-        properties: { index },
-        geometry: { type: "Point", coordinates },
-      })),
-    });
-    (map.getSource("site-polygon") as GeoJSONSource | undefined)?.setData({
-      type: "FeatureCollection",
-      features:
-        nextPoints.length >= 3
-          ? [
-              {
-                type: "Feature",
-                properties: {},
-                geometry: {
-                  type: "Polygon",
-                  coordinates: [[...nextPoints, nextPoints[0]]],
-                },
-              },
-            ]
-          : [],
-    });
-    updateDrawingOverlay(nextPoints);
-  }
-
-  useEffect(() => {
-    if (!containerRef.current || mapRef.current) return;
-
-    const map = new MapLibreMap({
-      container: containerRef.current,
-      center: [10, 47],
-      zoom: 4,
-      attributionControl: false,
-      style: {
-        version: 8,
-        sources: {
-          satellite: {
-            type: "raster",
-            tiles: [
-              "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
-            ],
-            tileSize: 256,
-            attribution:
-              "Sources: Esri, Maxar, Earthstar Geographics, and the GIS User Community",
-          },
-        },
-        layers: [
-          {
-            id: "satellite",
-            type: "raster",
-            source: "satellite",
-          },
-        ],
-      },
-    });
-
-    map.addControl(new NavigationControl({ showCompass: true }), "top-right");
-    map.addControl(new ScaleControl({ unit: "metric" }), "bottom-left");
-    map.addControl(new AttributionControl({ compact: true }), "bottom-right");
-
-    map.on("load", () => {
-      map.addSource("infrastructure", {
-        type: "geojson",
-        data: EMPTY_COLLECTION,
-        attribution: "© OpenStreetMap contributors",
-      });
-      const lineLayer = (
-        id: string,
-        kind: string,
-        color: string,
-        width: number,
-        dasharray?: number[],
-      ) => {
-        const layerState: Record<string, InfrastructureLayer> = {
-          road: "roads",
-          mv: "mv",
-          hv: "hv",
-          ehv: "ehv",
-          "power-unknown": "unknown",
-        };
-        map.addLayer({
-          id,
-          type: "line",
-          source: "infrastructure",
-          filter: ["==", ["get", "kind"], kind],
-          layout: {
-            visibility: infrastructureLayersRef.current[layerState[kind]]
-              ? "visible"
-              : "none",
-            "line-cap": "round",
-          },
-          paint: {
-            "line-color": color,
-            "line-width": width,
-            "line-opacity": 0.9,
-            ...(dasharray ? { "line-dasharray": dasharray } : {}),
-          },
-        });
-      };
-      const markerLayer = (
-        id: string,
-        kind: string,
-        color: string,
-        radius: number,
-      ) => {
-        const layerState: Record<string, InfrastructureLayer> = {
-          road: "roads",
-          mv: "mv",
-          hv: "hv",
-          ehv: "ehv",
-          "power-unknown": "unknown",
-        };
-        map.addLayer({
-          id,
-          type: "circle",
-          source: "infrastructure",
-          filter: [
-            "all",
-            ["==", ["get", "kind"], kind],
-            ["==", ["get", "marker"], true],
-          ],
-          layout: {
-            visibility: infrastructureLayersRef.current[layerState[kind]]
-              ? "visible"
-              : "none",
-          },
-          paint: {
-            "circle-radius": radius,
-            "circle-color": color,
-            "circle-opacity": 0.95,
-            "circle-stroke-color": "#020617",
-            "circle-stroke-width": 2,
-          },
-        });
-      };
-      lineLayer("infrastructure-roads", "road", "#f8fafc", 1.5);
-      lineLayer("infrastructure-mv", "mv", "#fb923c", 2);
-      lineLayer("infrastructure-hv", "hv", "#ef4444", 2.5);
-      lineLayer("infrastructure-ehv", "ehv", "#a855f7", 3);
-      lineLayer(
-        "infrastructure-unknown",
-        "power-unknown",
-        "#94a3b8",
-        1.5,
-        [2, 2],
-      );
-      markerLayer("infrastructure-roads-markers", "road", "#f8fafc", 3);
-      markerLayer("infrastructure-mv-markers", "mv", "#fb923c", 5);
-      markerLayer("infrastructure-hv-markers", "hv", "#ef4444", 6);
-      markerLayer("infrastructure-ehv-markers", "ehv", "#a855f7", 7);
-      markerLayer(
-        "infrastructure-unknown-markers",
-        "power-unknown",
-        "#94a3b8",
-        4,
-      );
-      map.addLayer({
-        id: "infrastructure-substation-fill",
-        type: "fill",
-        source: "infrastructure",
-        filter: [
-          "all",
-          ["==", ["get", "kind"], "substation"],
-          ["==", ["geometry-type"], "Polygon"],
-        ],
-        minzoom: 10,
-        layout: {
-          visibility: infrastructureLayersRef.current.substations
-            ? "visible"
-            : "none",
-        },
-        paint: {
-          "fill-color": "#22d3ee",
-          "fill-opacity": 0.62,
-          "fill-outline-color": "#ffffff",
-        },
-      });
-      map.addLayer({
-        id: "infrastructure-substation-halo",
-        type: "circle",
-        source: "infrastructure",
-        filter: [
-          "all",
-          ["==", ["get", "kind"], "substation"],
-          ["==", ["geometry-type"], "Point"],
-        ],
-        minzoom: 5,
-        layout: {
-          visibility: infrastructureLayersRef.current.substations
-            ? "visible"
-            : "none",
-        },
-        paint: {
-          "circle-radius": [
-            "interpolate",
-            ["linear"],
-            ["zoom"],
-            5,
-            5,
-            8,
-            12,
-            14,
-            28,
-          ],
-          "circle-color": "#22d3ee",
-          "circle-opacity": [
-            "interpolate",
-            ["linear"],
-            ["zoom"],
-            5,
-            0.18,
-            8,
-            0.3,
-            14,
-            0.38,
-          ],
-          "circle-stroke-color": "#ffffff",
-          "circle-stroke-width": 1.5,
-          "circle-stroke-opacity": 0.8,
-        },
-      });
-      map.addLayer({
-        id: "infrastructure-substations",
-        type: "circle",
-        source: "infrastructure",
-        filter: [
-          "all",
-          ["==", ["get", "kind"], "substation"],
-          ["==", ["geometry-type"], "Point"],
-        ],
-        minzoom: 5,
-        layout: {
-          visibility: infrastructureLayersRef.current.substations
-            ? "visible"
-            : "none",
-        },
-        paint: {
-          "circle-radius": [
-            "interpolate",
-            ["linear"],
-            ["zoom"],
-            5,
-            3,
-            8,
-            6,
-            14,
-            13,
-          ],
-          "circle-color": "#22d3ee",
-          "circle-stroke-color": "#ffffff",
-          "circle-stroke-width": [
-            "interpolate",
-            ["linear"],
-            ["zoom"],
-            5,
-            1,
-            8,
-            2,
-            14,
-            4,
-          ],
-        },
-      });
-
-      map.addSource("site-polygon", {
-        type: "geojson",
-        data: EMPTY_COLLECTION,
-      });
-      map.addSource("site-line", { type: "geojson", data: EMPTY_COLLECTION });
-      map.addSource("site-points", {
-        type: "geojson",
-        data: EMPTY_COLLECTION,
-      });
-      map.addLayer({
-        id: "site-fill",
-        type: "fill",
-        source: "site-polygon",
-        paint: { "fill-color": "#34d399", "fill-opacity": 0.25 },
-      });
-      map.addLayer({
-        id: "site-line-casing",
-        type: "line",
-        source: "site-line",
-        paint: {
-          "line-color": "#020617",
-          "line-width": 4,
-          "line-opacity": 0.8,
-        },
-      });
-      map.addLayer({
-        id: "site-line",
-        type: "line",
-        source: "site-line",
-        paint: {
-          "line-color": "#34d399",
-          "line-width": 2,
-        },
-      });
-      map.addLayer({
-        id: "site-points",
-        type: "circle",
-        source: "site-points",
-        paint: {
-          "circle-radius": 6,
-          "circle-color": "#0f172a",
-          "circle-stroke-color": "#34d399",
-          "circle-stroke-width": 3,
-        },
-      });
-      void loadInfrastructure(map);
-    });
-
-    map.on("click", (event) => {
-      if (!map.getCanvas().dataset.drawing) {
-        const features = map.queryRenderedFeatures(event.point, {
-          layers: Object.values(INFRASTRUCTURE_LAYER_IDS)
-            .flat()
-            .filter((layerId) => map.getLayer(layerId)),
-        });
-        const feature = features[0];
-        if (!feature?.properties) return;
-        const voltage = feature.properties.voltage
-          ? `${(Number(feature.properties.voltage) / 1_000).toLocaleString()} kV`
-          : "Not mapped";
-        const title =
-          feature.properties.name ||
-          (feature.properties.kind === "road"
-            ? `${feature.properties.roadClass ?? "Road"}`
-            : feature.properties.kind === "substation"
-              ? "Substation"
-              : "Power route");
-        const popupContent = document.createElement("div");
-        popupContent.className = "infrastructure-popup";
-        const heading = document.createElement("strong");
-        heading.textContent = String(title);
-        const details = document.createElement("p");
-        details.textContent =
-          feature.properties.kind === "road"
-            ? `Road class: ${feature.properties.roadClass ?? "unknown"}`
-            : `Voltage: ${voltage} · Operator: ${feature.properties.operator ?? "not mapped"}`;
-        popupContent.append(heading, details);
-        new Popup({ closeButton: true, maxWidth: "280px" })
-          .setLngLat(event.lngLat)
-          .setDOMContent(popupContent)
-          .addTo(map);
-        return;
-      }
-      const nextPoints: Coordinate[] = [
-        ...pointsRef.current,
-        [event.lngLat.lng, event.lngLat.lat],
-      ];
-      pointsRef.current = nextPoints;
-      setPoints(nextPoints);
-      setSolar(null);
-      updateMap(nextPoints);
-      setMessage(
-        nextPoints.length < 3
-          ? `Add ${3 - nextPoints.length} more point${3 - nextPoints.length === 1 ? "" : "s"} to form a site.`
-          : "Boundary ready. Add more points or finish drawing.",
-      );
-    });
-    const undoWithRightClick = (event: {
-      originalEvent: MouseEvent;
-    }) => {
-      if (!map.getCanvas().dataset.drawing || !pointsRef.current.length) return;
-      event.originalEvent.preventDefault();
-      const nextPoints = pointsRef.current.slice(0, -1);
-      pointsRef.current = nextPoints;
-      setPoints(nextPoints);
-      setSolar(null);
-      updateMap(nextPoints);
-      setMessage(
-        nextPoints.length
-          ? "Last point removed. Right-click again to undo another point."
-          : "Boundary cleared.",
-      );
-    };
-    map.on("contextmenu", undoWithRightClick);
-    const refreshDrawingOverlay = () => {
-      updateDrawingOverlay(pointsRef.current);
-      updateInfrastructureOverlay();
-    };
-    const refreshInfrastructure = () => {
-      if (Object.values(infrastructureLayersRef.current).some(Boolean)) {
-        void loadInfrastructure(map);
-      }
-    };
-    map.on("move", refreshDrawingOverlay);
-    map.on("moveend", refreshInfrastructure);
-    map.on("resize", refreshDrawingOverlay);
-
-    mapRef.current = map;
-
-    const resizeObserver = new ResizeObserver(() => {
-      map.resize();
-    });
-    resizeObserver.observe(containerRef.current);
-    const resizeFrame = requestAnimationFrame(() => map.resize());
-
-    return () => {
-      cancelAnimationFrame(resizeFrame);
-      resizeObserver.disconnect();
-      infrastructureAbortRef.current?.abort();
-      map.off("move", refreshDrawingOverlay);
-      map.off("moveend", refreshInfrastructure);
-      map.off("resize", refreshDrawingOverlay);
-      map.off("contextmenu", undoWithRightClick);
-      map.remove();
-      mapRef.current = null;
-    };
-    // MapLibre owns this imperative instance for the component lifetime.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  function toggleDrawing() {
-    const map = mapRef.current;
-    if (!map) return;
-    const next = !isDrawing;
-    setIsDrawing(next);
-    map.getCanvas().dataset.drawing = next ? "true" : "";
-    map.getCanvas().style.cursor = next ? "crosshair" : "";
-    setMessage(
-      next
-        ? "Left-click to add points. Right-click to undo the last point."
-        : "Drawing paused.",
-    );
-  }
-
-  function clearSite() {
-    pointsRef.current = [];
-    setPoints([]);
-    setSolar(null);
-    updateMap([]);
-    setMessage("Site cleared. Start drawing a new boundary.");
-  }
-
-  function undoPoint() {
-    const nextPoints = pointsRef.current.slice(0, -1);
-    pointsRef.current = nextPoints;
-    setPoints(nextPoints);
-    setSolar(null);
-    updateMap(nextPoints);
-    setMessage(nextPoints.length ? "Last point removed." : "Boundary cleared.");
-  }
+  const {
+    points,
+    isDrawing,
+    closedRing,
+    sitePolygon,
+    siteArea,
+    sitePerimeter,
+    siteCentroid,
+  } = drawing;
 
   async function importKmz(event: ChangeEvent<HTMLInputElement>) {
     const file = event.target.files?.[0];
@@ -1021,26 +96,7 @@ export default function SolarSiteScreeningMap() {
         .sort((a, b) => b.squareMetres - a.squareMetres);
       const nextPoints = rankedRings[0].ring;
 
-      pointsRef.current = nextPoints;
-      setPoints(nextPoints);
-      setSolar(null);
-      setIsDrawing(false);
-      const map = mapRef.current;
-      if (map) {
-        map.getCanvas().dataset.drawing = "";
-        map.getCanvas().style.cursor = "";
-      }
-      updateMap(nextPoints);
-
-      const longitudes = nextPoints.map(([longitude]) => longitude);
-      const latitudes = nextPoints.map(([, latitude]) => latitude);
-      map?.fitBounds(
-        [
-          [Math.min(...longitudes), Math.min(...latitudes)],
-          [Math.max(...longitudes), Math.max(...latitudes)],
-        ],
-        { padding: 60, maxZoom: 17, duration: 900 },
-      );
+      drawing.importBoundary(nextPoints);
       setMessage(
         rings.length === 1
           ? `Property boundary imported from ${file.name}. Existing analyses are ready to run.`
@@ -1077,8 +133,8 @@ export default function SolarSiteScreeningMap() {
   }
 
   async function runSolarCheck() {
-    if (!sitePolygon) return;
-    const [longitude, latitude] = centroid(sitePolygon).geometry.coordinates;
+    if (!sitePolygon || !siteCentroid) return;
+    const [longitude, latitude] = siteCentroid;
     setIsLoadingSolar(true);
     setMessage("Querying PVGIS for the site centroid…");
     try {
@@ -1105,42 +161,8 @@ export default function SolarSiteScreeningMap() {
     URL.revokeObjectURL(href);
   }
 
-  function createKml() {
-    if (!closedRing) return "";
-    const coordinates = closedRing
-      .map(([longitude, latitude]) => `${longitude},${latitude},0`)
-      .join(" ");
-
-    return `<?xml version="1.0" encoding="UTF-8"?>
-<kml xmlns="http://www.opengis.net/kml/2.2">
-  <Document>
-    <name>SolarDev Site Boundary</name>
-    <Style id="site-boundary">
-      <LineStyle><color>ff99d334</color><width>2</width></LineStyle>
-      <PolyStyle><color>4099d334</color></PolyStyle>
-    </Style>
-    <Placemark>
-      <name>SolarDev Site Boundary</name>
-      <description><![CDATA[
-        Gross area: ${formatArea(siteArea)}<br/>
-        Perimeter: ${formatDistance(sitePerimeter)}<br/>
-        Generated by SolarDev AI Site Check.
-      ]]></description>
-      <styleUrl>#site-boundary</styleUrl>
-      <Polygon>
-        <outerBoundaryIs>
-          <LinearRing>
-            <coordinates>${coordinates}</coordinates>
-          </LinearRing>
-        </outerBoundaryIs>
-      </Polygon>
-    </Placemark>
-  </Document>
-</kml>`;
-  }
-
   async function downloadBoundary() {
-    if (!sitePolygon) return;
+    if (!sitePolygon || !closedRing) return;
     setIsExporting(true);
     try {
       if (exportFormat === "geojson") {
@@ -1153,7 +175,7 @@ export default function SolarSiteScreeningMap() {
         return;
       }
 
-      const kml = createKml();
+      const kml = createKml(closedRing, siteArea, sitePerimeter);
       if (exportFormat === "kml") {
         downloadBlob(
           new Blob([kml], {
@@ -1179,9 +201,9 @@ export default function SolarSiteScreeningMap() {
   }
 
   async function downloadMeteoFile() {
-    if (!sitePolygon) return;
+    if (!sitePolygon || !siteCentroid) return;
 
-    const [longitude, latitude] = centroid(sitePolygon).geometry.coordinates;
+    const [longitude, latitude] = siteCentroid;
     setIsDownloadingMeteo(true);
     setMessage(`Preparing the PVGIS TMY ${meteoFormat.toUpperCase()} file…`);
 
@@ -1268,7 +290,7 @@ export default function SolarSiteScreeningMap() {
           </div>
           <button
             type="button"
-            onClick={toggleDrawing}
+            onClick={drawing.toggleDrawing}
             className={`w-full rounded-xl px-4 py-3 text-sm font-bold transition ${
               isDrawing
                 ? "bg-emerald-400 text-slate-950"
@@ -1278,10 +300,10 @@ export default function SolarSiteScreeningMap() {
             {isDrawing ? "Finish drawing" : points.length ? "Continue drawing" : "Start drawing"}
           </button>
           <div className="mt-2 grid grid-cols-2 gap-2">
-            <button type="button" onClick={undoPoint} disabled={!points.length} className="rounded-xl border border-white/10 px-3 py-2 text-sm text-slate-300 hover:bg-white/[0.05] disabled:opacity-40">
+            <button type="button" onClick={drawing.undoPoint} disabled={!points.length} className="rounded-xl border border-white/10 px-3 py-2 text-sm text-slate-300 hover:bg-white/[0.05] disabled:opacity-40">
               Undo point
             </button>
-            <button type="button" onClick={clearSite} disabled={!points.length} className="rounded-xl border border-white/10 px-3 py-2 text-sm text-slate-300 hover:bg-white/[0.05] disabled:opacity-40">
+            <button type="button" onClick={drawing.clearSite} disabled={!points.length} className="rounded-xl border border-white/10 px-3 py-2 text-sm text-slate-300 hover:bg-white/[0.05] disabled:opacity-40">
               Clear site
             </button>
           </div>
@@ -1419,33 +441,11 @@ export default function SolarSiteScreeningMap() {
       </aside>
 
       <div className="relative order-1 h-[480px] min-h-0 lg:order-2 lg:h-[720px]">
-        <div
-          ref={containerRef}
-          className="absolute inset-0 h-full w-full"
-          aria-label="Interactive solar site screening map"
+        <MapCanvas
+          containerRef={containerRef}
+          drawingOverlayRef={drawingOverlayRef}
+          ariaLabel="Interactive solar site screening map"
         />
-        <svg
-          ref={drawingOverlayRef}
-          aria-hidden="true"
-          className="pointer-events-none absolute inset-0 z-[5] h-full w-full overflow-hidden"
-        >
-          <g data-infrastructure-overlay />
-          <path
-            data-site-path
-            fill="rgba(52, 211, 153, 0.2)"
-            stroke="#020617"
-            strokeWidth="5"
-            strokeLinejoin="round"
-          />
-          <path
-            data-site-path
-            fill="transparent"
-            stroke="#34d399"
-            strokeWidth="2"
-            strokeLinejoin="round"
-          />
-          <g data-site-vertices />
-        </svg>
         <div className="pointer-events-none absolute left-4 top-4 rounded-xl border border-white/15 bg-slate-950/85 px-3 py-2 text-xs text-white shadow-lg backdrop-blur">
           {isDrawing
             ? "Drawing mode · left-click to add · right-click to undo"
@@ -1467,8 +467,8 @@ export default function SolarSiteScreeningMap() {
                 >
                   <input
                     type="checkbox"
-                    checked={infrastructureLayers[option.id]}
-                    onChange={() => toggleInfrastructureLayer(option.id)}
+                    checked={infrastructure.infrastructureLayers[option.id]}
+                    onChange={() => infrastructure.toggleInfrastructureLayer(option.id)}
                     className="h-3.5 w-3.5 accent-emerald-400"
                   />
                   <span
@@ -1484,7 +484,7 @@ export default function SolarSiteScreeningMap() {
               aria-live="polite"
               className="mt-2 border-t border-white/10 pt-2 text-[9px] leading-4 text-slate-400"
             >
-              {isLoadingInfrastructure ? "Loading…" : infrastructureNote}
+              {infrastructure.isLoadingInfrastructure ? "Loading…" : infrastructure.infrastructureNote}
             </p>
             <p className="mt-2 text-[9px] leading-4 text-slate-500">
               Coverage varies. Proximity does not indicate connection capacity,

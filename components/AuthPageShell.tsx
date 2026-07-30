@@ -73,14 +73,6 @@ export default function AuthPageShell({
               <li className="flex gap-3">
                 <span
                   aria-hidden="true"
-                  className="mt-2 h-2 w-2 shrink-0 rounded-full bg-emerald-400"
-                />
-                Return to one protected place for your development tools and
-                professional resources.
-              </li>
-              <li className="flex gap-3">
-                <span
-                  aria-hidden="true"
                   className="mt-2 h-2 w-2 shrink-0 rounded-full bg-sky-400"
                 />
                 Saved projects, reports and plan controls will be introduced
