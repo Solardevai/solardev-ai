@@ -1,5 +1,6 @@
 "use client";
 
+import { useUser } from "@clerk/nextjs";
 import { area, polygon } from "@turf/turf";
 import { ChangeEvent, FormEvent, useRef, useState } from "react";
 import { MapCanvas } from "@/components/map/MapCanvas";
@@ -24,8 +25,11 @@ type MeteoFormat = "csv" | "epw";
 export default function SolarSiteScreeningMap() {
   const kmzInputRef = useRef<HTMLInputElement>(null);
   const { containerRef, drawingOverlayRef, mapRef, map } = useMapCanvas();
+  const { isSignedIn } = useUser();
 
   const [query, setQuery] = useState("");
+  const [projectName, setProjectName] = useState("");
+  const [isSavingProject, setIsSavingProject] = useState(false);
   const [message, setMessage] = useState(
     "Search for a location, then start drawing your site.",
   );
@@ -240,6 +244,38 @@ export default function SolarSiteScreeningMap() {
     }
   }
 
+  async function saveProject() {
+    if (!sitePolygon || !siteCentroid) return;
+    if (!isSignedIn) {
+      setMessage("Sign in to save this site to a project.");
+      return;
+    }
+
+    setIsSavingProject(true);
+    setMessage("Saving project…");
+    try {
+      const response = await fetch("/api/projects", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: projectName,
+          boundary: sitePolygon.geometry,
+          areaSqm: siteArea,
+          perimeterM: sitePerimeter * 1000,
+          centroidLon: siteCentroid[0],
+          centroidLat: siteCentroid[1],
+        }),
+      });
+      const result = await response.json();
+      if (!response.ok) throw new Error(result.error || "The project could not be saved.");
+      setMessage(`Saved as "${result.name}".`);
+    } catch (error) {
+      setMessage(error instanceof Error ? error.message : "The project could not be saved.");
+    } finally {
+      setIsSavingProject(false);
+    }
+  }
+
   return (
     <section className="grid min-h-[720px] overflow-hidden rounded-3xl border border-white/10 bg-slate-900 shadow-2xl shadow-black/30 lg:grid-cols-[340px_1fr]">
       <aside className="order-2 flex flex-col border-t border-white/10 bg-slate-950/90 p-5 lg:order-1 lg:max-h-[720px] lg:overflow-y-auto lg:border-r lg:border-t-0">
@@ -318,6 +354,28 @@ export default function SolarSiteScreeningMap() {
             <span className="block text-xs text-slate-400">Perimeter</span>
             <strong className="mt-1 block text-lg text-white">{sitePolygon ? formatDistance(sitePerimeter) : "—"}</strong>
           </div>
+        </div>
+
+        <div className="mt-3 flex gap-2">
+          <label htmlFor="project-name" className="sr-only">
+            Project name
+          </label>
+          <input
+            id="project-name"
+            value={projectName}
+            onChange={(event) => setProjectName(event.target.value)}
+            placeholder="Name this site"
+            disabled={!sitePolygon || isSavingProject}
+            className="min-w-0 flex-1 rounded-xl border border-white/10 bg-white/[0.05] px-3 py-2.5 text-sm text-white outline-none placeholder:text-slate-500 focus:border-emerald-400 disabled:opacity-40"
+          />
+          <button
+            type="button"
+            onClick={saveProject}
+            disabled={!sitePolygon || isSavingProject}
+            className="rounded-xl border border-white/10 px-4 py-2.5 text-sm font-semibold text-slate-300 hover:bg-white/[0.05] disabled:cursor-not-allowed disabled:opacity-40"
+          >
+            {isSavingProject ? "Saving…" : "Save this site"}
+          </button>
         </div>
 
         <div aria-live="polite" className="mt-4 min-h-12 rounded-xl border border-white/10 bg-slate-900 px-3 py-2.5 text-xs leading-5 text-slate-400">
