@@ -1,0 +1,18 @@
+{
+  "permissions": {
+    "allow": [
+      "PowerShell(npx tsc --noEmit -p tsconfig.json; Write-Output \"TSC_EXIT:$LASTEXITCODE\")",
+      "PowerShell(npx next lint 2>&1 | Select-Object -Last 80; Write-Output \"LINT_EXIT:$LASTEXITCODE\")",
+      "PowerShell(Get-NetTCPConnection -LocalPort 3000 -ErrorAction SilentlyContinue)",
+      "PowerShell(Test-NetConnection -ComputerName localhost -Port 3000 -WarningAction SilentlyContinue)",
+      "PowerShell($env:USERPROFILE + \"\\\\AppData\\\\Local\\\\ms-playwright\" | ForEach-Object { if \\(Test-Path $_\\) { Get-ChildItem $_ } else { Write-Output \"no playwright browsers cache dir\" } })",
+      "PowerShell(node \"C:\\\\Users\\\\TIAGOP~1\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\c--Users-TiagoPires-Downloads-Temp-TP-Webdev-GitHub-solardev-ai\\\\4aaed3be-0f3d-4554-a4bc-63f4788297e5\\\\scratchpad\\\\verify-site-check.mjs\")",
+      "PowerShell(node \".verify-site-check.mjs\")",
+      "PowerShell(Get-Process node -ErrorAction SilentlyContinue)",
+      "PowerShell(Stop-Process -Id 25340 -Force -ErrorAction SilentlyContinue)",
+      "PowerShell(curl.exe -s -o NUL -w \"STATUS:%{http_code} TIME:%{time_total}\\\\n\" --max-time 30 \"http://127.0.0.1:3000/tools/solar-site-screening\")",
+      "PowerShell(npm install prisma @prisma/client 2>&1)",
+      "WebFetch(domain:pris.ly)"
+    ]
+  }
+}
