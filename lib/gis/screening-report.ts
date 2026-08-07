@@ -240,6 +240,299 @@ function recommendationItems(score: PreliminarySiteScore) {
   return items;
 }
 
+function criterionSourceId(criterionId: PreliminarySiteScore["criteria"][number]["id"]) {
+  if (
+    criterionId === "main-road" ||
+    criterionId === "transmission-line" ||
+    criterionId === "substation"
+  ) {
+    return "infrastructure";
+  }
+  if (criterionId === "national-designations") {
+    return "national-designations";
+  }
+  return criterionId;
+}
+
+function sourceForCriterion(
+  score: PreliminarySiteScore,
+  criterionId: PreliminarySiteScore["criteria"][number]["id"],
+) {
+  const sourceId = criterionSourceId(criterionId);
+  return score.sources?.find((source) => source.id === sourceId) ?? null;
+}
+
+function drawMapExhibit(
+  report: ReportBuilder,
+  project: SolarDevProject,
+  snapshot: AnalysisSnapshotDetail,
+) {
+  report.newPage("Dated map exhibit");
+  report.heading("Saved site boundary");
+  report.paragraph(
+    `Exhibit date: ${formatDate(snapshot.createdAt)} | Analysis date: ${formatDate(snapshot.payload.generatedAt)} | CRS: WGS 84 geographic coordinates (EPSG:4326).`,
+    { size: 8.7 },
+  );
+
+  const mapTop = report.y;
+  const mapHeight = 390;
+  const mapBottom = mapTop - mapHeight;
+  report.page.drawRectangle({
+    x: MARGIN,
+    y: mapBottom,
+    width: CONTENT_WIDTH,
+    height: mapHeight,
+    color: rgb(0.955, 0.97, 0.975),
+    borderWidth: 0.8,
+    borderColor: COLORS.line,
+  });
+
+  for (let index = 1; index < 5; index += 1) {
+    const x = MARGIN + (CONTENT_WIDTH * index) / 5;
+    const y = mapBottom + (mapHeight * index) / 5;
+    report.page.drawLine({
+      start: { x, y: mapBottom },
+      end: { x, y: mapTop },
+      thickness: 0.35,
+      color: COLORS.line,
+    });
+    report.page.drawLine({
+      start: { x: MARGIN, y },
+      end: { x: MARGIN + CONTENT_WIDTH, y },
+      thickness: 0.35,
+      color: COLORS.line,
+    });
+  }
+
+  const ring = (project.site.geometry.coordinates[0] ?? []).filter(
+    (coordinate) =>
+      Number.isFinite(coordinate[0]) && Number.isFinite(coordinate[1]),
+  );
+  if (ring.length >= 3) {
+    const longitudes = ring.map(([longitude]) => longitude);
+    const latitudes = ring.map(([, latitude]) => latitude);
+    const minimumLongitude = Math.min(...longitudes);
+    const maximumLongitude = Math.max(...longitudes);
+    const minimumLatitude = Math.min(...latitudes);
+    const maximumLatitude = Math.max(...latitudes);
+    const centerLongitude = (minimumLongitude + maximumLongitude) / 2;
+    const centerLatitude = (minimumLatitude + maximumLatitude) / 2;
+    const longitudeFactor = Math.max(
+      0.15,
+      Math.cos((centerLatitude * Math.PI) / 180),
+    );
+    const projected = ring.map(([longitude, latitude]) => ({
+      x: (longitude - centerLongitude) * longitudeFactor,
+      y: latitude - centerLatitude,
+    }));
+    const xRange = Math.max(
+      1e-8,
+      Math.max(...projected.map((point) => point.x)) -
+        Math.min(...projected.map((point) => point.x)),
+    );
+    const yRange = Math.max(
+      1e-8,
+      Math.max(...projected.map((point) => point.y)) -
+        Math.min(...projected.map((point) => point.y)),
+    );
+    const scale = Math.min(
+      (CONTENT_WIDTH - 70) / xRange,
+      (mapHeight - 70) / yRange,
+    );
+    const toPagePoint = (point: { x: number; y: number }) => ({
+      x: MARGIN + CONTENT_WIDTH / 2 + point.x * scale,
+      y: mapBottom + mapHeight / 2 + point.y * scale,
+    });
+    const pagePoints = projected.map(toPagePoint);
+    for (let index = 1; index < pagePoints.length; index += 1) {
+      report.page.drawLine({
+        start: pagePoints[index - 1],
+        end: pagePoints[index],
+        thickness: 2.2,
+        color: COLORS.emerald,
+      });
+    }
+    const first = pagePoints[0];
+    const last = pagePoints.at(-1);
+    if (first && last && (first.x !== last.x || first.y !== last.y)) {
+      report.page.drawLine({
+        start: last,
+        end: first,
+        thickness: 2.2,
+        color: COLORS.emerald,
+      });
+    }
+    const centroidPoint = toPagePoint({
+      x: (project.site.centroid[0] - centerLongitude) * longitudeFactor,
+      y: project.site.centroid[1] - centerLatitude,
+    });
+    report.page.drawCircle({
+      x: centroidPoint.x,
+      y: centroidPoint.y,
+      size: 4,
+      color: COLORS.ink,
+      borderWidth: 1.5,
+      borderColor: COLORS.white,
+    });
+
+    const boundsLabel = `${minimumLatitude.toFixed(5)}, ${minimumLongitude.toFixed(5)} to ${maximumLatitude.toFixed(5)}, ${maximumLongitude.toFixed(5)}`;
+    report.page.drawText(ascii(boundsLabel), {
+      x: MARGIN + 10,
+      y: mapBottom + 10,
+      size: 7.5,
+      font: report.regular,
+      color: COLORS.muted,
+    });
+  } else {
+    report.page.drawText("Saved boundary geometry is unavailable.", {
+      x: MARGIN + 18,
+      y: mapBottom + mapHeight / 2,
+      size: 10,
+      font: report.regular,
+      color: COLORS.rose,
+    });
+  }
+
+  const northX = MARGIN + CONTENT_WIDTH - 28;
+  const northY = mapTop - 30;
+  report.page.drawText("N", {
+    x: northX - 3,
+    y: northY + 10,
+    size: 9,
+    font: report.bold,
+    color: COLORS.ink,
+  });
+  report.page.drawLine({
+    start: { x: northX, y: northY - 12 },
+    end: { x: northX, y: northY + 7 },
+    thickness: 1.5,
+    color: COLORS.ink,
+  });
+  report.page.drawLine({
+    start: { x: northX, y: northY + 7 },
+    end: { x: northX - 4, y: northY + 1 },
+    thickness: 1.5,
+    color: COLORS.ink,
+  });
+  report.page.drawLine({
+    start: { x: northX, y: northY + 7 },
+    end: { x: northX + 4, y: northY + 1 },
+    thickness: 1.5,
+    color: COLORS.ink,
+  });
+
+  report.y = mapBottom - 24;
+  report.heading("Exhibit particulars", 13);
+  const detailTop = report.y;
+  const detailWidth = (CONTENT_WIDTH - 24) / 2;
+  report.labelValue(
+    "Site centroid",
+    `${project.site.centroid[1].toFixed(5)}, ${project.site.centroid[0].toFixed(5)}`,
+    MARGIN,
+    detailTop,
+    detailWidth,
+  );
+  report.labelValue(
+    "Gross boundary area",
+    `${(project.site.areaSqm / 10_000).toFixed(2)} ha`,
+    MARGIN + detailWidth + 24,
+    detailTop,
+    detailWidth,
+  );
+  report.y = detailTop - 62;
+  report.paragraph(
+    "This vector exhibit records the saved candidate-site boundary used for the selected analysis snapshot. It is not a cadastral, topographic or legal-title plan; boundary position and area require survey and land-record verification.",
+    { size: 8.4, color: COLORS.muted },
+  );
+}
+
+function drawConstraintRegister(
+  report: ReportBuilder,
+  snapshot: AnalysisSnapshotDetail,
+) {
+  const score = snapshot.payload;
+  report.newPage("Spatial constraint register");
+  report.heading("Snapshot constraint register");
+  report.paragraph(
+    "This register preserves the spatial finding, screening status and source retrieval date for each criterion in the selected immutable run.",
+  );
+
+  for (const criterion of score.criteria) {
+    const source = sourceForCriterion(score, criterion.id);
+    const evidenceLines = wrapText(
+      criterion.evidence,
+      report.regular,
+      8.5,
+      CONTENT_WIDTH - 20,
+    );
+    const sourceText = source
+      ? `${source.provider} | retrieved ${formatDate(source.retrievedAt)}`
+      : "Source metadata was not persisted for this snapshot.";
+    const sourceLines = wrapText(
+      sourceText,
+      report.regular,
+      7.6,
+      CONTENT_WIDTH - 20,
+    );
+    const rowHeight = 49 + evidenceLines.length * 11 + sourceLines.length * 10;
+    report.ensureSpace(rowHeight, "Spatial constraint register - continued");
+    const rowTop = report.y;
+    report.page.drawRectangle({
+      x: MARGIN,
+      y: rowTop - rowHeight + 5,
+      width: CONTENT_WIDTH,
+      height: rowHeight,
+      color: COLORS.white,
+      borderWidth: 0.7,
+      borderColor: COLORS.line,
+    });
+    report.page.drawText(ascii(criterion.label), {
+      x: MARGIN + 10,
+      y: rowTop - 17,
+      size: 9.7,
+      font: report.bold,
+      color: COLORS.ink,
+    });
+    const registerStatus = `${criterion.group.toUpperCase()} | ${criterion.status.toUpperCase()} | ${criterion.score ?? "N/A"}/100`;
+    report.page.drawText(ascii(registerStatus), {
+      x:
+        PAGE_WIDTH -
+        MARGIN -
+        report.regular.widthOfTextAtSize(ascii(registerStatus), 7.8) -
+        10,
+      y: rowTop - 17,
+      size: 7.8,
+      font: report.regular,
+      color:
+        criterion.status === "constraint"
+          ? COLORS.rose
+          : criterion.status === "caution"
+            ? COLORS.amber
+            : COLORS.slate,
+    });
+    evidenceLines.forEach((line, index) => {
+      report.page.drawText(line, {
+        x: MARGIN + 10,
+        y: rowTop - 36 - index * 11,
+        size: 8.5,
+        font: report.regular,
+        color: COLORS.slate,
+      });
+    });
+    const sourceTop = rowTop - 40 - evidenceLines.length * 11;
+    sourceLines.forEach((line, index) => {
+      report.page.drawText(line, {
+        x: MARGIN + 10,
+        y: sourceTop - index * 10,
+        size: 7.6,
+        font: report.regular,
+        color: COLORS.muted,
+      });
+    });
+    report.y -= rowHeight + 7;
+  }
+}
+
 export function screeningReportFilename(project: SolarDevProject) {
   const slug = ascii(project.name)
     .toLowerCase()
@@ -385,6 +678,9 @@ export async function generateScreeningReport(
       continuedTitle: "Recommended next actions - continued",
     });
   });
+
+  drawMapExhibit(report, project, snapshot);
+  drawConstraintRegister(report, snapshot);
 
   report.newPage("Criterion evidence");
   report.heading("Weighted screening criteria");

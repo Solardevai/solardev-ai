@@ -111,5 +111,12 @@ the only path that can grant or revoke Pro entitlements. Unrelated Stripe
 products are ignored and repeat downloads of an existing snapshot report do not
 consume another unit.
 
-The next professional-output increment should add a dated map exhibit and
-spatial constraint register to the snapshot PDF package.
+The snapshot PDF package now includes a dated vector map exhibit of the saved
+candidate-site boundary and a spatial constraint register. The register ties
+each immutable criterion finding to its screening status, score, provider and
+persisted retrieval timestamp, while legacy snapshots disclose when exact
+source metadata was not retained.
+
+The next professional-output increment should add authority-ready appendices
+with feature-level designation identifiers and a downloadable machine-readable
+constraint register.
