@@ -89,3 +89,34 @@ export type Natura2000ConstraintAnalysis = {
   };
   limitations: string[];
 };
+
+export type NationallyDesignatedArea = {
+  cddaId: number;
+  countryCode: string;
+  name: string;
+  nationalId: string | null;
+  designationTypeCode: string | null;
+  iucnCategory: string | null;
+};
+
+export type NationallyDesignatedAreasAnalysis = {
+  projectId: string;
+  generatedAt: string;
+  result: ConstraintResult & {
+    layerId: "nationally-designated-areas";
+    label: "Nationally designated areas";
+    affectedAreaSqm: number;
+    affectedSitePercent: number;
+    areas: NationallyDesignatedArea[];
+  };
+  source: {
+    provider: "European Environment Agency";
+    datasetVersion: "23";
+    reportingPeriod: "through May 2025";
+    licence: "EEA standard re-use policy";
+    serviceUrl: string;
+    metadataUrl: string;
+    retrievedAt: string;
+  };
+  limitations: string[];
+};

@@ -50,6 +50,13 @@ dataset and GeometryServer operations for union, intersection and geodesic
 area. Results include affected area, site percentage, designations, source
 metadata, limitations and risk classification.
 
-The next constraint increment should add nationally designated protected areas
-with the same traceable result contract. AI interpretation should remain
-downstream of deterministic results.
+GIS-03 nationally designated protected-area screening is now delivered against
+the official EEA NatDA v23 query service, with its May 2025 reporting cutoff and
+known country-coverage gaps disclosed alongside each result. The analysis
+returns unique CDDA designations, unioned overlap, geodesic affected area and
+site percentage using the same traceable result contract.
+
+The next constraint increment should evaluate a jurisdiction-aware flood or
+surface-water source rather than implying that one European dataset is legally
+authoritative everywhere. AI interpretation should remain downstream of
+deterministic results.

@@ -209,12 +209,18 @@ export default function ProjectWorkspace({ project }: ProjectWorkspaceProps) {
           </div>
           <div className="mt-6">
             <p className="text-xs font-semibold text-slate-300">Environment</p>
-            <div className="mt-2 flex items-center gap-2 rounded-lg bg-white/[0.04] px-3 py-2 text-xs text-slate-300">
-              <span className="h-2 w-2 rounded-full bg-rose-400" />
-              Natura 2000 screening
+            <div className="mt-2 space-y-1">
+              <div className="flex items-center gap-2 rounded-lg bg-white/[0.04] px-3 py-2 text-xs text-slate-300">
+                <span className="h-2 w-2 rounded-full bg-rose-400" />
+                Natura 2000 screening
+              </div>
+              <div className="flex items-center gap-2 rounded-lg bg-white/[0.04] px-3 py-2 text-xs text-slate-300">
+                <span className="h-2 w-2 rounded-full bg-amber-400" />
+                National designations
+              </div>
             </div>
             <p className="mt-2 text-[10px] leading-4 text-slate-500">
-              EEA dataset version 2024 · EU coverage
+              Natura 2000 (2024) · NatDA query service v23 (through May 2025)
             </p>
           </div>
         </aside>

@@ -127,6 +127,21 @@ export const constraintLayers = [
     },
     screening: { enabled: true, analysis: "intersection" },
   },
+  {
+    id: "nationally-designated-areas",
+    name: "Nationally designated areas",
+    group: "environment",
+    sourceType: "arcgis-rest",
+    defaultVisible: false,
+    minimumZoom: 7,
+    color: "#f59e0b",
+    metadata: {
+      provider: "European Environment Agency",
+      licence: "EEA standard re-use policy",
+      attribution: "EEA NatDA query service v23 · reporting through May 2025",
+    },
+    screening: { enabled: true, analysis: "intersection" },
+  },
 ] as const satisfies ReadonlyArray<GisLayerDefinition>;
 
 export const gisLayers: ReadonlyArray<GisLayerDefinition> = [
