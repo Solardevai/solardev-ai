@@ -149,3 +149,40 @@ export type FloodRiskAreaAnalysis = {
   };
   limitations: string[];
 };
+
+export type SurfaceWaterCategory =
+  | "watercourse"
+  | "standing-water"
+  | "wetland";
+
+export type SurfaceWaterProximityResult = {
+  id: SurfaceWaterCategory;
+  label: string;
+  distanceM: number | null;
+  classification: ProximityClassification;
+  risk: ConstraintRisk;
+  feature: null | {
+    osmType: "way" | "relation";
+    osmId: number;
+    name: string | null;
+    waterType: string;
+    intermittent: boolean | null;
+  };
+  recommendedAction: string;
+};
+
+export type SurfaceWaterAnalysis = {
+  projectId: string;
+  generatedAt: string;
+  searchRadiusKm: number;
+  featuresScanned: number;
+  results: SurfaceWaterProximityResult[];
+  source: {
+    provider: "OpenStreetMap contributors via Overpass API";
+    endpoint: string;
+    datasetTimestamp: string | null;
+    retrievedAt: string;
+    licence: "Open Database License (ODbL) 1.0";
+  };
+  limitations: string[];
+};

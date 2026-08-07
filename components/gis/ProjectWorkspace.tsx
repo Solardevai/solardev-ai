@@ -5,6 +5,7 @@ import { useEffect, useRef, useState } from "react";
 import ConstraintAnalysisPanel from "@/components/gis/ConstraintAnalysisPanel";
 import FloodRiskAnalysisPanel from "@/components/gis/FloodRiskAnalysisPanel";
 import InfrastructureAnalysisPanel from "@/components/gis/InfrastructureAnalysisPanel";
+import SurfaceWaterAnalysisPanel from "@/components/gis/SurfaceWaterAnalysisPanel";
 import { MapCoreCanvas, useMapCore } from "@/components/gis/MapCore";
 import {
   INFRASTRUCTURE_OPTIONS,
@@ -223,6 +224,10 @@ export default function ProjectWorkspace({ project }: ProjectWorkspaceProps) {
                 <span className="h-2 w-2 rounded-full bg-sky-400" />
                 Flood risk reporting areas
               </div>
+              <div className="flex items-center gap-2 rounded-lg bg-white/[0.04] px-3 py-2 text-xs text-slate-300">
+                <span className="h-2 w-2 rounded-full bg-cyan-400" />
+                Surface water and wetlands
+              </div>
             </div>
             <p className="mt-2 text-[10px] leading-4 text-slate-500">
               Natura 2000 · NatDA · Floods Directive context
@@ -309,6 +314,7 @@ export default function ProjectWorkspace({ project }: ProjectWorkspaceProps) {
 
           <ConstraintAnalysisPanel projectId={project.id} />
           <FloodRiskAnalysisPanel projectId={project.id} />
+          <SurfaceWaterAnalysisPanel projectId={project.id} />
           <InfrastructureAnalysisPanel projectId={project.id} />
         </aside>
       </div>

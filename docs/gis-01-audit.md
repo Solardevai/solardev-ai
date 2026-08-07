@@ -63,6 +63,11 @@ these are Member-State Areas of Potential Significant Flood Risk, not consistent
 inundation footprints. Results disclose the newer March 2025 reference dataset
 and direct users to current national authority hazard maps.
 
-The next constraint increment should add surface-water proximity or terrain
-slope, while keeping jurisdiction-specific regulatory interpretation downstream
-of deterministic geometry results.
+GIS-03 surface-water proximity is now delivered using live OpenStreetMap data
+through resilient Overpass endpoints. It measures polygon-boundary distance to
+watercourses, standing water and wetlands, detects on-site intersections and
+returns dataset timestamps, search radius, confidence limitations and authority
+verification actions.
+
+The next deterministic site-screening increment should add terrain elevation
+and slope before introducing a combined preliminary score.

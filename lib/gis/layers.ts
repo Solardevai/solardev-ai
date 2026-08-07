@@ -157,6 +157,20 @@ export const constraintLayers = [
     },
     screening: { enabled: true, analysis: "intersection" },
   },
+  {
+    id: "surface-water",
+    name: "Surface water and wetlands",
+    group: "environment",
+    sourceType: "api-geojson",
+    defaultVisible: false,
+    minimumZoom: 10,
+    color: "#22d3ee",
+    metadata: {
+      provider: "OpenStreetMap contributors via Overpass API",
+      licence: "Open Database License (ODbL)",
+    },
+    screening: { enabled: true, analysis: "distance" },
+  },
 ] as const satisfies ReadonlyArray<GisLayerDefinition>;
 
 export const gisLayers: ReadonlyArray<GisLayerDefinition> = [
