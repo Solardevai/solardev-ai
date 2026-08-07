@@ -266,7 +266,7 @@ export default function SunPathPage() {
               </p>
               <div className="flex shrink-0 flex-wrap gap-3">
                 <Link href="/tools/solar-site-screening" className="font-semibold text-emerald-300 hover:text-emerald-200">
-                  Site Check →
+                  Site Assessment →
                 </Link>
                 <Link href="/handbooks" className="font-semibold text-amber-300 hover:text-amber-200">
                   Handbooks →

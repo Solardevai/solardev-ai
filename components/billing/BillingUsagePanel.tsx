@@ -26,6 +26,20 @@ function UsageMeter({
   kind: UsageKind;
   usage: UsageSummary["allowances"][UsageKind];
 }) {
+  if (usage.limit === null) {
+    return (
+      <div className="rounded-xl border border-emerald-300/15 bg-emerald-300/[0.045] p-4">
+        <div className="flex items-center justify-between gap-3 text-xs">
+          <span className="font-semibold text-slate-300">{usageLabels[kind]}</span>
+          <span className="font-bold text-emerald-200">Unlimited</span>
+        </div>
+        <p className="mt-3 text-[10px] leading-4 text-slate-500">
+          {usage.used} tracked this UTC month for product-quality monitoring.
+        </p>
+      </div>
+    );
+  }
+
   const percent = Math.min(100, Math.round((usage.used / usage.limit) * 100));
   return (
     <div className="rounded-xl border border-white/8 bg-white/[0.025] p-4">
@@ -74,16 +88,18 @@ export default function BillingUsagePanel({
               id="account-usage-title"
               className="text-3xl font-semibold tracking-tight"
             >
-              Workspace {usage.plan === "pro" ? "Pro" : "Free"}
+              {usage.enforcementEnabled
+                ? `Workspace ${usage.plan === "pro" ? "Pro" : "Free"}`
+                : "Workspace open access"}
             </h2>
             <span className="rounded-full border border-white/10 bg-white/[0.04] px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.13em] text-slate-400">
-              {usage.subscriptionStatus}
+              {usage.enforcementEnabled ? usage.subscriptionStatus : "free preview"}
             </span>
           </div>
           <p className="mt-3 max-w-2xl text-sm leading-6 text-slate-400">
-            Allowances reset at the start of each UTC month. Failed analyses are
-            released automatically, and downloading an already-generated
-            snapshot report does not consume another report unit.
+            {usage.enforcementEnabled
+              ? "Allowances reset at the start of each UTC month. Failed analyses are released automatically, and downloading an already-generated snapshot report does not consume another report unit."
+              : "All current workspace, GIS analysis and professional-report features are free during the open-access period. Usage is tracked only to understand reliability and demand."}
           </p>
           {notice && noticeText[notice] ? (
             <p
@@ -104,7 +120,7 @@ export default function BillingUsagePanel({
         </div>
 
         <div className="flex min-w-48 flex-col gap-2">
-          {usage.plan === "free" && usage.checkoutConfigured ? (
+          {usage.enforcementEnabled && usage.plan === "free" && usage.checkoutConfigured ? (
             <form action="/api/billing/checkout" method="post">
               <button
                 type="submit"
@@ -114,12 +130,12 @@ export default function BillingUsagePanel({
               </button>
             </form>
           ) : null}
-          {usage.plan === "free" && !usage.checkoutConfigured ? (
+          {usage.enforcementEnabled && usage.plan === "free" && !usage.checkoutConfigured ? (
             <p className="rounded-xl border border-white/10 bg-white/[0.03] p-3 text-xs leading-5 text-slate-400">
               Pro upgrades are not currently available.
             </p>
           ) : null}
-          {usage.canManageBilling ? (
+          {usage.enforcementEnabled && usage.canManageBilling ? (
             <form action="/api/billing/portal" method="post">
               <button
                 type="submit"

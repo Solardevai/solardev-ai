@@ -11,6 +11,10 @@ import type {
 
 const ACTIVE_SUBSCRIPTION_STATUSES = new Set(["active", "trialing"]);
 
+export function isBillingEnforcementEnabled() {
+  return process.env.BILLING_ENFORCEMENT_ENABLED === "true";
+}
+
 function positiveLimit(name: string, fallback: number) {
   const configured = Number.parseInt(process.env[name] ?? "", 10);
   return Number.isInteger(configured) && configured > 0
@@ -51,8 +55,12 @@ function effectivePlan(user: {
     : "free";
 }
 
-function allowance(used: number, limit: number): UsageAllowance {
-  return { used, limit, remaining: Math.max(0, limit - used) };
+function allowance(used: number, limit: number | null): UsageAllowance {
+  return {
+    used,
+    limit,
+    remaining: limit === null ? null : Math.max(0, limit - used),
+  };
 }
 
 export class UsageLimitError extends Error {
@@ -73,6 +81,7 @@ export class UsageLimitError extends Error {
 }
 
 export async function getUsageSummary(userId: string): Promise<UsageSummary> {
+  const enforcementEnabled = isBillingEnforcementEnabled();
   const period = usagePeriod();
   const [user, groupedUsage] = await Promise.all([
     prisma.user.findUnique({
@@ -96,6 +105,7 @@ export async function getUsageSummary(userId: string): Promise<UsageSummary> {
   );
 
   return {
+    enforcementEnabled,
     plan,
     subscriptionStatus: user?.subscriptionStatus ?? "inactive",
     subscriptionPeriodEnd:
@@ -108,11 +118,11 @@ export async function getUsageSummary(userId: string): Promise<UsageSummary> {
     allowances: {
       "site-score": allowance(
         usedByKind.get("site-score") ?? 0,
-        PLAN_LIMITS[plan]["site-score"],
+        enforcementEnabled ? PLAN_LIMITS[plan]["site-score"] : null,
       ),
       "screening-report": allowance(
         usedByKind.get("screening-report") ?? 0,
-        PLAN_LIMITS[plan]["screening-report"],
+        enforcementEnabled ? PLAN_LIMITS[plan]["screening-report"] : null,
       ),
     },
   };
@@ -149,12 +159,14 @@ export async function reserveUsage(
           });
           const plan = effectivePlan(user);
           const limit = PLAN_LIMITS[plan][kind];
-          const aggregate = await transaction.usageEvent.aggregate({
-            where: { userId, kind, periodKey: period.key },
-            _sum: { units: true },
-          });
-          const used = aggregate._sum.units ?? 0;
-          if (used >= limit) throw new UsageLimitError(kind, limit);
+          if (isBillingEnforcementEnabled()) {
+            const aggregate = await transaction.usageEvent.aggregate({
+              where: { userId, kind, periodKey: period.key },
+              _sum: { units: true },
+            });
+            const used = aggregate._sum.units ?? 0;
+            if (used >= limit) throw new UsageLimitError(kind, limit);
+          }
 
           const event = await transaction.usageEvent.create({
             data: {

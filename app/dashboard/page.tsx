@@ -31,7 +31,7 @@ const workspaceTools = [
     description:
       "Draw a boundary, review mapped infrastructure and run an indicative PVGIS yield check.",
     href: "/tools/solar-site-screening",
-    action: "Open Site Check",
+    action: "Open Site Assessment",
     accent: "amber",
   },
   {
@@ -166,7 +166,7 @@ export default async function DashboardPage({
               </div>
             ) : (
               <div className="mt-6 rounded-2xl border border-dashed border-white/15 bg-white/[0.02] p-6 text-sm leading-6 text-slate-400">
-                No saved projects yet. Define a boundary in Site Check, save it,
+                No saved projects yet. Define a boundary in Site Assessment, save it,
                 then continue in the GIS workspace.
               </div>
             )}
@@ -206,14 +206,14 @@ export default async function DashboardPage({
                   Workspace roadmap
                 </p>
                 <h2 className="mt-3 text-2xl font-semibold tracking-tight">
-                  Commercial controls active
+                  Open-access GIS preview
                 </h2>
                 <p className="mt-4 max-w-3xl leading-7 text-slate-300">
                   Authentication, project saving and the first GIS workspace
                   are active alongside constraint screening, immutable history,
-                  professional PDF reports and portfolio ranking. Usage
-                  allowances and Stripe-backed subscription controls are now
-                  enforced at the API boundary.
+                  professional PDF reports, CSV registers and portfolio ranking.
+                  All current functionality is free while the product is being
+                  validated; commercial controls remain available for a later phase.
                 </p>
               </div>
               <Link

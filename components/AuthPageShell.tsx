@@ -67,7 +67,7 @@ export default function AuthPageShell({
                   aria-hidden="true"
                   className="mt-2 h-2 w-2 shrink-0 rounded-full bg-amber-400"
                 />
-                Site Check and Solar Angle remain available to try before
+                Site Assessment and Solar Angle remain available to try before
                 registration.
               </li>
               <li className="flex gap-3">
@@ -107,7 +107,7 @@ export function AuthenticationUnavailable() {
           href="/tools/solar-site-screening"
           className="inline-flex min-h-12 items-center justify-center rounded-xl bg-amber-400 px-4 py-3 text-sm font-bold text-slate-950 transition hover:bg-amber-300"
         >
-          Open Site Check
+          Open Site Assessment
         </Link>
         <Link
           href="/"

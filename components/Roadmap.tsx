@@ -26,7 +26,7 @@ const roadmapItems: RoadmapItem[] = [
     description:
       "Practical early-stage tools for solar site assessment and solar-angle analysis.",
     deliverables: [
-      "Site Check - Portugal, Spain, Italy and Germany",
+      "Site Assessment - Portugal, Spain, Italy and Germany",
       "Solar Angle",
     ],
     status: "Available",

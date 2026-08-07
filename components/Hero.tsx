@@ -38,7 +38,7 @@ export default function Hero() {
               href="/tools/solar-site-screening"
               className="rounded-xl bg-emerald-400 px-7 py-4 text-center font-semibold text-slate-950 shadow-lg shadow-emerald-400/10 transition hover:-translate-y-0.5 hover:bg-emerald-300"
             >
-              Open Site Check
+              Open Site Assessment
             </Link>
             <Link
               href="/tools/sun-path"
@@ -95,7 +95,7 @@ export default function Hero() {
                     <circle cx="294" cy="73" r="6" fill="#22d3ee" />
                   </svg>
                   <span className="absolute left-4 top-4 rounded-lg border border-emerald-400/20 bg-slate-950/85 px-3 py-2 text-[10px] font-bold uppercase tracking-[0.16em] text-emerald-300">
-                    Site Check
+                    Site Assessment
                   </span>
                   <div className="absolute bottom-3 left-3 right-3 grid grid-cols-3 gap-2">
                     <Metric label="Area" value="42.8 ha" />

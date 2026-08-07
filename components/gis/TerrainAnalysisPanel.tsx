@@ -48,7 +48,7 @@ export default function TerrainAnalysisPanel({
             Terrain
           </p>
           <p className="mt-1 text-[11px] text-slate-400">
-            Sampled elevation and slope · 90 m DEM
+            Sampled elevation and slope · ~30 m terrain data
           </p>
         </div>
         <button
@@ -132,7 +132,7 @@ export default function TerrainAnalysisPanel({
                   {analysis.result.sampleCount} samples · {analysis.methodology.sampling} · {analysis.methodology.slope}.
                 </p>
                 <p>
-                  {analysis.source.dataset} ({analysis.source.resolutionM} m) via {analysis.source.provider}. DOI {analysis.source.doi}. Retrieved {new Date(analysis.source.retrievedAt).toLocaleString()}.
+                  {analysis.source.dataset} (~{analysis.source.resolutionM} m) via {analysis.source.provider}. {analysis.source.reference}. Retrieved {new Date(analysis.source.retrievedAt).toLocaleString()}.
                 </p>
                 <ul className="list-disc space-y-1 pl-4">
                   {analysis.limitations.map((limitation) => (

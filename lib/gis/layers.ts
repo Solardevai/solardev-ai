@@ -37,12 +37,37 @@ export const INFRASTRUCTURE_LAYER_IDS = [
 export type InfrastructureLayerId =
   (typeof INFRASTRUCTURE_LAYER_IDS)[number];
 
+export type BasemapId = "topographic" | "satellite";
+
+export const topographicBasemap = {
+  id: "topographic",
+  name: "Topographic",
+  group: "basemap",
+  sourceType: "raster-tiles",
+  defaultVisible: true,
+  minimumZoom: 0,
+  tileUrl:
+    "https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}",
+  tileSize: 256,
+  metadata: {
+    provider: "Esri World Topographic Map",
+    licence: "Esri service terms",
+    attribution:
+      "Sources: Esri, TomTom, Garmin, FAO, NOAA, USGS, OpenStreetMap contributors, and the GIS User Community",
+  },
+  screening: { enabled: false, analysis: "context" },
+} as const satisfies GisLayerDefinition & {
+  id: BasemapId;
+  tileUrl: string;
+  tileSize: number;
+};
+
 export const satelliteBasemap = {
   id: "satellite",
   name: "Satellite",
   group: "basemap",
   sourceType: "raster-tiles",
-  defaultVisible: true,
+  defaultVisible: false,
   minimumZoom: 0,
   tileUrl:
     "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
@@ -55,9 +80,13 @@ export const satelliteBasemap = {
   },
   screening: { enabled: false, analysis: "context" },
 } as const satisfies GisLayerDefinition & {
+  id: BasemapId;
   tileUrl: string;
   tileSize: number;
 };
+
+export const basemaps = [topographicBasemap, satelliteBasemap] as const;
+export const defaultBasemapId: BasemapId = "topographic";
 
 export const infrastructureLayers = [
   {
@@ -184,15 +213,15 @@ export const constraintLayers = [
     minimumZoom: 10,
     color: "#a3e635",
     metadata: {
-      provider: "Copernicus DEM via Open-Meteo Elevation API",
-      licence: "Copernicus data attribution requirements",
+      provider: "Mapzen Terrain Tiles on AWS",
+      licence: "Source-specific open-data attribution requirements",
     },
     screening: { enabled: true, analysis: "context" },
   },
 ] as const satisfies ReadonlyArray<GisLayerDefinition>;
 
 export const gisLayers: ReadonlyArray<GisLayerDefinition> = [
-  satelliteBasemap,
+  ...basemaps,
   ...infrastructureLayers.map((layer) => ({
     ...layer,
     group: "infrastructure" as const,

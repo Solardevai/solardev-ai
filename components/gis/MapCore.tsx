@@ -8,7 +8,11 @@ import {
 } from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
 import { RefObject, useEffect, useRef, useState } from "react";
-import { satelliteBasemap } from "@/lib/gis/layers";
+import {
+  basemaps,
+  defaultBasemapId,
+  type BasemapId,
+} from "@/lib/gis/layers";
 import type { MapView } from "@/types/gis";
 
 export type MapCoreContext = {
@@ -16,10 +20,13 @@ export type MapCoreContext = {
   drawingOverlayRef: RefObject<SVGSVGElement | null>;
   mapRef: RefObject<MapLibreMap | null>;
   map: MapLibreMap | null;
+  basemap: BasemapId;
+  setBasemap: (basemap: BasemapId) => void;
 };
 
 type UseMapCoreOptions = {
   initialView?: Pick<MapView, "center" | "zoom">;
+  initialBasemap?: BasemapId;
 };
 
 export function useMapCore(options: UseMapCoreOptions = {}): MapCoreContext {
@@ -27,7 +34,11 @@ export function useMapCore(options: UseMapCoreOptions = {}): MapCoreContext {
   const drawingOverlayRef = useRef<SVGSVGElement>(null);
   const mapRef = useRef<MapLibreMap | null>(null);
   const initialViewRef = useRef(options.initialView);
+  const initialBasemapRef = useRef(options.initialBasemap ?? defaultBasemapId);
   const [map, setMap] = useState<MapLibreMap | null>(null);
+  const [basemap, setBasemapState] = useState<BasemapId>(
+    () => options.initialBasemap ?? defaultBasemapId,
+  );
 
   useEffect(() => {
     if (!containerRef.current || mapRef.current) return;
@@ -40,21 +51,26 @@ export function useMapCore(options: UseMapCoreOptions = {}): MapCoreContext {
       attributionControl: false,
       style: {
         version: 8,
-        sources: {
-          [satelliteBasemap.id]: {
-            type: "raster",
-            tiles: [satelliteBasemap.tileUrl],
-            tileSize: satelliteBasemap.tileSize,
-            attribution: satelliteBasemap.metadata.attribution,
+        sources: Object.fromEntries(
+          basemaps.map((item) => [
+            item.id,
+            {
+              type: "raster",
+              tiles: [item.tileUrl],
+              tileSize: item.tileSize,
+              attribution: item.metadata.attribution,
+            },
+          ]),
+        ),
+        layers: basemaps.map((item) => ({
+          id: item.id,
+          type: "raster" as const,
+          source: item.id,
+          layout: {
+            visibility:
+              item.id === initialBasemapRef.current ? "visible" : "none",
           },
-        },
-        layers: [
-          {
-            id: satelliteBasemap.id,
-            type: "raster",
-            source: satelliteBasemap.id,
-          },
-        ],
+        })),
       },
     });
 
@@ -84,7 +100,30 @@ export function useMapCore(options: UseMapCoreOptions = {}): MapCoreContext {
     };
   }, []);
 
-  return { containerRef, drawingOverlayRef, mapRef, map };
+  function setBasemap(nextBasemap: BasemapId) {
+    const instance = mapRef.current;
+    if (instance) {
+      for (const item of basemaps) {
+        if (instance.getLayer(item.id)) {
+          instance.setLayoutProperty(
+            item.id,
+            "visibility",
+            item.id === nextBasemap ? "visible" : "none",
+          );
+        }
+      }
+    }
+    setBasemapState(nextBasemap);
+  }
+
+  return {
+    containerRef,
+    drawingOverlayRef,
+    mapRef,
+    map,
+    basemap,
+    setBasemap,
+  };
 }
 
 type MapCoreCanvasProps = Pick<

@@ -1,8 +1,8 @@
 # GIS-01 audit and implementation boundary
 
-## Current Site Check capability
+## Current Site Assessment capability
 
-- MapLibre GL 6 with an Esri World Imagery raster basemap.
+- MapLibre GL 6 with an Esri World Topographic Map default and satellite imagery toggle.
 - Location and coordinate search through a server-side Nominatim proxy.
 - Polygon drawing, vertex editing, area, perimeter, and centroid calculations.
 - KMZ import and KMZ, KML, and GeoJSON export.
@@ -13,14 +13,15 @@
 ## GIS-01 changes
 
 - `components/gis/MapCore.tsx` owns the reusable MapLibre lifecycle, basemap,
-  controls, and map canvas shared by Site Check and a future workspace.
+  controls, and map canvas shared by Site Assessment and the project workspace.
 - `lib/gis/layers.ts` is the first formal layer registry. It is the source of
   layer names, colors, default visibility, minimum zoom, provider metadata, and
   intended screening behavior.
 - `types/gis.ts` defines map state and future constraint-result contracts.
 - `types/project.ts` distinguishes the future project domain model from the
   narrower persistence payload supported by the current database.
-- Site Check keeps the same UI, analyses, exports, and save behavior.
+- Site Assessment keeps the same analyses, exports, and save behavior while being
+  surfaced consistently under Tools.
 
 ## Deliberately deferred
 
@@ -37,7 +38,7 @@
 - Backward-compatible technology, country, status, and map-state persistence.
 - `/platform/projects/[projectId]` GIS Lite workspace using `MapCore`.
 - Saved-project list on the protected dashboard.
-- Site Check conversion path into the project workspace.
+- Site Assessment conversion path into the project workspace.
 
 ## Recommended next implementation
 
@@ -70,11 +71,11 @@ returns dataset timestamps, search radius, confidence limitations and authority
 verification actions.
 
 GIS-03 terrain screening is now delivered using a bounded site grid and the
-90 m Copernicus DEM through Open-Meteo. It reports sampled elevation range,
-average slope, 90th-percentile slope, maximum sampled slope, risk logic and
-survey limitations. Production access is gated behind a commercial
-`OPEN_METEO_API_KEY`; the free endpoint is available only through an explicit
-non-production evaluation flag.
+public Mapzen Terrain Tiles bare-earth DEM mosaic hosted by the AWS Open Data
+program. It provides approximately 30 m source detail in the target European
+markets without an API key and reports sampled elevation range, average slope,
+90th-percentile slope, maximum sampled slope, risk logic, source attribution
+and survey limitations.
 
 GIS-03 preliminary scoring is now delivered as an explainable eight-criterion,
 100-point model covering environmental designations, flood and surface water,
@@ -102,14 +103,13 @@ project by score, coverage, material-constraint count, analysis recency or name.
 Portfolio cards summarize analysis coverage, average score, material criteria
 and high-confidence runs, while each row links to the workspace and latest PDF.
 
-Workspace commercial controls are now delivered. PostgreSQL-backed UTC-month
-allowances are reserved atomically at the protected score and report APIs,
-released after failed work, and surfaced on the dashboard. Free and Pro limits
-are environment-overridable. Stripe-hosted subscription Checkout and Billing
-Portal routes are owner-authenticated, while signed subscription webhooks are
-the only path that can grant or revoke Pro entitlements. Unrelated Stripe
-products are ignored and repeat downloads of an existing snapshot report do not
-consume another unit.
+Workspace commercial controls remain available for a later launch, but
+enforcement is disabled by default through `BILLING_ENFORCEMENT_ENABLED=false`.
+Site scoring, reports, GIS analyses, saved projects, and exports therefore have
+no product quota or payment gate during the open-access period. Usage events
+continue to be recorded so limits can be introduced later without rebuilding
+the entitlement system. Authentication remains required for project ownership
+and persistence, not payment.
 
 The snapshot PDF package now includes a dated vector map exhibit of the saved
 candidate-site boundary and a spatial constraint register. The register ties

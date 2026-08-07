@@ -360,11 +360,11 @@ function sourceRegister(
       label: "Terrain elevation and slope",
       provider: terrain.value.source.provider,
       dataset: `${terrain.value.source.dataset} (${terrain.value.source.resolutionM} m)`,
-      version: terrain.value.source.doi,
+      version: terrain.value.source.reference,
       licence: terrain.value.source.licence,
       retrievedAt: terrain.value.source.retrievedAt,
-      serviceUrl: "https://open-meteo.com/en/docs/elevation-api",
-      metadataUrl: `https://doi.org/${terrain.value.source.doi}`,
+      serviceUrl: terrain.value.source.serviceUrl,
+      metadataUrl: terrain.value.source.metadataUrl,
       limitations: terrain.value.limitations,
     });
   }
@@ -644,7 +644,7 @@ export async function analyzePreliminarySiteScore(
       sourceFailure(
         "terrain",
         "Terrain elevation and slope",
-        "Commercial elevation API not configured or source unavailable.",
+        "Public terrain-tile source unavailable.",
       ),
     );
   }

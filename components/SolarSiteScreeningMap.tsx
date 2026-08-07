@@ -51,7 +51,14 @@ function SolarSiteScreeningMapContent({
   isSignedIn: boolean;
 }) {
   const kmzInputRef = useRef<HTMLInputElement>(null);
-  const { containerRef, drawingOverlayRef, mapRef, map } = useMapCore();
+  const {
+    containerRef,
+    drawingOverlayRef,
+    mapRef,
+    map,
+    basemap,
+    setBasemap,
+  } = useMapCore();
 
   const [query, setQuery] = useState("");
   const [projectName, setProjectName] = useState("");
@@ -554,7 +561,36 @@ function SolarSiteScreeningMapContent({
           drawingOverlayRef={drawingOverlayRef}
           ariaLabel="Interactive solar site screening map"
         />
-        <div className="pointer-events-none absolute left-4 top-4 rounded-xl border border-white/15 bg-slate-950/85 px-3 py-2 text-xs text-white shadow-lg backdrop-blur">
+        <div
+          className="absolute left-4 top-4 z-10 flex overflow-hidden rounded-xl border border-white/15 bg-slate-950/92 p-1 text-[11px] font-semibold shadow-lg backdrop-blur"
+          aria-label="Basemap"
+        >
+          <button
+            type="button"
+            aria-pressed={basemap === "topographic"}
+            onClick={() => setBasemap("topographic")}
+            className={`rounded-lg px-3 py-2 transition ${
+              basemap === "topographic"
+                ? "bg-emerald-300 text-slate-950"
+                : "text-slate-300 hover:bg-white/[0.08]"
+            }`}
+          >
+            Topographic
+          </button>
+          <button
+            type="button"
+            aria-pressed={basemap === "satellite"}
+            onClick={() => setBasemap("satellite")}
+            className={`rounded-lg px-3 py-2 transition ${
+              basemap === "satellite"
+                ? "bg-emerald-300 text-slate-950"
+                : "text-slate-300 hover:bg-white/[0.08]"
+            }`}
+          >
+            Satellite
+          </button>
+        </div>
+        <div className="pointer-events-none absolute left-4 top-16 rounded-xl border border-white/15 bg-slate-950/85 px-3 py-2 text-xs text-white shadow-lg backdrop-blur">
           {isDrawing
             ? "Drawing mode · left-click to add · right-click to undo"
             : "Pan and zoom to explore"}

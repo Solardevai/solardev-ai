@@ -206,12 +206,14 @@ export type TerrainAnalysis = {
     recommendedAction: string;
   };
   source: {
-    provider: "Open-Meteo Elevation API";
-    dataset: "Copernicus DEM";
-    resolutionM: 90;
-    doi: "10.5270/ESA-c5d3d65";
+    provider: "Mapzen Terrain Tiles on AWS";
+    dataset: "Global bare-earth Terrain Tiles DEM mosaic";
+    resolutionM: 30;
+    reference: "AWS Open Data terrain-tiles registry";
+    serviceUrl: string;
+    metadataUrl: "https://registry.opendata.aws/terrain-tiles/";
     retrievedAt: string;
-    licence: "Copernicus data attribution requirements";
+    licence: "Source-specific open-data attribution requirements";
   };
   methodology: {
     sampling: "9 × 9 interior grid plus available boundary vertices";

@@ -8,14 +8,14 @@ import { isAuthenticationAvailable } from "@/lib/auth-config";
 const SITE_URL = "https://www.solardev.ai/tools/solar-site-screening";
 
 export const metadata: Metadata = {
-  title: "Free Solar Site Screening & PVGIS Yield Tool",
+  title: "Free Solar Site Assessment & GIS Screening Tool",
   description:
-    "Measure a solar-site boundary, estimate PVGIS specific yield, review indicative grid context and download the boundary or a free PVGIS TMY meteo file.",
+    "Assess a solar-site boundary with topographic and satellite mapping, PVGIS yield, infrastructure context, saved GIS analysis and professional outputs.",
   alternates: { canonical: "/tools/solar-site-screening" },
   openGraph: {
-    title: "Free Solar Site Screening & PVGIS Yield Tool",
+    title: "Free Solar Site Assessment & GIS Screening Tool",
     description:
-      "Draw a candidate solar site, calculate its geometry, run an indicative PVGIS yield check and export the boundary.",
+      "Draw or import a candidate site, inspect topographic context, calculate geometry and continue into saved GIS constraint assessment.",
     url: SITE_URL,
     type: "website",
     images: [
@@ -29,16 +29,16 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Free Solar Site Screening & PVGIS Yield Tool",
+    title: "Free Solar Site Assessment & GIS Screening Tool",
     description:
-      "Draw a candidate solar site, calculate its geometry, run an indicative PVGIS yield check and export the boundary.",
+      "Draw or import a candidate site, inspect topographic context, calculate geometry and continue into saved GIS constraint assessment.",
     images: ["/opengraph-image.jpg"],
   },
 };
 
 const faqs = [
   {
-    question: "Is Site Check a solar-project feasibility study?",
+    question: "Is Site Assessment a solar-project feasibility study?",
     answer:
       "No. It is an early-stage screening tool. Its measurements, map context and PVGIS result help structure initial questions, but they do not replace site surveys, grid studies, planning review or professional due diligence.",
   },
@@ -55,12 +55,12 @@ const faqs = [
   {
     question: "Can I upload an existing property boundary?",
     answer:
-      "Yes. Upload a KMZ containing a property polygon and Site Check will place the boundary on the map, calculate its geometry and make the existing PVGIS, TMY and export tools available. If the file contains several polygons, the largest valid polygon is used.",
+      "Yes. Upload a KMZ containing a property polygon and Site Assessment will place the boundary on the map, calculate its geometry and make the existing PVGIS, TMY and export tools available. If the file contains several polygons, the largest valid polygon is used.",
   },
   {
     question: "Can I download a meteorological file for the site?",
     answer:
-      "Yes. Site Check can request a free PVGIS Typical Meteorological Year file at the boundary centroid in CSV or EPW format. The hourly file is intended for preliminary analysis and simulation workflows and is not a measured site dataset.",
+      "Yes. Site Assessment can request a free PVGIS Typical Meteorological Year file at the boundary centroid in CSV or EPW format. The hourly file is intended for preliminary analysis and simulation workflows and is not a measured site dataset.",
   },
   {
     question: "Do the infrastructure layers confirm grid capacity?",
@@ -75,7 +75,7 @@ const structuredData = {
     {
       "@type": ["SoftwareApplication", "WebApplication"],
       "@id": `${SITE_URL}#application`,
-      name: "SolarDev AI Site Check",
+      name: "SolarDev AI Site Assessment",
       url: SITE_URL,
       applicationCategory: "BusinessApplication",
       applicationSubCategory: "Solar site screening tool",
@@ -84,7 +84,7 @@ const structuredData = {
       description:
         "A free screening tool for measuring solar-site boundaries, reviewing indicative map context and requesting a preliminary PVGIS specific-yield result.",
       featureList: [
-        "Satellite site map",
+        "Detailed topographic and satellite basemaps",
         "Boundary area and perimeter calculation",
         "KMZ property-boundary import",
         "Boundary centroid",
@@ -114,7 +114,7 @@ const structuredData = {
         {
           "@type": "ListItem",
           position: 2,
-          name: "Site Check",
+          name: "Site Assessment",
           item: SITE_URL,
         },
       ],
@@ -149,12 +149,12 @@ export default function SolarSiteScreeningPage() {
           <div className="relative mx-auto max-w-7xl">
             <div className="mx-auto mb-10 max-w-4xl text-center">
               <h1 className="text-4xl font-bold tracking-tight sm:text-5xl lg:text-6xl">
-                Free Solar Site Screening and{" "}
-                <span className="text-emerald-400">PVGIS Yield Tool</span>
+                Free Solar Site Assessment and{" "}
+                <span className="text-emerald-400">GIS Screening Tool</span>
               </h1>
               <p className="mx-auto mt-5 max-w-3xl text-base leading-7 text-slate-300 sm:text-lg">
                 Upload a known property boundary from KMZ or draw a candidate
-                utility-scale solar site on satellite imagery, measure its boundary and obtain an indicative PVGIS
+                utility-scale solar site on detailed topographic or satellite mapping, measure its boundary and obtain an indicative PVGIS
                 specific-yield result at the site centroid. Review mapped
                 infrastructure context and export the boundary for further GIS
                 screening. You can also download an hourly PVGIS Typical
@@ -254,7 +254,7 @@ export default function SolarSiteScreeningPage() {
               <p className="text-xs font-bold uppercase tracking-[0.18em] text-amber-300">
                 Important limitations
               </p>
-              <h2 className="mt-3 text-2xl font-bold">What Site Check does not assess</h2>
+              <h2 className="mt-3 text-2xl font-bold">What Site Assessment does not replace</h2>
               <ul className="mt-5 grid gap-3 text-sm text-slate-300 sm:grid-cols-2">
                 {[
                   "Grid capacity or connection feasibility",

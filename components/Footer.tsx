@@ -8,7 +8,7 @@ const productLinks = [
     href: "/handbooks",
   },
   {
-    label: "Site Check",
+    label: "Site Assessment",
     href: "/tools/solar-site-screening",
   },
   {

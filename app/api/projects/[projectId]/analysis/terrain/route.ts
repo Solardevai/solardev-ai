@@ -2,7 +2,6 @@ import { auth } from "@clerk/nextjs/server";
 import { NextRequest, NextResponse } from "next/server";
 import {
   analyzeTerrain,
-  TerrainConfigurationError,
   TerrainSourceError,
 } from "@/lib/gis/terrain-service";
 import { getOwnedProject } from "@/lib/projects/data";
@@ -33,12 +32,6 @@ export async function POST(
       { headers: { "Cache-Control": "private, no-store" } },
     );
   } catch (error) {
-    if (error instanceof TerrainConfigurationError) {
-      return NextResponse.json(
-        { error: error.message },
-        { status: 503, headers: { "Retry-After": "3600" } },
-      );
-    }
     if (error instanceof TerrainSourceError) {
       console.error("[Terrain analysis] elevation service failed", {
         projectId,

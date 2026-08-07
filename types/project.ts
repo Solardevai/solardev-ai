@@ -48,7 +48,7 @@ export type PortfolioProjectSummary = ProjectSummary & {
   };
 };
 
-/** Current Site Check persistence contract. Expand alongside the database model. */
+/** Current Site Assessment persistence contract. Expand alongside the database model. */
 export type SaveProjectPayload = {
   name: string;
   technology?: ProjectTechnology;
