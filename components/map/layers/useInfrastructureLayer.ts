@@ -8,14 +8,14 @@ import type {
 import { Popup } from "maplibre-gl";
 import { RefObject, useEffect, useRef, useState } from "react";
 import type { Coordinate } from "@/lib/geo/types";
+import {
+  createInfrastructureVisibility,
+  getInfrastructureLayer,
+  infrastructureLayers as infrastructureLayerRegistry,
+  type InfrastructureLayerId,
+} from "@/lib/gis/layers";
 
-export type InfrastructureLayerId =
-  | "roads"
-  | "mv"
-  | "hv"
-  | "ehv"
-  | "substations"
-  | "unknown";
+export type { InfrastructureLayerId } from "@/lib/gis/layers";
 
 const INFRASTRUCTURE_LAYER_IDS: Record<InfrastructureLayerId, string[]> = {
   roads: ["infrastructure-roads", "infrastructure-roads-markers"],
@@ -30,32 +30,13 @@ const INFRASTRUCTURE_LAYER_IDS: Record<InfrastructureLayerId, string[]> = {
   unknown: ["infrastructure-unknown", "infrastructure-unknown-markers"],
 };
 
-export const INFRASTRUCTURE_OPTIONS: Array<{
-  id: InfrastructureLayerId;
-  label: string;
-  color: string;
-}> = [
-  { id: "roads", label: "Main roads", color: "#f8fafc" },
-  { id: "mv", label: "MV 1–<45 kV", color: "#fb923c" },
-  { id: "hv", label: "HV 45–<220 kV", color: "#ef4444" },
-  { id: "ehv", label: "EHV ≥220 kV", color: "#a855f7" },
-  { id: "substations", label: "Substations", color: "#22d3ee" },
-  { id: "unknown", label: "Voltage unknown", color: "#94a3b8" },
-];
-
-function createInfrastructureLayerState(): Record<
-  InfrastructureLayerId,
-  boolean
-> {
-  return {
-    roads: false,
-    mv: false,
-    hv: false,
-    ehv: false,
-    substations: true,
-    unknown: false,
-  };
-}
+export const INFRASTRUCTURE_OPTIONS = infrastructureLayerRegistry.map(
+  (layer) => ({
+    id: layer.id,
+    label: layer.name,
+    color: layer.color,
+  }),
+);
 
 const EMPTY_COLLECTION: GeoJSON.FeatureCollection = {
   type: "FeatureCollection",
@@ -77,9 +58,9 @@ export function useInfrastructureLayer({
   const infrastructureAbortRef = useRef<AbortController | null>(null);
   const infrastructureLayersRef = useRef<
     Record<InfrastructureLayerId, boolean>
-  >(createInfrastructureLayerState());
+  >(createInfrastructureVisibility());
   const [infrastructureLayers, setInfrastructureLayers] = useState(
-    createInfrastructureLayerState,
+    createInfrastructureVisibility,
   );
   const [isLoadingInfrastructure, setIsLoadingInfrastructure] =
     useState(false);
@@ -97,20 +78,20 @@ export function useInfrastructureLayer({
 
     const zoom = map.getZoom();
     const minimumZoom: Record<string, number> = {
-      substation: 5,
-      ehv: 6,
-      hv: 7,
-      mv: 8,
-      "power-unknown": 8,
-      road: 9,
+      substation: getInfrastructureLayer("substations").minimumZoom,
+      ehv: getInfrastructureLayer("ehv").minimumZoom,
+      hv: getInfrastructureLayer("hv").minimumZoom,
+      mv: getInfrastructureLayer("mv").minimumZoom,
+      "power-unknown": getInfrastructureLayer("unknown").minimumZoom,
+      road: getInfrastructureLayer("roads").minimumZoom,
     };
     const colors: Record<string, string> = {
-      substation: "#22d3ee",
-      ehv: "#a855f7",
-      hv: "#ef4444",
-      mv: "#fb923c",
-      "power-unknown": "#94a3b8",
-      road: "#f8fafc",
+      substation: getInfrastructureLayer("substations").color,
+      ehv: getInfrastructureLayer("ehv").color,
+      hv: getInfrastructureLayer("hv").color,
+      mv: getInfrastructureLayer("mv").color,
+      "power-unknown": getInfrastructureLayer("unknown").color,
+      road: getInfrastructureLayer("roads").color,
     };
     const elements: SVGElement[] = [];
     const occupiedPointCells = new Set<string>();

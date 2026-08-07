@@ -4,15 +4,15 @@ import { useUser } from "@clerk/nextjs";
 import { area } from "@turf/area";
 import { polygon } from "@turf/helpers";
 import { ChangeEvent, FormEvent, useRef, useState } from "react";
-import { MapCanvas } from "@/components/map/MapCanvas";
+import { MapCoreCanvas, useMapCore } from "@/components/gis/MapCore";
 import { useDrawingTools } from "@/components/map/useDrawingTools";
-import { useMapCanvas } from "@/components/map/useMapCanvas";
 import {
   INFRASTRUCTURE_OPTIONS,
   useInfrastructureLayer,
 } from "@/components/map/layers/useInfrastructureLayer";
 import { formatArea, formatDistance } from "@/lib/geo/format";
 import { createKml, parseKmlPolygons } from "@/lib/geo/kml";
+import type { SaveProjectPayload } from "@/types/project";
 
 type SolarResult = {
   annualYield: number;
@@ -49,7 +49,7 @@ function SolarSiteScreeningMapContent({
   isSignedIn: boolean;
 }) {
   const kmzInputRef = useRef<HTMLInputElement>(null);
-  const { containerRef, drawingOverlayRef, mapRef, map } = useMapCanvas();
+  const { containerRef, drawingOverlayRef, mapRef, map } = useMapCore();
 
   const [query, setQuery] = useState("");
   const [projectName, setProjectName] = useState("");
@@ -288,7 +288,7 @@ function SolarSiteScreeningMapContent({
           perimeterM: sitePerimeter * 1000,
           centroidLon: siteCentroid[0],
           centroidLat: siteCentroid[1],
-        }),
+        } satisfies SaveProjectPayload),
       });
       const result = await response.json();
       if (!response.ok) throw new Error(result.error || "The project could not be saved.");
@@ -523,7 +523,7 @@ function SolarSiteScreeningMapContent({
       </aside>
 
       <div className="relative order-1 h-[480px] min-h-0 lg:order-2 lg:h-[720px]">
-        <MapCanvas
+        <MapCoreCanvas
           containerRef={containerRef}
           drawingOverlayRef={drawingOverlayRef}
           ariaLabel="Interactive solar site screening map"

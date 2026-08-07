@@ -2,15 +2,7 @@ import { currentUser } from "@clerk/nextjs/server";
 import type { Prisma } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-
-type SaveProjectBody = {
-  name?: string;
-  boundary?: GeoJSON.Polygon;
-  areaSqm?: number;
-  perimeterM?: number;
-  centroidLat?: number;
-  centroidLon?: number;
-};
+import type { SaveProjectPayload } from "@/types/project";
 
 export async function POST(request: NextRequest) {
   const user = await currentUser();
@@ -22,7 +14,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Your account has no verified email." }, { status: 400 });
   }
 
-  const body = (await request.json()) as SaveProjectBody;
+  const body = (await request.json()) as Partial<SaveProjectPayload>;
   if (!body.boundary || body.boundary.type !== "Polygon") {
     return NextResponse.json({ error: "A site boundary is required." }, { status: 400 });
   }
