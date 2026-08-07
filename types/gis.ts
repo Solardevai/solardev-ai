@@ -241,6 +241,19 @@ export type SiteScoreCriterion = {
   evidence: string;
 };
 
+export type SiteScoreSource = {
+  id: string;
+  label: string;
+  provider: string;
+  dataset: string;
+  version: string | null;
+  licence: string;
+  retrievedAt: string;
+  serviceUrl: string | null;
+  metadataUrl: string | null;
+  limitations: string[];
+};
+
 export type PreliminarySiteScore = {
   projectId: string;
   generatedAt: string;
@@ -254,8 +267,10 @@ export type PreliminarySiteScore = {
     | "unavailable";
   criteria: SiteScoreCriterion[];
   unavailableSources: Array<{ id: string; label: string; reason: string }>;
+  /** Added in methodology v1.1. Optional for backward-compatible v1.0 snapshots. */
+  sources?: SiteScoreSource[];
   methodology: {
-    version: "1.0";
+    version: "1.0" | "1.1";
     totalWeight: 100;
     normalization: "available-weight normalized";
   };

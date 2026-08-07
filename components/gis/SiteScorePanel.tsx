@@ -250,13 +250,13 @@ export default function SiteScorePanel({
               const isLoading = loadingSnapshotId === snapshot.id;
 
               return (
-                <li key={snapshot.id}>
+                <li key={snapshot.id} className="flex items-stretch gap-1.5">
                   <button
                     type="button"
                     onClick={() => loadSnapshot(snapshot.id)}
                     disabled={loadingSnapshotId !== null || isRunning}
                     aria-pressed={isActive}
-                    className={`w-full rounded-lg border px-2.5 py-2 text-left hover:border-emerald-300/20 hover:bg-white/[0.045] disabled:opacity-60 ${
+                    className={`min-w-0 flex-1 rounded-lg border px-2.5 py-2 text-left hover:border-emerald-300/20 hover:bg-white/[0.045] disabled:opacity-60 ${
                       isActive
                         ? "border-emerald-300/30 bg-emerald-300/[0.06]"
                         : "border-white/8 bg-white/[0.025]"
@@ -293,6 +293,14 @@ export default function SiteScorePanel({
                       </span>
                     </span>
                   </button>
+                  <a
+                    href={`/api/projects/${projectId}/analysis/snapshots/${snapshot.id}/report`}
+                    download
+                    aria-label={`Download PDF report for the ${snapshotDateFormatter.format(new Date(snapshot.createdAt))} analysis`}
+                    className="flex w-12 shrink-0 items-center justify-center rounded-lg border border-white/8 bg-white/[0.025] text-[9px] font-bold text-emerald-200 hover:border-emerald-300/25 hover:bg-emerald-300/[0.06]"
+                  >
+                    PDF
+                  </a>
                 </li>
               );
             })}

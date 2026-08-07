@@ -89,5 +89,12 @@ payload, methodology version, score, coverage and confidence. Owner-authorized
 list and detail endpoints let the project workspace reopen prior runs and show
 their change from the immediately preceding result.
 
-The next increment should turn saved evidence into a professional screening
-report with project metadata, source citations, limitations and methodology.
+GIS-03 professional screening reports are now delivered as owner-authorized PDF
+downloads for every immutable score run. Each report includes project and site
+metadata, the executive result, weighted criterion evidence, recommended next
+actions, the persisted source register and limitations, methodology, reliance
+language and the snapshot audit record. Legacy snapshots remain exportable and
+explicitly disclose when detailed source metadata was not yet persisted.
+
+The next increment should add portfolio comparison so owners can rank saved
+projects by score, coverage, confidence and material-constraint count.

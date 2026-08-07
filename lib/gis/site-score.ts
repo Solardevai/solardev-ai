@@ -15,6 +15,7 @@ import type {
   ProximityClassification,
   SiteScoreCriterion,
   SiteScoreCriterionId,
+  SiteScoreSource,
   SurfaceWaterAnalysis,
   TerrainAnalysis,
 } from "@/types/gis";
@@ -266,6 +267,109 @@ function sourceFailure(id: string, label: string, reason: string) {
   return { id, label, reason };
 }
 
+function sourceRegister(
+  infrastructure: PromiseSettledResult<InfrastructureAnalysis>,
+  natura: PromiseSettledResult<Natura2000ConstraintAnalysis>,
+  national: PromiseSettledResult<NationallyDesignatedAreasAnalysis>,
+  flood: PromiseSettledResult<FloodRiskAreaAnalysis>,
+  surfaceWater: PromiseSettledResult<SurfaceWaterAnalysis>,
+  terrain: PromiseSettledResult<TerrainAnalysis>,
+) {
+  const sources: SiteScoreSource[] = [];
+
+  if (natura.status === "fulfilled") {
+    sources.push({
+      id: "natura-2000",
+      label: "Natura 2000",
+      provider: natura.value.source.provider,
+      dataset: "Natura 2000 spatial dataset",
+      version: natura.value.source.datasetVersion,
+      licence: natura.value.source.licence,
+      retrievedAt: natura.value.source.retrievedAt,
+      serviceUrl: natura.value.source.serviceUrl,
+      metadataUrl: natura.value.source.metadataUrl,
+      limitations: natura.value.limitations,
+    });
+  }
+
+  if (national.status === "fulfilled") {
+    sources.push({
+      id: "national-designations",
+      label: "Nationally designated areas",
+      provider: national.value.source.provider,
+      dataset: `Nationally designated areas (${national.value.source.reportingPeriod})`,
+      version: national.value.source.datasetVersion,
+      licence: national.value.source.licence,
+      retrievedAt: national.value.source.retrievedAt,
+      serviceUrl: national.value.source.serviceUrl,
+      metadataUrl: national.value.source.metadataUrl,
+      limitations: national.value.limitations,
+    });
+  }
+
+  if (flood.status === "fulfilled") {
+    sources.push({
+      id: "flood-risk-areas",
+      label: "Floods Directive reporting areas",
+      provider: flood.value.source.provider,
+      dataset: flood.value.source.serviceDataset,
+      version: flood.value.source.latestReferenceDataset,
+      licence: flood.value.source.licence,
+      retrievedAt: flood.value.source.retrievedAt,
+      serviceUrl: flood.value.source.serviceUrl,
+      metadataUrl: flood.value.source.metadataUrl,
+      limitations: flood.value.limitations,
+    });
+  }
+
+  if (surfaceWater.status === "fulfilled") {
+    sources.push({
+      id: "surface-water",
+      label: "Surface water and wetlands",
+      provider: surfaceWater.value.source.provider,
+      dataset: "Live OpenStreetMap extract",
+      version: surfaceWater.value.source.datasetTimestamp,
+      licence: surfaceWater.value.source.licence,
+      retrievedAt: surfaceWater.value.source.retrievedAt,
+      serviceUrl: surfaceWater.value.source.endpoint,
+      metadataUrl: "https://www.openstreetmap.org/copyright",
+      limitations: surfaceWater.value.limitations,
+    });
+  }
+
+  if (infrastructure.status === "fulfilled") {
+    sources.push({
+      id: "infrastructure",
+      label: "Road, grid and substation proximity",
+      provider: infrastructure.value.source.provider,
+      dataset: "Live OpenStreetMap infrastructure extract",
+      version: infrastructure.value.source.datasetTimestamp,
+      licence: infrastructure.value.source.licence,
+      retrievedAt: infrastructure.value.source.retrievedAt,
+      serviceUrl: infrastructure.value.source.endpoint,
+      metadataUrl: "https://www.openstreetmap.org/copyright",
+      limitations: infrastructure.value.limitations,
+    });
+  }
+
+  if (terrain.status === "fulfilled") {
+    sources.push({
+      id: "terrain",
+      label: "Terrain elevation and slope",
+      provider: terrain.value.source.provider,
+      dataset: `${terrain.value.source.dataset} (${terrain.value.source.resolutionM} m)`,
+      version: terrain.value.source.doi,
+      licence: terrain.value.source.licence,
+      retrievedAt: terrain.value.source.retrievedAt,
+      serviceUrl: "https://open-meteo.com/en/docs/elevation-api",
+      metadataUrl: `https://doi.org/${terrain.value.source.doi}`,
+      limitations: terrain.value.limitations,
+    });
+  }
+
+  return sources;
+}
+
 export async function analyzePreliminarySiteScore(
   projectId: string,
   site: GeoJSON.Polygon,
@@ -401,8 +505,16 @@ export async function analyzePreliminarySiteScore(
     band,
     criteria,
     unavailableSources,
+    sources: sourceRegister(
+      infrastructure,
+      natura,
+      national,
+      flood,
+      surfaceWater,
+      terrain,
+    ),
     methodology: {
-      version: "1.0",
+      version: "1.1",
       totalWeight: 100,
       normalization: "available-weight normalized",
     },
