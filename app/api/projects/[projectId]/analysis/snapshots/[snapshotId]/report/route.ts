@@ -1,5 +1,10 @@
 import { auth } from "@clerk/nextjs/server";
 import { NextRequest, NextResponse } from "next/server";
+import {
+  releaseUsage,
+  reserveUsage,
+  UsageLimitError,
+} from "@/lib/billing/usage";
 import { getOwnedAnalysisSnapshot } from "@/lib/gis/analysis-snapshots";
 import {
   generateScreeningReport,
@@ -14,7 +19,7 @@ type ReportRouteContext = {
 export const runtime = "nodejs";
 
 export async function GET(
-  _request: NextRequest,
+  request: NextRequest,
   context: ReportRouteContext,
 ) {
   const { userId } = await auth();
@@ -31,7 +36,13 @@ export async function GET(
     return NextResponse.json({ error: "Report evidence not found." }, { status: 404 });
   }
 
+  let usageReservation: Awaited<ReturnType<typeof reserveUsage>> | null = null;
   try {
+    usageReservation = await reserveUsage(userId, "screening-report", {
+      projectId,
+      snapshotId,
+      idempotencyKey: `screening-report:${userId}:${snapshotId}`,
+    });
     const bytes = await generateScreeningReport(project, snapshot);
     const body = bytes.buffer.slice(
       bytes.byteOffset,
@@ -47,6 +58,26 @@ export async function GET(
       },
     });
   } catch (error) {
+    if (error instanceof UsageLimitError) {
+      if (request.headers.get("accept")?.includes("text/html")) {
+        return NextResponse.redirect(
+          new URL("/dashboard?billing=report-limit", request.url),
+          303,
+        );
+      }
+      return NextResponse.json(
+        { error: error.message, code: error.code },
+        { status: 429 },
+      );
+    }
+    if (usageReservation?.newlyConsumed) {
+      await releaseUsage(usageReservation.eventId).catch((releaseError) => {
+        console.error("[Screening report] usage release failed", {
+          eventId: usageReservation?.eventId,
+          releaseError,
+        });
+      });
+    }
     console.error("[Screening report] generation failed", {
       projectId,
       snapshotId,

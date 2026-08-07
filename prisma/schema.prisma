@@ -7,10 +7,16 @@ datasource db {
 }
 
 model User {
-  id        String    @id // Clerk user id
-  email     String    @unique
-  createdAt DateTime  @default(now())
-  projects  Project[]
+  id                    String       @id // Clerk user id
+  email                 String       @unique
+  plan                  String       @default("free")
+  stripeCustomerId      String?      @unique
+  stripeSubscriptionId  String?      @unique
+  subscriptionStatus    String       @default("inactive")
+  subscriptionPeriodEnd DateTime?
+  createdAt             DateTime     @default(now())
+  projects              Project[]
+  usageEvents           UsageEvent[]
 }
 
 model Project {
@@ -51,4 +57,19 @@ model AnalysisSnapshot {
   createdAt          DateTime @default(now())
 
   @@index([projectId, createdAt])
+}
+
+model UsageEvent {
+  id             String   @id @default(cuid())
+  userId         String
+  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  kind           String
+  units          Int      @default(1)
+  periodKey      String
+  projectId      String?
+  snapshotId     String?
+  idempotencyKey String?  @unique
+  createdAt      DateTime @default(now())
+
+  @@index([userId, kind, periodKey])
 }

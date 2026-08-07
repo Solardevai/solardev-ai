@@ -102,5 +102,14 @@ project by score, coverage, material-constraint count, analysis recency or name.
 Portfolio cards summarize analysis coverage, average score, material criteria
 and high-confidence runs, while each row links to the workspace and latest PDF.
 
-The next increment should add usage allowances and subscription controls around
-high-cost analyses and professional report generation.
+Workspace commercial controls are now delivered. PostgreSQL-backed UTC-month
+allowances are reserved atomically at the protected score and report APIs,
+released after failed work, and surfaced on the dashboard. Free and Pro limits
+are environment-overridable. Stripe-hosted subscription Checkout and Billing
+Portal routes are owner-authenticated, while signed subscription webhooks are
+the only path that can grant or revoke Pro entitlements. Unrelated Stripe
+products are ignored and repeat downloads of an existing snapshot report do not
+consume another unit.
+
+The next professional-output increment should add a dated map exhibit and
+spatial constraint register to the snapshot PDF package.

@@ -4,8 +4,10 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import Footer from "@/components/Footer";
 import Navbar from "@/components/Navbar";
+import BillingUsagePanel from "@/components/billing/BillingUsagePanel";
 import PortfolioComparison from "@/components/gis/PortfolioComparison";
 import { isAuthenticationAvailable } from "@/lib/auth-config";
+import { getUsageSummary } from "@/lib/billing/usage";
 import { formatArea } from "@/lib/geo/format";
 import { listOwnedPortfolioProjects } from "@/lib/projects/data";
 
@@ -57,14 +59,24 @@ const accentClasses = {
   sky: "border-sky-300/20 bg-sky-300/10 text-sky-200",
 };
 
-export default async function DashboardPage() {
+export default async function DashboardPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ billing?: string | string[] }>;
+}) {
   if (!isAuthenticationAvailable()) {
     redirect("/sign-in?configuration=required");
   }
 
   const { userId } = await auth();
   if (!userId) redirect("/sign-in");
-  const projects = await listOwnedPortfolioProjects(userId);
+  const [projects, usage, query] = await Promise.all([
+    listOwnedPortfolioProjects(userId),
+    getUsageSummary(userId),
+    searchParams,
+  ]);
+  const billingNotice =
+    typeof query.billing === "string" ? query.billing : undefined;
 
   return (
     <>
@@ -78,7 +90,7 @@ export default async function DashboardPage() {
                 Protected workspace
               </span>
               <span className="rounded-full border border-white/10 bg-white/[0.04] px-3 py-1 text-xs font-semibold text-slate-300">
-                Free account
+                {usage.plan === "pro" ? "Pro account" : "Free account"}
               </span>
             </div>
 
@@ -100,6 +112,8 @@ export default async function DashboardPage() {
         </section>
 
         <section className="mx-auto max-w-7xl px-6 py-14 lg:px-8 lg:py-20">
+          <BillingUsagePanel usage={usage} notice={billingNotice} />
+
           <PortfolioComparison projects={projects} />
 
           <div className="mb-12">
@@ -192,13 +206,14 @@ export default async function DashboardPage() {
                   Workspace roadmap
                 </p>
                 <h2 className="mt-3 text-2xl font-semibold tracking-tight">
-                  Account foundation active
+                  Commercial controls active
                 </h2>
                 <p className="mt-4 max-w-3xl leading-7 text-slate-300">
                   Authentication, project saving and the first GIS workspace
                   are active alongside constraint screening, immutable history,
                   professional PDF reports and portfolio ranking. Usage
-                  allowances and subscription controls remain on the roadmap.
+                  allowances and Stripe-backed subscription controls are now
+                  enforced at the API boundary.
                 </p>
               </div>
               <Link

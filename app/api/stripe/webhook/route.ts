@@ -1,5 +1,9 @@
 import { NextResponse } from "next/server";
 import Stripe from "stripe";
+import {
+  syncWorkspaceCheckout,
+  syncWorkspaceSubscription,
+} from "@/lib/billing/stripe-subscription";
 import { getStripe } from "@/lib/stripe";
 import { handbookProducts } from "@/data/productData";
 
@@ -190,6 +194,16 @@ export async function POST(request: Request) {
         const session =
           event.data.object as Stripe.Checkout.Session;
 
+        if (session.mode === "subscription") {
+          const result = await syncWorkspaceCheckout(session);
+          console.info("Workspace subscription checkout processed", {
+            eventId: event.id,
+            sessionId: session.id,
+            entitled: result?.isEntitled ?? false,
+          });
+          break;
+        }
+
         /*
          * Card payments normally have payment_status=paid
          * at this point. Delayed payment methods might not.
@@ -224,6 +238,16 @@ export async function POST(request: Request) {
         const session =
           event.data.object as Stripe.Checkout.Session;
 
+        if (session.mode === "subscription") {
+          const result = await syncWorkspaceCheckout(session);
+          console.info("Workspace subscription payment processed", {
+            eventId: event.id,
+            sessionId: session.id,
+            entitled: result?.isEntitled ?? false,
+          });
+          break;
+        }
+
         const result =
           await verifyPaidOrder(session.id);
 
@@ -235,6 +259,20 @@ export async function POST(request: Request) {
           },
         );
 
+        break;
+      }
+
+      case "customer.subscription.created":
+      case "customer.subscription.updated":
+      case "customer.subscription.deleted": {
+        const subscription = event.data.object as Stripe.Subscription;
+        const result = await syncWorkspaceSubscription(subscription);
+        console.info("Workspace subscription state synchronized", {
+          eventId: event.id,
+          subscriptionId: subscription.id,
+          status: subscription.status,
+          entitled: result.isEntitled,
+        });
         break;
       }
 

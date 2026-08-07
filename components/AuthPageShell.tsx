@@ -75,8 +75,8 @@ export default function AuthPageShell({
                   aria-hidden="true"
                   className="mt-2 h-2 w-2 shrink-0 rounded-full bg-sky-400"
                 />
-                Saved projects, reports and plan controls will be introduced
-                here as those capabilities are released.
+                Saved projects, reports, portfolio comparison and plan controls
+                are available after registration.
               </li>
             </ul>
           </div>
