@@ -29,9 +29,14 @@ await page.goto(
   process.env.MAP_TEST_URL ??
     "http://127.0.0.1:3010/tools/solar-site-screening",
   {
-  waitUntil: "networkidle",
+    waitUntil: "domcontentloaded",
+    timeout: 60_000,
   },
 );
+await page.locator(".maplibregl-canvas").waitFor({
+  state: "visible",
+  timeout: 30_000,
+});
 await page.waitForTimeout(3000);
 
 const rejectAnalytics = page.getByRole("button", { name: "Reject analytics" });

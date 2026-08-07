@@ -23,10 +23,33 @@ type SolarResult = {
 type ExportFormat = "geojson" | "kml" | "kmz";
 type MeteoFormat = "csv" | "epw";
 
-export default function SolarSiteScreeningMap() {
+type SolarSiteScreeningMapProps = {
+  authenticationAvailable: boolean;
+};
+
+export default function SolarSiteScreeningMap({
+  authenticationAvailable,
+}: SolarSiteScreeningMapProps) {
+  return authenticationAvailable ? (
+    <AuthenticatedSolarSiteScreeningMap />
+  ) : (
+    <SolarSiteScreeningMapContent isSignedIn={false} />
+  );
+}
+
+function AuthenticatedSolarSiteScreeningMap() {
+  const { isSignedIn } = useUser();
+
+  return <SolarSiteScreeningMapContent isSignedIn={Boolean(isSignedIn)} />;
+}
+
+function SolarSiteScreeningMapContent({
+  isSignedIn,
+}: {
+  isSignedIn: boolean;
+}) {
   const kmzInputRef = useRef<HTMLInputElement>(null);
   const { containerRef, drawingOverlayRef, mapRef, map } = useMapCanvas();
-  const { isSignedIn } = useUser();
 
   const [query, setQuery] = useState("");
   const [projectName, setProjectName] = useState("");

@@ -3,6 +3,7 @@ import Link from "next/link";
 import Footer from "@/components/Footer";
 import Navbar from "@/components/Navbar";
 import SolarSiteScreeningMap from "@/components/SolarSiteScreeningMap";
+import { isAuthenticationAvailable } from "@/lib/auth-config";
 
 const SITE_URL = "https://www.solardev.ai/tools/solar-site-screening";
 
@@ -161,7 +162,9 @@ export default function SolarSiteScreeningPage() {
               </p>
             </div>
 
-            <SolarSiteScreeningMap />
+            <SolarSiteScreeningMap
+              authenticationAvailable={isAuthenticationAvailable()}
+            />
 
             <div className="mt-6 grid gap-4 text-sm text-slate-400 sm:grid-cols-3">
               <p>
