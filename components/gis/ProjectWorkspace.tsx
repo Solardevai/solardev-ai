@@ -6,6 +6,7 @@ import ConstraintAnalysisPanel from "@/components/gis/ConstraintAnalysisPanel";
 import FloodRiskAnalysisPanel from "@/components/gis/FloodRiskAnalysisPanel";
 import InfrastructureAnalysisPanel from "@/components/gis/InfrastructureAnalysisPanel";
 import SurfaceWaterAnalysisPanel from "@/components/gis/SurfaceWaterAnalysisPanel";
+import TerrainAnalysisPanel from "@/components/gis/TerrainAnalysisPanel";
 import { MapCoreCanvas, useMapCore } from "@/components/gis/MapCore";
 import {
   INFRASTRUCTURE_OPTIONS,
@@ -233,6 +234,16 @@ export default function ProjectWorkspace({ project }: ProjectWorkspaceProps) {
               Natura 2000 · NatDA · Floods Directive context
             </p>
           </div>
+          <div className="mt-6">
+            <p className="text-xs font-semibold text-slate-300">Terrain</p>
+            <div className="mt-2 flex items-center gap-2 rounded-lg bg-white/[0.04] px-3 py-2 text-xs text-slate-300">
+              <span className="h-2 w-2 rounded-full bg-lime-400" />
+              Elevation and sampled slope
+            </div>
+            <p className="mt-2 text-[10px] leading-4 text-slate-500">
+              Copernicus DEM · 90 m screening resolution
+            </p>
+          </div>
         </aside>
 
         <section className="relative order-1 h-[58vh] min-h-[440px] lg:order-2 lg:h-auto">
@@ -315,6 +326,7 @@ export default function ProjectWorkspace({ project }: ProjectWorkspaceProps) {
           <ConstraintAnalysisPanel projectId={project.id} />
           <FloodRiskAnalysisPanel projectId={project.id} />
           <SurfaceWaterAnalysisPanel projectId={project.id} />
+          <TerrainAnalysisPanel projectId={project.id} />
           <InfrastructureAnalysisPanel projectId={project.id} />
         </aside>
       </div>

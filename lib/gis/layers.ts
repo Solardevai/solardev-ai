@@ -1,4 +1,8 @@
-export type GisLayerGroup = "basemap" | "infrastructure" | "environment";
+export type GisLayerGroup =
+  | "basemap"
+  | "infrastructure"
+  | "environment"
+  | "terrain";
 export type GisLayerSourceType = "raster-tiles" | "api-geojson" | "arcgis-rest";
 export type GisLayerAnalysis = "context" | "distance" | "intersection";
 
@@ -170,6 +174,20 @@ export const constraintLayers = [
       licence: "Open Database License (ODbL)",
     },
     screening: { enabled: true, analysis: "distance" },
+  },
+  {
+    id: "terrain-slope",
+    name: "Terrain elevation and slope",
+    group: "terrain",
+    sourceType: "api-geojson",
+    defaultVisible: false,
+    minimumZoom: 10,
+    color: "#a3e635",
+    metadata: {
+      provider: "Copernicus DEM via Open-Meteo Elevation API",
+      licence: "Copernicus data attribution requirements",
+    },
+    screening: { enabled: true, analysis: "context" },
   },
 ] as const satisfies ReadonlyArray<GisLayerDefinition>;
 

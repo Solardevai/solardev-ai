@@ -69,5 +69,12 @@ watercourses, standing water and wetlands, detects on-site intersections and
 returns dataset timestamps, search radius, confidence limitations and authority
 verification actions.
 
-The next deterministic site-screening increment should add terrain elevation
-and slope before introducing a combined preliminary score.
+GIS-03 terrain screening is now delivered using a bounded site grid and the
+90 m Copernicus DEM through Open-Meteo. It reports sampled elevation range,
+average slope, 90th-percentile slope, maximum sampled slope, risk logic and
+survey limitations. Production access is gated behind a commercial
+`OPEN_METEO_API_KEY`; the free endpoint is available only through an explicit
+non-production evaluation flag.
+
+The next increment should combine the deterministic results into an explainable
+preliminary site score without persisting analysis history yet.

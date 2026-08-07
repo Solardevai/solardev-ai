@@ -186,3 +186,36 @@ export type SurfaceWaterAnalysis = {
   };
   limitations: string[];
 };
+
+export type TerrainAnalysis = {
+  projectId: string;
+  generatedAt: string;
+  result: {
+    layerId: "terrain-slope";
+    label: "Terrain elevation and slope";
+    sampleCount: number;
+    minimumElevationM: number;
+    maximumElevationM: number;
+    meanElevationM: number;
+    elevationRangeM: number;
+    averageSlopeDeg: number;
+    p90SlopeDeg: number;
+    maximumSampledSlopeDeg: number;
+    risk: ConstraintRisk;
+    confidence: "medium";
+    recommendedAction: string;
+  };
+  source: {
+    provider: "Open-Meteo Elevation API";
+    dataset: "Copernicus DEM";
+    resolutionM: 90;
+    doi: "10.5270/ESA-c5d3d65";
+    retrievedAt: string;
+    licence: "Copernicus data attribution requirements";
+  };
+  methodology: {
+    sampling: "9 × 9 interior grid plus available boundary vertices";
+    slope: "nearest-neighbour elevation gradient";
+  };
+  limitations: string[];
+};
