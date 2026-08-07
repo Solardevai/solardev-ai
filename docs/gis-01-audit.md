@@ -41,7 +41,11 @@
 
 ## Recommended next implementation
 
-GIS-03 should add deterministic constraint intersection and distance
-calculations, including affected area, site percentage, source metadata, and
-risk classification. AI interpretation should remain downstream of those
-traceable results.
+GIS-03 infrastructure proximity is now delivered with polygon-to-asset
+distance calculations, source timestamps, search-radius disclosure and
+recommended verification actions.
+
+The next GIS-03 increment should register the first authoritative constraint
+dataset and add polygon intersection, affected area, site percentage and risk
+classification. AI interpretation should remain downstream of those traceable
+results.

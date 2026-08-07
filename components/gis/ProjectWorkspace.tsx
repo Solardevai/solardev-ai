@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
+import InfrastructureAnalysisPanel from "@/components/gis/InfrastructureAnalysisPanel";
 import { MapCoreCanvas, useMapCore } from "@/components/gis/MapCore";
 import {
   INFRASTRUCTURE_OPTIONS,
@@ -284,15 +285,7 @@ export default function ProjectWorkspace({ project }: ProjectWorkspaceProps) {
             </dl>
           </div>
 
-          <div className="mt-6 rounded-xl border border-amber-300/15 bg-amber-300/[0.05] p-4">
-            <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-amber-200">
-              Screening
-            </p>
-            <p className="mt-2 text-sm font-semibold">Constraint engine next</p>
-            <p className="mt-2 text-[11px] leading-5 text-slate-400">
-              Automated intersections, distance analysis and preliminary risk scoring are not yet active.
-            </p>
-          </div>
+          <InfrastructureAnalysisPanel projectId={project.id} />
         </aside>
       </div>
 
