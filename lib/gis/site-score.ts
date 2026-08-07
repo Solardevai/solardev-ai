@@ -1,0 +1,412 @@
+import "server-only";
+
+import { analyzeFloodRiskAreas } from "@/lib/gis/flood-risk-service";
+import { analyzeInfrastructure } from "@/lib/gis/infrastructure-analysis";
+import { analyzeNationallyDesignatedAreas } from "@/lib/gis/nationally-designated-areas-service";
+import { analyzeNatura2000 } from "@/lib/gis/natura2000-service";
+import { analyzeSurfaceWater } from "@/lib/gis/surface-water-service";
+import { analyzeTerrain } from "@/lib/gis/terrain-service";
+import type {
+  FloodRiskAreaAnalysis,
+  InfrastructureAnalysis,
+  NationallyDesignatedAreasAnalysis,
+  Natura2000ConstraintAnalysis,
+  PreliminarySiteScore,
+  ProximityClassification,
+  SiteScoreCriterion,
+  SiteScoreCriterionId,
+  SurfaceWaterAnalysis,
+  TerrainAnalysis,
+} from "@/types/gis";
+
+type CriterionBase = Pick<
+  SiteScoreCriterion,
+  "id" | "label" | "group" | "weight"
+>;
+
+const SOURCE_DEADLINE_MS = 35_000;
+
+async function withinSourceDeadline<T>(promise: Promise<T>) {
+  let timeoutId: ReturnType<typeof setTimeout> | undefined;
+  const timeout = new Promise<never>((_resolve, reject) => {
+    timeoutId = setTimeout(
+      () => reject(new Error("Analysis source deadline exceeded.")),
+      SOURCE_DEADLINE_MS,
+    );
+  });
+  try {
+    return await Promise.race([promise, timeout]);
+  } finally {
+    if (timeoutId) clearTimeout(timeoutId);
+  }
+}
+
+const CRITERIA: Record<SiteScoreCriterionId, CriterionBase> = {
+  "natura-2000": {
+    id: "natura-2000",
+    label: "Natura 2000",
+    group: "environment",
+    weight: 15,
+  },
+  "national-designations": {
+    id: "national-designations",
+    label: "National designations",
+    group: "environment",
+    weight: 15,
+  },
+  "flood-risk-areas": {
+    id: "flood-risk-areas",
+    label: "Flood risk reporting areas",
+    group: "water",
+    weight: 10,
+  },
+  "surface-water": {
+    id: "surface-water",
+    label: "Surface water and wetlands",
+    group: "water",
+    weight: 15,
+  },
+  "main-road": {
+    id: "main-road",
+    label: "Main-road proximity",
+    group: "infrastructure",
+    weight: 10,
+  },
+  "transmission-line": {
+    id: "transmission-line",
+    label: "Transmission-line proximity",
+    group: "infrastructure",
+    weight: 10,
+  },
+  substation: {
+    id: "substation",
+    label: "Substation proximity",
+    group: "infrastructure",
+    weight: 10,
+  },
+  terrain: {
+    id: "terrain",
+    label: "Terrain slope",
+    group: "terrain",
+    weight: 15,
+  },
+};
+
+function round(value: number, decimals = 1) {
+  const factor = 10 ** decimals;
+  return Math.round(value * factor) / factor;
+}
+
+function criterion(
+  id: SiteScoreCriterionId,
+  score: number,
+  evidence: string,
+): SiteScoreCriterion {
+  const base = CRITERIA[id];
+  const boundedScore = Math.max(0, Math.min(100, score));
+  return {
+    ...base,
+    score: boundedScore,
+    deductionPoints: round(base.weight * (1 - boundedScore / 100)),
+    status:
+      boundedScore >= 80
+        ? "favourable"
+        : boundedScore >= 50
+          ? "caution"
+          : "constraint",
+    evidence,
+  };
+}
+
+function unavailable(
+  id: SiteScoreCriterionId,
+  evidence = "Source unavailable during this run.",
+): SiteScoreCriterion {
+  return {
+    ...CRITERIA[id],
+    score: null,
+    deductionPoints: null,
+    status: "unavailable",
+    evidence,
+  };
+}
+
+function overlapScore(percent: number, minorScore: number) {
+  if (percent <= 0) return 100;
+  if (percent <= 1) return minorScore;
+  if (percent <= 10) return 15;
+  return 0;
+}
+
+function naturaCriterion(analysis: Natura2000ConstraintAnalysis) {
+  const { affectedSitePercent, sites } = analysis.result;
+  return criterion(
+    "natura-2000",
+    overlapScore(affectedSitePercent, 40),
+    affectedSitePercent > 0
+      ? `${affectedSitePercent.toFixed(2)}% of the site overlaps ${sites.length} Natura 2000 designation${sites.length === 1 ? "" : "s"}.`
+      : "No mapped Natura 2000 intersection was returned.",
+  );
+}
+
+function nationalCriterion(analysis: NationallyDesignatedAreasAnalysis) {
+  const { affectedSitePercent, areas } = analysis.result;
+  return criterion(
+    "national-designations",
+    overlapScore(affectedSitePercent, 50),
+    affectedSitePercent > 0
+      ? `${affectedSitePercent.toFixed(2)}% of the site overlaps ${areas.length} national designation${areas.length === 1 ? "" : "s"}.`
+      : "No mapped national-designation intersection was returned.",
+  );
+}
+
+function floodCriterion(analysis: FloodRiskAreaAnalysis) {
+  return criterion(
+    "flood-risk-areas",
+    analysis.result.intersects ? 25 : 100,
+    analysis.result.intersects
+      ? `${analysis.result.areas.length} Floods Directive reporting-area ${analysis.result.areas.length === 1 ? "feature intersects" : "features intersect"} the site.`
+      : "No Floods Directive reporting-area intersection was returned.",
+  );
+}
+
+const proximityRank: Record<ProximityClassification, number> = {
+  "on-site": 0,
+  near: 1,
+  moderate: 2,
+  remote: 3,
+  "not-found": 4,
+};
+
+function waterCriterion(analysis: SurfaceWaterAnalysis) {
+  const worst = [...analysis.results].sort(
+    (first, second) =>
+      proximityRank[first.classification] - proximityRank[second.classification],
+  )[0];
+  const scoreByClassification: Record<ProximityClassification, number> = {
+    "on-site": 0,
+    near: 50,
+    moderate: 75,
+    remote: 100,
+    "not-found": 100,
+  };
+  const onSite = analysis.results.filter(
+    (result) => result.classification === "on-site",
+  );
+  return criterion(
+    "surface-water",
+    scoreByClassification[worst.classification],
+    onSite.length
+      ? `${onSite.length} mapped surface-water ${onSite.length === 1 ? "category intersects" : "categories intersect"} the site.`
+      : worst.distanceM == null
+        ? "No mapped surface-water feature was found within the search radius."
+        : `Nearest mapped ${worst.label.toLowerCase()} is ${worst.distanceM.toLocaleString()} m from the boundary.`,
+  );
+}
+
+function infrastructureScore(
+  id: "main-road" | "transmission-line" | "substation",
+  classification: ProximityClassification,
+) {
+  const scores = {
+    "main-road": {
+      "on-site": 50,
+      near: 100,
+      moderate: 75,
+      remote: 40,
+      "not-found": 20,
+    },
+    "transmission-line": {
+      "on-site": 60,
+      near: 100,
+      moderate: 75,
+      remote: 40,
+      "not-found": 20,
+    },
+    substation: {
+      "on-site": 70,
+      near: 100,
+      moderate: 80,
+      remote: 50,
+      "not-found": 25,
+    },
+  } as const;
+  return scores[id][classification];
+}
+
+function infrastructureCriteria(analysis: InfrastructureAnalysis) {
+  return analysis.results.map((result) =>
+    criterion(
+      result.id,
+      infrastructureScore(result.id, result.classification),
+      result.distanceM == null
+        ? `No mapped ${result.label.toLowerCase()} was found within ${analysis.searchRadiusKm} km.`
+        : result.distanceM <= 1
+          ? `${result.label} intersects the site.`
+          : `${result.label} is ${result.distanceM.toLocaleString()} m from the boundary.`,
+    ),
+  );
+}
+
+function terrainCriterion(analysis: TerrainAnalysis) {
+  const score =
+    analysis.result.risk === "low"
+      ? 100
+      : analysis.result.risk === "medium"
+        ? 60
+        : 20;
+  return criterion(
+    "terrain",
+    score,
+    `${analysis.result.averageSlopeDeg.toFixed(2)}° average and ${analysis.result.p90SlopeDeg.toFixed(2)}° 90th-percentile sampled slope.`,
+  );
+}
+
+function sourceFailure(id: string, label: string, reason: string) {
+  return { id, label, reason };
+}
+
+export async function analyzePreliminarySiteScore(
+  projectId: string,
+  site: GeoJSON.Polygon,
+): Promise<PreliminarySiteScore> {
+  const [infrastructure, natura, national, flood, surfaceWater, terrain] =
+    await Promise.allSettled([
+      withinSourceDeadline(analyzeInfrastructure(projectId, site)),
+      withinSourceDeadline(analyzeNatura2000(projectId, site)),
+      withinSourceDeadline(analyzeNationallyDesignatedAreas(projectId, site)),
+      withinSourceDeadline(analyzeFloodRiskAreas(projectId, site)),
+      withinSourceDeadline(analyzeSurfaceWater(projectId, site)),
+      withinSourceDeadline(analyzeTerrain(projectId, site)),
+    ] as const);
+
+  const criteria: SiteScoreCriterion[] = [];
+  const unavailableSources: PreliminarySiteScore["unavailableSources"] = [];
+
+  if (natura.status === "fulfilled") criteria.push(naturaCriterion(natura.value));
+  else {
+    criteria.push(unavailable("natura-2000"));
+    unavailableSources.push(
+      sourceFailure("natura-2000", "Natura 2000", "EEA source unavailable."),
+    );
+  }
+
+  if (national.status === "fulfilled") {
+    criteria.push(nationalCriterion(national.value));
+  } else {
+    criteria.push(unavailable("national-designations"));
+    unavailableSources.push(
+      sourceFailure(
+        "national-designations",
+        "National designations",
+        "EEA source unavailable.",
+      ),
+    );
+  }
+
+  if (flood.status === "fulfilled") criteria.push(floodCriterion(flood.value));
+  else {
+    criteria.push(unavailable("flood-risk-areas"));
+    unavailableSources.push(
+      sourceFailure(
+        "flood-risk-areas",
+        "Flood risk reporting areas",
+        "EEA source unavailable.",
+      ),
+    );
+  }
+
+  if (surfaceWater.status === "fulfilled") {
+    criteria.push(waterCriterion(surfaceWater.value));
+  } else {
+    criteria.push(unavailable("surface-water"));
+    unavailableSources.push(
+      sourceFailure(
+        "surface-water",
+        "Surface water and wetlands",
+        "Overpass source unavailable.",
+      ),
+    );
+  }
+
+  if (infrastructure.status === "fulfilled") {
+    criteria.push(...infrastructureCriteria(infrastructure.value));
+  } else {
+    criteria.push(
+      unavailable("main-road"),
+      unavailable("transmission-line"),
+      unavailable("substation"),
+    );
+    unavailableSources.push(
+      sourceFailure(
+        "infrastructure",
+        "Infrastructure proximity",
+        "Overpass source unavailable.",
+      ),
+    );
+  }
+
+  if (terrain.status === "fulfilled") criteria.push(terrainCriterion(terrain.value));
+  else {
+    criteria.push(
+      unavailable(
+        "terrain",
+        "Terrain provider is not configured or was unavailable during this run.",
+      ),
+    );
+    unavailableSources.push(
+      sourceFailure(
+        "terrain",
+        "Terrain elevation and slope",
+        "Commercial elevation API not configured or source unavailable.",
+      ),
+    );
+  }
+
+  const availableCriteria = criteria.filter(
+    (item): item is SiteScoreCriterion & { score: number } =>
+      item.score !== null,
+  );
+  const availableWeight = availableCriteria.reduce(
+    (sum, item) => sum + item.weight,
+    0,
+  );
+  const weightedScore = availableCriteria.reduce(
+    (sum, item) => sum + item.score * item.weight,
+    0,
+  );
+  const score = availableWeight ? round(weightedScore / availableWeight) : null;
+  const coveragePercent = availableWeight;
+  const confidence =
+    coveragePercent >= 95
+      ? "high"
+      : coveragePercent >= 70
+        ? "medium"
+        : "low";
+  const band =
+    score === null
+      ? "unavailable"
+      : score >= 80
+        ? "favourable-screening"
+        : score >= 60
+          ? "further-review"
+          : "material-constraints";
+
+  return {
+    projectId,
+    generatedAt: new Date().toISOString(),
+    score,
+    coveragePercent,
+    confidence,
+    band,
+    criteria,
+    unavailableSources,
+    methodology: {
+      version: "1.0",
+      totalWeight: 100,
+      normalization: "available-weight normalized",
+    },
+    disclaimer:
+      "This preliminary screening score is a deterministic prioritisation aid, not a permitting opinion, valuation, investment recommendation or substitute for authoritative studies and professional judgment.",
+  };
+}

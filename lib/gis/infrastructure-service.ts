@@ -59,12 +59,12 @@ export type InfrastructureFeatureCollection = GeoJSON.FeatureCollection<
 };
 
 export class InfrastructureSourceError extends Error {
-  constructor(
-    message: string,
-    readonly failures: string[],
-  ) {
+  readonly failures: string[];
+
+  constructor(message: string, failures: string[]) {
     super(message);
     this.name = "InfrastructureSourceError";
+    this.failures = failures;
   }
 }
 

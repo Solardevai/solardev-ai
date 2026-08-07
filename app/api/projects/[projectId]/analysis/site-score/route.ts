@@ -1,9 +1,6 @@
 import { auth } from "@clerk/nextjs/server";
 import { NextRequest, NextResponse } from "next/server";
-import {
-  InfrastructureSourceError,
-} from "@/lib/gis/infrastructure-service";
-import { analyzeInfrastructure } from "@/lib/gis/infrastructure-analysis";
+import { analyzePreliminarySiteScore } from "@/lib/gis/site-score";
 import { getOwnedProject } from "@/lib/projects/data";
 
 type AnalysisRouteContext = {
@@ -26,32 +23,21 @@ export async function POST(
   }
 
   try {
-    const analysis = await analyzeInfrastructure(
+    const score = await analyzePreliminarySiteScore(
       projectId,
       project.site.geometry,
     );
-
     return NextResponse.json(
-      { analysis },
+      { score },
       { headers: { "Cache-Control": "private, no-store" } },
     );
   } catch (error) {
-    if (error instanceof InfrastructureSourceError) {
-      console.error("[project infrastructure analysis] Overpass failed", {
-        projectId,
-        failures: error.failures,
-      });
-      return NextResponse.json(
-        { error: error.message },
-        { status: 503, headers: { "Retry-After": "20" } },
-      );
-    }
-    console.error("[project infrastructure analysis] unexpected failure", {
+    console.error("[Preliminary site score] unexpected failure", {
       projectId,
       error,
     });
     return NextResponse.json(
-      { error: "Infrastructure analysis could not be completed." },
+      { error: "The preliminary site score could not be completed." },
       { status: 502 },
     );
   }

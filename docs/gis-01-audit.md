@@ -76,5 +76,12 @@ survey limitations. Production access is gated behind a commercial
 `OPEN_METEO_API_KEY`; the free endpoint is available only through an explicit
 non-production evaluation flag.
 
-The next increment should combine the deterministic results into an explainable
-preliminary site score without persisting analysis history yet.
+GIS-03 preliminary scoring is now delivered as an explainable eight-criterion,
+100-point model covering environmental designations, flood and surface water,
+grid and access proximity, and terrain. Each deduction, weight and evidence
+statement is returned. Missing sources are excluded through available-weight
+normalization, lower the reported coverage/confidence, and never receive a
+favourable default. Individual sources have a 35-second orchestration deadline.
+
+The next increment should persist immutable analysis snapshots so projects can
+compare results across dates and source updates before professional reporting.

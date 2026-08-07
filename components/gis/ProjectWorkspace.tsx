@@ -5,6 +5,7 @@ import { useEffect, useRef, useState } from "react";
 import ConstraintAnalysisPanel from "@/components/gis/ConstraintAnalysisPanel";
 import FloodRiskAnalysisPanel from "@/components/gis/FloodRiskAnalysisPanel";
 import InfrastructureAnalysisPanel from "@/components/gis/InfrastructureAnalysisPanel";
+import SiteScorePanel from "@/components/gis/SiteScorePanel";
 import SurfaceWaterAnalysisPanel from "@/components/gis/SurfaceWaterAnalysisPanel";
 import TerrainAnalysisPanel from "@/components/gis/TerrainAnalysisPanel";
 import { MapCoreCanvas, useMapCore } from "@/components/gis/MapCore";
@@ -323,6 +324,7 @@ export default function ProjectWorkspace({ project }: ProjectWorkspaceProps) {
             </dl>
           </div>
 
+          <SiteScorePanel projectId={project.id} />
           <ConstraintAnalysisPanel projectId={project.id} />
           <FloodRiskAnalysisPanel projectId={project.id} />
           <SurfaceWaterAnalysisPanel projectId={project.id} />

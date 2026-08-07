@@ -219,3 +219,45 @@ export type TerrainAnalysis = {
   };
   limitations: string[];
 };
+
+export type SiteScoreCriterionId =
+  | "natura-2000"
+  | "national-designations"
+  | "flood-risk-areas"
+  | "surface-water"
+  | "main-road"
+  | "transmission-line"
+  | "substation"
+  | "terrain";
+
+export type SiteScoreCriterion = {
+  id: SiteScoreCriterionId;
+  label: string;
+  group: "environment" | "water" | "infrastructure" | "terrain";
+  weight: number;
+  score: number | null;
+  deductionPoints: number | null;
+  status: "favourable" | "caution" | "constraint" | "unavailable";
+  evidence: string;
+};
+
+export type PreliminarySiteScore = {
+  projectId: string;
+  generatedAt: string;
+  score: number | null;
+  coveragePercent: number;
+  confidence: "low" | "medium" | "high";
+  band:
+    | "favourable-screening"
+    | "further-review"
+    | "material-constraints"
+    | "unavailable";
+  criteria: SiteScoreCriterion[];
+  unavailableSources: Array<{ id: string; label: string; reason: string }>;
+  methodology: {
+    version: "1.0";
+    totalWeight: 100;
+    normalization: "available-weight normalized";
+  };
+  disclaimer: string;
+};
