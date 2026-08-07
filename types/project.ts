@@ -1,4 +1,5 @@
 import type { ConstraintResult, MapView } from "@/types/gis";
+import type { PreliminarySiteScore } from "@/types/gis";
 
 export type ProjectTechnology = "solar" | "bess" | "hybrid";
 export type ProjectStatus = "screening" | "development" | "due-diligence";
@@ -31,6 +32,20 @@ export type ProjectSummary = Pick<
   "id" | "name" | "technology" | "country" | "status" | "createdAt" | "updatedAt"
 > & {
   areaSqm: number;
+};
+
+export type PortfolioProjectSummary = ProjectSummary & {
+  latestAnalysis: null | {
+    snapshotId: string;
+    score: number | null;
+    coveragePercent: number;
+    confidence: PreliminarySiteScore["confidence"];
+    band: PreliminarySiteScore["band"];
+    methodologyVersion: string;
+    materialConstraintCount: number;
+    cautionCount: number;
+    createdAt: string;
+  };
 };
 
 /** Current Site Check persistence contract. Expand alongside the database model. */

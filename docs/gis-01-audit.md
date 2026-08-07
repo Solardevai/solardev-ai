@@ -96,5 +96,11 @@ actions, the persisted source register and limitations, methodology, reliance
 language and the snapshot audit record. Legacy snapshots remain exportable and
 explicitly disclose when detailed source metadata was not yet persisted.
 
-The next increment should add portfolio comparison so owners can rank saved
-projects by score, coverage, confidence and material-constraint count.
+GIS-03 portfolio comparison is now delivered on the protected dashboard. It
+uses a summary-only owner-scoped query to rank the latest immutable run for each
+project by score, coverage, material-constraint count, analysis recency or name.
+Portfolio cards summarize analysis coverage, average score, material criteria
+and high-confidence runs, while each row links to the workspace and latest PDF.
+
+The next increment should add usage allowances and subscription controls around
+high-cost analyses and professional report generation.

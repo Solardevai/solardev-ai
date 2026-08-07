@@ -8,7 +8,12 @@ import {
   isProjectTechnology,
   parseVisibleLayers,
 } from "@/lib/projects/project-values";
-import type { ProjectSummary, SolarDevProject } from "@/types/project";
+import type { PreliminarySiteScore } from "@/types/gis";
+import type {
+  PortfolioProjectSummary,
+  ProjectSummary,
+  SolarDevProject,
+} from "@/types/project";
 
 function defaultVisibleLayers() {
   return infrastructureLayers
@@ -80,4 +85,89 @@ export async function listOwnedProjects(ownerId: string) {
     orderBy: { updatedAt: "desc" },
   });
   return projects.map(serializeProjectSummary);
+}
+
+function criterionCounts(payload: unknown) {
+  if (!payload || typeof payload !== "object" || !("criteria" in payload)) {
+    return { materialConstraintCount: 0, cautionCount: 0 };
+  }
+  const criteria = (payload as { criteria?: unknown }).criteria;
+  if (!Array.isArray(criteria)) {
+    return { materialConstraintCount: 0, cautionCount: 0 };
+  }
+  let materialConstraintCount = 0;
+  let cautionCount = 0;
+  for (const criterion of criteria) {
+    if (!criterion || typeof criterion !== "object" || !("status" in criterion)) {
+      continue;
+    }
+    if (criterion.status === "constraint") materialConstraintCount += 1;
+    if (criterion.status === "caution") cautionCount += 1;
+  }
+  return { materialConstraintCount, cautionCount };
+}
+
+export async function listOwnedPortfolioProjects(
+  ownerId: string,
+): Promise<PortfolioProjectSummary[]> {
+  const projects = await prisma.project.findMany({
+    where: { ownerId },
+    orderBy: { updatedAt: "desc" },
+    select: {
+      id: true,
+      name: true,
+      technology: true,
+      country: true,
+      status: true,
+      areaSqm: true,
+      createdAt: true,
+      updatedAt: true,
+      analysisSnapshots: {
+        where: { analysisType: "preliminary-site-score" },
+        orderBy: { createdAt: "desc" },
+        take: 1,
+        select: {
+          id: true,
+          score: true,
+          coveragePercent: true,
+          confidence: true,
+          band: true,
+          methodologyVersion: true,
+          payload: true,
+          createdAt: true,
+        },
+      },
+    },
+  });
+
+  return projects.map((project) => {
+    const snapshot = project.analysisSnapshots[0];
+    const counts = snapshot ? criterionCounts(snapshot.payload) : null;
+    return {
+      id: project.id,
+      name: project.name,
+      technology: isProjectTechnology(project.technology)
+        ? project.technology
+        : "solar",
+      country: project.country,
+      status: isProjectStatus(project.status) ? project.status : "screening",
+      areaSqm: project.areaSqm ?? 0,
+      createdAt: project.createdAt.toISOString(),
+      updatedAt: project.updatedAt.toISOString(),
+      latestAnalysis: snapshot
+        ? {
+            snapshotId: snapshot.id,
+            score: snapshot.score,
+            coveragePercent: snapshot.coveragePercent,
+            confidence:
+              snapshot.confidence as PreliminarySiteScore["confidence"],
+            band: snapshot.band as PreliminarySiteScore["band"],
+            methodologyVersion: snapshot.methodologyVersion,
+            materialConstraintCount: counts?.materialConstraintCount ?? 0,
+            cautionCount: counts?.cautionCount ?? 0,
+            createdAt: snapshot.createdAt.toISOString(),
+          }
+        : null,
+    };
+  });
 }

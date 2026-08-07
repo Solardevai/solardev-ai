@@ -4,9 +4,10 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import Footer from "@/components/Footer";
 import Navbar from "@/components/Navbar";
+import PortfolioComparison from "@/components/gis/PortfolioComparison";
 import { isAuthenticationAvailable } from "@/lib/auth-config";
 import { formatArea } from "@/lib/geo/format";
-import { listOwnedProjects } from "@/lib/projects/data";
+import { listOwnedPortfolioProjects } from "@/lib/projects/data";
 
 export const metadata: Metadata = {
   title: "Dashboard",
@@ -63,7 +64,7 @@ export default async function DashboardPage() {
 
   const { userId } = await auth();
   if (!userId) redirect("/sign-in");
-  const projects = await listOwnedProjects(userId);
+  const projects = await listOwnedPortfolioProjects(userId);
 
   return (
     <>
@@ -99,6 +100,8 @@ export default async function DashboardPage() {
         </section>
 
         <section className="mx-auto max-w-7xl px-6 py-14 lg:px-8 lg:py-20">
+          <PortfolioComparison projects={projects} />
+
           <div className="mb-12">
             <div className="flex flex-wrap items-end justify-between gap-4">
               <div>
@@ -193,9 +196,9 @@ export default async function DashboardPage() {
                 </h2>
                 <p className="mt-4 max-w-3xl leading-7 text-slate-300">
                   Authentication, project saving and the first GIS workspace
-                  are active. Constraint screening, professional reports,
-                  usage allowances and subscription controls remain on the
-                  product roadmap.
+                  are active alongside constraint screening, immutable history,
+                  professional PDF reports and portfolio ranking. Usage
+                  allowances and subscription controls remain on the roadmap.
                 </p>
               </div>
               <Link
