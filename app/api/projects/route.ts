@@ -1,6 +1,7 @@
 import { currentUser } from "@clerk/nextjs/server";
 import type { Prisma } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
+import { parseVisibleLayers, isProjectTechnology } from "@/lib/projects/project-values";
 import { prisma } from "@/lib/prisma";
 import type { SaveProjectPayload } from "@/types/project";
 
@@ -18,6 +19,9 @@ export async function POST(request: NextRequest) {
   if (!body.boundary || body.boundary.type !== "Polygon") {
     return NextResponse.json({ error: "A site boundary is required." }, { status: 400 });
   }
+  if (body.technology && !isProjectTechnology(body.technology)) {
+    return NextResponse.json({ error: "Choose a valid project technology." }, { status: 400 });
+  }
 
   await prisma.user.upsert({
     where: { id: user.id },
@@ -29,13 +33,23 @@ export async function POST(request: NextRequest) {
     data: {
       ownerId: user.id,
       name: body.name?.trim() || "Untitled site",
+      technology: body.technology ?? "solar",
+      country: body.country?.trim().slice(0, 100) ?? "",
       boundary: body.boundary as unknown as Prisma.InputJsonValue,
       areaSqm: body.areaSqm,
       perimeterM: body.perimeterM,
       centroidLat: body.centroidLat,
       centroidLon: body.centroidLon,
+      mapCenterLat: body.map?.center[1] ?? body.centroidLat,
+      mapCenterLon: body.map?.center[0] ?? body.centroidLon,
+      mapZoom: body.map?.zoom ?? 13,
+      visibleLayers: parseVisibleLayers(body.map?.visibleLayers) as Prisma.InputJsonValue,
     },
   });
 
-  return NextResponse.json({ id: project.id, name: project.name });
+  return NextResponse.json({
+    id: project.id,
+    name: project.name,
+    workspaceUrl: `/platform/projects/${project.id}`,
+  });
 }

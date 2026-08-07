@@ -26,12 +26,30 @@ export type SolarDevProject = {
   updatedAt: string;
 };
 
+export type ProjectSummary = Pick<
+  SolarDevProject,
+  "id" | "name" | "technology" | "country" | "status" | "createdAt" | "updatedAt"
+> & {
+  areaSqm: number;
+};
+
 /** Current Site Check persistence contract. Expand alongside the database model. */
 export type SaveProjectPayload = {
   name: string;
+  technology?: ProjectTechnology;
+  country?: string;
   boundary: GeoJSON.Polygon;
   areaSqm: number;
   perimeterM: number;
   centroidLat: number;
   centroidLon: number;
+  map?: MapView;
+};
+
+export type UpdateProjectPayload = {
+  name?: string;
+  technology?: ProjectTechnology;
+  country?: string;
+  status?: ProjectStatus;
+  map?: MapView;
 };

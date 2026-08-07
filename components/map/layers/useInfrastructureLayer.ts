@@ -46,21 +46,26 @@ const EMPTY_COLLECTION: GeoJSON.FeatureCollection = {
 type UseInfrastructureLayerOptions = {
   map: MapLibreMap | null;
   drawingOverlayRef: RefObject<SVGSVGElement | null>;
+  initialVisibility?: Partial<Record<InfrastructureLayerId, boolean>>;
 };
 
 export function useInfrastructureLayer({
   map,
   drawingOverlayRef,
+  initialVisibility,
 }: UseInfrastructureLayerOptions) {
   const infrastructureFeaturesRef = useRef<GeoJSON.Feature[]>([]);
   const substationFeaturesRef = useRef<GeoJSON.Feature[]>([]);
   const detailedInfrastructureFeaturesRef = useRef<GeoJSON.Feature[]>([]);
   const infrastructureAbortRef = useRef<AbortController | null>(null);
+  const [infrastructureLayers, setInfrastructureLayers] = useState(() => ({
+    ...createInfrastructureVisibility(),
+    ...initialVisibility,
+  }));
   const infrastructureLayersRef = useRef<
     Record<InfrastructureLayerId, boolean>
-  >(createInfrastructureVisibility());
-  const [infrastructureLayers, setInfrastructureLayers] = useState(
-    createInfrastructureVisibility,
+  >(
+    infrastructureLayers,
   );
   const [isLoadingInfrastructure, setIsLoadingInfrastructure] =
     useState(false);

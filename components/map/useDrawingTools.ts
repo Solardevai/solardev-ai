@@ -133,6 +133,10 @@ export function useDrawingTools({
     if (!map) return;
 
     const addSources = () => {
+      if (map.getSource("site-polygon")) {
+        syncBoundarySources(pointsRef.current);
+        return;
+      }
       map.addSource("site-polygon", {
         type: "geojson",
         data: EMPTY_COLLECTION,
@@ -178,8 +182,13 @@ export function useDrawingTools({
           "circle-stroke-width": 3,
         },
       });
+      syncBoundarySources(pointsRef.current);
     };
-    map.once("load", addSources);
+    if (map.loaded()) {
+      addSources();
+    } else {
+      map.once("load", addSources);
+    }
 
     const handleClick = (event: MapMouseEvent) => {
       if (!map.getCanvas().dataset.drawing) return;
@@ -221,6 +230,7 @@ export function useDrawingTools({
     map.on("resize", refreshOverlay);
 
     return () => {
+      map.off("load", addSources);
       map.off("click", handleClick);
       map.off("contextmenu", handleContextMenu);
       map.off("move", refreshOverlay);

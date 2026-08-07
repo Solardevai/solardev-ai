@@ -5,6 +5,8 @@ import { redirect } from "next/navigation";
 import Footer from "@/components/Footer";
 import Navbar from "@/components/Navbar";
 import { isAuthenticationAvailable } from "@/lib/auth-config";
+import { formatArea } from "@/lib/geo/format";
+import { listOwnedProjects } from "@/lib/projects/data";
 
 export const metadata: Metadata = {
   title: "Dashboard",
@@ -59,7 +61,9 @@ export default async function DashboardPage() {
     redirect("/sign-in?configuration=required");
   }
 
-  await auth.protect();
+  const { userId } = await auth();
+  if (!userId) redirect("/sign-in");
+  const projects = await listOwnedProjects(userId);
 
   return (
     <>
@@ -95,6 +99,62 @@ export default async function DashboardPage() {
         </section>
 
         <section className="mx-auto max-w-7xl px-6 py-14 lg:px-8 lg:py-20">
+          <div className="mb-12">
+            <div className="flex flex-wrap items-end justify-between gap-4">
+              <div>
+                <p className="text-sm font-semibold uppercase tracking-[0.18em] text-emerald-300">
+                  GIS projects
+                </p>
+                <h2 className="mt-2 text-3xl font-semibold tracking-tight">
+                  Saved sites
+                </h2>
+              </div>
+              <Link
+                href="/tools/solar-site-screening"
+                className="rounded-xl bg-emerald-400 px-4 py-2.5 text-sm font-bold text-slate-950 hover:bg-emerald-300"
+              >
+                Create project
+              </Link>
+            </div>
+
+            {projects.length ? (
+              <div className="mt-6 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+                {projects.map((project) => (
+                  <Link
+                    key={project.id}
+                    href={`/platform/projects/${project.id}`}
+                    className="group rounded-2xl border border-white/10 bg-white/[0.03] p-5 transition hover:border-emerald-300/30 hover:bg-emerald-300/[0.05]"
+                  >
+                    <div className="flex items-center justify-between gap-3">
+                      <span className="rounded-full border border-white/10 px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.13em] text-slate-400">
+                        {project.technology === "bess"
+                          ? "BESS"
+                          : project.technology === "hybrid"
+                            ? "Hybrid"
+                            : "Solar PV"}
+                      </span>
+                      <span className="text-xs text-slate-500">
+                        {formatArea(project.areaSqm)}
+                      </span>
+                    </div>
+                    <h3 className="mt-4 truncate text-lg font-semibold group-hover:text-emerald-200">
+                      {project.name}
+                    </h3>
+                    <p className="mt-2 text-xs capitalize text-slate-500">
+                      {project.status.replace("-", " ")}
+                      {project.country ? ` · ${project.country}` : ""}
+                    </p>
+                  </Link>
+                ))}
+              </div>
+            ) : (
+              <div className="mt-6 rounded-2xl border border-dashed border-white/15 bg-white/[0.02] p-6 text-sm leading-6 text-slate-400">
+                No saved projects yet. Define a boundary in Site Check, save it,
+                then continue in the GIS workspace.
+              </div>
+            )}
+          </div>
+
           <div className="grid gap-6 lg:grid-cols-3">
             {workspaceTools.map((tool) => (
               <article
@@ -132,10 +192,10 @@ export default async function DashboardPage() {
                   Account foundation active
                 </h2>
                 <p className="mt-4 max-w-3xl leading-7 text-slate-300">
-                  Authentication and this protected workspace are ready.
-                  Project saving, professional reports, usage allowances and
-                  subscription controls require the application database and
-                  billing integration and are not presented as active yet.
+                  Authentication, project saving and the first GIS workspace
+                  are active. Constraint screening, professional reports,
+                  usage allowances and subscription controls remain on the
+                  product roadmap.
                 </p>
               </div>
               <Link

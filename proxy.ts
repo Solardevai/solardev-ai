@@ -8,6 +8,7 @@ import { isAuthenticationAvailable } from "@/lib/auth-config";
 
 const isProtectedRoute = createRouteMatcher([
   "/dashboard(.*)",
+  "/platform(.*)",
   "/projects(.*)",
   "/reports(.*)",
   "/library(.*)",

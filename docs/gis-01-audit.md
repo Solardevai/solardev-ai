@@ -31,9 +31,17 @@
 - Do not create `/platform/projects/[projectId]` until projects can be read by
   ID with owner authorization; the current API only creates projects.
 
+## GIS-02 delivered
+
+- Owner-authorized project retrieval and update endpoints.
+- Backward-compatible technology, country, status, and map-state persistence.
+- `/platform/projects/[projectId]` GIS Lite workspace using `MapCore`.
+- Saved-project list on the protected dashboard.
+- Site Check conversion path into the project workspace.
+
 ## Recommended next implementation
 
-GIS-02 should add authenticated `GET /api/projects/[projectId]`, extend the
-project record with technology/status/map state, and create the workspace shell
-using `MapCore`. The first analysis after that should be deterministic
-constraint intersection and distance calculations, not AI interpretation.
+GIS-03 should add deterministic constraint intersection and distance
+calculations, including affected area, site percentage, source metadata, and
+risk classification. AI interpretation should remain downstream of those
+traceable results.

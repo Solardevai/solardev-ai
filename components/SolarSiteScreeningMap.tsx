@@ -3,6 +3,7 @@
 import { useUser } from "@clerk/nextjs";
 import { area } from "@turf/area";
 import { polygon } from "@turf/helpers";
+import Link from "next/link";
 import { ChangeEvent, FormEvent, useRef, useState } from "react";
 import { MapCoreCanvas, useMapCore } from "@/components/gis/MapCore";
 import { useDrawingTools } from "@/components/map/useDrawingTools";
@@ -12,6 +13,7 @@ import {
 } from "@/components/map/layers/useInfrastructureLayer";
 import { formatArea, formatDistance } from "@/lib/geo/format";
 import { createKml, parseKmlPolygons } from "@/lib/geo/kml";
+import type { InfrastructureLayerId } from "@/lib/gis/layers";
 import type { SaveProjectPayload } from "@/types/project";
 
 type SolarResult = {
@@ -54,6 +56,7 @@ function SolarSiteScreeningMapContent({
   const [query, setQuery] = useState("");
   const [projectName, setProjectName] = useState("");
   const [isSavingProject, setIsSavingProject] = useState(false);
+  const [savedProjectId, setSavedProjectId] = useState<string | null>(null);
   const [message, setMessage] = useState(
     "Search for a location, then start drawing your site.",
   );
@@ -69,7 +72,10 @@ function SolarSiteScreeningMapContent({
   const drawing = useDrawingTools({
     map,
     drawingOverlayRef,
-    onBoundaryChange: () => setSolar(null),
+    onBoundaryChange: () => {
+      setSolar(null);
+      setSavedProjectId(null);
+    },
     onMessage: setMessage,
   });
   const infrastructure = useInfrastructureLayer({ map, drawingOverlayRef });
@@ -276,6 +282,7 @@ function SolarSiteScreeningMapContent({
     }
 
     setIsSavingProject(true);
+    setSavedProjectId(null);
     setMessage("Saving project…");
     try {
       const response = await fetch("/api/projects", {
@@ -288,10 +295,20 @@ function SolarSiteScreeningMapContent({
           perimeterM: sitePerimeter * 1000,
           centroidLon: siteCentroid[0],
           centroidLat: siteCentroid[1],
+          map: {
+            center: mapRef.current
+              ? [mapRef.current.getCenter().lng, mapRef.current.getCenter().lat]
+              : siteCentroid,
+            zoom: mapRef.current?.getZoom() ?? 13,
+            visibleLayers: Object.entries(infrastructure.infrastructureLayers)
+              .filter(([, visible]) => visible)
+              .map(([layer]) => layer as InfrastructureLayerId),
+          },
         } satisfies SaveProjectPayload),
       });
       const result = await response.json();
       if (!response.ok) throw new Error(result.error || "The project could not be saved.");
+      setSavedProjectId(result.id);
       setMessage(`Saved as "${result.name}".`);
     } catch (error) {
       setMessage(error instanceof Error ? error.message : "The project could not be saved.");
@@ -401,6 +418,15 @@ function SolarSiteScreeningMapContent({
             {isSavingProject ? "Saving…" : "Save this site"}
           </button>
         </div>
+
+        {savedProjectId && (
+          <Link
+            href={`/platform/projects/${savedProjectId}`}
+            className="mt-2 inline-flex w-full items-center justify-center rounded-xl bg-emerald-400 px-4 py-2.5 text-sm font-bold text-slate-950 transition hover:bg-emerald-300"
+          >
+            Open in GIS Workspace →
+          </Link>
+        )}
 
         <div aria-live="polite" className="mt-4 min-h-12 rounded-xl border border-white/10 bg-slate-900 px-3 py-2.5 text-xs leading-5 text-slate-400">
           {message}

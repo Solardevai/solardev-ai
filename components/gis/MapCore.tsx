@@ -9,6 +9,7 @@ import {
 import "maplibre-gl/dist/maplibre-gl.css";
 import { RefObject, useEffect, useRef, useState } from "react";
 import { satelliteBasemap } from "@/lib/gis/layers";
+import type { MapView } from "@/types/gis";
 
 export type MapCoreContext = {
   containerRef: RefObject<HTMLDivElement | null>;
@@ -17,19 +18,25 @@ export type MapCoreContext = {
   map: MapLibreMap | null;
 };
 
-export function useMapCore(): MapCoreContext {
+type UseMapCoreOptions = {
+  initialView?: Pick<MapView, "center" | "zoom">;
+};
+
+export function useMapCore(options: UseMapCoreOptions = {}): MapCoreContext {
   const containerRef = useRef<HTMLDivElement>(null);
   const drawingOverlayRef = useRef<SVGSVGElement>(null);
   const mapRef = useRef<MapLibreMap | null>(null);
+  const initialViewRef = useRef(options.initialView);
   const [map, setMap] = useState<MapLibreMap | null>(null);
 
   useEffect(() => {
     if (!containerRef.current || mapRef.current) return;
 
+    const initialView = initialViewRef.current;
     const instance = new MapLibreMap({
       container: containerRef.current,
-      center: [10, 47],
-      zoom: 4,
+      center: initialView?.center ?? [10, 47],
+      zoom: initialView?.zoom ?? 4,
       attributionControl: false,
       style: {
         version: 8,
