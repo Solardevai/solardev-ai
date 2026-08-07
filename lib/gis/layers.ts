@@ -142,6 +142,21 @@ export const constraintLayers = [
     },
     screening: { enabled: true, analysis: "intersection" },
   },
+  {
+    id: "flood-risk-areas",
+    name: "Floods Directive risk areas",
+    group: "environment",
+    sourceType: "arcgis-rest",
+    defaultVisible: false,
+    minimumZoom: 7,
+    color: "#38bdf8",
+    metadata: {
+      provider: "European Environment Agency",
+      licence: "EEA standard re-use policy",
+      attribution: "EEA · Floods Directive 2019 operational reporting service",
+    },
+    screening: { enabled: true, analysis: "intersection" },
+  },
 ] as const satisfies ReadonlyArray<GisLayerDefinition>;
 
 export const gisLayers: ReadonlyArray<GisLayerDefinition> = [

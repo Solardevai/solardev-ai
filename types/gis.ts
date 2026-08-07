@@ -120,3 +120,32 @@ export type NationallyDesignatedAreasAnalysis = {
   };
   limitations: string[];
 };
+
+export type FloodRiskArea = {
+  id: string;
+  name: string;
+  countryCode: string;
+  reportingYear: string | null;
+  hazardCategory: string | null;
+  representation: "point" | "line" | "polygon";
+};
+
+export type FloodRiskAreaAnalysis = {
+  projectId: string;
+  generatedAt: string;
+  result: ConstraintResult & {
+    layerId: "flood-risk-areas";
+    label: "Floods Directive risk areas";
+    areas: FloodRiskArea[];
+  };
+  source: {
+    provider: "European Environment Agency";
+    serviceDataset: "2019 reporting service";
+    latestReferenceDataset: "version 3.0, March 2025";
+    licence: "EEA standard re-use policy";
+    serviceUrl: string;
+    metadataUrl: string;
+    retrievedAt: string;
+  };
+  limitations: string[];
+};

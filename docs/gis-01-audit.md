@@ -56,7 +56,13 @@ known country-coverage gaps disclosed alongside each result. The analysis
 returns unique CDDA designations, unioned overlap, geodesic affected area and
 site percentage using the same traceable result contract.
 
-The next constraint increment should evaluate a jurisdiction-aware flood or
-surface-water source rather than implying that one European dataset is legally
-authoritative everywhere. AI interpretation should remain downstream of
-deterministic results.
+GIS-03 Floods Directive reporting-area screening is now delivered using the
+operational EEA 2019 point, line and polygon services. It flags exact site
+intersections but deliberately does not calculate an affected-area percentage:
+these are Member-State Areas of Potential Significant Flood Risk, not consistent
+inundation footprints. Results disclose the newer March 2025 reference dataset
+and direct users to current national authority hazard maps.
+
+The next constraint increment should add surface-water proximity or terrain
+slope, while keeping jurisdiction-specific regulatory interpretation downstream
+of deterministic geometry results.
