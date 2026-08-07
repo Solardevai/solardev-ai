@@ -59,3 +59,33 @@ export type InfrastructureAnalysis = {
   };
   limitations: string[];
 };
+
+export type Natura2000Site = {
+  code: string;
+  name: string;
+  designation: "Habitats" | "Birds" | "Habitats and Birds";
+  memberState: string;
+  releaseDate: string | null;
+};
+
+export type Natura2000ConstraintAnalysis = {
+  projectId: string;
+  generatedAt: string;
+  result: ConstraintResult & {
+    layerId: "natura-2000";
+    label: "Natura 2000";
+    affectedAreaSqm: number;
+    affectedSitePercent: number;
+    sites: Natura2000Site[];
+  };
+  source: {
+    provider: "European Environment Agency";
+    datasetVersion: "2024";
+    copyright: "EEA, Copenhagen, 2025";
+    licence: "CC BY 4.0";
+    serviceUrl: string;
+    metadataUrl: string;
+    retrievedAt: string;
+  };
+  limitations: string[];
+};

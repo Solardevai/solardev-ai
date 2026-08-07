@@ -45,7 +45,11 @@ GIS-03 infrastructure proximity is now delivered with polygon-to-asset
 distance calculations, source timestamps, search-radius disclosure and
 recommended verification actions.
 
-The next GIS-03 increment should register the first authoritative constraint
-dataset and add polygon intersection, affected area, site percentage and risk
-classification. AI interpretation should remain downstream of those traceable
-results.
+GIS-03 Natura 2000 screening is now delivered using the official EEA 2024
+dataset and GeometryServer operations for union, intersection and geodesic
+area. Results include affected area, site percentage, designations, source
+metadata, limitations and risk classification.
+
+The next constraint increment should add nationally designated protected areas
+with the same traceable result contract. AI interpretation should remain
+downstream of deterministic results.

@@ -1,6 +1,6 @@
-export type GisLayerGroup = "basemap" | "infrastructure";
-export type GisLayerSourceType = "raster-tiles" | "api-geojson";
-export type GisLayerAnalysis = "context" | "distance";
+export type GisLayerGroup = "basemap" | "infrastructure" | "environment";
+export type GisLayerSourceType = "raster-tiles" | "api-geojson" | "arcgis-rest";
+export type GisLayerAnalysis = "context" | "distance" | "intersection";
 
 export type GisLayerDefinition = {
   id: string;
@@ -111,6 +111,24 @@ export const infrastructureLayers = [
   }
 >;
 
+export const constraintLayers = [
+  {
+    id: "natura-2000",
+    name: "Natura 2000",
+    group: "environment",
+    sourceType: "arcgis-rest",
+    defaultVisible: false,
+    minimumZoom: 7,
+    color: "#f43f5e",
+    metadata: {
+      provider: "European Environment Agency",
+      licence: "CC BY 4.0",
+      attribution: "EEA, Copenhagen, 2025 · Natura 2000 dataset version 2024",
+    },
+    screening: { enabled: true, analysis: "intersection" },
+  },
+] as const satisfies ReadonlyArray<GisLayerDefinition>;
+
 export const gisLayers: ReadonlyArray<GisLayerDefinition> = [
   satelliteBasemap,
   ...infrastructureLayers.map((layer) => ({
@@ -122,6 +140,7 @@ export const gisLayers: ReadonlyArray<GisLayerDefinition> = [
       licence: "Open Database License (ODbL)",
     },
   })),
+  ...constraintLayers,
 ];
 
 const infrastructureLayerById = Object.fromEntries(

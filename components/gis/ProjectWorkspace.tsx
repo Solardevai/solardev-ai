@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
+import ConstraintAnalysisPanel from "@/components/gis/ConstraintAnalysisPanel";
 import InfrastructureAnalysisPanel from "@/components/gis/InfrastructureAnalysisPanel";
 import { MapCoreCanvas, useMapCore } from "@/components/gis/MapCore";
 import {
@@ -206,6 +207,16 @@ export default function ProjectWorkspace({ project }: ProjectWorkspaceProps) {
                 : infrastructure.infrastructureNote}
             </p>
           </div>
+          <div className="mt-6">
+            <p className="text-xs font-semibold text-slate-300">Environment</p>
+            <div className="mt-2 flex items-center gap-2 rounded-lg bg-white/[0.04] px-3 py-2 text-xs text-slate-300">
+              <span className="h-2 w-2 rounded-full bg-rose-400" />
+              Natura 2000 screening
+            </div>
+            <p className="mt-2 text-[10px] leading-4 text-slate-500">
+              EEA dataset version 2024 · EU coverage
+            </p>
+          </div>
         </aside>
 
         <section className="relative order-1 h-[58vh] min-h-[440px] lg:order-2 lg:h-auto">
@@ -285,6 +296,7 @@ export default function ProjectWorkspace({ project }: ProjectWorkspaceProps) {
             </dl>
           </div>
 
+          <ConstraintAnalysisPanel projectId={project.id} />
           <InfrastructureAnalysisPanel projectId={project.id} />
         </aside>
       </div>
