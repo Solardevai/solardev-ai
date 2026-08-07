@@ -9,6 +9,10 @@ import type {
 
 type Coordinate = [number, number];
 type ProjectedPoint = [number, number];
+export type ProximityGeometry =
+  | GeoJSON.Point
+  | GeoJSON.LineString
+  | GeoJSON.Polygon;
 
 const EARTH_RADIUS_M = 6_371_008.8;
 
@@ -154,7 +158,7 @@ function lineToSiteDistance(
 }
 
 function geometryDistance(
-  geometry: InfrastructureFeature["geometry"],
+  geometry: ProximityGeometry,
   siteRing: ProjectedPoint[],
   project: (coordinate: Coordinate) => ProjectedPoint,
 ) {
@@ -173,6 +177,17 @@ function geometryDistance(
   const line = coordinates.map((coordinate) => project(coordinate as Coordinate));
   if (geometry.type === "Polygon" && pointInRing(siteRing[0], line)) return 0;
   return lineToSiteDistance(line, siteRing, geometry.type === "Polygon");
+}
+
+export function createSiteDistanceCalculator(site: GeoJSON.Polygon) {
+  const ring = site.coordinates[0] ?? [];
+  if (ring.length < 4) throw new Error("A valid project polygon is required.");
+  const referenceLatitude =
+    ring.reduce((sum, coordinate) => sum + coordinate[1], 0) / ring.length;
+  const project = createProjector(referenceLatitude);
+  const siteRing = ring.map((coordinate) => project(coordinate as Coordinate));
+  return (geometry: ProximityGeometry) =>
+    geometryDistance(geometry, siteRing, project);
 }
 
 function thresholdsFor(id: InfrastructureProximityResult["id"]) {
