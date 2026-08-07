@@ -293,14 +293,24 @@ export default function SiteScorePanel({
                       </span>
                     </span>
                   </button>
-                  <a
-                    href={`/api/projects/${projectId}/analysis/snapshots/${snapshot.id}/report`}
-                    download
-                    aria-label={`Download PDF report for the ${snapshotDateFormatter.format(new Date(snapshot.createdAt))} analysis`}
-                    className="flex w-12 shrink-0 items-center justify-center rounded-lg border border-white/8 bg-white/[0.025] text-[9px] font-bold text-emerald-200 hover:border-emerald-300/25 hover:bg-emerald-300/[0.06]"
-                  >
-                    PDF
-                  </a>
+                  <div className="grid w-12 shrink-0 grid-rows-2 gap-1">
+                    <a
+                      href={`/api/projects/${projectId}/analysis/snapshots/${snapshot.id}/report`}
+                      download
+                      aria-label={`Download PDF report for the ${snapshotDateFormatter.format(new Date(snapshot.createdAt))} analysis`}
+                      className="flex items-center justify-center rounded-lg border border-white/8 bg-white/[0.025] text-[9px] font-bold text-emerald-200 hover:border-emerald-300/25 hover:bg-emerald-300/[0.06]"
+                    >
+                      PDF
+                    </a>
+                    <a
+                      href={`/api/projects/${projectId}/analysis/snapshots/${snapshot.id}/constraints`}
+                      download
+                      aria-label={`Download CSV constraint register for the ${snapshotDateFormatter.format(new Date(snapshot.createdAt))} analysis`}
+                      className="flex items-center justify-center rounded-lg border border-white/8 bg-white/[0.025] text-[9px] font-bold text-sky-200 hover:border-sky-300/25 hover:bg-sky-300/[0.06]"
+                    >
+                      CSV
+                    </a>
+                  </div>
                 </li>
               );
             })}

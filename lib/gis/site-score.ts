@@ -8,6 +8,8 @@ import { analyzeSurfaceWater } from "@/lib/gis/surface-water-service";
 import { analyzeTerrain } from "@/lib/gis/terrain-service";
 import type {
   FloodRiskAreaAnalysis,
+  ConstraintRegisterFeature,
+  ConstraintRegisterRow,
   InfrastructureAnalysis,
   NationallyDesignatedAreasAnalysis,
   Natura2000ConstraintAnalysis,
@@ -370,6 +372,186 @@ function sourceRegister(
   return sources;
 }
 
+function registerSourceId(id: SiteScoreCriterionId) {
+  return id === "main-road" || id === "transmission-line" || id === "substation"
+    ? "infrastructure"
+    : id;
+}
+
+function uniqueActions(actions: Array<string | null | undefined>) {
+  return [...new Set(actions.filter((action): action is string => Boolean(action)))];
+}
+
+function constraintRegister(
+  criteria: SiteScoreCriterion[],
+  sources: SiteScoreSource[],
+  infrastructure: PromiseSettledResult<InfrastructureAnalysis>,
+  natura: PromiseSettledResult<Natura2000ConstraintAnalysis>,
+  national: PromiseSettledResult<NationallyDesignatedAreasAnalysis>,
+  flood: PromiseSettledResult<FloodRiskAreaAnalysis>,
+  surfaceWater: PromiseSettledResult<SurfaceWaterAnalysis>,
+  terrain: PromiseSettledResult<TerrainAnalysis>,
+) {
+  const criterionById = new Map(criteria.map((item) => [item.id, item]));
+  const sourceById = new Map(sources.map((source) => [source.id, source]));
+
+  function row(
+    id: SiteScoreCriterionId,
+    details: Partial<
+      Pick<
+        ConstraintRegisterRow,
+        | "intersects"
+        | "affectedAreaSqm"
+        | "affectedSitePercent"
+        | "distanceM"
+        | "features"
+        | "recommendedActions"
+      >
+    > = {},
+  ): ConstraintRegisterRow {
+    const criterion = criterionById.get(id) ?? unavailable(id);
+    const sourceId = registerSourceId(id);
+    return {
+      criterionId: id,
+      label: criterion.label,
+      group: criterion.group,
+      status: criterion.status,
+      score: criterion.score,
+      finding: criterion.evidence,
+      intersects: details.intersects ?? null,
+      affectedAreaSqm: details.affectedAreaSqm ?? null,
+      affectedSitePercent: details.affectedSitePercent ?? null,
+      distanceM: details.distanceM ?? null,
+      sourceId,
+      sourceRetrievedAt: sourceById.get(sourceId)?.retrievedAt ?? null,
+      features: details.features ?? [],
+      recommendedActions: details.recommendedActions ?? [],
+    };
+  }
+
+  const rows: ConstraintRegisterRow[] = [];
+  if (natura.status === "fulfilled") {
+    const result = natura.value.result;
+    rows.push(
+      row("natura-2000", {
+        intersects: result.intersects,
+        affectedAreaSqm: result.affectedAreaSqm,
+        affectedSitePercent: result.affectedSitePercent,
+        features: result.sites.map<ConstraintRegisterFeature>((site) => ({
+          identifier: site.code,
+          name: site.name,
+          jurisdiction: site.memberState,
+          classification: site.designation,
+        })),
+        recommendedActions: uniqueActions([result.recommendedAction]),
+      }),
+    );
+  } else rows.push(row("natura-2000"));
+
+  if (national.status === "fulfilled") {
+    const result = national.value.result;
+    rows.push(
+      row("national-designations", {
+        intersects: result.intersects,
+        affectedAreaSqm: result.affectedAreaSqm,
+        affectedSitePercent: result.affectedSitePercent,
+        features: result.areas.map<ConstraintRegisterFeature>((area) => ({
+          identifier: area.nationalId || `CDDA:${area.cddaId}`,
+          name: area.name,
+          jurisdiction: area.countryCode,
+          classification:
+            area.designationTypeCode || area.iucnCategory || "National designation",
+        })),
+        recommendedActions: uniqueActions([result.recommendedAction]),
+      }),
+    );
+  } else rows.push(row("national-designations"));
+
+  if (flood.status === "fulfilled") {
+    const result = flood.value.result;
+    rows.push(
+      row("flood-risk-areas", {
+        intersects: result.intersects,
+        features: result.areas.map<ConstraintRegisterFeature>((area) => ({
+          identifier: area.id,
+          name: area.name,
+          jurisdiction: area.countryCode,
+          classification: `${area.representation}${area.hazardCategory ? ` | ${area.hazardCategory}` : ""}`,
+        })),
+        recommendedActions: uniqueActions([result.recommendedAction]),
+      }),
+    );
+  } else rows.push(row("flood-risk-areas"));
+
+  if (surfaceWater.status === "fulfilled") {
+    const results = surfaceWater.value.results;
+    const distances = results
+      .map((result) => result.distanceM)
+      .filter((distance): distance is number => distance !== null);
+    rows.push(
+      row("surface-water", {
+        intersects: results.some((result) => result.classification === "on-site"),
+        distanceM: distances.length ? Math.min(...distances) : null,
+        features: results.flatMap<ConstraintRegisterFeature>((result) =>
+          result.feature
+            ? [{
+                identifier: `OSM:${result.feature.osmType}/${result.feature.osmId}`,
+                name: result.feature.name,
+                jurisdiction: null,
+                classification: result.feature.waterType,
+              }]
+            : [],
+        ),
+        recommendedActions: uniqueActions(
+          results.map((result) => result.recommendedAction),
+        ),
+      }),
+    );
+  } else rows.push(row("surface-water"));
+
+  const infrastructureIds = [
+    "main-road",
+    "transmission-line",
+    "substation",
+  ] as const;
+  for (const id of infrastructureIds) {
+    if (infrastructure.status !== "fulfilled") {
+      rows.push(row(id));
+      continue;
+    }
+    const result = infrastructure.value.results.find((item) => item.id === id);
+    rows.push(
+      row(id, {
+        intersects: result ? result.classification === "on-site" : null,
+        distanceM: result?.distanceM ?? null,
+        features: result?.asset
+          ? [{
+              identifier: `OSM:${result.asset.osmType}/${result.asset.osmId}`,
+              name: result.asset.name,
+              jurisdiction: null,
+              classification:
+                result.asset.voltage != null
+                  ? `${result.asset.voltage} V`
+                  : result.asset.roadClass,
+            }]
+          : [],
+        recommendedActions: uniqueActions([result?.recommendedAction]),
+      }),
+    );
+  }
+
+  rows.push(
+    terrain.status === "fulfilled"
+      ? row("terrain", {
+          recommendedActions: uniqueActions([
+            terrain.value.result.recommendedAction,
+          ]),
+        })
+      : row("terrain"),
+  );
+  return rows;
+}
+
 export async function analyzePreliminarySiteScore(
   projectId: string,
   site: GeoJSON.Polygon,
@@ -496,6 +678,15 @@ export async function analyzePreliminarySiteScore(
           ? "further-review"
           : "material-constraints";
 
+  const sources = sourceRegister(
+    infrastructure,
+    natura,
+    national,
+    flood,
+    surfaceWater,
+    terrain,
+  );
+
   return {
     projectId,
     generatedAt: new Date().toISOString(),
@@ -505,7 +696,10 @@ export async function analyzePreliminarySiteScore(
     band,
     criteria,
     unavailableSources,
-    sources: sourceRegister(
+    sources,
+    constraintRegister: constraintRegister(
+      criteria,
+      sources,
       infrastructure,
       natura,
       national,
@@ -514,7 +708,7 @@ export async function analyzePreliminarySiteScore(
       terrain,
     ),
     methodology: {
-      version: "1.1",
+      version: "1.2",
       totalWeight: 100,
       normalization: "available-weight normalized",
     },

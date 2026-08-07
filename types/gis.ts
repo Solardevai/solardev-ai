@@ -254,6 +254,30 @@ export type SiteScoreSource = {
   limitations: string[];
 };
 
+export type ConstraintRegisterFeature = {
+  identifier: string;
+  name: string | null;
+  jurisdiction: string | null;
+  classification: string | null;
+};
+
+export type ConstraintRegisterRow = {
+  criterionId: SiteScoreCriterionId;
+  label: string;
+  group: SiteScoreCriterion["group"];
+  status: SiteScoreCriterion["status"];
+  score: number | null;
+  finding: string;
+  intersects: boolean | null;
+  affectedAreaSqm: number | null;
+  affectedSitePercent: number | null;
+  distanceM: number | null;
+  sourceId: string;
+  sourceRetrievedAt: string | null;
+  features: ConstraintRegisterFeature[];
+  recommendedActions: string[];
+};
+
 export type PreliminarySiteScore = {
   projectId: string;
   generatedAt: string;
@@ -269,8 +293,10 @@ export type PreliminarySiteScore = {
   unavailableSources: Array<{ id: string; label: string; reason: string }>;
   /** Added in methodology v1.1. Optional for backward-compatible v1.0 snapshots. */
   sources?: SiteScoreSource[];
+  /** Added in methodology v1.2. Optional for backward-compatible snapshots. */
+  constraintRegister?: ConstraintRegisterRow[];
   methodology: {
-    version: "1.0" | "1.1";
+    version: "1.0" | "1.1" | "1.2";
     totalWeight: 100;
     normalization: "available-weight normalized";
   };

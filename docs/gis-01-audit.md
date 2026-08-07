@@ -117,6 +117,14 @@ each immutable criterion finding to its screening status, score, provider and
 persisted retrieval timestamp, while legacy snapshots disclose when exact
 source metadata was not retained.
 
-The next professional-output increment should add authority-ready appendices
-with feature-level designation identifiers and a downloadable machine-readable
-constraint register.
+Methodology v1.2 now persists a structured spatial constraint register inside
+each immutable score snapshot. It retains source feature identifiers for Natura
+2000, national designations, Floods Directive areas, OpenStreetMap water and
+infrastructure features, plus the applicable spatial metrics, retrieval times
+and recommended actions. Professional PDFs include an authority-identifier
+appendix, and every saved run exposes an owner-authorized CSV register download.
+Legacy runs remain downloadable with an explicit metadata fallback.
+
+The next GIS increment should add project-level analyst notes and disposition
+states so each constraint can be tracked from screening finding to verified,
+accepted, mitigated or excluded.

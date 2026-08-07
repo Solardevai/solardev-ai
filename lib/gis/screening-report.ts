@@ -5,7 +5,10 @@ import {
   StandardFonts,
   rgb,
 } from "pdf-lib";
-import type { AnalysisSnapshotDetail, PreliminarySiteScore } from "@/types/gis";
+import type {
+  AnalysisSnapshotDetail,
+  PreliminarySiteScore,
+} from "@/types/gis";
 import type { SolarDevProject } from "@/types/project";
 
 const PAGE_WIDTH = 595.28;
@@ -533,6 +536,57 @@ function drawConstraintRegister(
   }
 }
 
+function drawAuthorityIdentifiers(
+  report: ReportBuilder,
+  snapshot: AnalysisSnapshotDetail,
+) {
+  report.newPage("Authority identifier appendix");
+  report.heading("Feature-level source identifiers");
+  report.paragraph(
+    "Identifiers below are preserved from the source response used by the selected analysis run. Use them to locate the mapped record in current competent-authority data; an identifier is not confirmation that the feature remains current or legally applicable.",
+  );
+
+  const register = snapshot.payload.constraintRegister;
+  if (!register) {
+    report.paragraph(
+      "This legacy snapshot predates feature-level constraint-register persistence. Its screening findings remain available, but exact designation and mapped-feature identifiers cannot be reconstructed without rerunning the analysis.",
+      { color: COLORS.amber },
+    );
+    return;
+  }
+
+  const rowsWithFeatures = register.filter((row) => row.features.length > 0);
+  if (!rowsWithFeatures.length) {
+    report.paragraph(
+      "No mapped feature identifiers were returned by the available sources during this run. Review the constraint register and source availability before treating this as evidence of absence.",
+      { color: COLORS.amber },
+    );
+    return;
+  }
+
+  for (const row of rowsWithFeatures) {
+    report.ensureSpace(74, "Authority identifier appendix - continued");
+    report.heading(row.label, 12);
+    for (const feature of row.features) {
+      const featureText = [
+        feature.identifier,
+        feature.name,
+        feature.jurisdiction ? `jurisdiction ${feature.jurisdiction}` : null,
+        feature.classification,
+      ]
+        .filter(Boolean)
+        .join(" | ");
+      report.paragraph(`- ${featureText}`, {
+        size: 8.5,
+        indent: 8,
+        gap: 3,
+        continuedTitle: "Authority identifier appendix - continued",
+      });
+    }
+    report.y -= 6;
+  }
+}
+
 export function screeningReportFilename(project: SolarDevProject) {
   const slug = ascii(project.name)
     .toLowerCase()
@@ -681,6 +735,7 @@ export async function generateScreeningReport(
 
   drawMapExhibit(report, project, snapshot);
   drawConstraintRegister(report, snapshot);
+  drawAuthorityIdentifiers(report, snapshot);
 
   report.newPage("Criterion evidence");
   report.heading("Weighted screening criteria");
