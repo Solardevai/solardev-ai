@@ -83,5 +83,11 @@ statement is returned. Missing sources are excluded through available-weight
 normalization, lower the reported coverage/confidence, and never receive a
 favourable default. Individual sources have a 35-second orchestration deadline.
 
-The next increment should persist immutable analysis snapshots so projects can
-compare results across dates and source updates before professional reporting.
+GIS-03 immutable analysis history is now delivered. Every completed preliminary
+score creates an append-only PostgreSQL snapshot containing its full evidence
+payload, methodology version, score, coverage and confidence. Owner-authorized
+list and detail endpoints let the project workspace reopen prior runs and show
+their change from the immediately preceding result.
+
+The next increment should turn saved evidence into a professional screening
+report with project metadata, source citations, limitations and methodology.

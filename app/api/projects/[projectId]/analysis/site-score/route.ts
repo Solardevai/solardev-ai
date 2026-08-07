@@ -1,5 +1,6 @@
 import { auth } from "@clerk/nextjs/server";
 import { NextRequest, NextResponse } from "next/server";
+import { createAnalysisSnapshot } from "@/lib/gis/analysis-snapshots";
 import { analyzePreliminarySiteScore } from "@/lib/gis/site-score";
 import { getOwnedProject } from "@/lib/projects/data";
 
@@ -27,8 +28,9 @@ export async function POST(
       projectId,
       project.site.geometry,
     );
+    const snapshot = await createAnalysisSnapshot(projectId, score);
     return NextResponse.json(
-      { score },
+      { score, snapshot },
       { headers: { "Cache-Control": "private, no-store" } },
     );
   } catch (error) {

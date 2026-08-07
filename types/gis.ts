@@ -261,3 +261,19 @@ export type PreliminarySiteScore = {
   };
   disclaimer: string;
 };
+
+export type AnalysisSnapshotSummary = {
+  id: string;
+  analysisType: "preliminary-site-score";
+  methodologyVersion: string;
+  score: number | null;
+  coveragePercent: number;
+  confidence: PreliminarySiteScore["confidence"];
+  band: PreliminarySiteScore["band"];
+  createdAt: string;
+};
+
+export type AnalysisSnapshotDetail = AnalysisSnapshotSummary & {
+  projectId: string;
+  payload: PreliminarySiteScore;
+};

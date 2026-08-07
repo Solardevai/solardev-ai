@@ -14,24 +14,41 @@ model User {
 }
 
 model Project {
-  id            String   @id @default(cuid())
-  ownerId       String
-  owner         User     @relation(fields: [ownerId], references: [id])
-  name          String
-  technology    String   @default("solar")
-  country       String   @default("")
-  status        String   @default("screening")
-  boundary      Json // GeoJSON Polygon
-  areaSqm       Float?
-  perimeterM    Float?
-  centroidLat   Float?
-  centroidLon   Float?
-  mapCenterLat  Float?
-  mapCenterLon  Float?
-  mapZoom       Float?
-  visibleLayers Json?
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+  id                String             @id @default(cuid())
+  ownerId           String
+  owner             User               @relation(fields: [ownerId], references: [id])
+  analysisSnapshots AnalysisSnapshot[]
+  name              String
+  technology        String             @default("solar")
+  country           String             @default("")
+  status            String             @default("screening")
+  boundary          Json // GeoJSON Polygon
+  areaSqm           Float?
+  perimeterM        Float?
+  centroidLat       Float?
+  centroidLon       Float?
+  mapCenterLat      Float?
+  mapCenterLon      Float?
+  mapZoom           Float?
+  visibleLayers     Json?
+  createdAt         DateTime           @default(now())
+  updatedAt         DateTime           @updatedAt
 
   @@index([ownerId])
+}
+
+model AnalysisSnapshot {
+  id                 String   @id @default(cuid())
+  projectId          String
+  project            Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  analysisType       String   @default("preliminary-site-score")
+  methodologyVersion String
+  score              Float?
+  coveragePercent    Int
+  confidence         String
+  band               String
+  payload            Json
+  createdAt          DateTime @default(now())
+
+  @@index([projectId, createdAt])
 }

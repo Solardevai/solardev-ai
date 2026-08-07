@@ -16,6 +16,7 @@ import {
 import { useDrawingTools } from "@/components/map/useDrawingTools";
 import { formatArea, formatDistance } from "@/lib/geo/format";
 import type { InfrastructureLayerId } from "@/lib/gis/layers";
+import type { AnalysisSnapshotSummary } from "@/types/gis";
 import type {
   ProjectStatus,
   ProjectTechnology,
@@ -25,6 +26,7 @@ import type {
 
 type ProjectWorkspaceProps = {
   project: SolarDevProject;
+  initialScoreHistory: AnalysisSnapshotSummary[];
 };
 
 const technologyLabels: Record<ProjectTechnology, string> = {
@@ -58,7 +60,10 @@ function boundaryPoints(boundary: GeoJSON.Polygon) {
   );
 }
 
-export default function ProjectWorkspace({ project }: ProjectWorkspaceProps) {
+export default function ProjectWorkspace({
+  project,
+  initialScoreHistory,
+}: ProjectWorkspaceProps) {
   const [name, setName] = useState(project.name);
   const [technology, setTechnology] = useState(project.technology);
   const [country, setCountry] = useState(project.country);
@@ -324,7 +329,10 @@ export default function ProjectWorkspace({ project }: ProjectWorkspaceProps) {
             </dl>
           </div>
 
-          <SiteScorePanel projectId={project.id} />
+          <SiteScorePanel
+            projectId={project.id}
+            initialHistory={initialScoreHistory}
+          />
           <ConstraintAnalysisPanel projectId={project.id} />
           <FloodRiskAnalysisPanel projectId={project.id} />
           <SurfaceWaterAnalysisPanel projectId={project.id} />
