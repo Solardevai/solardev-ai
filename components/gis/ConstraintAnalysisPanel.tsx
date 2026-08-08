@@ -7,7 +7,14 @@ import type {
   Natura2000ConstraintAnalysis,
 } from "@/types/gis";
 
-type ConstraintAnalysisPanelProps = { projectId: string };
+type ConstraintAnalysisPanelProps = {
+  projectId: string;
+  onIntersectionChange?: (
+    layerId: "natura-2000" | "nationally-designated-areas",
+    intersects: boolean,
+    affectedSitePercent: number,
+  ) => void;
+};
 
 type ScreenButtonProps = {
   isRunning: boolean;
@@ -54,6 +61,7 @@ function RiskBadge({ risk }: { risk: "low" | "medium" | "high" }) {
 
 export default function ConstraintAnalysisPanel({
   projectId,
+  onIntersectionChange,
 }: ConstraintAnalysisPanelProps) {
   const [natura, setNatura] = useState<Natura2000ConstraintAnalysis | null>(null);
   const [national, setNational] =
@@ -74,6 +82,11 @@ export default function ConstraintAnalysisPanel({
       const result = await response.json();
       if (!response.ok) throw new Error(result.error || "Natura 2000 screening failed.");
       setNatura(result.analysis);
+      onIntersectionChange?.(
+        "natura-2000",
+        result.analysis.result.intersects,
+        result.analysis.result.affectedSitePercent,
+      );
     } catch (error) {
       setNaturaError(error instanceof Error ? error.message : "Natura 2000 screening failed.");
     } finally {
@@ -94,6 +107,11 @@ export default function ConstraintAnalysisPanel({
         throw new Error(result.error || "National protected-area screening failed.");
       }
       setNational(result.analysis);
+      onIntersectionChange?.(
+        "nationally-designated-areas",
+        result.analysis.result.intersects,
+        result.analysis.result.affectedSitePercent,
+      );
     } catch (error) {
       setNationalError(
         error instanceof Error

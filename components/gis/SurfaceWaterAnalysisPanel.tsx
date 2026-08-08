@@ -7,7 +7,10 @@ import type {
   SurfaceWaterAnalysis,
 } from "@/types/gis";
 
-type SurfaceWaterAnalysisPanelProps = { projectId: string };
+type SurfaceWaterAnalysisPanelProps = {
+  projectId: string;
+  onIntersectionChange?: (intersects: boolean) => void;
+};
 
 const classificationStyles: Record<ProximityClassification, string> = {
   "on-site": "border-rose-300/20 bg-rose-300/10 text-rose-200",
@@ -32,6 +35,7 @@ function featureDetail(result: SurfaceWaterAnalysis["results"][number]) {
 
 export default function SurfaceWaterAnalysisPanel({
   projectId,
+  onIntersectionChange,
 }: SurfaceWaterAnalysisPanelProps) {
   const [analysis, setAnalysis] = useState<SurfaceWaterAnalysis | null>(null);
   const [isRunning, setIsRunning] = useState(false);
@@ -50,6 +54,12 @@ export default function SurfaceWaterAnalysisPanel({
         throw new Error(result.error || "Surface-water screening failed.");
       }
       setAnalysis(result.analysis);
+      onIntersectionChange?.(
+        result.analysis.results.some(
+          (item: SurfaceWaterAnalysis["results"][number]) =>
+            item.classification === "on-site",
+        ),
+      );
     } catch (runError) {
       setError(
         runError instanceof Error

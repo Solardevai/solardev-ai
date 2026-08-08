@@ -11,6 +11,7 @@ import type {
 type SiteScorePanelProps = {
   projectId: string;
   initialHistory: AnalysisSnapshotSummary[];
+  onAnalysisChange?: (analysis: PreliminarySiteScore) => void;
 };
 
 const bandLabels: Record<PreliminarySiteScore["band"], string> = {
@@ -41,6 +42,7 @@ const snapshotDateFormatter = new Intl.DateTimeFormat("en-GB", {
 export default function SiteScorePanel({
   projectId,
   initialHistory,
+  onAnalysisChange,
 }: SiteScorePanelProps) {
   const [analysis, setAnalysis] = useState<PreliminarySiteScore | null>(null);
   const [history, setHistory] = useState(initialHistory);
@@ -67,6 +69,7 @@ export default function SiteScorePanel({
       }
       const { score, snapshot } = result;
       setAnalysis(score);
+      onAnalysisChange?.(score);
       setActiveSnapshotId(snapshot.id);
       setHistory((current) =>
         [
@@ -99,6 +102,7 @@ export default function SiteScorePanel({
         throw new Error(result.error || "Saved analysis could not be loaded.");
       }
       setAnalysis(result.snapshot.payload);
+      onAnalysisChange?.(result.snapshot.payload);
       setActiveSnapshotId(snapshotId);
     } catch (loadError) {
       setError(

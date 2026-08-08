@@ -16,7 +16,11 @@ import {
 import { useDrawingTools } from "@/components/map/useDrawingTools";
 import { formatArea, formatDistance } from "@/lib/geo/format";
 import type { InfrastructureLayerId } from "@/lib/gis/layers";
-import type { AnalysisSnapshotSummary } from "@/types/gis";
+import type {
+  AnalysisSnapshotSummary,
+  PreliminarySiteScore,
+  SiteScoreCriterionId,
+} from "@/types/gis";
 import type {
   ProjectStatus,
   ProjectTechnology,
@@ -27,7 +31,49 @@ import type {
 type ProjectWorkspaceProps = {
   project: SolarDevProject;
   initialScoreHistory: AnalysisSnapshotSummary[];
+  initialAnalysis: PreliminarySiteScore | null;
 };
+
+type IntersectionLegendItem = {
+  id: SiteScoreCriterionId;
+  label: string;
+  color: string;
+  affectedSitePercent: number | null;
+};
+
+const intersectionLegendDefinitions: Partial<
+  Record<SiteScoreCriterionId, Pick<IntersectionLegendItem, "label" | "color">>
+> = {
+  "natura-2000": { label: "Natura 2000", color: "#f43f5e" },
+  "national-designations": {
+    label: "National designation",
+    color: "#f59e0b",
+  },
+  "flood-risk-areas": { label: "Flood reporting area", color: "#38bdf8" },
+  "surface-water": { label: "Surface water / wetland", color: "#22d3ee" },
+  "main-road": { label: "Main road", color: "#f8fafc" },
+  "transmission-line": { label: "Transmission line", color: "#ef4444" },
+  substation: { label: "Substation", color: "#22d3ee" },
+};
+
+function legendItemsFromAnalysis(
+  analysis: PreliminarySiteScore | null,
+): IntersectionLegendItem[] {
+  if (!analysis?.constraintRegister) return [];
+  return analysis.constraintRegister.flatMap((row) => {
+    if (!row.intersects) return [];
+    const definition = intersectionLegendDefinitions[row.criterionId];
+    if (!definition) return [];
+    return [
+      {
+        id: row.criterionId,
+        label: definition.label,
+        color: definition.color,
+        affectedSitePercent: row.affectedSitePercent,
+      },
+    ];
+  });
+}
 
 const technologyLabels: Record<ProjectTechnology, string> = {
   solar: "Solar PV",
@@ -63,6 +109,7 @@ function boundaryPoints(boundary: GeoJSON.Polygon) {
 export default function ProjectWorkspace({
   project,
   initialScoreHistory,
+  initialAnalysis,
 }: ProjectWorkspaceProps) {
   const [name, setName] = useState(project.name);
   const [technology, setTechnology] = useState(project.technology);
@@ -72,6 +119,12 @@ export default function ProjectWorkspace({
     "idle" | "saving" | "saved" | "error"
   >("idle");
   const [message, setMessage] = useState("Project loaded.");
+  const [intersectingConstraints, setIntersectingConstraints] = useState<
+    IntersectionLegendItem[]
+  >(() => legendItemsFromAnalysis(initialAnalysis));
+  const [hasIntersectionAnalysis, setHasIntersectionAnalysis] = useState(
+    () => Boolean(initialAnalysis?.constraintRegister),
+  );
   const didImportBoundary = useRef(false);
   const latitudeRef = useRef<HTMLSpanElement>(null);
   const longitudeRef = useRef<HTMLSpanElement>(null);
@@ -149,6 +202,28 @@ export default function ProjectWorkspace({
       setSaveState("error");
       setMessage(error instanceof Error ? error.message : "Project save failed.");
     }
+  }
+
+  function updateIntersection(
+    id: SiteScoreCriterionId,
+    intersects: boolean,
+    affectedSitePercent: number | null = null,
+  ) {
+    setHasIntersectionAnalysis(true);
+    setIntersectingConstraints((current) => {
+      const withoutCurrent = current.filter((item) => item.id !== id);
+      const definition = intersectionLegendDefinitions[id];
+      if (!intersects || !definition) return withoutCurrent;
+      return [
+        ...withoutCurrent,
+        { id, ...definition, affectedSitePercent },
+      ];
+    });
+  }
+
+  function showScoreIntersections(analysis: PreliminarySiteScore) {
+    setHasIntersectionAnalysis(true);
+    setIntersectingConstraints(legendItemsFromAnalysis(analysis));
   }
 
   return (
@@ -283,6 +358,51 @@ export default function ProjectWorkspace({
           <div className="pointer-events-none absolute left-4 top-4 rounded-lg border border-white/15 bg-slate-950/85 px-3 py-2 text-[11px] shadow-lg backdrop-blur">
             Saved project boundary
           </div>
+          <aside
+            aria-label="Site and intersecting constraint legend"
+            className="pointer-events-none absolute right-3 top-3 w-52 rounded-xl border border-white/15 bg-slate-950/90 p-3 text-[10px] shadow-xl backdrop-blur sm:right-4 sm:top-4"
+          >
+            <p className="font-bold uppercase tracking-[0.14em] text-slate-300">
+              Map legend
+            </p>
+            <div className="mt-2 flex items-center gap-2 text-slate-200">
+              <span
+                aria-hidden="true"
+                className="h-0.5 w-5 rounded-full bg-emerald-400"
+              />
+              <span>Saved site boundary</span>
+            </div>
+            <div className="mt-2 border-t border-white/10 pt-2">
+              <p className="font-semibold text-slate-400">
+                Confirmed intersections
+              </p>
+              {intersectingConstraints.length > 0 ? (
+                <ul className="mt-1.5 space-y-1.5">
+                  {intersectingConstraints.map((item) => (
+                    <li key={item.id} className="flex items-start gap-2">
+                      <span
+                        aria-hidden="true"
+                        className="mt-1 h-2.5 w-2.5 shrink-0 rounded-sm"
+                        style={{ backgroundColor: item.color }}
+                      />
+                      <span className="min-w-0 text-slate-200">
+                        {item.label}
+                        {item.affectedSitePercent !== null
+                          ? ` · ${item.affectedSitePercent.toFixed(1)}% of site`
+                          : " · intersects"}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <p className="mt-1.5 leading-4 text-slate-500">
+                  {hasIntersectionAnalysis
+                    ? "No confirmed overlaps in the selected analysis."
+                    : "Run or open a preliminary score to identify overlaps."}
+                </p>
+              )}
+            </div>
+          </aside>
         </section>
 
         <aside className="order-3 border-t border-white/10 bg-slate-950 p-4 lg:border-l lg:border-t-0 lg:overflow-y-auto">
@@ -354,10 +474,32 @@ export default function ProjectWorkspace({
           <SiteScorePanel
             projectId={project.id}
             initialHistory={initialScoreHistory}
+            onAnalysisChange={showScoreIntersections}
           />
-          <ConstraintAnalysisPanel projectId={project.id} />
-          <FloodRiskAnalysisPanel projectId={project.id} />
-          <SurfaceWaterAnalysisPanel projectId={project.id} />
+          <ConstraintAnalysisPanel
+            projectId={project.id}
+            onIntersectionChange={(layerId, intersects, affectedPercent) =>
+              updateIntersection(
+                layerId === "nationally-designated-areas"
+                  ? "national-designations"
+                  : layerId,
+                intersects,
+                affectedPercent,
+              )
+            }
+          />
+          <FloodRiskAnalysisPanel
+            projectId={project.id}
+            onIntersectionChange={(intersects) =>
+              updateIntersection("flood-risk-areas", intersects)
+            }
+          />
+          <SurfaceWaterAnalysisPanel
+            projectId={project.id}
+            onIntersectionChange={(intersects) =>
+              updateIntersection("surface-water", intersects)
+            }
+          />
           <TerrainAnalysisPanel projectId={project.id} />
           <InfrastructureAnalysisPanel projectId={project.id} />
         </aside>

@@ -3,7 +3,10 @@ import type { Metadata } from "next";
 import { notFound, redirect } from "next/navigation";
 import ProjectWorkspace from "@/components/gis/ProjectWorkspace";
 import { isAuthenticationAvailable } from "@/lib/auth-config";
-import { listOwnedAnalysisSnapshots } from "@/lib/gis/analysis-snapshots";
+import {
+  getLatestOwnedAnalysisSnapshot,
+  listOwnedAnalysisSnapshots,
+} from "@/lib/gis/analysis-snapshots";
 import { getOwnedProject } from "@/lib/projects/data";
 
 export const metadata: Metadata = {
@@ -27,9 +30,10 @@ export default async function ProjectWorkspacePage({
   if (!userId) redirect("/sign-in");
 
   const { projectId } = await params;
-  const [project, initialScoreHistory] = await Promise.all([
+  const [project, initialScoreHistory, latestAnalysis] = await Promise.all([
     getOwnedProject(userId, projectId),
     listOwnedAnalysisSnapshots(userId, projectId),
+    getLatestOwnedAnalysisSnapshot(userId, projectId),
   ]);
   if (!project) notFound();
 
@@ -37,6 +41,7 @@ export default async function ProjectWorkspacePage({
     <ProjectWorkspace
       project={project}
       initialScoreHistory={initialScoreHistory}
+      initialAnalysis={latestAnalysis?.payload ?? null}
     />
   );
 }

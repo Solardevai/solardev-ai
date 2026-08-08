@@ -69,6 +69,21 @@ export async function listOwnedAnalysisSnapshots(
   return snapshots.map(serializeSummary);
 }
 
+export async function getLatestOwnedAnalysisSnapshot(
+  ownerId: string,
+  projectId: string,
+) {
+  const snapshot = await prisma.analysisSnapshot.findFirst({
+    where: {
+      projectId,
+      analysisType: ANALYSIS_TYPE,
+      project: { ownerId },
+    },
+    orderBy: { createdAt: "desc" },
+  });
+  return snapshot ? serializeDetail(snapshot) : null;
+}
+
 export async function getOwnedAnalysisSnapshot(
   ownerId: string,
   projectId: string,
