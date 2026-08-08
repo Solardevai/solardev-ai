@@ -7,7 +7,7 @@ import {
   ScaleControl,
 } from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
-import { RefObject, useEffect, useRef, useState } from "react";
+import { RefObject, useEffect, useRef, useState, type ReactNode } from "react";
 import {
   basemaps,
   defaultBasemapId,
@@ -131,12 +131,14 @@ type MapCoreCanvasProps = Pick<
   "containerRef" | "drawingOverlayRef"
 > & {
   ariaLabel: string;
+  terrainOverlay?: ReactNode;
 };
 
 export function MapCoreCanvas({
   containerRef,
   drawingOverlayRef,
   ariaLabel,
+  terrainOverlay,
 }: MapCoreCanvasProps) {
   return (
     <>
@@ -158,7 +160,7 @@ export function MapCoreCanvas({
           strokeWidth="5"
           strokeLinejoin="round"
         />
-        <g data-terrain-overlay />
+        {terrainOverlay}
         <path
           data-site-path
           fill="transparent"

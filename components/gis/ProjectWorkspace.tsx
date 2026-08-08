@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import type { Map as MapLibreMap } from "maplibre-gl";
 import { useEffect, useRef, useState } from "react";
 import ConstraintAnalysisPanel from "@/components/gis/ConstraintAnalysisPanel";
 import FloodRiskAnalysisPanel from "@/components/gis/FloodRiskAnalysisPanel";
@@ -113,6 +114,91 @@ function boundaryPoints(boundary: GeoJSON.Polygon) {
   );
 }
 
+type TerrainOverlayPath = {
+  id: string;
+  pathData: string;
+  slopeDeg: number;
+  aspectDeg: number;
+};
+
+function projectTerrainPaths(
+  map: MapLibreMap,
+  areas: TerrainAnalysis["nonUsableAreas"],
+): TerrainOverlayPath[] {
+  return areas.features.flatMap((feature, featureIndex) => {
+    const polygons =
+      feature.geometry.type === "Polygon"
+        ? [feature.geometry.coordinates]
+        : feature.geometry.coordinates;
+    const pathData = polygons
+      .flatMap((polygon) =>
+        polygon.map((ring) =>
+          ring
+            .map(([longitude, latitude], pointIndex) => {
+              const point = map.project([longitude, latitude]);
+              return `${pointIndex === 0 ? "M" : "L"}${point.x.toFixed(1)} ${point.y.toFixed(1)}`;
+            })
+            .concat("Z")
+            .join(" "),
+        ),
+      )
+      .join(" ");
+
+    if (!pathData) return [];
+    return [
+      {
+        id: `terrain-${featureIndex}`,
+        pathData,
+        slopeDeg: feature.properties.slopeDeg,
+        aspectDeg: feature.properties.aspectDeg,
+      },
+    ];
+  });
+}
+
+function TerrainMaskOverlay({
+  map,
+  areas,
+}: {
+  map: MapLibreMap | null;
+  areas: TerrainAnalysis["nonUsableAreas"];
+}) {
+  const [paths, setPaths] = useState<TerrainOverlayPath[]>([]);
+
+  useEffect(() => {
+    if (!map) return;
+
+    const updatePaths = () => setPaths(projectTerrainPaths(map, areas));
+    const initialFrame = requestAnimationFrame(updatePaths);
+    map.on("move", updatePaths);
+    map.on("resize", updatePaths);
+    return () => {
+      cancelAnimationFrame(initialFrame);
+      map.off("move", updatePaths);
+      map.off("resize", updatePaths);
+    };
+  }, [map, areas]);
+
+  return (
+    <g data-terrain-overlay data-feature-count={map ? paths.length : 0}>
+      {map && paths.map((path) => (
+        <path
+          key={path.id}
+          d={path.pathData}
+          fill="#f97316"
+          fillOpacity="0.68"
+          fillRule="evenodd"
+          stroke="#7c2d12"
+          strokeWidth="1.5"
+          strokeLinejoin="round"
+          data-slope-deg={path.slopeDeg}
+          data-aspect-deg={path.aspectDeg}
+        />
+      ))}
+    </g>
+  );
+}
+
 export default function ProjectWorkspace({
   project,
   initialScoreHistory,
@@ -176,65 +262,6 @@ export default function ProjectWorkspace({
       map.off("mousemove", updateCoordinates);
     };
   }, [map]);
-
-  useEffect(() => {
-    const overlay = drawingOverlayRef.current?.querySelector<SVGGElement>(
-      "[data-terrain-overlay]",
-    );
-    if (!map || !overlay) return;
-
-    const renderTerrainMask = () => {
-      overlay.replaceChildren();
-      overlay.dataset.featureCount = String(
-        terrainNonUsableAreas.features.length,
-      );
-
-      for (const feature of terrainNonUsableAreas.features) {
-        const polygons =
-          feature.geometry.type === "Polygon"
-            ? [feature.geometry.coordinates]
-            : feature.geometry.coordinates;
-        const pathData = polygons
-          .flatMap((polygon) =>
-            polygon.map((ring) =>
-              ring
-                .map(([longitude, latitude], index) => {
-                  const point = map.project([longitude, latitude]);
-                  return `${index === 0 ? "M" : "L"}${point.x.toFixed(1)} ${point.y.toFixed(1)}`;
-                })
-                .concat("Z")
-                .join(" "),
-            ),
-          )
-          .join(" ");
-        if (!pathData) continue;
-
-        const path = document.createElementNS(
-          "http://www.w3.org/2000/svg",
-          "path",
-        );
-        path.setAttribute("d", pathData);
-        path.setAttribute("fill", "#f97316");
-        path.setAttribute("fill-opacity", "0.68");
-        path.setAttribute("fill-rule", "evenodd");
-        path.setAttribute("stroke", "#7c2d12");
-        path.setAttribute("stroke-width", "1.5");
-        path.setAttribute("stroke-linejoin", "round");
-        path.dataset.slopeDeg = String(feature.properties.slopeDeg);
-        path.dataset.aspectDeg = String(feature.properties.aspectDeg);
-        overlay.append(path);
-      }
-    };
-
-    renderTerrainMask();
-    map.on("move", renderTerrainMask);
-    map.on("resize", renderTerrainMask);
-    return () => {
-      map.off("move", renderTerrainMask);
-      map.off("resize", renderTerrainMask);
-      overlay.replaceChildren();
-    };
-  }, [drawingOverlayRef, map, terrainNonUsableAreas]);
 
   async function saveProject() {
     const currentMap = mapRef.current;
@@ -435,6 +462,9 @@ export default function ProjectWorkspace({
             containerRef={containerRef}
             drawingOverlayRef={drawingOverlayRef}
             ariaLabel={`GIS workspace map for ${project.name}`}
+            terrainOverlay={
+              <TerrainMaskOverlay map={map} areas={terrainNonUsableAreas} />
+            }
           />
           <div className="pointer-events-none absolute left-4 top-4 rounded-lg border border-white/15 bg-slate-950/85 px-3 py-2 text-[11px] shadow-lg backdrop-blur">
             Saved project boundary
