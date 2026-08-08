@@ -261,7 +261,7 @@ function terrainCriterion(analysis: TerrainAnalysis) {
   return criterion(
     "terrain",
     score,
-    `${analysis.result.averageSlopeDeg.toFixed(2)}° average and ${analysis.result.p90SlopeDeg.toFixed(2)}° 90th-percentile sampled slope.`,
+    `${analysis.result.averageSlopeDeg.toFixed(2)}° average and ${analysis.result.p90SlopeDeg.toFixed(2)}° 90th-percentile sampled slope; ${analysis.result.nonUsableNorthSlopePercent.toFixed(2)}% classified non-usable because it is north-facing above 5°.`,
   );
 }
 
@@ -543,6 +543,12 @@ function constraintRegister(
   rows.push(
     terrain.status === "fulfilled"
       ? row("terrain", {
+          intersects:
+            terrain.value.result.nonUsableNorthSlopeAreaSqm > 0,
+          affectedAreaSqm:
+            terrain.value.result.nonUsableNorthSlopeAreaSqm,
+          affectedSitePercent:
+            terrain.value.result.nonUsableNorthSlopePercent,
           recommendedActions: uniqueActions([
             terrain.value.result.recommendedAction,
           ]),
@@ -707,8 +713,12 @@ export async function analyzePreliminarySiteScore(
       surfaceWater,
       terrain,
     ),
+    terrainNonUsableAreas:
+      terrain.status === "fulfilled"
+        ? terrain.value.nonUsableAreas
+        : undefined,
     methodology: {
-      version: "1.2",
+      version: "1.3",
       totalWeight: 100,
       normalization: "available-weight normalized",
     },

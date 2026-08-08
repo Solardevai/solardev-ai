@@ -1,9 +1,13 @@
 "use client";
 
 import { useState } from "react";
+import { formatArea } from "@/lib/geo/format";
 import type { TerrainAnalysis } from "@/types/gis";
 
-type TerrainAnalysisPanelProps = { projectId: string };
+type TerrainAnalysisPanelProps = {
+  projectId: string;
+  onAnalysisChange?: (analysis: TerrainAnalysis) => void;
+};
 
 function percentGrade(degrees: number) {
   return Math.tan((degrees * Math.PI) / 180) * 100;
@@ -11,6 +15,7 @@ function percentGrade(degrees: number) {
 
 export default function TerrainAnalysisPanel({
   projectId,
+  onAnalysisChange,
 }: TerrainAnalysisPanelProps) {
   const [analysis, setAnalysis] = useState<TerrainAnalysis | null>(null);
   const [isRunning, setIsRunning] = useState(false);
@@ -29,6 +34,7 @@ export default function TerrainAnalysisPanel({
         throw new Error(result.error || "Terrain screening failed.");
       }
       setAnalysis(result.analysis);
+      onAnalysisChange?.(result.analysis);
     } catch (runError) {
       setError(
         runError instanceof Error
@@ -117,6 +123,15 @@ export default function TerrainAnalysisPanel({
                   {analysis.result.p90SlopeDeg.toFixed(2)}° · {percentGrade(analysis.result.p90SlopeDeg).toFixed(1)}%
                 </dd>
               </div>
+              <div className="col-span-2 rounded-lg border border-orange-300/15 bg-orange-300/[0.05] p-2.5">
+                <dt className="text-orange-200">Non-usable north-facing slope</dt>
+                <dd className="mt-1 font-semibold text-white">
+                  {formatArea(analysis.result.nonUsableNorthSlopeAreaSqm)} · {analysis.result.nonUsableNorthSlopePercent.toFixed(2)}% of site
+                </dd>
+                <p className="mt-1 text-[9px] leading-4 text-slate-500">
+                  {analysis.result.nonUsableCellCount} clipped terrain cells above 5° with downslope aspect between 315° and 45°.
+                </p>
+              </div>
             </dl>
 
             <p className="mt-3 border-t border-white/8 pt-3 text-[10px] leading-4 text-slate-400">
@@ -129,7 +144,7 @@ export default function TerrainAnalysisPanel({
               </summary>
               <div className="mt-3 space-y-2 text-[9px] leading-4 text-slate-500">
                 <p>
-                  {analysis.result.sampleCount} samples · {analysis.methodology.sampling} · {analysis.methodology.slope}.
+                  {analysis.result.sampleCount} elevation nodes · {analysis.methodology.sampling} · {analysis.methodology.slope}. {analysis.methodology.aspect}. Non-usable rule: {analysis.methodology.nonUsableRule}.
                 </p>
                 <p>
                   {analysis.source.dataset} (~{analysis.source.resolutionM} m) via {analysis.source.provider}. {analysis.source.reference}. Retrieved {new Date(analysis.source.retrievedAt).toLocaleString()}.

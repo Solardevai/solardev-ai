@@ -1,5 +1,8 @@
 import "server-only";
 
+import area from "@turf/area";
+import intersect from "@turf/intersect";
+import { featureCollection, polygon } from "@turf/helpers";
 import sharp from "sharp";
 import type { ConstraintRisk, TerrainAnalysis } from "@/types/gis";
 
@@ -8,7 +11,8 @@ type SamplePoint = {
   latitude: number;
 };
 
-type ElevatedPoint = SamplePoint & { elevationM: number };
+type GridPoint = SamplePoint & { row: number; column: number };
+type ElevatedGridPoint = GridPoint & { elevationM: number };
 
 export class TerrainSourceError extends Error {
   constructor(message: string) {
@@ -18,7 +22,7 @@ export class TerrainSourceError extends Error {
 }
 
 const GRID_SIZE = 9;
-const MAX_LOCATIONS = 100;
+const GRID_NODE_SIZE = GRID_SIZE + 1;
 const EARTH_RADIUS_M = 6_371_008.8;
 const TERRAIN_TILE_ZOOM = 12;
 const TERRAIN_TILE_SIZE = 256;
@@ -26,27 +30,7 @@ const MAX_TERRAIN_TILES = 32;
 const TERRAIN_TILE_BASE_URL =
   "https://s3.amazonaws.com/elevation-tiles-prod/terrarium";
 
-function pointInRing(point: SamplePoint, ring: number[][]) {
-  let inside = false;
-  for (
-    let current = 0, previous = ring.length - 1;
-    current < ring.length;
-    previous = current++
-  ) {
-    const [currentX, currentY] = ring[current];
-    const [previousX, previousY] = ring[previous];
-    const crosses =
-      currentY > point.latitude !== previousY > point.latitude &&
-      point.longitude <
-        ((previousX - currentX) * (point.latitude - currentY)) /
-          (previousY - currentY) +
-          currentX;
-    if (crosses) inside = !inside;
-  }
-  return inside;
-}
-
-function sampleSite(site: GeoJSON.Polygon) {
+function sampleTerrainGrid(site: GeoJSON.Polygon) {
   const ring = site.coordinates[0] ?? [];
   if (ring.length < 4) throw new Error("A valid project polygon is required.");
   const longitudes = ring.map(([longitude]) => longitude);
@@ -55,44 +39,21 @@ function sampleSite(site: GeoJSON.Polygon) {
   const east = Math.max(...longitudes);
   const south = Math.min(...latitudes);
   const north = Math.max(...latitudes);
-  const points: SamplePoint[] = [];
-  const seen = new Set<string>();
-  const addPoint = (longitude: number, latitude: number) => {
-    const key = `${longitude.toFixed(7)},${latitude.toFixed(7)}`;
-    if (seen.has(key) || points.length >= MAX_LOCATIONS) return;
-    seen.add(key);
-    points.push({ longitude, latitude });
-  };
-
-  for (let row = 0; row < GRID_SIZE; row += 1) {
-    const latitude = south + ((row + 0.5) / GRID_SIZE) * (north - south);
-    for (let column = 0; column < GRID_SIZE; column += 1) {
-      const longitude =
-        west + ((column + 0.5) / GRID_SIZE) * (east - west);
-      const point = { longitude, latitude };
-      if (pointInRing(point, ring)) addPoint(longitude, latitude);
-    }
-  }
-
-  const openRing = ring.slice(
-    0,
-    ring.length > 1 &&
-      ring[0][0] === ring.at(-1)?.[0] &&
-      ring[0][1] === ring.at(-1)?.[1]
-      ? -1
-      : undefined,
-  );
-  for (const [longitude, latitude] of openRing) {
-    addPoint(longitude, latitude);
-  }
-
-  if (points.length < 3) {
+  if (west === east || south === north) {
     throw new Error("The project polygon is too narrow to sample terrain.");
   }
-  return points;
+  const nodes: GridPoint[] = [];
+  for (let row = 0; row < GRID_NODE_SIZE; row += 1) {
+    const latitude = south + (row / GRID_SIZE) * (north - south);
+    for (let column = 0; column < GRID_NODE_SIZE; column += 1) {
+      const longitude = west + (column / GRID_SIZE) * (east - west);
+      nodes.push({ longitude, latitude, row, column });
+    }
+  }
+  return nodes;
 }
 
-function terrainTileSample(point: SamplePoint) {
+function terrainTileSample(point: GridPoint) {
   const latitude = Math.max(-85.05112878, Math.min(85.05112878, point.latitude));
   const tilesPerAxis = 2 ** TERRAIN_TILE_ZOOM;
   const xPosition = ((point.longitude + 180) / 360) * tilesPerAxis;
@@ -141,7 +102,7 @@ async function fetchTerrainTile(tileX: number, tileY: number) {
   return { data, channels: info.channels };
 }
 
-async function fetchElevations(points: SamplePoint[]) {
+async function fetchElevations(points: GridPoint[]) {
   const samples = points.map(terrainTileSample);
   const uniqueTiles = new Map(
     samples.map((sample) => [sample.key, sample] as const),
@@ -164,7 +125,7 @@ async function fetchElevations(points: SamplePoint[]) {
     }),
   );
 
-  const elevated = samples.flatMap<ElevatedPoint>((sample) => {
+  const elevated = samples.flatMap<ElevatedGridPoint>((sample) => {
     const tile = decodedTiles.get(sample.key);
     if (!tile || tile.channels < 3) return [];
     const offset =
@@ -202,34 +163,82 @@ function distanceM(first: SamplePoint, second: SamplePoint) {
   return 2 * EARTH_RADIUS_M * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 }
 
-function slopeSamples(points: ElevatedPoint[]) {
+function terrainCells(
+  site: GeoJSON.Polygon,
+  points: ElevatedGridPoint[],
+) {
+  const pointByCell = new Map(
+    points.map((point) => [`${point.row}:${point.column}`, point]),
+  );
+  const siteFeature = polygon(site.coordinates);
   const slopes: number[] = [];
-  const usedPairs = new Set<string>();
-  for (let index = 0; index < points.length; index += 1) {
-    let nearestIndex = -1;
-    let nearestDistance = Number.POSITIVE_INFINITY;
-    for (let candidate = 0; candidate < points.length; candidate += 1) {
-      if (candidate === index) continue;
-      const distance = distanceM(points[index], points[candidate]);
-      if (distance < nearestDistance) {
-        nearestDistance = distance;
-        nearestIndex = candidate;
-      }
+  const nonUsableFeatures: TerrainAnalysis["nonUsableAreas"]["features"] = [];
+
+  for (let row = 0; row < GRID_SIZE; row += 1) {
+    for (let column = 0; column < GRID_SIZE; column += 1) {
+      const southWest = pointByCell.get(`${row}:${column}`);
+      const southEast = pointByCell.get(`${row}:${column + 1}`);
+      const northWest = pointByCell.get(`${row + 1}:${column}`);
+      const northEast = pointByCell.get(`${row + 1}:${column + 1}`);
+      if (!southWest || !southEast || !northWest || !northEast) continue;
+
+      const cell = polygon([[
+        [southWest.longitude, southWest.latitude],
+        [southEast.longitude, southEast.latitude],
+        [northEast.longitude, northEast.latitude],
+        [northWest.longitude, northWest.latitude],
+        [southWest.longitude, southWest.latitude],
+      ]]);
+      const clipped = intersect(featureCollection([siteFeature, cell]));
+      if (!clipped) continue;
+
+      const middleLatitude = (southWest.latitude + northWest.latitude) / 2;
+      const middleLongitude = (southWest.longitude + southEast.longitude) / 2;
+      const eastWestDistance = distanceM(
+        { longitude: southWest.longitude, latitude: middleLatitude },
+        { longitude: southEast.longitude, latitude: middleLatitude },
+      );
+      const northSouthDistance = distanceM(
+        { longitude: middleLongitude, latitude: southWest.latitude },
+        { longitude: middleLongitude, latitude: northWest.latitude },
+      );
+      if (eastWestDistance < 1 || northSouthDistance < 1) continue;
+
+      const westElevation = (southWest.elevationM + northWest.elevationM) / 2;
+      const eastElevation = (southEast.elevationM + northEast.elevationM) / 2;
+      const southElevation = (southWest.elevationM + southEast.elevationM) / 2;
+      const northElevation = (northWest.elevationM + northEast.elevationM) / 2;
+      const eastGradient = (eastElevation - westElevation) / eastWestDistance;
+      const northGradient = (northElevation - southElevation) / northSouthDistance;
+      const slopeDeg =
+        (Math.atan(Math.hypot(eastGradient, northGradient)) * 180) / Math.PI;
+      const aspectDeg =
+        ((Math.atan2(-eastGradient, -northGradient) * 180) / Math.PI + 360) %
+        360;
+      slopes.push(slopeDeg);
+
+      const northFacing = aspectDeg >= 315 || aspectDeg <= 45;
+      if (slopeDeg <= 5 || !northFacing) continue;
+      const areaSqm = area(clipped);
+      nonUsableFeatures.push({
+        ...clipped,
+        properties: {
+          slopeDeg: round(slopeDeg, 2),
+          aspectDeg: round(aspectDeg, 1),
+          areaSqm: round(areaSqm),
+        },
+      });
     }
-    if (nearestIndex < 0 || nearestDistance < 1) continue;
-    const pair = [index, nearestIndex].sort((first, second) => first - second);
-    const pairKey = `${pair[0]}:${pair[1]}`;
-    if (usedPairs.has(pairKey)) continue;
-    usedPairs.add(pairKey);
-    const rise = Math.abs(
-      points[index].elevationM - points[nearestIndex].elevationM,
-    );
-    slopes.push((Math.atan(rise / nearestDistance) * 180) / Math.PI);
   }
+
   if (!slopes.length) {
     throw new TerrainSourceError("Terrain slope could not be calculated.");
   }
-  return slopes.sort((first, second) => first - second);
+  return {
+    slopes: slopes.sort((first, second) => first - second),
+    nonUsableAreas: featureCollection(nonUsableFeatures),
+    siteAreaSqm: area(siteFeature),
+  };
 }
 
 function round(value: number, decimals = 1) {
@@ -245,9 +254,15 @@ function percentile(sortedValues: number[], quantile: number) {
   return sortedValues[index];
 }
 
-function terrainRisk(averageSlope: number, p90Slope: number): ConstraintRisk {
-  if (averageSlope > 10 || p90Slope > 15) return "high";
-  if (averageSlope > 5 || p90Slope > 8) return "medium";
+function terrainRisk(
+  averageSlope: number,
+  p90Slope: number,
+  nonUsablePercent: number,
+): ConstraintRisk {
+  if (averageSlope > 10 || p90Slope > 15 || nonUsablePercent >= 25) {
+    return "high";
+  }
+  if (averageSlope > 5 || p90Slope > 8 || nonUsablePercent > 0) return "medium";
   return "low";
 }
 
@@ -255,9 +270,16 @@ export async function analyzeTerrain(
   projectId: string,
   site: GeoJSON.Polygon,
 ): Promise<TerrainAnalysis> {
-  const points = await fetchElevations(sampleSite(site));
+  const points = await fetchElevations(sampleTerrainGrid(site));
   const elevations = points.map((point) => point.elevationM);
-  const slopes = slopeSamples(points);
+  const { slopes, nonUsableAreas, siteAreaSqm } = terrainCells(site, points);
+  const nonUsableNorthSlopeAreaSqm = nonUsableAreas.features.reduce(
+    (sum, feature) => sum + feature.properties.areaSqm,
+    0,
+  );
+  const nonUsableNorthSlopePercent = siteAreaSqm
+    ? (nonUsableNorthSlopeAreaSqm / siteAreaSqm) * 100
+    : 0;
   const minimumElevationM = Math.min(...elevations);
   const maximumElevationM = Math.max(...elevations);
   const meanElevationM =
@@ -266,7 +288,11 @@ export async function analyzeTerrain(
   const averageSlope =
     slopes.reduce((sum, slope) => sum + slope, 0) / slopes.length;
   const p90Slope = percentile(slopes, 0.9);
-  const risk = terrainRisk(averageSlope, p90Slope);
+  const risk = terrainRisk(
+    averageSlope,
+    p90Slope,
+    nonUsableNorthSlopePercent,
+  );
 
   return {
     projectId,
@@ -282,10 +308,15 @@ export async function analyzeTerrain(
       averageSlopeDeg: round(averageSlope, 2),
       p90SlopeDeg: round(p90Slope, 2),
       maximumSampledSlopeDeg: round(slopes.at(-1)!, 2),
+      nonUsableNorthSlopeAreaSqm: round(nonUsableNorthSlopeAreaSqm),
+      nonUsableNorthSlopePercent: round(nonUsableNorthSlopePercent, 2),
+      nonUsableCellCount: nonUsableAreas.features.length,
       risk,
       confidence: "medium",
       recommendedAction:
-        risk === "high"
+        nonUsableNorthSlopePercent > 0
+          ? `Exclude the mapped north-facing cells above 5° from preliminary usable-area assumptions (${round(nonUsableNorthSlopePercent, 2)}% of the site). Confirm the exclusion with a higher-resolution terrain model and topographic survey.`
+          : risk === "high"
           ? "Treat terrain as a material layout and grading risk. Obtain a higher-resolution terrain model and topographic survey before capacity or earthworks assumptions."
           : risk === "medium"
             ? "Review tracker or fixed-tilt slope limits, preliminary grading and drainage using a higher-resolution terrain model."
@@ -302,13 +333,17 @@ export async function analyzeTerrain(
       licence: "Source-specific open-data attribution requirements",
     },
     methodology: {
-      sampling: "9 × 9 interior grid plus available boundary vertices",
-      slope: "nearest-neighbour elevation gradient",
+      sampling: "10 × 10 elevation-node grid producing clipped 9 × 9 terrain cells",
+      slope: "central cell gradient from corner elevations",
+      aspect: "downslope azimuth; north-facing sector 315°–45°",
+      nonUsableRule: "slope >5° and north-facing",
     },
+    nonUsableAreas,
     limitations: [
-      "This is a sampled screening result, not a continuous slope raster or topographic survey.",
+      "This is a gridded screening result, not a continuous slope raster or topographic survey.",
       "The terrain mosaic uses regional best-available sources with approximately 30 m detail in the target European markets; effective resolution and vertical datum can vary by location.",
-      "Sample spacing depends on the site extent; maximum sampled slope is not the maximum slope everywhere on the site.",
+      "Cell spacing depends on the site extent; the non-usable mask generalizes each cell from four elevation nodes and may omit local terrain breaks.",
+      "The north-facing rule uses downslope aspect from 315° through north to 45° and applies only where calculated slope is greater than 5°.",
       "Source mosaicking, datum differences and DEM artefacts may affect elevations.",
       "Europe terrain data includes EU-DEM layers produced using Copernicus data and information funded by the European Union.",
       "Earthworks, drainage, geotechnical conditions and technology-specific grading limits are not assessed.",

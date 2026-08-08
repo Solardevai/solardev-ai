@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import type { GeoJSONSource } from "maplibre-gl";
 import { useEffect, useRef, useState } from "react";
 import ConstraintAnalysisPanel from "@/components/gis/ConstraintAnalysisPanel";
 import FloodRiskAnalysisPanel from "@/components/gis/FloodRiskAnalysisPanel";
@@ -20,6 +21,7 @@ import type {
   AnalysisSnapshotSummary,
   PreliminarySiteScore,
   SiteScoreCriterionId,
+  TerrainAnalysis,
 } from "@/types/gis";
 import type {
   ProjectStatus,
@@ -54,6 +56,12 @@ const intersectionLegendDefinitions: Partial<
   "main-road": { label: "Main road", color: "#f8fafc" },
   "transmission-line": { label: "Transmission line", color: "#ef4444" },
   substation: { label: "Substation", color: "#22d3ee" },
+  terrain: { label: "North-facing slope >5°", color: "#f97316" },
+};
+
+const emptyTerrainMask: TerrainAnalysis["nonUsableAreas"] = {
+  type: "FeatureCollection",
+  features: [],
 };
 
 function legendItemsFromAnalysis(
@@ -125,6 +133,9 @@ export default function ProjectWorkspace({
   const [hasIntersectionAnalysis, setHasIntersectionAnalysis] = useState(
     () => Boolean(initialAnalysis?.constraintRegister),
   );
+  const [terrainNonUsableAreas, setTerrainNonUsableAreas] = useState<
+    TerrainAnalysis["nonUsableAreas"]
+  >(() => initialAnalysis?.terrainNonUsableAreas ?? emptyTerrainMask);
   const didImportBoundary = useRef(false);
   const latitudeRef = useRef<HTMLSpanElement>(null);
   const longitudeRef = useRef<HTMLSpanElement>(null);
@@ -166,6 +177,59 @@ export default function ProjectWorkspace({
       map.off("mousemove", updateCoordinates);
     };
   }, [map]);
+
+  useEffect(() => {
+    if (!map) return;
+    const sourceId = "terrain-north-slope-non-usable";
+    const fillLayerId = `${sourceId}-fill`;
+    const lineLayerId = `${sourceId}-line`;
+    const syncTerrainMask = () => {
+      const existingSource = map.getSource(sourceId) as
+        | GeoJSONSource
+        | undefined;
+      if (existingSource) {
+        existingSource.setData(terrainNonUsableAreas);
+        return;
+      }
+      map.addSource(sourceId, {
+        type: "geojson",
+        data: terrainNonUsableAreas,
+      });
+      const beforeLayer = map.getLayer("site-line-casing")
+        ? "site-line-casing"
+        : undefined;
+      map.addLayer(
+        {
+          id: fillLayerId,
+          type: "fill",
+          source: sourceId,
+          paint: {
+            "fill-color": "#f97316",
+            "fill-opacity": 0.52,
+          },
+        },
+        beforeLayer,
+      );
+      map.addLayer(
+        {
+          id: lineLayerId,
+          type: "line",
+          source: sourceId,
+          paint: {
+            "line-color": "#fed7aa",
+            "line-width": 1.5,
+          },
+        },
+        beforeLayer,
+      );
+    };
+
+    if (map.isStyleLoaded()) syncTerrainMask();
+    else map.once("load", syncTerrainMask);
+    return () => {
+      map.off("load", syncTerrainMask);
+    };
+  }, [map, terrainNonUsableAreas]);
 
   async function saveProject() {
     const currentMap = mapRef.current;
@@ -224,6 +288,18 @@ export default function ProjectWorkspace({
   function showScoreIntersections(analysis: PreliminarySiteScore) {
     setHasIntersectionAnalysis(true);
     setIntersectingConstraints(legendItemsFromAnalysis(analysis));
+    setTerrainNonUsableAreas(
+      analysis.terrainNonUsableAreas ?? emptyTerrainMask,
+    );
+  }
+
+  function showTerrainAnalysis(analysis: TerrainAnalysis) {
+    setTerrainNonUsableAreas(analysis.nonUsableAreas);
+    updateIntersection(
+      "terrain",
+      analysis.result.nonUsableNorthSlopeAreaSqm > 0,
+      analysis.result.nonUsableNorthSlopePercent,
+    );
   }
 
   return (
@@ -340,8 +416,8 @@ export default function ProjectWorkspace({
           <div className="mt-6">
             <p className="text-xs font-semibold text-slate-300">Terrain</p>
             <div className="mt-2 flex items-center gap-2 rounded-lg bg-white/[0.04] px-3 py-2 text-xs text-slate-300">
-              <span className="h-2 w-2 rounded-full bg-lime-400" />
-              Elevation and sampled slope
+              <span className="h-2 w-2 rounded-sm bg-orange-500" />
+              Non-usable north-facing slope &gt;5°
             </div>
             <p className="mt-2 text-[10px] leading-4 text-slate-500">
               Public terrain DEM mosaic · approximately 30 m detail
@@ -500,7 +576,10 @@ export default function ProjectWorkspace({
               updateIntersection("surface-water", intersects)
             }
           />
-          <TerrainAnalysisPanel projectId={project.id} />
+          <TerrainAnalysisPanel
+            projectId={project.id}
+            onAnalysisChange={showTerrainAnalysis}
+          />
           <InfrastructureAnalysisPanel projectId={project.id} />
         </aside>
       </div>

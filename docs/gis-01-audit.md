@@ -125,6 +125,14 @@ and recommended actions. Professional PDFs include an authority-identifier
 appendix, and every saved run exposes an owner-authorized CSV register download.
 Legacy runs remain downloadable with an explicit metadata fallback.
 
+Methodology v1.3 now evaluates terrain on a clipped 9 × 9 cell grid. Cells with
+a calculated slope greater than 5° and a downslope aspect from 315° through
+north to 45° are classified as non-usable screening area. Their clipped
+geometry, estimated area and site percentage are persisted with the score,
+rendered as an orange map overlay and recorded as a terrain intersection in the
+constraint register. The mask remains a DEM-based screening estimate that must
+be confirmed with higher-resolution terrain data and a topographic survey.
+
 The next GIS increment should add project-level analyst notes and disposition
 states so each constraint can be tracked from screening finding to verified,
 accepted, mitigated or excluded.

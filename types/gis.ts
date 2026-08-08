@@ -201,6 +201,9 @@ export type TerrainAnalysis = {
     averageSlopeDeg: number;
     p90SlopeDeg: number;
     maximumSampledSlopeDeg: number;
+    nonUsableNorthSlopeAreaSqm: number;
+    nonUsableNorthSlopePercent: number;
+    nonUsableCellCount: number;
     risk: ConstraintRisk;
     confidence: "medium";
     recommendedAction: string;
@@ -216,9 +219,15 @@ export type TerrainAnalysis = {
     licence: "Source-specific open-data attribution requirements";
   };
   methodology: {
-    sampling: "9 × 9 interior grid plus available boundary vertices";
-    slope: "nearest-neighbour elevation gradient";
+    sampling: "10 × 10 elevation-node grid producing clipped 9 × 9 terrain cells";
+    slope: "central cell gradient from corner elevations";
+    aspect: "downslope azimuth; north-facing sector 315°–45°";
+    nonUsableRule: "slope >5° and north-facing";
   };
+  nonUsableAreas: GeoJSON.FeatureCollection<
+    GeoJSON.Polygon | GeoJSON.MultiPolygon,
+    { slopeDeg: number; aspectDeg: number; areaSqm: number }
+  >;
   limitations: string[];
 };
 
@@ -297,8 +306,10 @@ export type PreliminarySiteScore = {
   sources?: SiteScoreSource[];
   /** Added in methodology v1.2. Optional for backward-compatible snapshots. */
   constraintRegister?: ConstraintRegisterRow[];
+  /** Added in methodology v1.3 for map display and usable-area screening. */
+  terrainNonUsableAreas?: TerrainAnalysis["nonUsableAreas"];
   methodology: {
-    version: "1.0" | "1.1" | "1.2";
+    version: "1.0" | "1.1" | "1.2" | "1.3";
     totalWeight: 100;
     normalization: "available-weight normalized";
   };
