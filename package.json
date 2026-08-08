@@ -17,6 +17,7 @@
     "@turf/area": "^7.3.5",
     "@turf/centroid": "^7.3.5",
     "@turf/helpers": "^7.3.5",
+    "@turf/intersect": "^7.3.5",
     "@turf/length": "^7.3.5",
     "@vercel/blob": "^2.6.1",
     "jszip": "^3.10.1",
