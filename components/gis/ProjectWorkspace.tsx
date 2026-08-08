@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import type { Map as MapLibreMap } from "maplibre-gl";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 import ConstraintAnalysisPanel from "@/components/gis/ConstraintAnalysisPanel";
 import FloodRiskAnalysisPanel from "@/components/gis/FloodRiskAnalysisPanel";
 import InfrastructureAnalysisPanel from "@/components/gis/InfrastructureAnalysisPanel";
@@ -19,8 +19,14 @@ import { formatArea, formatDistance } from "@/lib/geo/format";
 import type { InfrastructureLayerId } from "@/lib/gis/layers";
 import type {
   AnalysisSnapshotSummary,
+  ConstraintMapFeatureCollection,
+  FloodRiskAreaAnalysis,
+  InfrastructureAnalysis,
+  NationallyDesignatedAreasAnalysis,
+  Natura2000ConstraintAnalysis,
   PreliminarySiteScore,
   SiteScoreCriterionId,
+  SurfaceWaterAnalysis,
   TerrainAnalysis,
 } from "@/types/gis";
 import type {
@@ -55,14 +61,34 @@ const intersectionLegendDefinitions: Partial<
   "surface-water": { label: "Surface water / wetland", color: "#22d3ee" },
   "main-road": { label: "Main road", color: "#f8fafc" },
   "transmission-line": { label: "Transmission line", color: "#ef4444" },
-  substation: { label: "Substation", color: "#22d3ee" },
+  substation: { label: "Substation", color: "#a78bfa" },
   terrain: { label: "North-facing slope >5°", color: "#f97316" },
 };
 
-const emptyTerrainMask: TerrainAnalysis["nonUsableAreas"] = {
+const emptyConstraintMap: ConstraintMapFeatureCollection = {
   type: "FeatureCollection",
   features: [],
 };
+
+function mapFeaturesFromAnalysis(
+  analysis: PreliminarySiteScore | null,
+): ConstraintMapFeatureCollection {
+  if (analysis?.constraintMapFeatures) return analysis.constraintMapFeatures;
+  if (!analysis?.terrainNonUsableAreas) return emptyConstraintMap;
+  return {
+    type: "FeatureCollection",
+    features: analysis.terrainNonUsableAreas.features.map((feature, index) => ({
+      type: "Feature",
+      geometry: feature.geometry,
+      properties: {
+        criterionId: "terrain",
+        label: "North-facing slope >5Â°",
+        featureId: `terrain:${index}`,
+        featureName: `${feature.properties.slopeDeg.toFixed(1)}Â° slope`,
+      },
+    })),
+  };
+}
 
 function legendItemsFromAnalysis(
   analysis: PreliminarySiteScore | null,
@@ -114,88 +140,187 @@ function boundaryPoints(boundary: GeoJSON.Polygon) {
   );
 }
 
-type TerrainOverlayPath = {
+type ConstraintOverlayPath = {
+  kind: "path";
   id: string;
   pathData: string;
-  slopeDeg: number;
-  aspectDeg: number;
+  color: string;
+  criterionId: SiteScoreCriterionId;
+  polygon: boolean;
 };
 
-function projectTerrainPaths(
-  map: MapLibreMap,
-  areas: TerrainAnalysis["nonUsableAreas"],
-): TerrainOverlayPath[] {
-  return areas.features.flatMap((feature, featureIndex) => {
-    const polygons =
-      feature.geometry.type === "Polygon"
-        ? [feature.geometry.coordinates]
-        : feature.geometry.coordinates;
-    const pathData = polygons
-      .flatMap((polygon) =>
-        polygon.map((ring) =>
-          ring
-            .map(([longitude, latitude], pointIndex) => {
-              const point = map.project([longitude, latitude]);
-              return `${pointIndex === 0 ? "M" : "L"}${point.x.toFixed(1)} ${point.y.toFixed(1)}`;
-            })
-            .concat("Z")
-            .join(" "),
-        ),
-      )
-      .join(" ");
+type ConstraintOverlayPoint = {
+  kind: "point";
+  id: string;
+  x: number;
+  y: number;
+  color: string;
+  criterionId: SiteScoreCriterionId;
+};
 
-    if (!pathData) return [];
-    return [
-      {
-        id: `terrain-${featureIndex}`,
-        pathData,
-        slopeDeg: feature.properties.slopeDeg,
-        aspectDeg: feature.properties.aspectDeg,
-      },
-    ];
-  });
+type ConstraintOverlayShape = ConstraintOverlayPath | ConstraintOverlayPoint;
+
+function projectLine(
+  map: MapLibreMap,
+  coordinates: GeoJSON.Position[],
+  close = false,
+) {
+  const path = coordinates
+    .map(([longitude, latitude], pointIndex) => {
+      const point = map.project([longitude, latitude]);
+      return `${pointIndex === 0 ? "M" : "L"}${point.x.toFixed(1)} ${point.y.toFixed(1)}`;
+    })
+    .join(" ");
+  return close && path ? `${path} Z` : path;
 }
 
-function TerrainMaskOverlay({
+function projectPolygon(
+  map: MapLibreMap,
+  polygons: GeoJSON.Position[][][],
+) {
+  return polygons
+    .flatMap((polygon) =>
+      polygon.map((ring) => projectLine(map, ring, true)),
+    )
+    .filter(Boolean)
+    .join(" ");
+}
+
+function projectConstraintShapes(
+  map: MapLibreMap,
+  features: ConstraintMapFeatureCollection,
+): ConstraintOverlayShape[] {
+  return features.features.flatMap<ConstraintOverlayShape>((feature, index) => {
+    const definition = intersectionLegendDefinitions[feature.properties.criterionId];
+    if (!definition) return [];
+    const base = {
+      id: `${feature.properties.featureId}:${index}`,
+      color: definition.color,
+      criterionId: feature.properties.criterionId,
+    };
+    const geometry = feature.geometry;
+    if (geometry.type === "Point") {
+      const point = map.project(geometry.coordinates as [number, number]);
+      return [{ ...base, kind: "point" as const, x: point.x, y: point.y }];
+    }
+    if (geometry.type === "LineString") {
+      return [{
+        ...base,
+        kind: "path" as const,
+        pathData: projectLine(map, geometry.coordinates),
+        polygon: false,
+      }];
+    }
+    if (geometry.type === "MultiLineString") {
+      return [{
+        ...base,
+        kind: "path" as const,
+        pathData: geometry.coordinates
+          .map((line) => projectLine(map, line))
+          .filter(Boolean)
+          .join(" "),
+        polygon: false,
+      }];
+    }
+    const polygons =
+      geometry.type === "Polygon"
+        ? [geometry.coordinates]
+        : geometry.coordinates;
+    return [{
+      ...base,
+      kind: "path" as const,
+      pathData: projectPolygon(map, polygons),
+      polygon: true,
+    }];
+  }).filter((shape) => shape.kind === "point" || Boolean(shape.pathData));
+}
+
+function ConstraintMapOverlay({
   map,
-  areas,
+  features,
+  site,
 }: {
   map: MapLibreMap | null;
-  areas: TerrainAnalysis["nonUsableAreas"];
+  features: ConstraintMapFeatureCollection;
+  site: GeoJSON.Polygon;
 }) {
-  const [paths, setPaths] = useState<TerrainOverlayPath[]>([]);
+  const clipId = `constraint-clip-${useId().replace(/[^a-zA-Z0-9_-]/g, "")}`;
+  const [overlay, setOverlay] = useState<{
+    clipPath: string;
+    shapes: ConstraintOverlayShape[];
+  }>({ clipPath: "", shapes: [] });
 
   useEffect(() => {
     if (!map) return;
 
-    const updatePaths = () => setPaths(projectTerrainPaths(map, areas));
-    const initialFrame = requestAnimationFrame(updatePaths);
-    map.on("move", updatePaths);
-    map.on("resize", updatePaths);
+    const updateOverlay = () =>
+      setOverlay({
+        clipPath: projectPolygon(map, [site.coordinates]),
+        shapes: projectConstraintShapes(map, features),
+      });
+    const initialFrame = requestAnimationFrame(updateOverlay);
+    map.on("move", updateOverlay);
+    map.on("resize", updateOverlay);
     return () => {
       cancelAnimationFrame(initialFrame);
-      map.off("move", updatePaths);
-      map.off("resize", updatePaths);
+      map.off("move", updateOverlay);
+      map.off("resize", updateOverlay);
     };
-  }, [map, areas]);
+  }, [map, features, site]);
 
   return (
-    <g data-terrain-overlay data-feature-count={map ? paths.length : 0}>
-      {map && paths.map((path) => (
-        <path
-          key={path.id}
-          d={path.pathData}
-          fill="#f97316"
-          fillOpacity="0.68"
-          fillRule="evenodd"
-          stroke="#7c2d12"
-          strokeWidth="1.5"
-          strokeLinejoin="round"
-          data-slope-deg={path.slopeDeg}
-          data-aspect-deg={path.aspectDeg}
-        />
-      ))}
-    </g>
+    <>
+      <defs>
+        <clipPath id={clipId}>
+          <path d={overlay.clipPath} fillRule="evenodd" />
+        </clipPath>
+      </defs>
+      <g
+        data-constraint-overlay
+        data-feature-count={map ? overlay.shapes.length : 0}
+        clipPath={`url(#${clipId})`}
+      >
+        {map && overlay.shapes.map((shape) =>
+          shape.kind === "point" ? (
+            <circle
+              key={shape.id}
+              cx={shape.x}
+              cy={shape.y}
+              r="6"
+              fill={shape.color}
+              stroke="#020617"
+              strokeWidth="2"
+              data-criterion-id={shape.criterionId}
+            />
+          ) : (
+            <g key={shape.id} data-criterion-id={shape.criterionId}>
+              {!shape.polygon && (
+                <path
+                  d={shape.pathData}
+                  fill="none"
+                  stroke="#020617"
+                  strokeOpacity="0.9"
+                  strokeWidth="7"
+                  strokeLinejoin="round"
+                  strokeLinecap="round"
+                />
+              )}
+              <path
+                d={shape.pathData}
+                fill={shape.polygon ? shape.color : "none"}
+                fillOpacity={shape.polygon ? "0.48" : undefined}
+                fillRule="evenodd"
+                stroke={shape.color}
+                strokeOpacity="0.95"
+                strokeWidth={shape.polygon ? "2" : "4"}
+                strokeLinejoin="round"
+                strokeLinecap="round"
+              />
+            </g>
+          ),
+        )}
+      </g>
+    </>
   );
 }
 
@@ -218,9 +343,10 @@ export default function ProjectWorkspace({
   const [hasIntersectionAnalysis, setHasIntersectionAnalysis] = useState(
     () => Boolean(initialAnalysis?.constraintRegister),
   );
-  const [terrainNonUsableAreas, setTerrainNonUsableAreas] = useState<
-    TerrainAnalysis["nonUsableAreas"]
-  >(() => initialAnalysis?.terrainNonUsableAreas ?? emptyTerrainMask);
+  const [constraintMapFeatures, setConstraintMapFeatures] =
+    useState<ConstraintMapFeatureCollection>(() =>
+      mapFeaturesFromAnalysis(initialAnalysis),
+    );
   const didImportBoundary = useRef(false);
   const latitudeRef = useRef<HTMLSpanElement>(null);
   const longitudeRef = useRef<HTMLSpanElement>(null);
@@ -317,16 +443,86 @@ export default function ProjectWorkspace({
     });
   }
 
+  function replaceConstraintFeatures(
+    criterionIds: SiteScoreCriterionId[],
+    features: ConstraintMapFeatureCollection,
+  ) {
+    const replacedIds = new Set(criterionIds);
+    setConstraintMapFeatures((current) => ({
+      type: "FeatureCollection",
+      features: [
+        ...current.features.filter(
+          (feature) => !replacedIds.has(feature.properties.criterionId),
+        ),
+        ...features.features,
+      ],
+    }));
+  }
+
+  function showProtectedAreaAnalysis(
+    analysis:
+      | Natura2000ConstraintAnalysis
+      | NationallyDesignatedAreasAnalysis,
+  ) {
+    const id =
+      analysis.result.layerId === "nationally-designated-areas"
+        ? "national-designations"
+        : "natura-2000";
+    updateIntersection(
+      id,
+      analysis.result.intersects,
+      analysis.result.affectedSitePercent,
+    );
+    replaceConstraintFeatures([id], analysis.mapFeatures);
+  }
+
+  function showFloodAnalysis(analysis: FloodRiskAreaAnalysis) {
+    updateIntersection("flood-risk-areas", analysis.result.intersects);
+    replaceConstraintFeatures(["flood-risk-areas"], analysis.mapFeatures);
+  }
+
+  function showSurfaceWaterAnalysis(analysis: SurfaceWaterAnalysis) {
+    updateIntersection(
+      "surface-water",
+      analysis.results.some((result) => result.classification === "on-site"),
+    );
+    replaceConstraintFeatures(["surface-water"], analysis.mapFeatures);
+  }
+
+  function showInfrastructureAnalysis(analysis: InfrastructureAnalysis) {
+    const ids = ["main-road", "transmission-line", "substation"] as const;
+    for (const id of ids) {
+      const result = analysis.results.find((item) => item.id === id);
+      updateIntersection(id, result?.classification === "on-site");
+    }
+    replaceConstraintFeatures([...ids], analysis.mapFeatures);
+  }
+
   function showScoreIntersections(analysis: PreliminarySiteScore) {
     setHasIntersectionAnalysis(true);
     setIntersectingConstraints(legendItemsFromAnalysis(analysis));
-    setTerrainNonUsableAreas(
-      analysis.terrainNonUsableAreas ?? emptyTerrainMask,
-    );
+    setConstraintMapFeatures(mapFeaturesFromAnalysis(analysis));
   }
 
   function showTerrainAnalysis(analysis: TerrainAnalysis) {
-    setTerrainNonUsableAreas(analysis.nonUsableAreas);
+    setConstraintMapFeatures((current) => ({
+      type: "FeatureCollection",
+      features: [
+        ...current.features.filter(
+          (feature) => feature.properties.criterionId !== "terrain",
+        ),
+        ...analysis.nonUsableAreas.features.map((feature, index) => ({
+          type: "Feature" as const,
+          geometry: feature.geometry,
+          properties: {
+            criterionId: "terrain" as const,
+            label: "North-facing slope >5Â°",
+            featureId: `terrain:${index}`,
+            featureName: `${feature.properties.slopeDeg.toFixed(1)}Â° slope`,
+          },
+        })),
+      ],
+    }));
     updateIntersection(
       "terrain",
       analysis.result.nonUsableNorthSlopeAreaSqm > 0,
@@ -462,8 +658,12 @@ export default function ProjectWorkspace({
             containerRef={containerRef}
             drawingOverlayRef={drawingOverlayRef}
             ariaLabel={`GIS workspace map for ${project.name}`}
-            terrainOverlay={
-              <TerrainMaskOverlay map={map} areas={terrainNonUsableAreas} />
+            constraintOverlay={
+              <ConstraintMapOverlay
+                map={map}
+                features={constraintMapFeatures}
+                site={project.site.geometry}
+              />
             }
           />
           <div className="pointer-events-none absolute left-4 top-4 rounded-lg border border-white/15 bg-slate-950/85 px-3 py-2 text-[11px] shadow-lg backdrop-blur">
@@ -589,33 +789,24 @@ export default function ProjectWorkspace({
           />
           <ConstraintAnalysisPanel
             projectId={project.id}
-            onIntersectionChange={(layerId, intersects, affectedPercent) =>
-              updateIntersection(
-                layerId === "nationally-designated-areas"
-                  ? "national-designations"
-                  : layerId,
-                intersects,
-                affectedPercent,
-              )
-            }
+            onAnalysisChange={showProtectedAreaAnalysis}
           />
           <FloodRiskAnalysisPanel
             projectId={project.id}
-            onIntersectionChange={(intersects) =>
-              updateIntersection("flood-risk-areas", intersects)
-            }
+            onAnalysisChange={showFloodAnalysis}
           />
           <SurfaceWaterAnalysisPanel
             projectId={project.id}
-            onIntersectionChange={(intersects) =>
-              updateIntersection("surface-water", intersects)
-            }
+            onAnalysisChange={showSurfaceWaterAnalysis}
           />
           <TerrainAnalysisPanel
             projectId={project.id}
             onAnalysisChange={showTerrainAnalysis}
           />
-          <InfrastructureAnalysisPanel projectId={project.id} />
+          <InfrastructureAnalysisPanel
+            projectId={project.id}
+            onAnalysisChange={showInfrastructureAnalysis}
+          />
         </aside>
       </div>
 

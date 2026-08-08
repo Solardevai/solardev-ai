@@ -7,6 +7,7 @@ import { analyzeNatura2000 } from "@/lib/gis/natura2000-service";
 import { analyzeSurfaceWater } from "@/lib/gis/surface-water-service";
 import { analyzeTerrain } from "@/lib/gis/terrain-service";
 import type {
+  ConstraintMapFeatureCollection,
   FloodRiskAreaAnalysis,
   ConstraintRegisterFeature,
   ConstraintRegisterRow,
@@ -558,6 +559,43 @@ function constraintRegister(
   return rows;
 }
 
+function constraintMapFeatures(
+  infrastructure: PromiseSettledResult<InfrastructureAnalysis>,
+  natura: PromiseSettledResult<Natura2000ConstraintAnalysis>,
+  national: PromiseSettledResult<NationallyDesignatedAreasAnalysis>,
+  flood: PromiseSettledResult<FloodRiskAreaAnalysis>,
+  surfaceWater: PromiseSettledResult<SurfaceWaterAnalysis>,
+  terrain: PromiseSettledResult<TerrainAnalysis>,
+): ConstraintMapFeatureCollection {
+  const features: ConstraintMapFeatureCollection["features"] = [];
+  for (const analysis of [
+    infrastructure,
+    natura,
+    national,
+    flood,
+    surfaceWater,
+  ]) {
+    if (analysis.status === "fulfilled") {
+      features.push(...analysis.value.mapFeatures.features);
+    }
+  }
+  if (terrain.status === "fulfilled") {
+    features.push(
+      ...terrain.value.nonUsableAreas.features.map((feature, index) => ({
+        type: "Feature" as const,
+        geometry: feature.geometry,
+        properties: {
+          criterionId: "terrain" as const,
+          label: "North-facing slope >5Â°",
+          featureId: `terrain:${index}`,
+          featureName: `${feature.properties.slopeDeg.toFixed(1)}Â° slope`,
+        },
+      })),
+    );
+  }
+  return { type: "FeatureCollection", features };
+}
+
 export async function analyzePreliminarySiteScore(
   projectId: string,
   site: GeoJSON.Polygon,
@@ -717,6 +755,14 @@ export async function analyzePreliminarySiteScore(
       terrain.status === "fulfilled"
         ? terrain.value.nonUsableAreas
         : undefined,
+    constraintMapFeatures: constraintMapFeatures(
+      infrastructure,
+      natura,
+      national,
+      flood,
+      surfaceWater,
+      terrain,
+    ),
     methodology: {
       version: "1.3",
       totalWeight: 100,

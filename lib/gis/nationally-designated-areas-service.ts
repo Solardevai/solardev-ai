@@ -1,5 +1,10 @@
 import "server-only";
 
+import {
+  constraintFeature,
+  constraintFeatureCollection,
+  polygonFromEsriRings,
+} from "@/lib/gis/constraint-map";
 import type {
   NationallyDesignatedArea,
   NationallyDesignatedAreasAnalysis,
@@ -223,12 +228,14 @@ export async function analyzeNationallyDesignatedAreas(
 
   let affectedAreaSqm = 0;
   let affectedSitePercent = 0;
+  let overlapGeometry: EsriPolygon | null = null;
   if (uniqueAreas.size) {
     const union = await unionPolygons(
       [...uniqueAreas.values()].map((value) => value.geometry),
     );
     const intersection = await intersectPolygon(union, site);
     if (intersection?.rings?.length) {
+      overlapGeometry = intersection;
       const [intersectionArea, siteArea] = await geodesicAreas([
         intersection,
         site,
@@ -241,6 +248,9 @@ export async function analyzeNationallyDesignatedAreas(
   }
 
   const intersects = affectedAreaSqm > 0;
+  const mapGeometry = overlapGeometry
+    ? polygonFromEsriRings(overlapGeometry.rings)
+    : null;
   return {
     projectId,
     generatedAt: new Date().toISOString(),
@@ -260,6 +270,18 @@ export async function analyzeNationallyDesignatedAreas(
         .map((value) => value.area)
         .sort((first, second) => first.cddaId - second.cddaId),
     },
+    mapFeatures: constraintFeatureCollection(
+      mapGeometry
+        ? [
+            constraintFeature(mapGeometry, {
+              criterionId: "national-designations",
+              label: "National designation",
+              featureId: "national-designations-overlap",
+              featureName: `${uniqueAreas.size} intersecting designation${uniqueAreas.size === 1 ? "" : "s"}`,
+            }),
+          ]
+        : [],
+    ),
     source: {
       provider: "European Environment Agency",
       datasetVersion: "23",

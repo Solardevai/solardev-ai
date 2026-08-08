@@ -9,7 +9,7 @@ import type {
 
 type SurfaceWaterAnalysisPanelProps = {
   projectId: string;
-  onIntersectionChange?: (intersects: boolean) => void;
+  onAnalysisChange?: (analysis: SurfaceWaterAnalysis) => void;
 };
 
 const classificationStyles: Record<ProximityClassification, string> = {
@@ -35,7 +35,7 @@ function featureDetail(result: SurfaceWaterAnalysis["results"][number]) {
 
 export default function SurfaceWaterAnalysisPanel({
   projectId,
-  onIntersectionChange,
+  onAnalysisChange,
 }: SurfaceWaterAnalysisPanelProps) {
   const [analysis, setAnalysis] = useState<SurfaceWaterAnalysis | null>(null);
   const [isRunning, setIsRunning] = useState(false);
@@ -54,12 +54,7 @@ export default function SurfaceWaterAnalysisPanel({
         throw new Error(result.error || "Surface-water screening failed.");
       }
       setAnalysis(result.analysis);
-      onIntersectionChange?.(
-        result.analysis.results.some(
-          (item: SurfaceWaterAnalysis["results"][number]) =>
-            item.classification === "on-site",
-        ),
-      );
+      onAnalysisChange?.(result.analysis);
     } catch (runError) {
       setError(
         runError instanceof Error

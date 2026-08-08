@@ -131,14 +131,14 @@ type MapCoreCanvasProps = Pick<
   "containerRef" | "drawingOverlayRef"
 > & {
   ariaLabel: string;
-  terrainOverlay?: ReactNode;
+  constraintOverlay?: ReactNode;
 };
 
 export function MapCoreCanvas({
   containerRef,
   drawingOverlayRef,
   ariaLabel,
-  terrainOverlay,
+  constraintOverlay,
 }: MapCoreCanvasProps) {
   return (
     <>
@@ -160,7 +160,7 @@ export function MapCoreCanvas({
           strokeWidth="5"
           strokeLinejoin="round"
         />
-        {terrainOverlay}
+        {constraintOverlay}
         <path
           data-site-path
           fill="transparent"

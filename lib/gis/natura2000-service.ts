@@ -1,5 +1,10 @@
 import "server-only";
 
+import {
+  constraintFeature,
+  constraintFeatureCollection,
+  polygonFromEsriRings,
+} from "@/lib/gis/constraint-map";
 import type {
   Natura2000ConstraintAnalysis,
   Natura2000Site,
@@ -227,12 +232,14 @@ export async function analyzeNatura2000(
 
   let affectedAreaSqm = 0;
   let affectedSitePercent = 0;
+  let overlapGeometry: EsriPolygon | null = null;
   if (uniqueSites.size) {
     const union = await unionPolygons(
       [...uniqueSites.values()].map((value) => value.geometry),
     );
     const intersection = await intersectPolygon(union, site);
     if (intersection?.rings?.length) {
+      overlapGeometry = intersection;
       const [intersectionArea, siteArea] = await geodesicAreas([
         intersection,
         site,
@@ -245,6 +252,9 @@ export async function analyzeNatura2000(
   }
 
   const intersects = affectedAreaSqm > 0;
+  const mapGeometry = overlapGeometry
+    ? polygonFromEsriRings(overlapGeometry.rings)
+    : null;
   return {
     projectId,
     generatedAt: new Date().toISOString(),
@@ -264,6 +274,18 @@ export async function analyzeNatura2000(
         .map((value) => value.site)
         .sort((first, second) => first.code.localeCompare(second.code)),
     },
+    mapFeatures: constraintFeatureCollection(
+      mapGeometry
+        ? [
+            constraintFeature(mapGeometry, {
+              criterionId: "natura-2000",
+              label: "Natura 2000",
+              featureId: "natura-2000-overlap",
+              featureName: `${uniqueSites.size} intersecting designation${uniqueSites.size === 1 ? "" : "s"}`,
+            }),
+          ]
+        : [],
+    ),
     source: {
       provider: "European Environment Agency",
       datasetVersion: "2024",

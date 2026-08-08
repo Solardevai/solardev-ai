@@ -9,6 +9,7 @@ import type {
 
 type InfrastructureAnalysisPanelProps = {
   projectId: string;
+  onAnalysisChange?: (analysis: InfrastructureAnalysis) => void;
 };
 
 const classificationStyles: Record<ProximityClassification, string> = {
@@ -36,6 +37,7 @@ function formatAssetDetail(
 
 export default function InfrastructureAnalysisPanel({
   projectId,
+  onAnalysisChange,
 }: InfrastructureAnalysisPanelProps) {
   const [analysis, setAnalysis] = useState<InfrastructureAnalysis | null>(null);
   const [isRunning, setIsRunning] = useState(false);
@@ -54,6 +56,7 @@ export default function InfrastructureAnalysisPanel({
         throw new Error(result.error || "Infrastructure analysis failed.");
       }
       setAnalysis(result.analysis);
+      onAnalysisChange?.(result.analysis);
     } catch (runError) {
       setError(
         runError instanceof Error

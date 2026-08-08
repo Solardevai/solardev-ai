@@ -1,12 +1,17 @@
 import "server-only";
 
+import {
+  constraintFeature,
+  constraintFeatureCollection,
+} from "@/lib/gis/constraint-map";
 import { fetchInfrastructure } from "@/lib/gis/infrastructure-service";
 import type { InfrastructureLayerId } from "@/lib/gis/layers";
 import {
   analyzeInfrastructureProximity,
   boundsAroundSite,
+  createSiteDistanceCalculator,
 } from "@/lib/gis/proximity";
-import type { InfrastructureAnalysis } from "@/types/gis";
+import type { InfrastructureAnalysis, SiteScoreCriterionId } from "@/types/gis";
 
 const SEARCH_RADIUS_KM = 15;
 const ANALYSIS_LAYERS = new Set<InfrastructureLayerId>([
@@ -32,12 +37,48 @@ export async function analyzeInfrastructure(
         `${feature.properties.osmType}:${feature.properties.osmId}`,
     ),
   );
+  const distanceFromSite = createSiteDistanceCalculator(site);
+  const onSiteAssets = new Map<
+    string,
+    (typeof infrastructure.features)[number]
+  >();
+  for (const feature of infrastructure.features) {
+    if (distanceFromSite(feature.geometry) > 1) continue;
+    const assetKey = `${feature.properties.osmType}:${feature.properties.osmId}`;
+    const existing = onSiteAssets.get(assetKey);
+    if (!existing || (existing.geometry.type === "Point" && feature.geometry.type !== "Point")) {
+      onSiteAssets.set(assetKey, feature);
+    }
+  }
+  const mapFeatures = constraintFeatureCollection(
+    [...onSiteAssets.entries()].map(([assetKey, feature]) => {
+      const criterionId: SiteScoreCriterionId =
+        feature.properties.kind === "road"
+          ? "main-road"
+          : feature.properties.kind === "substation"
+            ? "substation"
+            : "transmission-line";
+      const label =
+        criterionId === "main-road"
+          ? "Main road"
+          : criterionId === "substation"
+            ? "Substation"
+            : "Transmission line";
+      return constraintFeature(feature.geometry, {
+        criterionId,
+        label,
+        featureId: `OSM:${assetKey}`,
+        featureName: feature.properties.name,
+      });
+    }),
+  );
   return {
     projectId,
     generatedAt: new Date().toISOString(),
     searchRadiusKm: SEARCH_RADIUS_KM,
     assetsScanned: uniqueAssets.size,
     results: analyzeInfrastructureProximity(site, infrastructure.features),
+    mapFeatures,
     source: {
       provider: infrastructure.metadata.source,
       endpoint: infrastructure.metadata.sourceEndpoint,

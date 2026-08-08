@@ -5,7 +5,7 @@ import type { FloodRiskAreaAnalysis } from "@/types/gis";
 
 type FloodRiskAnalysisPanelProps = {
   projectId: string;
-  onIntersectionChange?: (intersects: boolean) => void;
+  onAnalysisChange?: (analysis: FloodRiskAreaAnalysis) => void;
 };
 
 const representationLabels = {
@@ -16,7 +16,7 @@ const representationLabels = {
 
 export default function FloodRiskAnalysisPanel({
   projectId,
-  onIntersectionChange,
+  onAnalysisChange,
 }: FloodRiskAnalysisPanelProps) {
   const [analysis, setAnalysis] = useState<FloodRiskAreaAnalysis | null>(null);
   const [isRunning, setIsRunning] = useState(false);
@@ -35,7 +35,7 @@ export default function FloodRiskAnalysisPanel({
         throw new Error(result.error || "Flood risk-area screening failed.");
       }
       setAnalysis(result.analysis);
-      onIntersectionChange?.(result.analysis.result.intersects);
+      onAnalysisChange?.(result.analysis);
     } catch (runError) {
       setError(
         runError instanceof Error

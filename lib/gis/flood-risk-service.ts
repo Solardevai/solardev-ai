@@ -1,5 +1,11 @@
 import "server-only";
 
+import {
+  constraintFeature,
+  constraintFeatureCollection,
+  polygonFromEsriRings,
+  polylineFromEsriPaths,
+} from "@/lib/gis/constraint-map";
 import type { FloodRiskArea, FloodRiskAreaAnalysis } from "@/types/gis";
 
 type ArcGisError = { message?: string; details?: string[] };
@@ -16,7 +22,15 @@ type FloodAttributes = {
 };
 
 type FloodQueryResponse = {
-  features?: Array<{ attributes: FloodAttributes }>;
+  features?: Array<{
+    attributes: FloodAttributes;
+    geometry?: {
+      x?: number;
+      y?: number;
+      paths?: number[][][];
+      rings?: number[][][];
+    };
+  }>;
   exceededTransferLimit?: boolean;
   error?: ArcGisError;
 };
@@ -73,7 +87,8 @@ async function queryLayer(
       spatialRel: "esriSpatialRelIntersects",
       outFields:
         "OBJECTID,cYear,inspireIdLocalId,thematicIdIdentifier,nameTextInternational,nameText,hazardCategory,countryCode",
-      returnGeometry: "false",
+      returnGeometry: "true",
+      outSR: "4326",
       f: "json",
     }),
     cache: "no-store",
@@ -96,12 +111,25 @@ async function queryLayer(
   }
   return (result.features ?? []).map((feature) => ({
     attributes: feature.attributes,
+    geometry: feature.geometry,
     representation: layer.representation,
   }));
 }
 
 function optionalText(value?: string | null) {
   return value?.trim() || null;
+}
+
+function officialId(
+  attributes: FloodAttributes,
+  representation: (typeof LAYERS)[number]["representation"],
+  index: number,
+) {
+  return (
+    optionalText(attributes.thematicIdIdentifier) ||
+    optionalText(attributes.inspireIdLocalId) ||
+    `${representation}-${attributes.OBJECTID ?? index}`
+  );
 }
 
 export async function analyzeFloodRiskAreas(
@@ -116,16 +144,13 @@ export async function analyzeFloodRiskAreas(
   const areas: FloodRiskArea[] = layerResults
     .flat()
     .map(({ attributes, representation }, index) => {
-      const officialId =
-        optionalText(attributes.thematicIdIdentifier) ||
-        optionalText(attributes.inspireIdLocalId) ||
-        `${representation}-${attributes.OBJECTID ?? index}`;
+      const identifier = officialId(attributes, representation, index);
       return {
-        id: `${representation}:${officialId}`,
+        id: `${representation}:${identifier}`,
         name:
           optionalText(attributes.nameTextInternational) ||
           optionalText(attributes.nameText) ||
-          officialId,
+          identifier,
         countryCode: optionalText(attributes.countryCode) || "",
         reportingYear:
           attributes.cYear == null ? null : String(attributes.cYear),
@@ -134,6 +159,37 @@ export async function analyzeFloodRiskAreas(
       };
     })
     .sort((first, second) => first.id.localeCompare(second.id));
+
+  const mapFeatures = constraintFeatureCollection(
+    layerResults.flat().flatMap(({ attributes, representation, geometry }, index) => {
+      const identifier = officialId(attributes, representation, index);
+      const mapGeometry =
+        representation === "point" &&
+        typeof geometry?.x === "number" &&
+        typeof geometry.y === "number"
+          ? ({
+              type: "Point",
+              coordinates: [geometry.x, geometry.y],
+            } as GeoJSON.Point)
+          : representation === "line" && geometry?.paths
+            ? polylineFromEsriPaths(geometry.paths)
+            : representation === "polygon" && geometry?.rings
+              ? polygonFromEsriRings(geometry.rings)
+              : null;
+      if (!mapGeometry) return [];
+      return [
+        constraintFeature(mapGeometry, {
+          criterionId: "flood-risk-areas",
+          label: "Flood reporting area",
+          featureId: `${representation}:${identifier}`,
+          featureName:
+            optionalText(attributes.nameTextInternational) ||
+            optionalText(attributes.nameText) ||
+            identifier,
+        }),
+      ];
+    }),
+  );
 
   const intersects = areas.length > 0;
   return {
@@ -151,6 +207,7 @@ export async function analyzeFloodRiskAreas(
         ? "The site intersects an area reported by a Member State as having potential significant flood risk. Open the competent national authority's current hazard and risk maps to confirm inundation probability, depth and development controls."
         : "No reporting-area intersection was returned. This does not exclude flood hazard; check the competent national authority's current river, coastal and surface-water maps.",
     },
+    mapFeatures,
     source: {
       provider: "European Environment Agency",
       serviceDataset: "2019 reporting service",

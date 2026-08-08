@@ -44,12 +44,32 @@ export type InfrastructureProximityResult = {
   recommendedAction: string;
 };
 
+export type ConstraintMapGeometry =
+  | GeoJSON.Point
+  | GeoJSON.LineString
+  | GeoJSON.MultiLineString
+  | GeoJSON.Polygon
+  | GeoJSON.MultiPolygon;
+
+export type ConstraintMapFeatureProperties = {
+  criterionId: SiteScoreCriterionId;
+  label: string;
+  featureId: string;
+  featureName: string | null;
+};
+
+export type ConstraintMapFeatureCollection = GeoJSON.FeatureCollection<
+  ConstraintMapGeometry,
+  ConstraintMapFeatureProperties
+>;
+
 export type InfrastructureAnalysis = {
   projectId: string;
   generatedAt: string;
   searchRadiusKm: number;
   assetsScanned: number;
   results: InfrastructureProximityResult[];
+  mapFeatures: ConstraintMapFeatureCollection;
   source: {
     provider: string;
     endpoint: string | null;
@@ -78,6 +98,7 @@ export type Natura2000ConstraintAnalysis = {
     affectedSitePercent: number;
     sites: Natura2000Site[];
   };
+  mapFeatures: ConstraintMapFeatureCollection;
   source: {
     provider: "European Environment Agency";
     datasetVersion: "2024";
@@ -109,6 +130,7 @@ export type NationallyDesignatedAreasAnalysis = {
     affectedSitePercent: number;
     areas: NationallyDesignatedArea[];
   };
+  mapFeatures: ConstraintMapFeatureCollection;
   source: {
     provider: "European Environment Agency";
     datasetVersion: "23";
@@ -138,6 +160,7 @@ export type FloodRiskAreaAnalysis = {
     label: "Floods Directive risk areas";
     areas: FloodRiskArea[];
   };
+  mapFeatures: ConstraintMapFeatureCollection;
   source: {
     provider: "European Environment Agency";
     serviceDataset: "2019 reporting service";
@@ -177,6 +200,7 @@ export type SurfaceWaterAnalysis = {
   searchRadiusKm: number;
   featuresScanned: number;
   results: SurfaceWaterProximityResult[];
+  mapFeatures: ConstraintMapFeatureCollection;
   source: {
     provider: "OpenStreetMap contributors via Overpass API";
     endpoint: string;
@@ -308,6 +332,8 @@ export type PreliminarySiteScore = {
   constraintRegister?: ConstraintRegisterRow[];
   /** Added in methodology v1.3 for map display and usable-area screening. */
   terrainNonUsableAreas?: TerrainAnalysis["nonUsableAreas"];
+  /** Saved intersecting geometries used by the project map and its legend. */
+  constraintMapFeatures?: ConstraintMapFeatureCollection;
   methodology: {
     version: "1.0" | "1.1" | "1.2" | "1.3";
     totalWeight: 100;

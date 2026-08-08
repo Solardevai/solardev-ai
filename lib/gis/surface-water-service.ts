@@ -1,5 +1,9 @@
 import "server-only";
 
+import {
+  constraintFeature,
+  constraintFeatureCollection,
+} from "@/lib/gis/constraint-map";
 import { boundsAroundSite, createSiteDistanceCalculator } from "@/lib/gis/proximity";
 import type {
   ProximityClassification,
@@ -258,6 +262,19 @@ export async function analyzeSurfaceWater(
       (feature) => `${feature.properties.osmType}:${feature.properties.osmId}`,
     ),
   );
+  const mapFeatures = constraintFeatureCollection(
+    data.features.flatMap((feature, index) => {
+      if (distanceFromSite(feature.geometry) > 1) return [];
+      return [
+        constraintFeature(feature.geometry, {
+          criterionId: "surface-water",
+          label: "Surface water / wetland",
+          featureId: `OSM:${feature.properties.osmType}/${feature.properties.osmId}:${index}`,
+          featureName: feature.properties.name,
+        }),
+      ];
+    }),
+  );
   return {
     projectId,
     generatedAt: new Date().toISOString(),
@@ -283,6 +300,7 @@ export async function analyzeSurfaceWater(
         distanceFromSite,
       ),
     ],
+    mapFeatures,
     source: {
       provider: "OpenStreetMap contributors via Overpass API",
       endpoint: data.endpoint,
