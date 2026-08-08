@@ -158,6 +158,7 @@ export function MapCoreCanvas({
           strokeWidth="5"
           strokeLinejoin="round"
         />
+        <g data-terrain-overlay />
         <path
           data-site-path
           fill="transparent"

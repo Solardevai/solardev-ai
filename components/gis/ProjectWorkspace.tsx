@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import type { GeoJSONSource } from "maplibre-gl";
 import { useEffect, useRef, useState } from "react";
 import ConstraintAnalysisPanel from "@/components/gis/ConstraintAnalysisPanel";
 import FloodRiskAnalysisPanel from "@/components/gis/FloodRiskAnalysisPanel";
@@ -179,57 +178,63 @@ export default function ProjectWorkspace({
   }, [map]);
 
   useEffect(() => {
-    if (!map) return;
-    const sourceId = "terrain-north-slope-non-usable";
-    const fillLayerId = `${sourceId}-fill`;
-    const lineLayerId = `${sourceId}-line`;
-    const syncTerrainMask = () => {
-      const existingSource = map.getSource(sourceId) as
-        | GeoJSONSource
-        | undefined;
-      if (existingSource) {
-        existingSource.setData(terrainNonUsableAreas);
-        return;
+    const overlay = drawingOverlayRef.current?.querySelector<SVGGElement>(
+      "[data-terrain-overlay]",
+    );
+    if (!map || !overlay) return;
+
+    const renderTerrainMask = () => {
+      overlay.replaceChildren();
+      overlay.dataset.featureCount = String(
+        terrainNonUsableAreas.features.length,
+      );
+
+      for (const feature of terrainNonUsableAreas.features) {
+        const polygons =
+          feature.geometry.type === "Polygon"
+            ? [feature.geometry.coordinates]
+            : feature.geometry.coordinates;
+        const pathData = polygons
+          .flatMap((polygon) =>
+            polygon.map((ring) =>
+              ring
+                .map(([longitude, latitude], index) => {
+                  const point = map.project([longitude, latitude]);
+                  return `${index === 0 ? "M" : "L"}${point.x.toFixed(1)} ${point.y.toFixed(1)}`;
+                })
+                .concat("Z")
+                .join(" "),
+            ),
+          )
+          .join(" ");
+        if (!pathData) continue;
+
+        const path = document.createElementNS(
+          "http://www.w3.org/2000/svg",
+          "path",
+        );
+        path.setAttribute("d", pathData);
+        path.setAttribute("fill", "#f97316");
+        path.setAttribute("fill-opacity", "0.68");
+        path.setAttribute("fill-rule", "evenodd");
+        path.setAttribute("stroke", "#7c2d12");
+        path.setAttribute("stroke-width", "1.5");
+        path.setAttribute("stroke-linejoin", "round");
+        path.dataset.slopeDeg = String(feature.properties.slopeDeg);
+        path.dataset.aspectDeg = String(feature.properties.aspectDeg);
+        overlay.append(path);
       }
-      map.addSource(sourceId, {
-        type: "geojson",
-        data: terrainNonUsableAreas,
-      });
-      const beforeLayer = map.getLayer("site-line-casing")
-        ? "site-line-casing"
-        : undefined;
-      map.addLayer(
-        {
-          id: fillLayerId,
-          type: "fill",
-          source: sourceId,
-          paint: {
-            "fill-color": "#f97316",
-            "fill-opacity": 0.52,
-          },
-        },
-        beforeLayer,
-      );
-      map.addLayer(
-        {
-          id: lineLayerId,
-          type: "line",
-          source: sourceId,
-          paint: {
-            "line-color": "#fed7aa",
-            "line-width": 1.5,
-          },
-        },
-        beforeLayer,
-      );
     };
 
-    if (map.isStyleLoaded()) syncTerrainMask();
-    else map.once("load", syncTerrainMask);
+    renderTerrainMask();
+    map.on("move", renderTerrainMask);
+    map.on("resize", renderTerrainMask);
     return () => {
-      map.off("load", syncTerrainMask);
+      map.off("move", renderTerrainMask);
+      map.off("resize", renderTerrainMask);
+      overlay.replaceChildren();
     };
-  }, [map, terrainNonUsableAreas]);
+  }, [drawingOverlayRef, map, terrainNonUsableAreas]);
 
   async function saveProject() {
     const currentMap = mapRef.current;
