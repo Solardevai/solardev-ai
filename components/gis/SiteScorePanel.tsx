@@ -39,6 +39,22 @@ const snapshotDateFormatter = new Intl.DateTimeFormat("en-GB", {
   timeZoneName: "short",
 });
 
+function roundedScore(value: number) {
+  return Math.round(value * 10) / 10;
+}
+
+function formatScore(value: number) {
+  const rounded = roundedScore(value);
+  return Number.isInteger(rounded) ? rounded.toFixed(0) : rounded.toFixed(1);
+}
+
+function formatScoreDelta(value: number | null) {
+  if (value === null) return "—";
+  const rounded = roundedScore(value);
+  const normalized = Object.is(rounded, -0) ? 0 : rounded;
+  return `${normalized > 0 ? "+" : ""}${formatScore(normalized)} vs prior`;
+}
+
 export default function SiteScorePanel({
   projectId,
   initialHistory,
@@ -156,7 +172,9 @@ export default function SiteScorePanel({
               >
                 <div className="text-center">
                   <p className="text-2xl font-black text-white">
-                    {analysis.score ?? "—"}
+                    {analysis.score === null
+                      ? "—"
+                      : formatScore(analysis.score)}
                   </p>
                   <p className="text-[9px] uppercase tracking-wide text-slate-500">
                     / 100
@@ -248,13 +266,16 @@ export default function SiteScorePanel({
                 olderSnapshot &&
                 snapshot.score !== null &&
                 olderSnapshot.score !== null
-                  ? snapshot.score - olderSnapshot.score
+                  ? roundedScore(snapshot.score - olderSnapshot.score)
                   : null;
               const isActive = activeSnapshotId === snapshot.id;
               const isLoading = loadingSnapshotId === snapshot.id;
 
               return (
-                <li key={snapshot.id} className="flex items-stretch gap-1.5">
+                <li
+                  key={snapshot.id}
+                  className="grid grid-cols-[minmax(0,1fr)_3rem] items-stretch gap-1.5"
+                >
                   <button
                     type="button"
                     onClick={() => loadSnapshot(snapshot.id)}
@@ -266,16 +287,16 @@ export default function SiteScorePanel({
                         : "border-white/8 bg-white/[0.025]"
                     }`}
                   >
-                    <span className="flex items-center justify-between gap-2">
+                    <span className="grid min-w-0 gap-0.5">
                       <span className="text-[10px] font-semibold text-slate-300">
                         {isLoading
-                          ? "Loadingâ€¦"
+                          ? "Loading…"
                           : snapshot.score === null
                             ? "No score"
-                            : `${snapshot.score}/100`}
+                            : `${formatScore(snapshot.score)}/100`}
                       </span>
                       <span
-                        className={
+                        className={`text-[9px] font-semibold leading-4 ${
                           delta === null
                             ? "text-slate-600"
                             : delta > 0
@@ -283,17 +304,19 @@ export default function SiteScorePanel({
                               : delta < 0
                                 ? "text-rose-300"
                                 : "text-slate-500"
-                        }
+                        }`}
                       >
-                        {delta === null
-                          ? "â€”"
-                          : `${delta > 0 ? "+" : ""}${delta} vs prior`}
+                        {formatScoreDelta(delta)}
                       </span>
                     </span>
-                    <span className="mt-1 flex items-center justify-between gap-2 text-[9px] text-slate-500">
-                      <span>{snapshotDateFormatter.format(new Date(snapshot.createdAt))}</span>
+                    <span className="mt-1 grid min-w-0 gap-0.5 text-[9px] leading-4 text-slate-500">
                       <span>
-                        {snapshot.coveragePercent}% Â· {snapshot.confidence}
+                        {snapshotDateFormatter.format(
+                          new Date(snapshot.createdAt),
+                        )}
+                      </span>
+                      <span>
+                        {snapshot.coveragePercent}% · {snapshot.confidence}
                       </span>
                     </span>
                   </button>
