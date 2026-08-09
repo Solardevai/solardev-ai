@@ -653,7 +653,7 @@ export default function ProjectWorkspace({
           </div>
         </aside>
 
-        <section className="relative order-1 h-[29vh] min-h-[220px] lg:order-2 lg:h-[45vh] lg:min-h-[340px] lg:self-start">
+        <section className="relative order-1 h-[58vh] min-h-[440px] lg:order-2 lg:h-[90vh] lg:min-h-[680px] lg:self-start">
           <MapCoreCanvas
             containerRef={containerRef}
             drawingOverlayRef={drawingOverlayRef}

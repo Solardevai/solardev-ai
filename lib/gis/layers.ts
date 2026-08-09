@@ -44,7 +44,7 @@ export const topographicBasemap = {
   name: "Topographic",
   group: "basemap",
   sourceType: "raster-tiles",
-  defaultVisible: true,
+  defaultVisible: false,
   minimumZoom: 0,
   tileUrl:
     "https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}",
@@ -67,7 +67,7 @@ export const satelliteBasemap = {
   name: "Satellite",
   group: "basemap",
   sourceType: "raster-tiles",
-  defaultVisible: false,
+  defaultVisible: true,
   minimumZoom: 0,
   tileUrl:
     "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
@@ -86,7 +86,7 @@ export const satelliteBasemap = {
 };
 
 export const basemaps = [topographicBasemap, satelliteBasemap] as const;
-export const defaultBasemapId: BasemapId = "topographic";
+export const defaultBasemapId: BasemapId = "satellite";
 
 export const infrastructureLayers = [
   {
