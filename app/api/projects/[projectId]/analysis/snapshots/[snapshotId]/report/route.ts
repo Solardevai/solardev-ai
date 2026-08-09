@@ -10,6 +10,7 @@ import {
   generateScreeningReport,
   screeningReportFilename,
 } from "@/lib/gis/screening-report";
+import { getSatelliteExhibit } from "@/lib/gis/satellite-exhibit";
 import { getIndicativeSolarYield } from "@/lib/pvgis/indicative-yield";
 import { getOwnedProject } from "@/lib/projects/data";
 
@@ -44,19 +45,34 @@ export async function GET(
       snapshotId,
       idempotencyKey: `screening-report:${userId}:${snapshotId}`,
     });
-    const indicativeYield = await getIndicativeSolarYield(
-      project.site.centroid[1],
-      project.site.centroid[0],
-    ).catch((yieldError) => {
-      console.warn("[Screening report] indicative PVGIS yield unavailable", {
-        projectId,
-        snapshotId,
-        yieldError,
-      });
-      return null;
-    });
+    const ring = (project.site.geometry.coordinates[0] ?? []).filter(
+      (coordinate) =>
+        Number.isFinite(coordinate[0]) && Number.isFinite(coordinate[1]),
+    );
+    const [indicativeYield, satelliteExhibit] = await Promise.all([
+      getIndicativeSolarYield(
+        project.site.centroid[1],
+        project.site.centroid[0],
+      ).catch((yieldError) => {
+        console.warn("[Screening report] indicative PVGIS yield unavailable", {
+          projectId,
+          snapshotId,
+          yieldError,
+        });
+        return null;
+      }),
+      getSatelliteExhibit(ring, 499.28 / 390).catch((satelliteError) => {
+        console.warn("[Screening report] satellite imagery unavailable", {
+          projectId,
+          snapshotId,
+          satelliteError,
+        });
+        return null;
+      }),
+    ]);
     const bytes = await generateScreeningReport(project, snapshot, {
       indicativeSpecificYield: indicativeYield?.specificYield ?? null,
+      satelliteExhibit,
     });
     const body = bytes.buffer.slice(
       bytes.byteOffset,

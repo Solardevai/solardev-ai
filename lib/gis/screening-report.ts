@@ -10,6 +10,10 @@ import type {
   PreliminarySiteScore,
 } from "@/types/gis";
 import type { SolarDevProject } from "@/types/project";
+import {
+  projectToWebMercator,
+  type SatelliteExhibit,
+} from "./satellite-exhibit";
 
 const PAGE_WIDTH = 595.28;
 const PAGE_HEIGHT = 841.89;
@@ -18,6 +22,7 @@ const CONTENT_WIDTH = PAGE_WIDTH - MARGIN * 2;
 
 export type ScreeningReportMetrics = {
   indicativeSpecificYield: number | null;
+  satelliteExhibit?: SatelliteExhibit | null;
 };
 const COLORS = {
   ink: rgb(0.055, 0.09, 0.15),
@@ -281,10 +286,11 @@ function sourceForCriterion(
   return score.sources?.find((source) => source.id === sourceId) ?? null;
 }
 
-function drawMapExhibit(
+async function drawMapExhibit(
   report: ReportBuilder,
   project: SolarDevProject,
   snapshot: AnalysisSnapshotDetail,
+  satelliteExhibit: SatelliteExhibit | null,
 ) {
   report.newPage("Dated map exhibit");
   report.heading("Saved site boundary");
@@ -306,21 +312,33 @@ function drawMapExhibit(
     borderColor: COLORS.line,
   });
 
-  for (let index = 1; index < 5; index += 1) {
-    const x = MARGIN + (CONTENT_WIDTH * index) / 5;
-    const y = mapBottom + (mapHeight * index) / 5;
-    report.page.drawLine({
-      start: { x, y: mapBottom },
-      end: { x, y: mapTop },
-      thickness: 0.35,
-      color: COLORS.line,
+  if (satelliteExhibit) {
+    const satelliteImage = await report.document.embedJpg(
+      satelliteExhibit.imageBytes,
+    );
+    report.page.drawImage(satelliteImage, {
+      x: MARGIN,
+      y: mapBottom,
+      width: CONTENT_WIDTH,
+      height: mapHeight,
     });
-    report.page.drawLine({
-      start: { x: MARGIN, y },
-      end: { x: MARGIN + CONTENT_WIDTH, y },
-      thickness: 0.35,
-      color: COLORS.line,
-    });
+  } else {
+    for (let index = 1; index < 5; index += 1) {
+      const x = MARGIN + (CONTENT_WIDTH * index) / 5;
+      const y = mapBottom + (mapHeight * index) / 5;
+      report.page.drawLine({
+        start: { x, y: mapBottom },
+        end: { x, y: mapTop },
+        thickness: 0.35,
+        color: COLORS.line,
+      });
+      report.page.drawLine({
+        start: { x: MARGIN, y },
+        end: { x: MARGIN + CONTENT_WIDTH, y },
+        thickness: 0.35,
+        color: COLORS.line,
+      });
+    }
   }
 
   const ring = (project.site.geometry.coordinates[0] ?? []).filter(
@@ -334,36 +352,49 @@ function drawMapExhibit(
     const maximumLongitude = Math.max(...longitudes);
     const minimumLatitude = Math.min(...latitudes);
     const maximumLatitude = Math.max(...latitudes);
-    const centerLongitude = (minimumLongitude + maximumLongitude) / 2;
-    const centerLatitude = (minimumLatitude + maximumLatitude) / 2;
-    const longitudeFactor = Math.max(
-      0.15,
-      Math.cos((centerLatitude * Math.PI) / 180),
+    const projected = ring.map(([longitude, latitude]) =>
+      projectToWebMercator(longitude, latitude),
     );
-    const projected = ring.map(([longitude, latitude]) => ({
-      x: (longitude - centerLongitude) * longitudeFactor,
-      y: latitude - centerLatitude,
-    }));
-    const xRange = Math.max(
-      1e-8,
-      Math.max(...projected.map((point) => point.x)) -
-        Math.min(...projected.map((point) => point.x)),
-    );
-    const yRange = Math.max(
-      1e-8,
-      Math.max(...projected.map((point) => point.y)) -
-        Math.min(...projected.map((point) => point.y)),
-    );
-    const scale = Math.min(
-      (CONTENT_WIDTH - 70) / xRange,
-      (mapHeight - 70) / yRange,
-    );
+    const fallbackMinimumX = Math.min(...projected.map((point) => point.x));
+    const fallbackMaximumX = Math.max(...projected.map((point) => point.x));
+    const fallbackMinimumY = Math.min(...projected.map((point) => point.y));
+    const fallbackMaximumY = Math.max(...projected.map((point) => point.y));
+    const extent = satelliteExhibit?.extent ?? {
+      minimumX:
+        fallbackMinimumX -
+        Math.max(10, fallbackMaximumX - fallbackMinimumX) * 0.12,
+      maximumX:
+        fallbackMaximumX +
+        Math.max(10, fallbackMaximumX - fallbackMinimumX) * 0.12,
+      minimumY:
+        fallbackMinimumY -
+        Math.max(10, fallbackMaximumY - fallbackMinimumY) * 0.12,
+      maximumY:
+        fallbackMaximumY +
+        Math.max(10, fallbackMaximumY - fallbackMinimumY) * 0.12,
+    };
     const toPagePoint = (point: { x: number; y: number }) => ({
-      x: MARGIN + CONTENT_WIDTH / 2 + point.x * scale,
-      y: mapBottom + mapHeight / 2 + point.y * scale,
+      x:
+        MARGIN +
+        ((point.x - extent.minimumX) /
+          (extent.maximumX - extent.minimumX)) *
+          CONTENT_WIDTH,
+      y:
+        mapBottom +
+        ((point.y - extent.minimumY) /
+          (extent.maximumY - extent.minimumY)) *
+          mapHeight,
     });
     const pagePoints = projected.map(toPagePoint);
     for (let index = 1; index < pagePoints.length; index += 1) {
+      if (satelliteExhibit) {
+        report.page.drawLine({
+          start: pagePoints[index - 1],
+          end: pagePoints[index],
+          thickness: 4.2,
+          color: COLORS.ink,
+        });
+      }
       report.page.drawLine({
         start: pagePoints[index - 1],
         end: pagePoints[index],
@@ -374,6 +405,14 @@ function drawMapExhibit(
     const first = pagePoints[0];
     const last = pagePoints.at(-1);
     if (first && last && (first.x !== last.x || first.y !== last.y)) {
+      if (satelliteExhibit) {
+        report.page.drawLine({
+          start: last,
+          end: first,
+          thickness: 4.2,
+          color: COLORS.ink,
+        });
+      }
       report.page.drawLine({
         start: last,
         end: first,
@@ -381,10 +420,12 @@ function drawMapExhibit(
         color: COLORS.emerald,
       });
     }
-    const centroidPoint = toPagePoint({
-      x: (project.site.centroid[0] - centerLongitude) * longitudeFactor,
-      y: project.site.centroid[1] - centerLatitude,
-    });
+    const centroidPoint = toPagePoint(
+      projectToWebMercator(
+        project.site.centroid[0],
+        project.site.centroid[1],
+      ),
+    );
     report.page.drawCircle({
       x: centroidPoint.x,
       y: centroidPoint.y,
@@ -397,10 +438,10 @@ function drawMapExhibit(
     const boundsLabel = `${minimumLatitude.toFixed(5)}, ${minimumLongitude.toFixed(5)} to ${maximumLatitude.toFixed(5)}, ${maximumLongitude.toFixed(5)}`;
     report.page.drawText(ascii(boundsLabel), {
       x: MARGIN + 10,
-      y: mapBottom + 10,
+      y: mapBottom + (satelliteExhibit ? 32 : 10),
       size: 7.5,
       font: report.regular,
-      color: COLORS.muted,
+      color: satelliteExhibit ? COLORS.white : COLORS.muted,
     });
   } else {
     report.page.drawText("Saved boundary geometry is unavailable.", {
@@ -414,6 +455,16 @@ function drawMapExhibit(
 
   const northX = MARGIN + CONTENT_WIDTH - 28;
   const northY = mapTop - 30;
+  if (satelliteExhibit) {
+    report.page.drawRectangle({
+      x: northX - 13,
+      y: northY - 17,
+      width: 26,
+      height: 43,
+      color: COLORS.white,
+      opacity: 0.78,
+    });
+  }
   report.page.drawText("N", {
     x: northX - 3,
     y: northY + 10,
@@ -427,6 +478,26 @@ function drawMapExhibit(
     thickness: 1.5,
     color: COLORS.ink,
   });
+
+  if (satelliteExhibit) {
+    const attribution =
+      "Satellite imagery: Esri, Maxar, Earthstar Geographics and the GIS User Community";
+    report.page.drawRectangle({
+      x: MARGIN,
+      y: mapBottom,
+      width: CONTENT_WIDTH,
+      height: 24,
+      color: COLORS.ink,
+      opacity: 0.72,
+    });
+    report.page.drawText(attribution, {
+      x: MARGIN + 10,
+      y: mapBottom + 8,
+      size: 6.5,
+      font: report.regular,
+      color: COLORS.white,
+    });
+  }
   report.page.drawLine({
     start: { x: northX, y: northY + 7 },
     end: { x: northX - 4, y: northY + 1 },
@@ -467,7 +538,7 @@ function drawMapExhibit(
   );
   report.y = detailTop - 62;
   report.paragraph(
-    "This vector exhibit records the saved candidate-site boundary used for the selected analysis snapshot. It is not a cadastral, topographic or legal-title plan; boundary position and area require survey and land-record verification.",
+    "This exhibit places the saved candidate-site boundary over Esri World Imagery for geographic context. Imagery capture date and resolution vary by location. It is not a cadastral, topographic or legal-title plan; boundary position and area require survey and land-record verification.",
     { size: 8.4, color: COLORS.muted },
   );
 }
@@ -622,7 +693,10 @@ export function screeningReportFilename(project: SolarDevProject) {
 export async function generateScreeningReport(
   project: SolarDevProject,
   snapshot: AnalysisSnapshotDetail,
-  metrics: ScreeningReportMetrics = { indicativeSpecificYield: null },
+  metrics: ScreeningReportMetrics = {
+    indicativeSpecificYield: null,
+    satelliteExhibit: null,
+  },
 ) {
   const score = snapshot.payload;
   const report = await ReportBuilder.create();
@@ -770,7 +844,12 @@ export async function generateScreeningReport(
     });
   });
 
-  drawMapExhibit(report, project, snapshot);
+  await drawMapExhibit(
+    report,
+    project,
+    snapshot,
+    metrics.satelliteExhibit ?? null,
+  );
   drawConstraintRegister(report, snapshot);
   drawAuthorityIdentifiers(report, snapshot);
 
@@ -887,7 +966,7 @@ export async function generateScreeningReport(
   report.paragraph(`Analysis generated: ${formatDate(score.generatedAt)}`, { gap: 2 });
   report.paragraph(`Methodology version: ${snapshot.methodologyVersion}`, { gap: 2 });
   report.paragraph(
-    "Constraint findings and the site score are generated from the selected immutable snapshot. The indicative PVGIS yield is a separate report-time calculation at the saved centroid and does not alter the score or snapshot evidence.",
+    "Constraint findings and the site score are generated from the selected immutable snapshot. The satellite basemap and indicative PVGIS yield are separate report-time context and calculations; neither alters the score or snapshot evidence.",
   );
 
   return report.finish();
