@@ -15,6 +15,10 @@ const PAGE_WIDTH = 595.28;
 const PAGE_HEIGHT = 841.89;
 const MARGIN = 48;
 const CONTENT_WIDTH = PAGE_WIDTH - MARGIN * 2;
+
+export type ScreeningReportMetrics = {
+  indicativeSpecificYield: number | null;
+};
 const COLORS = {
   ink: rgb(0.055, 0.09, 0.15),
   slate: rgb(0.29, 0.35, 0.43),
@@ -62,6 +66,18 @@ function formatBand(band: PreliminarySiteScore["band"]) {
     unavailable: "Unavailable",
   };
   return labels[band];
+}
+
+function formatPerimeter(perimeterM: number) {
+  return perimeterM >= 1_000
+    ? `${(perimeterM / 1_000).toFixed(2)} km`
+    : `${Math.round(perimeterM)} m`;
+}
+
+function formatIndicativeYield(value: number | null) {
+  return value === null
+    ? "Unavailable"
+    : `${Math.round(value).toLocaleString("en-GB")} kWh/kWp/year`;
 }
 
 function wrapText(text: string, font: PDFFont, size: number, width: number) {
@@ -427,7 +443,7 @@ function drawMapExhibit(
   report.y = mapBottom - 24;
   report.heading("Exhibit particulars", 13);
   const detailTop = report.y;
-  const detailWidth = (CONTENT_WIDTH - 24) / 2;
+  const detailWidth = (CONTENT_WIDTH - 48) / 3;
   report.labelValue(
     "Site centroid",
     `${project.site.centroid[1].toFixed(5)}, ${project.site.centroid[0].toFixed(5)}`,
@@ -439,6 +455,13 @@ function drawMapExhibit(
     "Gross boundary area",
     `${(project.site.areaSqm / 10_000).toFixed(2)} ha`,
     MARGIN + detailWidth + 24,
+    detailTop,
+    detailWidth,
+  );
+  report.labelValue(
+    "Boundary perimeter",
+    formatPerimeter(project.site.perimeterM),
+    MARGIN + (detailWidth + 24) * 2,
     detailTop,
     detailWidth,
   );
@@ -599,6 +622,7 @@ export function screeningReportFilename(project: SolarDevProject) {
 export async function generateScreeningReport(
   project: SolarDevProject,
   snapshot: AnalysisSnapshotDetail,
+  metrics: ScreeningReportMetrics = { indicativeSpecificYield: null },
 ) {
   const score = snapshot.payload;
   const report = await ReportBuilder.create();
@@ -680,14 +704,17 @@ export async function generateScreeningReport(
 
   const metadataTop = PAGE_HEIGHT - 350;
   const columnWidth = (CONTENT_WIDTH - 24) / 2;
+  const metadataGap = 61;
   report.labelValue("Technology", project.technology.toUpperCase(), MARGIN, metadataTop, columnWidth);
   report.labelValue("Project status", project.status, MARGIN + columnWidth + 24, metadataTop, columnWidth);
-  report.labelValue("Country / market", project.country || "Not specified", MARGIN, metadataTop - 70, columnWidth);
-  report.labelValue("Gross site area", `${(project.site.areaSqm / 10_000).toFixed(2)} ha`, MARGIN + columnWidth + 24, metadataTop - 70, columnWidth);
-  report.labelValue("Site centroid", `${project.site.centroid[1].toFixed(5)}, ${project.site.centroid[0].toFixed(5)}`, MARGIN, metadataTop - 140, columnWidth);
-  report.labelValue("Analysis generated", formatDate(score.generatedAt), MARGIN + columnWidth + 24, metadataTop - 140, columnWidth);
-  report.labelValue("Snapshot ID", snapshot.id, MARGIN, metadataTop - 210, columnWidth);
-  report.labelValue("Methodology", `v${snapshot.methodologyVersion}`, MARGIN + columnWidth + 24, metadataTop - 210, columnWidth);
+  report.labelValue("Country / market", project.country || "Not specified", MARGIN, metadataTop - metadataGap, columnWidth);
+  report.labelValue("Gross site area", `${(project.site.areaSqm / 10_000).toFixed(2)} ha`, MARGIN + columnWidth + 24, metadataTop - metadataGap, columnWidth);
+  report.labelValue("Boundary perimeter", formatPerimeter(project.site.perimeterM), MARGIN, metadataTop - metadataGap * 2, columnWidth);
+  report.labelValue("Indicative specific yield", formatIndicativeYield(metrics.indicativeSpecificYield), MARGIN + columnWidth + 24, metadataTop - metadataGap * 2, columnWidth);
+  report.labelValue("Site centroid", `${project.site.centroid[1].toFixed(5)}, ${project.site.centroid[0].toFixed(5)}`, MARGIN, metadataTop - metadataGap * 3, columnWidth);
+  report.labelValue("Analysis generated", formatDate(score.generatedAt), MARGIN + columnWidth + 24, metadataTop - metadataGap * 3, columnWidth);
+  report.labelValue("Snapshot ID", snapshot.id, MARGIN, metadataTop - metadataGap * 4, columnWidth);
+  report.labelValue("Methodology", `v${snapshot.methodologyVersion}`, MARGIN + columnWidth + 24, metadataTop - metadataGap * 4, columnWidth);
 
   report.page.drawRectangle({
     x: MARGIN,
@@ -725,6 +752,16 @@ export async function generateScreeningReport(
       { color: COLORS.amber },
     );
   }
+  report.heading("Site metrics", 15);
+  report.paragraph(
+    `The saved candidate boundary has a gross area of ${(project.site.areaSqm / 10_000).toFixed(2)} ha and a perimeter of ${formatPerimeter(project.site.perimeterM)}.`,
+  );
+  report.paragraph(
+    metrics.indicativeSpecificYield === null
+      ? "An indicative PVGIS specific-yield value was unavailable when this PDF was generated. The screening score and recorded constraint evidence are unaffected."
+      : `The indicative PVGIS specific yield is ${formatIndicativeYield(metrics.indicativeSpecificYield)} at the saved boundary centroid, using a 1 kWp fixed system, optimum inclination and 14% assumed system losses. This is a screening model output, not a project energy-yield assessment.`,
+    { color: metrics.indicativeSpecificYield === null ? COLORS.amber : COLORS.slate },
+  );
   report.heading("Recommended next actions", 15);
   recommendationItems(score).forEach((item, index) => {
     report.paragraph(`${index + 1}. ${item}`, {
@@ -850,7 +887,7 @@ export async function generateScreeningReport(
   report.paragraph(`Analysis generated: ${formatDate(score.generatedAt)}`, { gap: 2 });
   report.paragraph(`Methodology version: ${snapshot.methodologyVersion}`, { gap: 2 });
   report.paragraph(
-    "The report is generated from the selected immutable snapshot. Generating the PDF does not rerun or refresh any source.",
+    "Constraint findings and the site score are generated from the selected immutable snapshot. The indicative PVGIS yield is a separate report-time calculation at the saved centroid and does not alter the score or snapshot evidence.",
   );
 
   return report.finish();

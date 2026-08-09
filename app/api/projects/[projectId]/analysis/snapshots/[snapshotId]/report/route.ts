@@ -10,6 +10,7 @@ import {
   generateScreeningReport,
   screeningReportFilename,
 } from "@/lib/gis/screening-report";
+import { getIndicativeSolarYield } from "@/lib/pvgis/indicative-yield";
 import { getOwnedProject } from "@/lib/projects/data";
 
 type ReportRouteContext = {
@@ -43,7 +44,20 @@ export async function GET(
       snapshotId,
       idempotencyKey: `screening-report:${userId}:${snapshotId}`,
     });
-    const bytes = await generateScreeningReport(project, snapshot);
+    const indicativeYield = await getIndicativeSolarYield(
+      project.site.centroid[1],
+      project.site.centroid[0],
+    ).catch((yieldError) => {
+      console.warn("[Screening report] indicative PVGIS yield unavailable", {
+        projectId,
+        snapshotId,
+        yieldError,
+      });
+      return null;
+    });
+    const bytes = await generateScreeningReport(project, snapshot, {
+      indicativeSpecificYield: indicativeYield?.specificYield ?? null,
+    });
     const body = bytes.buffer.slice(
       bytes.byteOffset,
       bytes.byteOffset + bytes.byteLength,
