@@ -6,6 +6,7 @@ import { analyzeNationallyDesignatedAreas } from "@/lib/gis/nationally-designate
 import { analyzeNatura2000 } from "@/lib/gis/natura2000-service";
 import { analyzeSurfaceWater } from "@/lib/gis/surface-water-service";
 import { analyzeTerrain } from "@/lib/gis/terrain-service";
+import { terrainConstraintMapFeatures } from "@/lib/gis/terrain-constraint-map";
 import type {
   ConstraintMapFeatureCollection,
   FloodRiskAreaAnalysis,
@@ -581,16 +582,7 @@ function constraintMapFeatures(
   }
   if (terrain.status === "fulfilled") {
     features.push(
-      ...terrain.value.nonUsableAreas.features.map((feature, index) => ({
-        type: "Feature" as const,
-        geometry: feature.geometry,
-        properties: {
-          criterionId: "terrain" as const,
-          label: "North-facing slope >5Â°",
-          featureId: `terrain:${index}`,
-          featureName: `${feature.properties.slopeDeg.toFixed(1)}Â° slope`,
-        },
-      })),
+      ...terrainConstraintMapFeatures(terrain.value.nonUsableAreas).features,
     );
   }
   return { type: "FeatureCollection", features };

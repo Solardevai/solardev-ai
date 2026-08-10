@@ -17,6 +17,10 @@ import {
 import { useDrawingTools } from "@/components/map/useDrawingTools";
 import { formatArea, formatDistance } from "@/lib/geo/format";
 import type { InfrastructureLayerId } from "@/lib/gis/layers";
+import {
+  normalizeTerrainConstraintMapFeatures,
+  terrainConstraintMapFeatures,
+} from "@/lib/gis/terrain-constraint-map";
 import type {
   ConstraintMapFeatureCollection,
   FloodRiskAreaAnalysis,
@@ -71,21 +75,13 @@ const emptyConstraintMap: ConstraintMapFeatureCollection = {
 function mapFeaturesFromAnalysis(
   analysis: PreliminarySiteScore | null,
 ): ConstraintMapFeatureCollection {
-  if (analysis?.constraintMapFeatures) return analysis.constraintMapFeatures;
+  if (analysis?.constraintMapFeatures) {
+    return normalizeTerrainConstraintMapFeatures(
+      analysis.constraintMapFeatures,
+    );
+  }
   if (!analysis?.terrainNonUsableAreas) return emptyConstraintMap;
-  return {
-    type: "FeatureCollection",
-    features: analysis.terrainNonUsableAreas.features.map((feature, index) => ({
-      type: "Feature",
-      geometry: feature.geometry,
-      properties: {
-        criterionId: "terrain",
-        label: "North-facing slope >5Â°",
-        featureId: `terrain:${index}`,
-        featureName: `${feature.properties.slopeDeg.toFixed(1)}Â° slope`,
-      },
-    })),
-  };
+  return terrainConstraintMapFeatures(analysis.terrainNonUsableAreas);
 }
 
 function legendItemsFromAnalysis(
@@ -508,16 +504,7 @@ export default function ProjectWorkspace({
         ...current.features.filter(
           (feature) => feature.properties.criterionId !== "terrain",
         ),
-        ...analysis.nonUsableAreas.features.map((feature, index) => ({
-          type: "Feature" as const,
-          geometry: feature.geometry,
-          properties: {
-            criterionId: "terrain" as const,
-            label: "North-facing slope >5Â°",
-            featureId: `terrain:${index}`,
-            featureName: `${feature.properties.slopeDeg.toFixed(1)}Â° slope`,
-          },
-        })),
+        ...terrainConstraintMapFeatures(analysis.nonUsableAreas).features,
       ],
     }));
     updateIntersection(
@@ -641,7 +628,7 @@ export default function ProjectWorkspace({
           <div className="mt-6">
             <p className="text-xs font-semibold text-slate-300">Terrain</p>
             <div className="mt-2 flex items-center gap-2 rounded-lg bg-white/[0.04] px-3 py-2 text-xs text-slate-300">
-              <span className="h-2 w-2 rounded-sm bg-orange-500" />
+              <span className="h-0.5 w-4 rounded-full bg-orange-500" />
               Non-usable north-facing slope &gt;5°
             </div>
             <p className="mt-2 text-[10px] leading-4 text-slate-500">
@@ -690,7 +677,11 @@ export default function ProjectWorkspace({
                     <li key={item.id} className="flex items-start gap-2">
                       <span
                         aria-hidden="true"
-                        className="mt-1 h-2.5 w-2.5 shrink-0 rounded-sm"
+                        className={
+                          item.id === "terrain"
+                            ? "mt-1.5 h-0.5 w-3 shrink-0 rounded-full"
+                            : "mt-1 h-2.5 w-2.5 shrink-0 rounded-sm"
+                        }
                         style={{ backgroundColor: item.color }}
                       />
                       <span className="min-w-0 text-slate-200">
