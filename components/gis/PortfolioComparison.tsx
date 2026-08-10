@@ -95,43 +95,53 @@ export default function PortfolioComparison({
     (project) => project.latestAnalysis?.confidence === "high",
   ).length;
 
-  if (!projects.length) return null;
-
   return (
-    <section className="mb-12" aria-labelledby="portfolio-comparison-title">
+    <section className="mb-12" aria-labelledby="saved-projects-title">
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
           <p className="text-sm font-semibold uppercase tracking-[0.18em] text-emerald-300">
-            Portfolio comparison
+            GIS projects
           </p>
           <h2
-            id="portfolio-comparison-title"
+            id="saved-projects-title"
             className="mt-2 text-3xl font-semibold tracking-tight"
           >
-            Latest screening rank
+            Saved projects
           </h2>
           <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-400">
-            Indicative comparison of each project&apos;s newest immutable run.
-            Ranking does not replace project-specific due diligence.
+            Open saved sites or compare their latest preliminary screening
+            results. Ranking does not replace project-specific due diligence.
           </p>
         </div>
-        <label className="text-xs font-semibold text-slate-400">
-          Rank by
-          <select
-            value={sortKey}
-            onChange={(event) => setSortKey(event.target.value as SortKey)}
-            className="ml-2 rounded-lg border border-white/10 bg-slate-900 px-3 py-2 text-xs text-white"
+        <div className="flex flex-wrap items-center gap-3">
+          {projects.length > 0 && (
+            <label className="text-xs font-semibold text-slate-400">
+              Rank by
+              <select
+                value={sortKey}
+                onChange={(event) => setSortKey(event.target.value as SortKey)}
+                className="ml-2 rounded-lg border border-white/10 bg-slate-900 px-3 py-2 text-xs text-white"
+              >
+                <option value="score">Highest score</option>
+                <option value="coverage">Highest coverage</option>
+                <option value="constraints">Fewest constraints</option>
+                <option value="recent">Most recently analyzed</option>
+                <option value="name">Project name</option>
+              </select>
+            </label>
+          )}
+          <Link
+            href="/tools/solar-site-screening"
+            className="rounded-xl bg-emerald-400 px-4 py-2.5 text-sm font-bold text-slate-950 hover:bg-emerald-300"
           >
-            <option value="score">Highest score</option>
-            <option value="coverage">Highest coverage</option>
-            <option value="constraints">Fewest constraints</option>
-            <option value="recent">Most recently analyzed</option>
-            <option value="name">Project name</option>
-          </select>
-        </label>
+            Create project
+          </Link>
+        </div>
       </div>
 
-      <dl className="mt-6 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+      {projects.length > 0 ? (
+        <>
+          <dl className="mt-6 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
         <div className="rounded-xl border border-white/10 bg-white/[0.03] p-4">
           <dt className="text-[10px] font-bold uppercase tracking-[0.14em] text-slate-500">
             Projects scored
@@ -164,9 +174,9 @@ export default function PortfolioComparison({
             {highConfidenceCount}
           </dd>
         </div>
-      </dl>
+          </dl>
 
-      <div className="mt-4 overflow-x-auto rounded-2xl border border-white/10">
+          <div className="mt-4 overflow-x-auto rounded-2xl border border-white/10">
         <table className="min-w-[930px] w-full border-collapse text-left text-xs">
           <thead className="bg-white/[0.05] text-[10px] uppercase tracking-[0.12em] text-slate-500">
             <tr>
@@ -264,7 +274,14 @@ export default function PortfolioComparison({
             })}
           </tbody>
         </table>
-      </div>
+          </div>
+        </>
+      ) : (
+        <div className="mt-6 rounded-2xl border border-dashed border-white/15 bg-white/[0.02] p-6 text-sm leading-6 text-slate-400">
+          No saved projects yet. Define a boundary in Site Assessment, save it,
+          then continue in the GIS workspace.
+        </div>
+      )}
     </section>
   );
 }

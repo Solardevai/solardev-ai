@@ -8,7 +8,6 @@ import BillingUsagePanel from "@/components/billing/BillingUsagePanel";
 import PortfolioComparison from "@/components/gis/PortfolioComparison";
 import { isAuthenticationAvailable } from "@/lib/auth-config";
 import { getUsageSummary } from "@/lib/billing/usage";
-import { formatArea } from "@/lib/geo/format";
 import { listOwnedPortfolioProjects } from "@/lib/projects/data";
 
 export const metadata: Metadata = {
@@ -115,62 +114,6 @@ export default async function DashboardPage({
           <BillingUsagePanel usage={usage} notice={billingNotice} />
 
           <PortfolioComparison projects={projects} />
-
-          <div className="mb-12">
-            <div className="flex flex-wrap items-end justify-between gap-4">
-              <div>
-                <p className="text-sm font-semibold uppercase tracking-[0.18em] text-emerald-300">
-                  GIS projects
-                </p>
-                <h2 className="mt-2 text-3xl font-semibold tracking-tight">
-                  Saved sites
-                </h2>
-              </div>
-              <Link
-                href="/tools/solar-site-screening"
-                className="rounded-xl bg-emerald-400 px-4 py-2.5 text-sm font-bold text-slate-950 hover:bg-emerald-300"
-              >
-                Create project
-              </Link>
-            </div>
-
-            {projects.length ? (
-              <div className="mt-6 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-                {projects.map((project) => (
-                  <Link
-                    key={project.id}
-                    href={`/platform/projects/${project.id}`}
-                    className="group rounded-2xl border border-white/10 bg-white/[0.03] p-5 transition hover:border-emerald-300/30 hover:bg-emerald-300/[0.05]"
-                  >
-                    <div className="flex items-center justify-between gap-3">
-                      <span className="rounded-full border border-white/10 px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.13em] text-slate-400">
-                        {project.technology === "bess"
-                          ? "BESS"
-                          : project.technology === "hybrid"
-                            ? "Hybrid"
-                            : "Solar PV"}
-                      </span>
-                      <span className="text-xs text-slate-500">
-                        {formatArea(project.areaSqm)}
-                      </span>
-                    </div>
-                    <h3 className="mt-4 truncate text-lg font-semibold group-hover:text-emerald-200">
-                      {project.name}
-                    </h3>
-                    <p className="mt-2 text-xs capitalize text-slate-500">
-                      {project.status.replace("-", " ")}
-                      {project.country ? ` · ${project.country}` : ""}
-                    </p>
-                  </Link>
-                ))}
-              </div>
-            ) : (
-              <div className="mt-6 rounded-2xl border border-dashed border-white/15 bg-white/[0.02] p-6 text-sm leading-6 text-slate-400">
-                No saved projects yet. Define a boundary in Site Assessment, save it,
-                then continue in the GIS workspace.
-              </div>
-            )}
-          </div>
 
           <div className="grid gap-6 lg:grid-cols-3">
             {workspaceTools.map((tool) => (
