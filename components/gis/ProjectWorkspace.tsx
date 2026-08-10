@@ -18,7 +18,6 @@ import { useDrawingTools } from "@/components/map/useDrawingTools";
 import { formatArea, formatDistance } from "@/lib/geo/format";
 import type { InfrastructureLayerId } from "@/lib/gis/layers";
 import type {
-  AnalysisSnapshotSummary,
   ConstraintMapFeatureCollection,
   FloodRiskAreaAnalysis,
   InfrastructureAnalysis,
@@ -38,7 +37,6 @@ import type {
 
 type ProjectWorkspaceProps = {
   project: SolarDevProject;
-  initialScoreHistory: AnalysisSnapshotSummary[];
   initialAnalysis: PreliminarySiteScore | null;
 };
 
@@ -326,7 +324,6 @@ function ConstraintMapOverlay({
 
 export default function ProjectWorkspace({
   project,
-  initialScoreHistory,
   initialAnalysis,
 }: ProjectWorkspaceProps) {
   const [name, setName] = useState(project.name);
@@ -784,7 +781,6 @@ export default function ProjectWorkspace({
 
           <SiteScorePanel
             projectId={project.id}
-            initialHistory={initialScoreHistory}
             onAnalysisChange={showScoreIntersections}
           />
           <ConstraintAnalysisPanel
