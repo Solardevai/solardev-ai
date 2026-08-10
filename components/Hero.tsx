@@ -16,21 +16,20 @@ export default function Hero() {
         <div>
           <div className="inline-flex items-center gap-3 rounded-full border border-emerald-400/25 bg-emerald-400/10 px-4 py-2 text-sm font-semibold text-emerald-300">
             <span className="h-2 w-2 rounded-full bg-emerald-400 shadow-[0_0_12px_rgba(52,211,153,.8)]" />
-            Engineering tools for Solar PV &amp; BESS
+            Professional platform for Solar PV &amp; BESS
           </div>
 
           <p className="mt-8 text-sm font-semibold uppercase tracking-[0.25em] text-emerald-400">
-            Screen · Quantify · Export
+            Screen · Develop · Decide
           </p>
 
           <h1 className="mt-5 max-w-3xl text-5xl font-bold leading-[1.03] tracking-[-0.045em] text-white sm:text-6xl lg:text-7xl">
-            Utility-Scale Solar &amp; BESS Project Development Tools
+            The professional development platform for Solar &amp; BESS projects
           </h1>
 
           <p className="mt-6 max-w-2xl text-lg leading-8 text-slate-300">
-            Move early-stage projects forward with better site intelligence,
-            transparent calculations and practitioner-led engineering
-            workflows.
+            Bring site intelligence, transparent engineering tools, controlled
+            workflows and specialist AI agents into one evidence-led workspace.
           </p>
 
           <div className="mt-9 flex flex-col gap-3 sm:flex-row">
@@ -38,21 +37,21 @@ export default function Hero() {
               href="/tools/solar-site-screening"
               className="rounded-xl bg-emerald-400 px-7 py-4 text-center font-semibold text-slate-950 shadow-lg shadow-emerald-400/10 transition hover:-translate-y-0.5 hover:bg-emerald-300"
             >
-              Open Site Assessment
+              Launch free GIS Site Check
             </Link>
             <Link
-              href="/tools/sun-path"
+              href="/agents/project-development"
               className="rounded-xl bg-amber-400 px-7 py-4 text-center font-semibold text-slate-950 shadow-lg shadow-amber-400/10 transition hover:-translate-y-0.5 hover:bg-amber-300"
             >
-              Open Solar Angle
+              Preview the development agent
             </Link>
           </div>
 
           <div className="mt-10 flex flex-wrap gap-x-6 gap-y-3 text-xs font-medium text-slate-400">
             {[
-              "No account required",
-              "Satellite-based workflows",
-              "Screening-level outputs",
+              "Free tools available now",
+              "Saved professional workspace",
+              "Traceable screening outputs",
             ].map((item) => (
               <span key={item} className="flex items-center gap-2">
                 <span className="text-emerald-400">✓</span>

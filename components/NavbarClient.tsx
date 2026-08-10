@@ -246,6 +246,18 @@ export default function Navbar({
                       </span>
                     </Link>
 
+                    <Link
+                      href="/agents/project-development"
+                      className="mt-1 block rounded-xl px-4 py-3 transition hover:bg-white/[0.06] focus:outline-none focus-visible:bg-white/[0.06]"
+                    >
+                      <span className="block font-semibold text-white">
+                        Project Development Agent
+                      </span>
+                      <span className="mt-1 block text-xs leading-5 text-slate-400">
+                        Preview evidence-led project actions and decision briefs.
+                      </span>
+                    </Link>
+
                   </div>
                 </details>
               )}
@@ -361,6 +373,13 @@ export default function Navbar({
                       className="flex min-h-12 items-center justify-between rounded-lg px-3 py-3 font-semibold text-white transition hover:bg-white/[0.05] focus:outline-none focus-visible:bg-white/[0.05]"
                     >
                       Solar Angle
+                    </Link>
+                    <Link
+                      href="/agents/project-development"
+                      onClick={closeMenu}
+                      className="flex min-h-12 items-center justify-between rounded-lg px-3 py-3 font-semibold text-white transition hover:bg-white/[0.05] focus:outline-none focus-visible:bg-white/[0.05]"
+                    >
+                      Project Development Agent
                     </Link>
                   </div>
                 )}

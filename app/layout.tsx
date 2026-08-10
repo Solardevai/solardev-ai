@@ -7,10 +7,10 @@ import "./globals.css";
 
 const SITE_URL = "https://www.solardev.ai";
 const SITE_TITLE =
-  "Utility-Scale Solar & BESS Development Tools | SolarDev AI";
+  "Professional Solar & BESS Development Platform | SolarDev AI";
 
 const SITE_DESCRIPTION =
-  "Engineering-led tools, professional handbooks and controlled AI workflows for utility-scale Solar PV and BESS project development, screening and due diligence.";
+  "GIS site intelligence, engineering-led workflows, traceable project outputs and controlled AI agents for utility-scale Solar PV and BESS development.";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),

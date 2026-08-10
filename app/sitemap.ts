@@ -1,15 +1,28 @@
 import type { MetadataRoute } from "next";
+import { workflowGuides } from "@/data/workflowGuides";
 
 const SITE_URL = "https://www.solardev.ai";
-const CONTENT_LAST_UPDATED = new Date("2026-07-28");
+const CONTENT_LAST_UPDATED = new Date("2026-08-11");
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  return [
+  const staticRoutes: MetadataRoute.Sitemap = [
     {
       url: `${SITE_URL}/`,
       lastModified: CONTENT_LAST_UPDATED,
       changeFrequency: "weekly",
       priority: 1,
+    },
+    {
+      url: `${SITE_URL}/agents/project-development`,
+      lastModified: CONTENT_LAST_UPDATED,
+      changeFrequency: "monthly",
+      priority: 0.9,
+    },
+    {
+      url: `${SITE_URL}/insights`,
+      lastModified: CONTENT_LAST_UPDATED,
+      changeFrequency: "weekly",
+      priority: 0.9,
     },
     {
       url: `${SITE_URL}/handbooks`,
@@ -59,5 +72,14 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "yearly",
       priority: 0.2,
     },
+  ];
+  return [
+    ...staticRoutes,
+    ...workflowGuides.map((guide) => ({
+      url: `${SITE_URL}/insights/${guide.slug}`,
+      lastModified: CONTENT_LAST_UPDATED,
+      changeFrequency: "monthly" as const,
+      priority: 0.75,
+    })),
   ];
 }

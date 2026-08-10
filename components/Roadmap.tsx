@@ -33,8 +33,22 @@ const roadmapItems: RoadmapItem[] = [
     state: "complete",
   },
   {
-    year: "2026 · Q4",
+    year: "2026 · Q3",
     number: "03",
+    title: "Project Development Agent",
+    description:
+      "Introduce the first specialist agent around evidence-led development actions and decision gates.",
+    deliverables: [
+      "Interactive agent preview",
+      "Stage-aware development briefs",
+      "Controlled evidence model",
+    ],
+    status: "Preview live",
+    state: "current",
+  },
+  {
+    year: "2026 · Q4",
+    number: "04",
     title: "SolarDev AI Platform",
     description:
       "Unify professional AI resources and project-screening capabilities in a structured GIS workspace.",
@@ -148,14 +162,14 @@ export default function Roadmap() {
         <div className="relative mx-auto mt-12 max-w-6xl">
           <div
             aria-hidden="true"
-            className="absolute bottom-5 left-[17px] top-5 w-px bg-white/10 md:bottom-auto md:left-[16.666%] md:right-[16.666%] md:top-[17px] md:h-px md:w-auto"
+            className="absolute bottom-5 left-[17px] top-5 w-px bg-white/10 md:bottom-auto md:left-[12.5%] md:right-[12.5%] md:top-[17px] md:h-px md:w-auto"
           />
           <div
             aria-hidden="true"
-            className="absolute left-[17px] top-5 h-[calc(50%-4px)] w-px bg-emerald-400/70 md:left-[16.666%] md:top-[17px] md:h-0.5 md:w-[33.333%]"
+            className="absolute left-[17px] top-5 h-[calc(66.666%-4px)] w-px bg-emerald-400/70 md:left-[12.5%] md:top-[17px] md:h-0.5 md:w-1/2"
           />
 
-          <ol className="relative grid gap-9 md:grid-cols-3 md:gap-5">
+          <ol className="relative grid gap-9 md:grid-cols-4 md:gap-5">
             {roadmapItems.map((item) => {
               const styles = stateStyles[item.state];
 

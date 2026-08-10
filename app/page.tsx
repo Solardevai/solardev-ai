@@ -1,5 +1,6 @@
 import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
+import PlatformExperience from "@/components/PlatformExperience";
 import Features from "@/components/Features";
 import VolumeOne from "@/components/VolumeOne";
 import AudienceApplications from "@/components/Audience";
@@ -74,6 +75,34 @@ const homeStructuredData = {
         },
       })),
     },
+    {
+      "@type": "SoftwareApplication",
+      name: "SolarDev GIS Site Check",
+      applicationCategory: "BusinessApplication",
+      operatingSystem: "Web",
+      url: "https://www.solardev.ai/tools/solar-site-screening",
+      description:
+        "Free GIS site screening for utility-scale solar and BESS development, including boundary metrics, satellite mapping, constraints and indicative PVGIS yield.",
+      offers: {
+        "@type": "Offer",
+        price: "0",
+        priceCurrency: "EUR",
+      },
+    },
+    {
+      "@type": "SoftwareApplication",
+      name: "SolarDev Project Development Agent Preview",
+      applicationCategory: "BusinessApplication",
+      operatingSystem: "Web",
+      url: "https://www.solardev.ai/agents/project-development",
+      description:
+        "Interactive preview of an evidence-led specialist agent for solar and BESS project development workflows.",
+      offers: {
+        "@type": "Offer",
+        price: "0",
+        priceCurrency: "EUR",
+      },
+    },
   ],
 };
 
@@ -93,12 +122,13 @@ export default function Home() {
 
       <main className="min-h-screen bg-slate-950 text-white">
         <Hero />
+        <PlatformExperience />
         <Features />
-        <VolumeOne />
         <AudienceApplications />
+        <Roadmap />
+        <VolumeOne />
         <Pricing />
         <FAQ />
-        <Roadmap />
         <Contact />
       </main>
 

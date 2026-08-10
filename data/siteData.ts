@@ -4,7 +4,7 @@ export const siteConfig = {
   name: "SolarDev AI",
   tagline: "AI for Utility-Scale Solar & BESS Professionals",
   description:
-    "Engineering-led knowledge, controlled AI workflows and deterministic early-stage tools for utility-scale Solar PV and BESS project development.",
+    "A professional platform combining GIS site intelligence, engineering-led workflows, traceable project outputs and controlled AI agents for utility-scale Solar PV and BESS development.",
 
   infoEmail: "info@solardev.ai",
   supportEmail: "support@solardev.ai",
@@ -34,16 +34,20 @@ export const navigationItems = [
     href: "/",
   },
   {
+    label: "Platform",
+    href: "/#platform",
+  },
+  {
+    label: "Insights",
+    href: "/insights",
+  },
+  {
     label: "Professionals",
     href: "/#audience",
   },
   {
     label: "Roadmap",
     href: "/#roadmap",
-  },
-  {
-    label: "Pricing",
-    href: "/#pricing",
   },
   {
     label: "FAQ",
@@ -242,9 +246,9 @@ export const faqItems = [
       "Site Assessment lets you upload a property boundary from KMZ or draw a candidate site on topographic or satellite mapping, then calculates its gross area, perimeter and centroid. It provides an indicative PVGIS specific-yield estimate, mapped context for nearby roads, power lines and substations, GIS-ready boundary exports in KMZ, KML or GeoJSON, and hourly PVGIS Typical Meteorological Year data in CSV or EPW. Saved sites can continue into the GIS workspace for constraint analysis, scoring and reports.",
   },
   {
-    question: "When will the SolarDev AI Platform be available?",
+    question: "What is available on the SolarDev AI platform today?",
     answer:
-      "Development started in Q2 2026. The first release date will be confirmed after the professional workflows and templates have completed internal review.",
+      "The public GIS Site Check and Solar Angle tools are available now, alongside saved GIS projects, deterministic constraint screening, preliminary scoring, PDF reports, CSV registers and the professional workflow library. The Project Development Agent is currently an interactive preview of the controlled agent experience being developed.",
   },
   {
     question: "Is this a general AI book?",
