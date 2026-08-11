@@ -19,10 +19,10 @@ const dateFormatter = new Intl.DateTimeFormat("en-GB", {
 });
 
 const bandLabels = {
-  "favourable-screening": "Favourable",
-  "further-review": "Further review",
-  "material-constraints": "Material constraints",
-  unavailable: "Unavailable",
+  "favourable-screening": "Lower mapped exposure",
+  "further-review": "Further review required",
+  "material-constraints": "Material mapped constraints",
+  unavailable: "Insufficient coverage",
 } as const;
 
 function scoreValue(project: PortfolioProjectSummary) {
@@ -159,7 +159,7 @@ export default function PortfolioComparison({
                 onChange={(event) => setSortKey(event.target.value as SortKey)}
                 className="ml-2 rounded-lg border border-white/10 bg-slate-900 px-3 py-2 text-xs text-white"
               >
-                <option value="score">Highest score</option>
+                <option value="score">Highest screening index</option>
                 <option value="coverage">Highest coverage</option>
                 <option value="constraints">Fewest constraints</option>
                 <option value="recent">Most recently analyzed</option>
@@ -198,7 +198,7 @@ export default function PortfolioComparison({
         </div>
         <div className="rounded-xl border border-white/10 bg-white/[0.03] p-4">
           <dt className="text-[10px] font-bold uppercase tracking-[0.14em] text-slate-500">
-            Average score
+            Average index
           </dt>
           <dd className="mt-2 text-2xl font-black text-emerald-200">
             {averageScore ?? "-"}
@@ -363,7 +363,7 @@ export default function PortfolioComparison({
         </>
       ) : (
         <div className="mt-6 rounded-2xl border border-dashed border-white/15 bg-white/[0.02] p-6 text-sm leading-6 text-slate-400">
-          No saved projects yet. Define a boundary in Site Assessment, save it,
+          No saved projects yet. Define a boundary in SolarDev GIS Site Check, save it,
           then continue in the GIS workspace.
         </div>
       )}

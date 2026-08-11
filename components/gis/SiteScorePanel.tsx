@@ -8,14 +8,15 @@ import type {
 
 type SiteScorePanelProps = {
   projectId: string;
+  northSlopeThresholdDeg?: number;
   onAnalysisChange?: (analysis: PreliminarySiteScore) => void;
 };
 
 const bandLabels: Record<PreliminarySiteScore["band"], string> = {
-  "favourable-screening": "Favourable screening",
-  "further-review": "Further review",
-  "material-constraints": "Material constraints",
-  unavailable: "Unavailable",
+  "favourable-screening": "Lower mapped exposure",
+  "further-review": "Further review required",
+  "material-constraints": "Material mapped constraints",
+  unavailable: "Insufficient source coverage",
 };
 
 const statusStyles: Record<SiteScoreCriterion["status"], string> = {
@@ -36,6 +37,7 @@ function formatScore(value: number) {
 
 export default function SiteScorePanel({
   projectId,
+  northSlopeThresholdDeg = 5,
   onAnalysisChange,
 }: SiteScorePanelProps) {
   const [analysis, setAnalysis] = useState<PreliminarySiteScore | null>(null);
@@ -48,14 +50,18 @@ export default function SiteScorePanel({
     try {
       const response = await fetch(
         `/api/projects/${projectId}/analysis/site-score`,
-        { method: "POST" },
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ northSlopeThresholdDeg }),
+        },
       );
       const result: {
         score?: PreliminarySiteScore;
         error?: string;
       } = await response.json();
       if (!response.ok || !result.score) {
-        throw new Error(result.error || "Preliminary scoring failed.");
+        throw new Error(result.error || "Screening-index calculation failed.");
       }
       const { score } = result;
       setAnalysis(score);
@@ -64,7 +70,7 @@ export default function SiteScorePanel({
       setError(
         runError instanceof Error
           ? runError.message
-          : "Preliminary scoring failed.",
+          : "Screening-index calculation failed.",
       );
     } finally {
       setIsRunning(false);
@@ -76,10 +82,10 @@ export default function SiteScorePanel({
       <div className="flex items-center justify-between gap-3">
         <div>
           <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-slate-500">
-            Preliminary score
+            Preliminary screening index
           </p>
           <p className="mt-1 text-[11px] text-slate-400">
-            Explainable deterministic screening
+            Relative prioritisation across available sources
           </p>
         </div>
         <button
@@ -88,7 +94,7 @@ export default function SiteScorePanel({
           disabled={isRunning}
           className="shrink-0 rounded-lg bg-emerald-300 px-3 py-2 text-[11px] font-bold text-slate-950 hover:bg-emerald-200 disabled:opacity-60"
         >
-          {isRunning ? "Scoring…" : analysis ? "Refresh" : "Calculate"}
+          {isRunning ? "Calculating…" : analysis ? "Refresh" : "Calculate"}
         </button>
       </div>
 
@@ -104,7 +110,7 @@ export default function SiteScorePanel({
             <div className="flex items-center gap-4">
               <div
                 role="meter"
-                aria-label="Preliminary site score"
+                aria-label="Preliminary screening index"
                 aria-valuemin={0}
                 aria-valuemax={100}
                 aria-valuenow={analysis.score ?? undefined}
@@ -130,7 +136,7 @@ export default function SiteScorePanel({
                 </p>
                 {analysis.coveragePercent < 100 && (
                   <p className="mt-1 text-[9px] leading-4 text-amber-200">
-                    Partial score, normalized across available criteria.
+                    Partial index, normalized across available criteria.
                   </p>
                 )}
               </div>
@@ -149,7 +155,7 @@ export default function SiteScorePanel({
                     <span className={statusStyles[item.status]}>
                       {item.score === null
                         ? "Unavailable"
-                        : `${item.score}/100 · −${item.deductionPoints} pts`}
+                        : `${item.score}/100 · index effect −${item.deductionPoints}`}
                     </span>
                   </div>
                   <p className="mt-1 text-[9px] leading-4 text-slate-500">
@@ -181,6 +187,14 @@ export default function SiteScorePanel({
               <div className="mt-3 space-y-2 text-[9px] leading-4 text-slate-500">
                 <p>
                   Methodology v{analysis.methodology.version}; eight fixed criteria totaling {analysis.methodology.totalWeight} weight points. Missing inputs use {analysis.methodology.normalization} and are never scored as favourable.
+                </p>
+                {analysis.methodology.assumptions ? (
+                  <p>
+                    Recorded terrain assumption: north-facing slope threshold &gt;{analysis.methodology.assumptions.northSlopeThresholdDeg}°.
+                  </p>
+                ) : null}
+                <p>
+                  The index compares mapped exposure under this methodology. It is not a feasibility rating, consent opinion, grid-capacity assessment or prediction of project success.
                 </p>
                 <p>{analysis.disclaimer}</p>
               </div>

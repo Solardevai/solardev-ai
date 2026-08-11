@@ -81,6 +81,7 @@ function connectSegments(segments: Segment[]) {
 
 function terrainOutlineFeature(
   geometries: Array<GeoJSON.Polygon | GeoJSON.MultiPolygon>,
+  northSlopeThresholdDeg = 5,
 ): ConstraintMapFeatureCollection["features"][number] | null {
   const lines = connectSegments(exteriorSegments(geometries));
   if (!lines.length) return null;
@@ -89,18 +90,19 @@ function terrainOutlineFeature(
     geometry: { type: "MultiLineString", coordinates: lines },
     properties: {
       criterionId: "terrain",
-      label: "North-facing slope >5°",
+      label: `North-facing slope >${northSlopeThresholdDeg}°`,
       featureId: "terrain:non-usable-boundary",
-      featureName: "Non-usable area boundary",
+      featureName: "Preliminary terrain exclusion boundary",
     },
   };
 }
 
 export function terrainConstraintMapFeatures(
   nonUsableAreas: TerrainAnalysis["nonUsableAreas"],
+  northSlopeThresholdDeg = 5,
 ): ConstraintMapFeatureCollection {
   const geometries = nonUsableAreas.features.map((feature) => feature.geometry);
-  const outline = terrainOutlineFeature(geometries);
+  const outline = terrainOutlineFeature(geometries, northSlopeThresholdDeg);
   return {
     type: "FeatureCollection",
     features: outline ? [outline] : [],

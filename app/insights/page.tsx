@@ -58,7 +58,7 @@ export default function InsightsPage() {
                 href="/tools/solar-site-screening"
                 className="rounded-xl bg-emerald-400 px-5 py-3 text-sm font-bold text-slate-950 hover:bg-emerald-300"
               >
-                Open free GIS Site Check
+                Open SolarDev GIS Site Check
               </Link>
               <Link
                 href="/agents/project-development"

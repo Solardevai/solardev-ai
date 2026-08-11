@@ -166,6 +166,7 @@ function distanceM(first: SamplePoint, second: SamplePoint) {
 function terrainCells(
   site: GeoJSON.Polygon,
   points: ElevatedGridPoint[],
+  northSlopeThresholdDeg: number,
 ) {
   const pointByCell = new Map(
     points.map((point) => [`${point.row}:${point.column}`, point]),
@@ -218,7 +219,7 @@ function terrainCells(
       slopes.push(slopeDeg);
 
       const northFacing = aspectDeg >= 315 || aspectDeg <= 45;
-      if (slopeDeg <= 5 || !northFacing) continue;
+      if (slopeDeg <= northSlopeThresholdDeg || !northFacing) continue;
       const areaSqm = area(clipped);
       nonUsableFeatures.push({
         ...clipped,
@@ -269,10 +270,15 @@ function terrainRisk(
 export async function analyzeTerrain(
   projectId: string,
   site: GeoJSON.Polygon,
+  northSlopeThresholdDeg = 5,
 ): Promise<TerrainAnalysis> {
   const points = await fetchElevations(sampleTerrainGrid(site));
   const elevations = points.map((point) => point.elevationM);
-  const { slopes, nonUsableAreas, siteAreaSqm } = terrainCells(site, points);
+  const { slopes, nonUsableAreas, siteAreaSqm } = terrainCells(
+    site,
+    points,
+    northSlopeThresholdDeg,
+  );
   const nonUsableNorthSlopeAreaSqm = nonUsableAreas.features.reduce(
     (sum, feature) => sum + feature.properties.areaSqm,
     0,
@@ -311,11 +317,12 @@ export async function analyzeTerrain(
       nonUsableNorthSlopeAreaSqm: round(nonUsableNorthSlopeAreaSqm),
       nonUsableNorthSlopePercent: round(nonUsableNorthSlopePercent, 2),
       nonUsableCellCount: nonUsableAreas.features.length,
+      northSlopeThresholdDeg,
       risk,
       confidence: "medium",
       recommendedAction:
         nonUsableNorthSlopePercent > 0
-          ? `Exclude the mapped north-facing cells above 5° from preliminary usable-area assumptions (${round(nonUsableNorthSlopePercent, 2)}% of the site). Confirm the exclusion with a higher-resolution terrain model and topographic survey.`
+          ? `Treat the mapped north-facing cells above ${northSlopeThresholdDeg}° as a preliminary terrain exclusion under the selected assumption (${round(nonUsableNorthSlopePercent, 2)}% of the site). Confirm it with layout-specific limits, a higher-resolution terrain model and topographic survey.`
           : risk === "high"
           ? "Treat terrain as a material layout and grading risk. Obtain a higher-resolution terrain model and topographic survey before capacity or earthworks assumptions."
           : risk === "medium"
@@ -336,14 +343,14 @@ export async function analyzeTerrain(
       sampling: "10 × 10 elevation-node grid producing clipped 9 × 9 terrain cells",
       slope: "central cell gradient from corner elevations",
       aspect: "downslope azimuth; north-facing sector 315°–45°",
-      nonUsableRule: "slope >5° and north-facing",
+      nonUsableRule: `slope >${northSlopeThresholdDeg}° and north-facing`,
     },
     nonUsableAreas,
     limitations: [
       "This is a gridded screening result, not a continuous slope raster or topographic survey.",
       "The terrain mosaic uses regional best-available sources with approximately 30 m detail in the target European markets; effective resolution and vertical datum can vary by location.",
-      "Cell spacing depends on the site extent; the non-usable mask generalizes each cell from four elevation nodes and may omit local terrain breaks.",
-      "The north-facing rule uses downslope aspect from 315° through north to 45° and applies only where calculated slope is greater than 5°.",
+      "Cell spacing depends on the site extent; the preliminary terrain mask generalizes each cell from four elevation nodes and may omit local terrain breaks.",
+      `The selected preliminary rule uses downslope aspect from 315° through north to 45° and applies where calculated slope is greater than ${northSlopeThresholdDeg}°. This is a user assumption, not a universal constructability limit.`,
       "Source mosaicking, datum differences and DEM artefacts may affect elevations.",
       "Europe terrain data includes EU-DEM layers produced using Copernicus data and information funded by the European Union.",
       "Earthworks, drainage, geotechnical conditions and technology-specific grading limits are not assessed.",

@@ -30,7 +30,7 @@ const workspaceTools = [
     description:
       "Draw a boundary, review mapped infrastructure and run an indicative PVGIS yield check.",
     href: "/tools/solar-site-screening",
-    action: "Open Site Assessment",
+    action: "Open SolarDev GIS Site Check",
     accent: "amber",
   },
   {
@@ -38,7 +38,7 @@ const workspaceTools = [
     description:
       "Calculate solar angles, explore the daily sun path and review indicative shadow geometry.",
     href: "/tools/sun-path",
-    action: "Open Solar Angle",
+    action: "Open Solar Geometry Tool",
     accent: "emerald",
   },
   {

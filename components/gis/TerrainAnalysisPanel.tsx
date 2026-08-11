@@ -18,6 +18,7 @@ export default function TerrainAnalysisPanel({
   onAnalysisChange,
 }: TerrainAnalysisPanelProps) {
   const [analysis, setAnalysis] = useState<TerrainAnalysis | null>(null);
+  const [northSlopeThresholdDeg, setNorthSlopeThresholdDeg] = useState(5);
   const [isRunning, setIsRunning] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -27,7 +28,11 @@ export default function TerrainAnalysisPanel({
     try {
       const response = await fetch(
         `/api/projects/${projectId}/analysis/terrain`,
-        { method: "POST" },
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ northSlopeThresholdDeg }),
+        },
       );
       const result = await response.json();
       if (!response.ok) {
@@ -57,14 +62,33 @@ export default function TerrainAnalysisPanel({
             Sampled elevation and slope · ~30 m terrain data
           </p>
         </div>
-        <button
-          type="button"
-          onClick={runAnalysis}
-          disabled={isRunning}
-          className="shrink-0 rounded-lg bg-lime-300 px-3 py-2 text-[11px] font-bold text-slate-950 hover:bg-lime-200 disabled:opacity-60"
-        >
-          {isRunning ? "Analysing…" : analysis ? "Refresh" : "Run"}
-        </button>
+        <div className="flex items-end gap-2">
+          <label className="text-[9px] font-semibold text-slate-500">
+            North-facing threshold
+            <span className="mt-1 flex items-center gap-1">
+              <input
+                type="number"
+                min={1}
+                max={20}
+                step={0.5}
+                value={northSlopeThresholdDeg}
+                onChange={(event) =>
+                  setNorthSlopeThresholdDeg(Number(event.target.value))
+                }
+                className="w-16 rounded-lg border border-white/10 bg-slate-900 px-2 py-2 text-[11px] text-white"
+              />
+              <span>°</span>
+            </span>
+          </label>
+          <button
+            type="button"
+            onClick={runAnalysis}
+            disabled={isRunning}
+            className="shrink-0 rounded-lg bg-lime-300 px-3 py-2 text-[11px] font-bold text-slate-950 hover:bg-lime-200 disabled:opacity-60"
+          >
+            {isRunning ? "Analysing…" : analysis ? "Refresh" : "Run"}
+          </button>
+        </div>
       </div>
 
       <div aria-live="polite">
@@ -124,12 +148,12 @@ export default function TerrainAnalysisPanel({
                 </dd>
               </div>
               <div className="col-span-2 rounded-lg border border-orange-300/15 bg-orange-300/[0.05] p-2.5">
-                <dt className="text-orange-200">Non-usable north-facing slope</dt>
+                <dt className="text-orange-200">Preliminary north-facing terrain exclusion</dt>
                 <dd className="mt-1 font-semibold text-white">
                   {formatArea(analysis.result.nonUsableNorthSlopeAreaSqm)} · {analysis.result.nonUsableNorthSlopePercent.toFixed(2)}% of site
                 </dd>
                 <p className="mt-1 text-[9px] leading-4 text-slate-500">
-                  {analysis.result.nonUsableCellCount} clipped terrain cells above 5° with downslope aspect between 315° and 45°.
+                  {analysis.result.nonUsableCellCount} clipped terrain cells above {analysis.result.northSlopeThresholdDeg}° with downslope aspect between 315° and 45°.
                 </p>
               </div>
             </dl>
@@ -144,7 +168,7 @@ export default function TerrainAnalysisPanel({
               </summary>
               <div className="mt-3 space-y-2 text-[9px] leading-4 text-slate-500">
                 <p>
-                  {analysis.result.sampleCount} elevation nodes · {analysis.methodology.sampling} · {analysis.methodology.slope}. {analysis.methodology.aspect}. Non-usable rule: {analysis.methodology.nonUsableRule}.
+                  {analysis.result.sampleCount} elevation nodes · {analysis.methodology.sampling} · {analysis.methodology.slope}. {analysis.methodology.aspect}. Selected preliminary rule: {analysis.methodology.nonUsableRule}.
                 </p>
                 <p>
                   {analysis.source.dataset} (~{analysis.source.resolutionM} m) via {analysis.source.provider}. {analysis.source.reference}. Retrieved {new Date(analysis.source.retrievedAt).toLocaleString()}.

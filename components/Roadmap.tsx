@@ -26,8 +26,8 @@ const roadmapItems: RoadmapItem[] = [
     description:
       "Practical early-stage tools for solar site assessment and solar-angle analysis.",
     deliverables: [
-      "Site Assessment - Portugal, Spain, Italy and Germany",
-      "Solar Angle",
+      "SolarDev GIS Site Check",
+      "SolarDev Solar Geometry Tool",
     ],
     status: "Available",
     state: "complete",
@@ -35,13 +35,13 @@ const roadmapItems: RoadmapItem[] = [
   {
     year: "2026 · Q3",
     number: "03",
-    title: "Project Development Agent",
+    title: "GIS Workspace & Agent Preview",
     description:
-      "Introduce the first specialist agent around evidence-led development actions and decision gates.",
+      "Turn saved boundaries into traceable screening evidence while demonstrating the first specialist-agent interaction model.",
     deliverables: [
-      "Interactive agent preview",
-      "Stage-aware development briefs",
-      "Controlled evidence model",
+      "Saved GIS projects and screening index",
+      "Source registers, PDF reports and CSV exports",
+      "Project Development Agent preview",
     ],
     status: "Preview live",
     state: "current",
@@ -49,14 +49,14 @@ const roadmapItems: RoadmapItem[] = [
   {
     year: "2026 · Q4",
     number: "04",
-    title: "SolarDev AI Platform",
+    title: "Platform Expansion",
     description:
-      "Unify professional AI resources and project-screening capabilities in a structured GIS workspace.",
+      "Expand the live platform with deeper market evidence, development-envelope calculations and controlled specialist agents.",
     deliverables: [
-      "Templates & checklists",
-      "Site screening - constraints",
-      "Automatic reports",
-      "GIS platform",
+      "Country-specific authority datasets",
+      "Collaboration and evidence workflows",
+      "Project-aware specialist agents",
+      "Independent methodology review",
     ],
     status: "Planned",
     state: "upcoming",

@@ -7,12 +7,12 @@ import SunPathTool from "@/components/SunPathTool";
 const PAGE_URL = "https://www.solardev.ai/tools/sun-path";
 
 export const metadata: Metadata = {
-  title: "Solar Sun Position & Shading Calculator",
+  title: "SolarDev Solar Geometry Tool",
   description:
     "Calculate solar azimuth, elevation, zenith, sunrise, sunset and indicative flat-ground shading by coordinates, date, local time and object height.",
   alternates: { canonical: "/tools/sun-path" },
   openGraph: {
-    title: "Solar Sun Position & Shading Calculator",
+    title: "SolarDev Solar Geometry Tool",
     description:
       "Explore sun direction, solar elevation and indicative shadow geometry on an interactive satellite map.",
     url: PAGE_URL,
@@ -28,7 +28,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Solar Sun Position & Shading Calculator",
+    title: "SolarDev Solar Geometry Tool",
     description:
       "Explore sun direction, solar elevation and indicative shadow geometry on an interactive satellite map.",
     images: ["/opengraph-image.jpg"],
@@ -64,7 +64,7 @@ const structuredData = {
     {
       "@type": ["SoftwareApplication", "WebApplication"],
       "@id": `${PAGE_URL}#application`,
-      name: "SolarDev AI Sun Position & Shadings",
+      name: "SolarDev Solar Geometry Tool",
       url: PAGE_URL,
       applicationCategory: "BusinessApplication",
       applicationSubCategory: "Solar geometry calculator",
@@ -103,7 +103,7 @@ const structuredData = {
         {
           "@type": "ListItem",
           position: 2,
-          name: "Sun Position & Shadings",
+          name: "Solar Geometry Tool",
           item: PAGE_URL,
         },
       ],
@@ -144,8 +144,7 @@ export default function SunPathPage() {
                 <span className="text-xs text-slate-500">Public beta</span>
               </div>
               <h1 className="mt-5 text-4xl font-bold tracking-tight sm:text-5xl lg:text-6xl">
-                Solar Sun Position and{" "}
-                <span className="text-amber-400">Shadings Calculator</span>
+                SolarDev <span className="text-amber-400">Solar Geometry Tool</span>
               </h1>
               <p className="mt-5 max-w-3xl text-base leading-7 text-slate-300 sm:text-lg">
                 Calculate solar azimuth, elevation, daily solar events and
@@ -261,12 +260,12 @@ export default function SunPathPage() {
             </div>
             <div className="mt-10 flex flex-col gap-3 rounded-2xl border border-white/10 bg-white/[0.03] p-6 sm:flex-row sm:items-center sm:justify-between">
               <p className="max-w-2xl text-sm leading-6 text-slate-300">
-                Apply the solar geometry within a candidate site assessment or
+                Apply the solar geometry within a candidate site screen or
                 continue with the wider development methodology.
               </p>
               <div className="flex shrink-0 flex-wrap gap-3">
                 <Link href="/tools/solar-site-screening" className="font-semibold text-emerald-300 hover:text-emerald-200">
-                  Site Assessment →
+                  SolarDev GIS Site Check →
                 </Link>
                 <Link href="/handbooks" className="font-semibold text-amber-300 hover:text-amber-200">
                   Handbooks →

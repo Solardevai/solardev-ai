@@ -228,6 +228,7 @@ export type TerrainAnalysis = {
     nonUsableNorthSlopeAreaSqm: number;
     nonUsableNorthSlopePercent: number;
     nonUsableCellCount: number;
+    northSlopeThresholdDeg: number;
     risk: ConstraintRisk;
     confidence: "medium";
     recommendedAction: string;
@@ -246,7 +247,7 @@ export type TerrainAnalysis = {
     sampling: "10 × 10 elevation-node grid producing clipped 9 × 9 terrain cells";
     slope: "central cell gradient from corner elevations";
     aspect: "downslope azimuth; north-facing sector 315°–45°";
-    nonUsableRule: "slope >5° and north-facing";
+    nonUsableRule: string;
   };
   nonUsableAreas: GeoJSON.FeatureCollection<
     GeoJSON.Polygon | GeoJSON.MultiPolygon,
@@ -335,9 +336,12 @@ export type PreliminarySiteScore = {
   /** Saved intersecting geometries used by the project map and its legend. */
   constraintMapFeatures?: ConstraintMapFeatureCollection;
   methodology: {
-    version: "1.0" | "1.1" | "1.2" | "1.3";
+    version: "1.0" | "1.1" | "1.2" | "1.3" | "1.4";
     totalWeight: 100;
     normalization: "available-weight normalized";
+    assumptions?: {
+      northSlopeThresholdDeg: number;
+    };
   };
   disclaimer: string;
 };

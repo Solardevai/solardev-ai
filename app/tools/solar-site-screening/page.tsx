@@ -8,12 +8,12 @@ import { isAuthenticationAvailable } from "@/lib/auth-config";
 const SITE_URL = "https://www.solardev.ai/tools/solar-site-screening";
 
 export const metadata: Metadata = {
-  title: "Free Solar Site Assessment & GIS Screening Tool",
+  title: "Free SolarDev GIS Site Check",
   description:
     "Assess a solar-site boundary with topographic and satellite mapping, PVGIS yield, infrastructure context, saved GIS analysis and professional outputs.",
   alternates: { canonical: "/tools/solar-site-screening" },
   openGraph: {
-    title: "Free Solar Site Assessment & GIS Screening Tool",
+    title: "Free SolarDev GIS Site Check",
     description:
       "Draw or import a candidate site, inspect topographic context, calculate geometry and continue into saved GIS constraint assessment.",
     url: SITE_URL,
@@ -29,7 +29,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Free Solar Site Assessment & GIS Screening Tool",
+    title: "Free SolarDev GIS Site Check",
     description:
       "Draw or import a candidate site, inspect topographic context, calculate geometry and continue into saved GIS constraint assessment.",
     images: ["/opengraph-image.jpg"],
@@ -38,7 +38,7 @@ export const metadata: Metadata = {
 
 const faqs = [
   {
-    question: "Is Site Assessment a solar-project feasibility study?",
+    question: "Is SolarDev GIS Site Check a solar-project feasibility study?",
     answer:
       "No. It is an early-stage screening tool. Its measurements, map context and PVGIS result help structure initial questions, but they do not replace site surveys, grid studies, planning review or professional due diligence.",
   },
@@ -55,12 +55,12 @@ const faqs = [
   {
     question: "Can I upload an existing property boundary?",
     answer:
-      "Yes. Upload a KMZ containing a property polygon and Site Assessment will place the boundary on the map, calculate its geometry and make the existing PVGIS, TMY and export tools available. If the file contains several polygons, the largest valid polygon is used.",
+      "Yes. Upload a KMZ containing a property polygon and SolarDev GIS Site Check will place the boundary on the map, calculate its geometry and make the PVGIS, TMY and export tools available. If the file contains several polygons, the largest valid polygon is used.",
   },
   {
     question: "Can I download a meteorological file for the site?",
     answer:
-      "Yes. Site Assessment can request a free PVGIS Typical Meteorological Year file at the boundary centroid in CSV or EPW format. The hourly file is intended for preliminary analysis and simulation workflows and is not a measured site dataset.",
+      "Yes. SolarDev GIS Site Check can request a free PVGIS Typical Meteorological Year file at the boundary centroid in CSV or EPW format. The hourly file is intended for preliminary analysis and simulation workflows and is not a measured site dataset.",
   },
   {
     question: "Do the infrastructure layers confirm grid capacity?",
@@ -75,7 +75,7 @@ const structuredData = {
     {
       "@type": ["SoftwareApplication", "WebApplication"],
       "@id": `${SITE_URL}#application`,
-      name: "SolarDev AI Site Assessment",
+      name: "SolarDev GIS Site Check",
       url: SITE_URL,
       applicationCategory: "BusinessApplication",
       applicationSubCategory: "Solar site screening tool",
@@ -114,7 +114,7 @@ const structuredData = {
         {
           "@type": "ListItem",
           position: 2,
-          name: "Site Assessment",
+          name: "SolarDev GIS Site Check",
           item: SITE_URL,
         },
       ],
@@ -149,8 +149,7 @@ export default function SolarSiteScreeningPage() {
           <div className="relative mx-auto max-w-7xl">
             <div className="mx-auto mb-10 max-w-4xl text-center">
               <h1 className="text-4xl font-bold tracking-tight sm:text-5xl lg:text-6xl">
-                Free Solar Site Assessment and{" "}
-                <span className="text-emerald-400">GIS Screening Tool</span>
+                Free <span className="text-emerald-400">SolarDev GIS Site Check</span>
               </h1>
               <p className="mx-auto mt-5 max-w-3xl text-base leading-7 text-slate-300 sm:text-lg">
                 Upload a known property boundary from KMZ or draw a candidate
@@ -160,6 +159,16 @@ export default function SolarSiteScreeningPage() {
                 screening. You can also download an hourly PVGIS Typical
                 Meteorological Year file at the site centroid.
               </p>
+              <div className="mx-auto mt-5 grid max-w-3xl gap-2 text-left text-xs leading-5 text-slate-400 sm:grid-cols-2">
+                <p className="rounded-xl border border-emerald-300/15 bg-emerald-300/[0.05] p-3">
+                  <strong className="block text-emerald-200">Public boundary and resource pre-check</strong>
+                  Geometry, PVGIS, TMY, exports and indicative OpenStreetMap context.
+                </p>
+                <p className="rounded-xl border border-sky-300/15 bg-sky-300/[0.05] p-3">
+                  <strong className="block text-sky-200">Saved GIS workspace</strong>
+                  Separate source-based constraint screens, preliminary index and evidence reports after saving.
+                </p>
+              </div>
             </div>
 
             <SolarSiteScreeningMap
@@ -254,7 +263,7 @@ export default function SolarSiteScreeningPage() {
               <p className="text-xs font-bold uppercase tracking-[0.18em] text-amber-300">
                 Important limitations
               </p>
-              <h2 className="mt-3 text-2xl font-bold">What Site Assessment does not replace</h2>
+              <h2 className="mt-3 text-2xl font-bold">What SolarDev GIS Site Check does not replace</h2>
               <ul className="mt-5 grid gap-3 text-sm text-slate-300 sm:grid-cols-2">
                 {[
                   "Grid capacity or connection feasibility",

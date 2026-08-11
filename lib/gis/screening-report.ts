@@ -65,10 +65,10 @@ function formatDate(value: string) {
 
 function formatBand(band: PreliminarySiteScore["band"]) {
   const labels: Record<PreliminarySiteScore["band"], string> = {
-    "favourable-screening": "Favourable screening",
-    "further-review": "Further review",
-    "material-constraints": "Material constraints",
-    unavailable: "Unavailable",
+    "favourable-screening": "Lower mapped exposure",
+    "further-review": "Further review required",
+    "material-constraints": "Material mapped constraints",
+    unavailable: "Insufficient source coverage",
   };
   return labels[band];
 }
@@ -230,7 +230,7 @@ class ReportBuilder {
   async finish() {
     const pages = this.document.getPages();
     pages.forEach((page, index) => {
-      page.drawText("SolarDev AI | Preliminary screening report", {
+      page.drawText("SolarDev AI | Preliminary screening-index report", {
         x: MARGIN,
         y: 26,
         size: 7.5,
@@ -700,7 +700,7 @@ export async function generateScreeningReport(
 ) {
   const score = snapshot.payload;
   const report = await ReportBuilder.create();
-  report.document.setTitle(`${project.name} - Preliminary screening report`);
+  report.document.setTitle(`${project.name} - Preliminary screening-index report`);
   report.document.setAuthor("SolarDev AI");
   report.document.setSubject("Explainable preliminary renewable-energy site screening");
   report.document.setKeywords([
@@ -733,7 +733,7 @@ export async function generateScreeningReport(
     font: report.bold,
     color: COLORS.emerald,
   });
-  report.page.drawText("Preliminary screening report", {
+  report.page.drawText("Preliminary screening-index report", {
     x: MARGIN,
     y: PAGE_HEIGHT - 124,
     size: 25,
@@ -768,7 +768,7 @@ export async function generateScreeningReport(
     font: report.bold,
     color: COLORS.white,
   });
-  report.page.drawText("OUT OF 100", {
+  report.page.drawText("INDEX / 100", {
     x: PAGE_WIDTH - 130,
     y: PAGE_HEIGHT - 198,
     size: 7,
@@ -818,11 +818,11 @@ export async function generateScreeningReport(
   report.newPage("Executive summary");
   report.heading("Screening result");
   report.paragraph(
-    `This immutable run produced a score of ${score.score ?? "not available"} out of 100, classified as ${formatBand(score.band).toLowerCase()}, with ${score.coveragePercent}% source coverage and ${score.confidence} confidence. The result reflects only the evidence and source responses recorded at ${formatDate(score.generatedAt)}.`,
+    `This immutable run produced a preliminary screening index of ${score.score ?? "not available"} out of 100, classified as ${formatBand(score.band).toLowerCase()}, with ${score.coveragePercent}% source coverage and ${score.confidence} confidence. The index is a relative prioritisation aid and reflects only the evidence and source responses recorded at ${formatDate(score.generatedAt)}.`,
   );
   if (score.coveragePercent < 100) {
     report.paragraph(
-      `The result is partial. ${score.unavailableSources.length} source group${score.unavailableSources.length === 1 ? " was" : "s were"} unavailable and the score was normalized across available-weight criteria; missing evidence was not treated as favourable.`,
+      `The result is partial. ${score.unavailableSources.length} source group${score.unavailableSources.length === 1 ? " was" : "s were"} unavailable and the index was normalized across available-weight criteria; missing evidence was not treated as favourable.`,
       { color: COLORS.amber },
     );
   }
@@ -832,7 +832,7 @@ export async function generateScreeningReport(
   );
   report.paragraph(
     metrics.indicativeSpecificYield === null
-      ? "An indicative PVGIS specific-yield value was unavailable when this PDF was generated. The screening score and recorded constraint evidence are unaffected."
+      ? "An indicative PVGIS specific-yield value was unavailable when this PDF was generated. The screening index and recorded constraint evidence are unaffected."
       : `The indicative PVGIS specific yield is ${formatIndicativeYield(metrics.indicativeSpecificYield)} at the saved boundary centroid, using a 1 kWp fixed system, optimum inclination and 14% assumed system losses. This is a screening model output, not a project energy-yield assessment.`,
     { color: metrics.indicativeSpecificYield === null ? COLORS.amber : COLORS.slate },
   );
@@ -856,7 +856,7 @@ export async function generateScreeningReport(
   report.newPage("Criterion evidence");
   report.heading("Weighted screening criteria");
   report.paragraph(
-    "The table below preserves the score, weight, status and evidence statement returned for every criterion in this run.",
+    "The table below preserves the weighted criterion result, status and evidence statement returned for every criterion in this run. These values contribute to a relative screening index, not a feasibility rating.",
   );
   for (const criterion of score.criteria) {
     const evidenceLines = wrapText(

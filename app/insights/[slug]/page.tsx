@@ -5,6 +5,7 @@ import Footer from "@/components/Footer";
 import Navbar from "@/components/Navbar";
 import {
   getWorkflowGuide,
+  workflowGuideEnhancements,
   workflowGuides,
 } from "@/data/workflowGuides";
 
@@ -55,6 +56,7 @@ function NumberedList({ items }: { items: string[] }) {
 export default async function GuidePage({ params }: GuidePageProps) {
   const guide = getWorkflowGuide((await params).slug);
   if (!guide) notFound();
+  const enhancement = workflowGuideEnhancements[guide.slug];
   const related = workflowGuides
     .filter(
       (candidate) =>
@@ -71,7 +73,7 @@ export default async function GuidePage({ params }: GuidePageProps) {
         description: guide.description,
         url,
         datePublished: "2026-08-11",
-        dateModified: "2026-08-11",
+        dateModified: enhancement?.reviewedAt ?? "2026-08-11",
         author: { "@type": "Organization", name: "SolarDev AI" },
         publisher: {
           "@type": "Organization",
@@ -120,6 +122,17 @@ export default async function GuidePage({ params }: GuidePageProps) {
               <p className="mt-6 max-w-3xl text-lg leading-8 text-slate-300">
                 {guide.description}
               </p>
+              <div className="mt-7 flex flex-wrap gap-2 text-xs text-slate-400">
+                <span className="rounded-full border border-white/10 bg-white/[0.035] px-3 py-1.5">
+                  Methodology owner: SolarDev AI
+                </span>
+                <span className="rounded-full border border-white/10 bg-white/[0.035] px-3 py-1.5">
+                  Reviewed: {enhancement?.reviewedAt ?? "11 August 2026"}
+                </span>
+                <Link href="/methodology" className="rounded-full border border-amber-300/20 bg-amber-300/[0.06] px-3 py-1.5 text-amber-200 hover:bg-amber-300/10">
+                  Validation status →
+                </Link>
+              </div>
             </div>
           </header>
 
@@ -167,6 +180,55 @@ export default async function GuidePage({ params }: GuidePageProps) {
                 <h2 className="font-semibold text-amber-200">Professional limitation</h2>
                 <p className="mt-3 text-sm leading-7 text-slate-300">{guide.caution}</p>
               </aside>
+
+              {enhancement ? (
+                <>
+                  <section className="mt-12 border-t border-white/10 pt-10">
+                    <h2 className="text-2xl font-semibold">Market application</h2>
+                    <ul className="mt-6 space-y-3">
+                      {enhancement.marketContext.map((item) => (
+                        <li key={item} className="rounded-xl border border-white/10 bg-white/[0.025] p-4 text-sm leading-7 text-slate-300">
+                          {item}
+                        </li>
+                      ))}
+                    </ul>
+                  </section>
+
+                  <section className="mt-12 border-t border-white/10 pt-10">
+                    <p className="text-xs font-bold uppercase tracking-[0.16em] text-sky-300">
+                      Worked example
+                    </p>
+                    <h2 className="mt-3 text-2xl font-semibold">
+                      {enhancement.workedExample.title}
+                    </h2>
+                    <dl className="mt-6 grid gap-3">
+                      <ExampleRow label="Basis" value={enhancement.workedExample.basis} />
+                      <ExampleRow label="Screening response" value={enhancement.workedExample.result} />
+                      <ExampleRow label="Limitation" value={enhancement.workedExample.caveat} caution />
+                    </dl>
+                  </section>
+
+                  <section className="mt-12 border-t border-white/10 pt-10">
+                    <h2 className="text-2xl font-semibold">Authoritative starting points</h2>
+                    <p className="mt-3 text-sm leading-7 text-slate-400">
+                      Use these primary sources to begin verification, then obtain the current competent-authority evidence for the project market.
+                    </p>
+                    <ul className="mt-6 space-y-3">
+                      {enhancement.sources.map((source) => (
+                        <li key={source.url} className="rounded-xl border border-white/10 bg-white/[0.025] p-4">
+                          <a href={source.url} target="_blank" rel="noreferrer" className="font-semibold text-emerald-200 hover:text-emerald-100">
+                            {source.name} ↗
+                          </a>
+                          <p className="mt-2 text-sm leading-6 text-slate-400">{source.use}</p>
+                        </li>
+                      ))}
+                    </ul>
+                    <p className="mt-5 text-xs leading-6 text-amber-200">
+                      Review status: {enhancement.reviewStatus}
+                    </p>
+                  </section>
+                </>
+              ) : null}
             </div>
 
             <aside className="lg:sticky lg:top-32 lg:self-start">
@@ -176,7 +238,7 @@ export default async function GuidePage({ params }: GuidePageProps) {
                   Start with a free mapped site boundary, infrastructure context and indicative yield.
                 </p>
                 <Link href="/tools/solar-site-screening" className="mt-5 flex justify-center rounded-xl bg-emerald-400 px-4 py-3 text-sm font-bold text-slate-950 hover:bg-emerald-300">
-                  Open GIS Site Check
+                  Open SolarDev GIS Site Check
                 </Link>
               </div>
             </aside>
@@ -200,5 +262,22 @@ export default async function GuidePage({ params }: GuidePageProps) {
       </main>
       <Footer />
     </>
+  );
+}
+
+function ExampleRow({
+  label,
+  value,
+  caution = false,
+}: {
+  label: string;
+  value: string;
+  caution?: boolean;
+}) {
+  return (
+    <div className={`rounded-xl border p-4 ${caution ? "border-amber-300/20 bg-amber-300/[0.05]" : "border-white/10 bg-white/[0.025]"}`}>
+      <dt className="text-xs font-bold uppercase tracking-[0.12em] text-slate-500">{label}</dt>
+      <dd className="mt-2 text-sm leading-7 text-slate-300">{value}</dd>
+    </div>
   );
 }

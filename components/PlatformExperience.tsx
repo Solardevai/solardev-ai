@@ -9,7 +9,7 @@ function GisPreview() {
           <p className="text-[9px] font-bold uppercase tracking-[0.15em] text-slate-500">SolarDev GIS</p>
           <p className="mt-1 text-xs font-semibold text-white">Candidate site workspace</p>
         </div>
-        <span className="rounded-full bg-emerald-300/10 px-2.5 py-1 text-[9px] font-bold text-emerald-200">LIVE</span>
+        <span className="rounded-full bg-sky-300/10 px-2.5 py-1 text-[9px] font-bold text-sky-200">ILLUSTRATIVE DATA</span>
       </div>
       <div className="grid grid-cols-[72px_1fr_92px]">
         <div className="space-y-2 border-r border-white/10 p-3">
@@ -33,7 +33,7 @@ function GisPreview() {
           </div>
         </div>
         <div className="space-y-3 border-l border-white/10 p-3">
-          {[['Score','82/100'],['Coverage','100%'],['Yield','1,684']].map(([label, value]) => (
+          {[['Index','82/100'],['Coverage','100%'],['Yield','1,684']].map(([label, value]) => (
             <div key={label} className="rounded-lg bg-white/[0.04] p-2">
               <p className="text-[7px] uppercase text-slate-600">{label}</p>
               <p className="mt-1 text-[10px] font-bold text-white">{value}</p>
@@ -50,10 +50,10 @@ function ReportPreview() {
     <div className="relative mx-auto h-72 max-w-xs rounded-2xl border border-white/10 bg-slate-100 p-5 text-slate-950 shadow-2xl shadow-black/30">
       <div className="h-20 rounded-lg bg-slate-950 p-4 text-white">
         <p className="text-[7px] font-bold tracking-[0.14em] text-emerald-300">SOLARDEV AI</p>
-        <p className="mt-2 text-sm font-bold">Preliminary screening report</p>
+        <p className="mt-2 text-sm font-bold">Preliminary screening-index report</p>
       </div>
       <div className="mt-4 grid grid-cols-2 gap-2">
-        {[['Score','82/100'],['Area','42.8 ha'],['Perimeter','2.9 km'],['Yield','1,684 kWh/kWp']].map(([label, value]) => (
+        {[['Index','82/100'],['Area','42.8 ha'],['Perimeter','2.9 km'],['Yield','1,684 kWh/kWp']].map(([label, value]) => (
           <div key={label} className="rounded-md border border-slate-200 p-2">
             <p className="text-[6px] font-bold uppercase text-slate-400">{label}</p>
             <p className="mt-1 text-[9px] font-semibold">{value}</p>
@@ -86,14 +86,14 @@ export default function PlatformExperience() {
             <GisPreview />
             <div>
               <span className="rounded-full border border-emerald-300/20 bg-emerald-300/10 px-3 py-1 text-xs font-bold uppercase tracking-[0.14em] text-emerald-200">Free now</span>
-              <h3 className="mt-5 text-3xl font-semibold">GIS Site Check</h3>
-              <p className="mt-4 leading-7 text-slate-300">Draw or upload a boundary, use satellite mapping, quantify area and perimeter, estimate PVGIS yield, inspect grid context and continue into constraint screening.</p>
+              <h3 className="mt-5 text-3xl font-semibold">SolarDev GIS Site Check</h3>
+              <p className="mt-4 leading-7 text-slate-300">Use the public tool for boundary geometry, PVGIS and indicative infrastructure context. Save the project to continue into separate source-based constraint screens, a preliminary screening index and evidence reports.</p>
               <ul className="mt-6 space-y-3 text-sm text-slate-300">
                 <li>✓ Satellite and topographic basemaps</li>
                 <li>✓ Terrain, environmental, water and infrastructure screening</li>
                 <li>✓ Saved projects, GIS exports and professional reports</li>
               </ul>
-              <Link href="/tools/solar-site-screening" className="mt-7 inline-flex rounded-xl bg-emerald-400 px-5 py-3 text-sm font-bold text-slate-950 hover:bg-emerald-300">Launch free GIS Site Check</Link>
+              <Link href="/tools/solar-site-screening" className="mt-7 inline-flex rounded-xl bg-emerald-400 px-5 py-3 text-sm font-bold text-slate-950 hover:bg-emerald-300">Launch SolarDev GIS Site Check</Link>
             </div>
           </div>
 
@@ -104,8 +104,9 @@ export default function PlatformExperience() {
               <h3 className="mt-4 text-3xl font-semibold">See what the platform produces</h3>
               <p className="mt-5 leading-7 text-slate-300">Every saved assessment can become a dated evidence package with a satellite boundary exhibit, perimeter, indicative yield, criterion results, source register, constraints CSV and clear professional limitations.</p>
               <div className="mt-6 grid gap-3 sm:grid-cols-3">
-                {['Explainable score','Dated map exhibit','PDF + CSV exports'].map((item) => <div key={item} className="rounded-xl border border-white/10 bg-slate-950 p-4 text-sm font-semibold text-slate-200">{item}</div>)}
+                {['Explainable index','Dated map exhibit','PDF + CSV exports'].map((item) => <div key={item} className="rounded-xl border border-white/10 bg-slate-950 p-4 text-sm font-semibold text-slate-200">{item}</div>)}
               </div>
+              <Link href="/methodology" className="mt-6 inline-flex text-sm font-semibold text-sky-300 hover:text-sky-200">Review methodology, validation status and sample evidence →</Link>
             </div>
           </div>
         </div>

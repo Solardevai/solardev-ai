@@ -30,14 +30,14 @@ export default function ProjectDevelopmentAgentPage() {
                 First specialized agent
               </span>
               <span className="rounded-full border border-amber-300/20 bg-amber-300/10 px-3 py-1 text-xs font-bold uppercase tracking-[0.16em] text-amber-200">
-                Interactive preview
+                Rules-based interactive preview
               </span>
             </div>
             <h1 className="mt-6 max-w-4xl text-4xl font-bold tracking-tight sm:text-6xl">
               Project Development Agent
             </h1>
             <p className="mt-6 max-w-3xl text-lg leading-8 text-slate-300">
-              A specialized workspace for turning project evidence into
+              A transparent preview of how a future specialized workspace could turn project evidence into
               prioritized actions, information requests, risks and decision-gate
               briefs across the solar and BESS development lifecycle.
             </p>
@@ -69,13 +69,14 @@ export default function ProjectDevelopmentAgentPage() {
               <div>
                 <h2 className="text-2xl font-semibold">Start with real site evidence</h2>
                 <p className="mt-3 max-w-3xl leading-7 text-slate-300">
-                  The free GIS Site Check already creates the boundary, terrain,
-                  constraint, infrastructure and indicative-yield context that a
-                  future project agent can use inside controlled workflows.
+                  SolarDev GIS Site Check creates the boundary and indicative
+                  resource context. After saving, the GIS workspace adds separate
+                  terrain, constraint and infrastructure evidence that a future
+                  project agent can use inside controlled workflows.
                 </p>
               </div>
               <Link href="/tools/solar-site-screening" className="rounded-xl bg-emerald-400 px-5 py-3 text-center text-sm font-bold text-slate-950 hover:bg-emerald-300">
-                Open free GIS Site Check
+                Open SolarDev GIS Site Check
               </Link>
             </div>
           </aside>

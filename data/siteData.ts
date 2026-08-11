@@ -42,12 +42,12 @@ export const navigationItems = [
     href: "/insights",
   },
   {
-    label: "Professionals",
-    href: "/#audience",
+    label: "Methodology",
+    href: "/methodology",
   },
   {
-    label: "Roadmap",
-    href: "/#roadmap",
+    label: "Professionals",
+    href: "/#audience",
   },
   {
     label: "FAQ",
@@ -233,7 +233,7 @@ export const roadmapItems = [
   },
   {
     volume: "2026 · Q4",
-    title: "Site Assessment Expansion",
+    title: "SolarDev GIS Site Check Expansion",
     status: "Planned",
     active: false,
   },
@@ -241,14 +241,14 @@ export const roadmapItems = [
 
 export const faqItems = [
   {
-    question: "What does the Site Assessment currently assess?",
+    question: "What does SolarDev GIS Site Check currently assess?",
     answer:
-      "Site Assessment lets you upload a property boundary from KMZ or draw a candidate site on topographic or satellite mapping, then calculates its gross area, perimeter and centroid. It provides an indicative PVGIS specific-yield estimate, mapped context for nearby roads, power lines and substations, GIS-ready boundary exports in KMZ, KML or GeoJSON, and hourly PVGIS Typical Meteorological Year data in CSV or EPW. Saved sites can continue into the GIS workspace for constraint analysis, scoring and reports.",
+      "The public SolarDev GIS Site Check lets you upload or draw a candidate boundary, calculate gross area, perimeter and centroid, request an indicative PVGIS specific yield, inspect OpenStreetMap infrastructure context and export boundary or TMY files. It does not run constraint analysis on the public page. After saving a project, the authenticated GIS workspace can run separate source-based terrain, protected-area, flood-reporting, surface-water and infrastructure screens, create a preliminary screening index and export evidence reports.",
   },
   {
     question: "What is available on the SolarDev AI platform today?",
     answer:
-      "The public GIS Site Check and Solar Angle tools are available now, alongside saved GIS projects, deterministic constraint screening, preliminary scoring, PDF reports, CSV registers and the professional workflow library. The Project Development Agent is currently an interactive preview of the controlled agent experience being developed.",
+      "SolarDev GIS Site Check and the Solar Geometry Tool are available now, alongside saved GIS projects, deterministic constraint screening, a preliminary screening index, PDF reports, CSV registers and the professional workflow library. The Project Development Agent is an interactive rules-based preview of the controlled agent experience being developed.",
   },
   {
     question: "Is this a general AI book?",

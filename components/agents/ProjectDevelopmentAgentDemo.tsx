@@ -40,6 +40,7 @@ export default function ProjectDevelopmentAgentDemo() {
   const [priority, setPriority] = useState<Priority>("site");
   const [market, setMarket] = useState("Spain");
   const [hasGenerated, setHasGenerated] = useState(true);
+  const stageArticle = stage === "origination" ? "an" : "a";
 
   function generateBrief() {
     setHasGenerated(true);
@@ -123,14 +124,14 @@ export default function ProjectDevelopmentAgentDemo() {
             </h2>
           </div>
           <span className="rounded-full border border-amber-300/20 bg-amber-300/10 px-3 py-1 text-[10px] font-bold uppercase tracking-wide text-amber-200">
-            Guided preview
+            Rules-based preview
           </span>
         </div>
 
         {hasGenerated ? (
           <div className="mt-5">
             <p className="text-sm leading-7 text-slate-300">
-              For a <strong className="text-white">{stage}</strong>-stage
+              For {stageArticle} <strong className="text-white">{stage}</strong>-stage
               project in <strong className="text-white">{market || "the selected market"}</strong>,
               prioritize the following controlled actions:
             </p>
@@ -158,7 +159,7 @@ export default function ProjectDevelopmentAgentDemo() {
         )}
 
         <p className="mt-5 text-[10px] leading-5 text-slate-500">
-          This preview uses a controlled decision framework. The forthcoming AI
+          This rules-based preview uses a controlled decision framework and does not process project files. The forthcoming AI
           agent will work with project evidence, cite sources, expose uncertainty
           and require professional validation before conclusions are issued.
         </p>

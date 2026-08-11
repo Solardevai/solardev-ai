@@ -8,16 +8,20 @@ const productLinks = [
     href: "/handbooks",
   },
   {
-    label: "Site Assessment",
+    label: "SolarDev GIS Site Check",
     href: "/tools/solar-site-screening",
   },
   {
-    label: "Sun Position & Shadings",
+    label: "Solar Geometry Tool",
     href: "/tools/sun-path",
   },
 ];
 
 const companyLinks = [
+  {
+    label: "Methodology & validation",
+    href: "/methodology",
+  },
   {
     label: "Professionals",
     href: "/#audience",

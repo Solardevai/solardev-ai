@@ -263,7 +263,7 @@ function terrainCriterion(analysis: TerrainAnalysis) {
   return criterion(
     "terrain",
     score,
-    `${analysis.result.averageSlopeDeg.toFixed(2)}° average and ${analysis.result.p90SlopeDeg.toFixed(2)}° 90th-percentile sampled slope; ${analysis.result.nonUsableNorthSlopePercent.toFixed(2)}% classified non-usable because it is north-facing above 5°.`,
+    `${analysis.result.averageSlopeDeg.toFixed(2)}° average and ${analysis.result.p90SlopeDeg.toFixed(2)}° 90th-percentile sampled slope; ${analysis.result.nonUsableNorthSlopePercent.toFixed(2)}% is a preliminary terrain exclusion under the selected north-facing threshold above ${analysis.result.northSlopeThresholdDeg}°.`,
   );
 }
 
@@ -582,7 +582,10 @@ function constraintMapFeatures(
   }
   if (terrain.status === "fulfilled") {
     features.push(
-      ...terrainConstraintMapFeatures(terrain.value.nonUsableAreas).features,
+      ...terrainConstraintMapFeatures(
+        terrain.value.nonUsableAreas,
+        terrain.value.result.northSlopeThresholdDeg,
+      ).features,
     );
   }
   return { type: "FeatureCollection", features };
@@ -591,6 +594,7 @@ function constraintMapFeatures(
 export async function analyzePreliminarySiteScore(
   projectId: string,
   site: GeoJSON.Polygon,
+  northSlopeThresholdDeg = 5,
 ): Promise<PreliminarySiteScore> {
   const [infrastructure, natura, national, flood, surfaceWater, terrain] =
     await Promise.allSettled([
@@ -599,7 +603,9 @@ export async function analyzePreliminarySiteScore(
       withinSourceDeadline(analyzeNationallyDesignatedAreas(projectId, site)),
       withinSourceDeadline(analyzeFloodRiskAreas(projectId, site)),
       withinSourceDeadline(analyzeSurfaceWater(projectId, site)),
-      withinSourceDeadline(analyzeTerrain(projectId, site)),
+      withinSourceDeadline(
+        analyzeTerrain(projectId, site, northSlopeThresholdDeg),
+      ),
     ] as const);
 
   const criteria: SiteScoreCriterion[] = [];
@@ -756,11 +762,12 @@ export async function analyzePreliminarySiteScore(
       terrain,
     ),
     methodology: {
-      version: "1.3",
+      version: "1.4",
       totalWeight: 100,
       normalization: "available-weight normalized",
+      assumptions: { northSlopeThresholdDeg },
     },
     disclaimer:
-      "This preliminary screening score is a deterministic prioritisation aid, not a permitting opinion, valuation, investment recommendation or substitute for authoritative studies and professional judgment.",
+      "This preliminary screening index is a deterministic relative-prioritisation aid based only on the listed sources and fixed methodology. It is not a feasibility rating, permitting opinion, grid-capacity assessment, valuation, investment recommendation or substitute for authoritative studies and professional judgment.",
   };
 }

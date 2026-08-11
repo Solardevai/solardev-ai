@@ -227,7 +227,7 @@ export default function Navbar({
                       className="mt-1 block rounded-xl px-4 py-3 transition hover:bg-white/[0.06] focus:outline-none focus-visible:bg-white/[0.06]"
                     >
                       <span className="block font-semibold text-white">
-                        Site Assessment
+                        SolarDev GIS Site Check
                       </span>
                       <span className="mt-1 block text-xs leading-5 text-slate-400">
                         Screen a site, save it and continue into GIS analysis.
@@ -239,7 +239,7 @@ export default function Navbar({
                       className="mt-1 block rounded-xl px-4 py-3 transition hover:bg-white/[0.06] focus:outline-none focus-visible:bg-white/[0.06]"
                     >
                       <span className="block font-semibold text-white">
-                        Solar Angle
+                        Solar Geometry Tool
                       </span>
                       <span className="mt-1 block text-xs leading-5 text-slate-400">
                         Explore solar angles and indicative shading geometry.
@@ -365,14 +365,14 @@ export default function Navbar({
                       onClick={closeMenu}
                       className="flex min-h-12 items-center justify-between rounded-lg px-3 py-3 font-semibold text-white transition hover:bg-white/[0.05] focus:outline-none focus-visible:bg-white/[0.05]"
                     >
-                      Site Assessment
+                      SolarDev GIS Site Check
                     </Link>
                     <Link
                       href="/tools/sun-path"
                       onClick={closeMenu}
                       className="flex min-h-12 items-center justify-between rounded-lg px-3 py-3 font-semibold text-white transition hover:bg-white/[0.05] focus:outline-none focus-visible:bg-white/[0.05]"
                     >
-                      Solar Angle
+                      Solar Geometry Tool
                     </Link>
                     <Link
                       href="/agents/project-development"

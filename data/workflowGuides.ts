@@ -11,6 +11,23 @@ export type WorkflowGuide = {
   caution: string;
 };
 
+export type WorkflowGuideEnhancement = {
+  reviewedAt: string;
+  reviewStatus: string;
+  marketContext: string[];
+  workedExample: {
+    title: string;
+    basis: string;
+    result: string;
+    caveat: string;
+  };
+  sources: Array<{
+    name: string;
+    url: string;
+    use: string;
+  }>;
+};
+
 export const workflowGuides: WorkflowGuide[] = [
   {
     slug: "utility-scale-solar-site-selection",
@@ -165,7 +182,7 @@ export const workflowGuides: WorkflowGuide[] = [
     questions: ["What are the average, P90 and maximum sampled slopes?", "Where are steep or adverse-aspect areas concentrated?", "Does terrain fragment tracker blocks or access routes?", "What survey resolution is required next?"],
     workflow: ["Sample a consistent elevation grid within the boundary.", "Calculate slope and aspect for clipped terrain cells.", "Map areas outside preliminary technology limits.", "Define topographic survey, grading and drainage studies."],
     evidence: ["DEM source and effective resolution", "Slope and aspect calculations", "Candidate technology limits", "Topographic survey and geotechnical context"],
-    outputs: ["Terrain screening summary", "Preliminary non-usable-area boundary", "Survey and earthworks study scope"],
+    outputs: ["Terrain screening summary", "Preliminary terrain-assumption boundary", "Survey and earthworks study scope"],
     caution: "Regional DEMs generalize local breaks and may use different vertical datums. They are unsuitable for detailed grading or drainage design.",
   },
   {
@@ -175,7 +192,7 @@ export const workflowGuides: WorkflowGuide[] = [
     description: "Understand why north-facing slopes above a project threshold may be excluded from preliminary northern-hemisphere layouts.",
     overview: "For northern-hemisphere projects, materially north-facing terrain can reduce solar access and complicate row geometry, tracker operation and grading. A screening rule can protect early capacity estimates from obviously adverse cells.",
     questions: ["Which downslope aspects are classified as north-facing?", "What slope threshold matches the preliminary technology?", "Are excluded areas contiguous or fragmented?", "Could detailed design recover some land safely?"],
-    workflow: ["Calculate slope and downslope aspect from terrain samples.", "Apply the documented slope and north-sector rule.", "Dissolve qualifying cells into non-usable boundaries.", "Validate with higher-resolution terrain and technology-specific layout studies."],
+    workflow: ["Calculate slope and downslope aspect from terrain samples.", "Apply the documented, user-selected slope and north-sector assumption.", "Dissolve qualifying cells into preliminary terrain-mask boundaries.", "Validate with higher-resolution terrain and technology-specific layout studies."],
     evidence: ["Elevation grid and calculation method", "Aspect convention and threshold", "Mapped exclusion boundary", "Tracker or fixed-tilt design criteria"],
     outputs: ["North-slope affected-area percentage", "Continuous preliminary exclusion boundary", "Validation actions for layout design"],
     caution: "The rule is a screening assumption, not a universal design limit. Hemisphere, system type, grading strategy and detailed topography can change the conclusion.",
@@ -349,6 +366,182 @@ export const workflowGuides: WorkflowGuide[] = [
     caution: "A well-populated folder is not proof of maturity. Evidence must be reviewed for quality, currency, approval and consistency.",
   },
 ];
+
+const pvgisSource = {
+  name: "European Commission JRC — PVGIS",
+  url: "https://joint-research-centre.ec.europa.eu/photovoltaic-geographical-information-system-pvgis_en",
+  use: "Solar-resource and indicative PV performance context",
+};
+
+const inspireSource = {
+  name: "European Commission — INSPIRE Geoportal",
+  url: "https://inspire-geoportal.ec.europa.eu/",
+  use: "Discovery of official European spatial datasets and metadata",
+};
+
+const eiaSource = {
+  name: "European Commission — Environmental Impact Assessment",
+  url: "https://environment.ec.europa.eu/topics/environmental-assessments/environmental-impact-assessment_en",
+  use: "EU environmental-assessment framework and Member State implementation context",
+};
+
+const floodsSource = {
+  name: "European Commission — Floods Directive",
+  url: "https://environment.ec.europa.eu/topics/water/floods_en",
+  use: "Strategic flood-risk reporting framework and competent-authority context",
+};
+
+const terrainSource = {
+  name: "AWS Open Data — Terrain Tiles",
+  url: "https://registry.opendata.aws/terrain-tiles/",
+  use: "Source registry for the regional DEM mosaic used in preliminary terrain screening",
+};
+
+const entsoeSource = {
+  name: "ENTSO-E — Ten-Year Network Development Plan",
+  url: "https://tyndp.entsoe.eu/",
+  use: "European transmission-development context; not project-specific connection capacity",
+};
+
+const commonMarketContext = [
+  "Portugal, Spain, Italy and Germany apply different national, regional and municipal planning controls; EU-wide layers are an initial evidence layer only.",
+  "Grid feasibility must be checked through the relevant transmission or distribution system operator, including queue, capacity, studies and connection route.",
+  "Cadastral boundaries, land rights, local setbacks and permit status require current national or competent-authority evidence.",
+];
+
+export const workflowGuideEnhancements: Record<
+  string,
+  WorkflowGuideEnhancement
+> = {
+  "utility-scale-solar-site-selection": {
+    reviewedAt: "2026-08-11",
+    reviewStatus:
+      "SolarDev AI internal methodology review; independent technical review not yet published.",
+    marketContext: commonMarketContext,
+    workedExample: {
+      title: "Fictional two-site comparison",
+      basis:
+        "Site A has stronger irradiation but fragmented land and an unverified grid route. Site B has lower resource, a coherent boundary and clearer access evidence.",
+      result:
+        "Advance both only far enough to test the controlling uncertainty: grid and land continuity for Site A, grid capacity for Site B. Do not select on irradiation alone.",
+      caveat:
+        "The example demonstrates decision logic and does not represent a real project or market recommendation.",
+    },
+    sources: [inspireSource, eiaSource, entsoeSource, pvgisSource],
+  },
+  "solar-site-feasibility-study": {
+    reviewedAt: "2026-08-11",
+    reviewStatus:
+      "SolarDev AI internal methodology review; independent technical review not yet published.",
+    marketContext: commonMarketContext,
+    workedExample: {
+      title: "Fictional feasibility gate",
+      basis:
+        "A 60 ha gross boundary has incomplete terrain and flood evidence and no operator-confirmed connection capacity.",
+      result:
+        "Issue a conditional hold: complete the development-envelope assumptions, authority flood review and grid evidence before fixing capacity or CAPEX.",
+      caveat:
+        "A feasibility gate records evidence sufficiency; it is not consent or investment approval.",
+    },
+    sources: [eiaSource, inspireSource, pvgisSource, entsoeSource],
+  },
+  "solar-gis-constraint-screening": {
+    reviewedAt: "2026-08-11",
+    reviewStatus:
+      "SolarDev AI internal methodology review; independent technical review not yet published.",
+    marketContext: commonMarketContext,
+    workedExample: {
+      title: "Fictional mapped overlap",
+      basis:
+        "An EU reporting layer intersects 8% of a candidate boundary while a national source has not yet been obtained.",
+      result:
+        "Record the overlap as a screening trigger, preserve its identifier and request the current national dataset before assigning a legal buffer or usable-area deduction.",
+      caveat:
+        "Intersection does not by itself establish legal effect, severity or development prohibition.",
+    },
+    sources: [inspireSource, eiaSource, floodsSource, terrainSource],
+  },
+  "solar-land-area-estimation": {
+    reviewedAt: "2026-08-11",
+    reviewStatus:
+      "SolarDev AI internal methodology review; independent technical review not yet published.",
+    marketContext: commonMarketContext,
+    workedExample: {
+      title: "Fictional gross-to-usable bridge",
+      basis:
+        "Start with 50 ha gross, deduct a 4 ha selected terrain mask, then apply a documented 15% allowance to the remaining land.",
+      result:
+        "The indicative usable-area assumption is 39.1 ha. At 0.65 MWp/ha it supports an illustrative 25.4 MWp before layout validation.",
+      caveat:
+        "Do not add overlapping deductions twice; calculate actual geometry and test contiguity before relying on the result.",
+    },
+    sources: [inspireSource, terrainSource, pvgisSource],
+  },
+  "solar-energy-yield-screening": {
+    reviewedAt: "2026-08-11",
+    reviewStatus:
+      "SolarDev AI internal methodology review; independent technical review not yet published.",
+    marketContext: commonMarketContext,
+    workedExample: {
+      title: "Fictional specific-yield bridge",
+      basis:
+        "An illustrative 25 MWp DC envelope is multiplied by 1,600 kWh/kWp/year from a centroid screening result.",
+      result:
+        "The arithmetic result is 40 GWh/year before project-specific geometry, clipping, availability, curtailment, degradation and uncertainty are modelled.",
+      caveat:
+        "This is not P50 or P90 and must not be used as a bankable production forecast.",
+    },
+    sources: [pvgisSource],
+  },
+  "solar-grid-connection-screening": {
+    reviewedAt: "2026-08-11",
+    reviewStatus:
+      "SolarDev AI internal methodology review; independent technical review not yet published.",
+    marketContext: commonMarketContext,
+    workedExample: {
+      title: "Fictional nearby substation",
+      basis:
+        "A mapped substation is 3 km from the site, but voltage, spare capacity, ownership and a viable cable corridor are unconfirmed.",
+      result:
+        "Treat proximity as a candidate connection option and open four evidence actions; do not score it as confirmed grid feasibility.",
+      caveat:
+        "Only the network operator and formal connection process can establish a viable point of connection.",
+    },
+    sources: [entsoeSource, inspireSource],
+  },
+  "solar-flood-risk-screening": {
+    reviewedAt: "2026-08-11",
+    reviewStatus:
+      "SolarDev AI internal methodology review; independent technical review not yet published.",
+    marketContext: commonMarketContext,
+    workedExample: {
+      title: "Fictional reporting-area intersection",
+      basis:
+        "The candidate boundary intersects a Floods Directive reporting area but no current national depth or probability layer has been reviewed.",
+      result:
+        "Flag authority review and hydrology as mandatory next actions; do not treat the reporting polygon as an inundation footprint or automatic exclusion.",
+      caveat:
+        "Pluvial flooding, drainage, groundwater, climate allowances and safe access remain outside the strategic layer.",
+    },
+    sources: [floodsSource, inspireSource],
+  },
+  "solar-terrain-slope-assessment": {
+    reviewedAt: "2026-08-11",
+    reviewStatus:
+      "SolarDev AI internal methodology review; independent technical review not yet published.",
+    marketContext: commonMarketContext,
+    workedExample: {
+      title: "Fictional north-facing terrain assumption",
+      basis:
+        "A 30 m screening DEM identifies 6 ha above a user-selected 5° north-facing threshold within a 50 ha site.",
+      result:
+        "Carry 6 ha as a preliminary terrain mask and test 4°, 7° and technology-specific alternatives before fixing the usable area.",
+      caveat:
+        "The threshold is an assumption, not a universal non-usable rule; confirm it with survey-grade terrain and layout criteria.",
+    },
+    sources: [terrainSource, inspireSource],
+  },
+};
 
 export function getWorkflowGuide(slug: string) {
   return workflowGuides.find((guide) => guide.slug === slug) ?? null;

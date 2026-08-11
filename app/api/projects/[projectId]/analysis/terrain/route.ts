@@ -11,7 +11,7 @@ type AnalysisRouteContext = {
 };
 
 export async function POST(
-  _request: NextRequest,
+  request: NextRequest,
   context: AnalysisRouteContext,
 ) {
   const { userId } = await auth();
@@ -25,8 +25,28 @@ export async function POST(
     return NextResponse.json({ error: "Project not found." }, { status: 404 });
   }
 
+  const body = (await request.json().catch(() => ({}))) as {
+    northSlopeThresholdDeg?: unknown;
+  };
+  const requestedThreshold = Number(body.northSlopeThresholdDeg ?? 5);
+  if (
+    !Number.isFinite(requestedThreshold) ||
+    requestedThreshold < 1 ||
+    requestedThreshold > 20
+  ) {
+    return NextResponse.json(
+      { error: "Choose a north-facing slope threshold between 1° and 20°." },
+      { status: 400 },
+    );
+  }
+  const northSlopeThresholdDeg = Math.round(requestedThreshold * 2) / 2;
+
   try {
-    const analysis = await analyzeTerrain(projectId, project.site.geometry);
+    const analysis = await analyzeTerrain(
+      projectId,
+      project.site.geometry,
+      northSlopeThresholdDeg,
+    );
     return NextResponse.json(
       { analysis },
       { headers: { "Cache-Control": "private, no-store" } },
