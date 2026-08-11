@@ -85,3 +85,24 @@ export async function PATCH(
 
   return NextResponse.json({ project: serializeProject(project) });
 }
+
+export async function DELETE(
+  _request: NextRequest,
+  context: ProjectRouteContext,
+) {
+  const { userId } = await auth();
+  if (!userId) {
+    return NextResponse.json({ error: "Unauthorized." }, { status: 401 });
+  }
+
+  const { projectId } = await context.params;
+  const result = await prisma.project.deleteMany({
+    where: { id: projectId, ownerId: userId },
+  });
+
+  if (result.count === 0) {
+    return NextResponse.json({ error: "Project not found." }, { status: 404 });
+  }
+
+  return new NextResponse(null, { status: 204 });
+}

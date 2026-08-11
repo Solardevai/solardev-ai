@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import type { PortfolioProjectSummary } from "@/types/project";
 
@@ -68,11 +69,16 @@ function compareProjects(
 export default function PortfolioComparison({
   projects,
 }: PortfolioComparisonProps) {
+  const router = useRouter();
   const [sortKey, setSortKey] = useState<SortKey>("score");
-  const rankedProjects = projects.toSorted((first, second) =>
+  const [savedProjects, setSavedProjects] = useState(projects);
+  const [pendingDeleteId, setPendingDeleteId] = useState<string | null>(null);
+  const [deletingId, setDeletingId] = useState<string | null>(null);
+  const [deleteError, setDeleteError] = useState<string | null>(null);
+  const rankedProjects = savedProjects.toSorted((first, second) =>
     compareProjects(first, second, sortKey),
   );
-  const scoredProjects = projects.filter(
+  const scoredProjects = savedProjects.filter(
     (project) =>
       project.latestAnalysis !== null && project.latestAnalysis.score !== null,
   );
@@ -86,14 +92,45 @@ export default function PortfolioComparison({
           10,
       ) / 10
     : null;
-  const materialConstraintCount = projects.reduce(
+  const materialConstraintCount = savedProjects.reduce(
     (total, project) =>
       total + (project.latestAnalysis?.materialConstraintCount ?? 0),
     0,
   );
-  const highConfidenceCount = projects.filter(
+  const highConfidenceCount = savedProjects.filter(
     (project) => project.latestAnalysis?.confidence === "high",
   ).length;
+
+  async function deleteProject(projectId: string) {
+    setDeletingId(projectId);
+    setDeleteError(null);
+
+    try {
+      const response = await fetch(`/api/projects/${projectId}`, {
+        method: "DELETE",
+      });
+      if (!response.ok) {
+        const body = (await response.json().catch(() => null)) as
+          | { error?: string }
+          | null;
+        throw new Error(body?.error ?? "The project could not be deleted.");
+      }
+
+      setSavedProjects((current) =>
+        current.filter((project) => project.id !== projectId),
+      );
+      setPendingDeleteId(null);
+      router.refresh();
+    } catch (error) {
+      setDeleteError(
+        error instanceof Error
+          ? error.message
+          : "The project could not be deleted.",
+      );
+    } finally {
+      setDeletingId(null);
+    }
+  }
 
   return (
     <section className="mb-12" aria-labelledby="saved-projects-title">
@@ -114,7 +151,7 @@ export default function PortfolioComparison({
           </p>
         </div>
         <div className="flex flex-wrap items-center gap-3">
-          {projects.length > 0 && (
+          {savedProjects.length > 0 && (
             <label className="text-xs font-semibold text-slate-400">
               Rank by
               <select
@@ -139,7 +176,16 @@ export default function PortfolioComparison({
         </div>
       </div>
 
-      {projects.length > 0 ? (
+      {deleteError ? (
+        <p
+          role="alert"
+          className="mt-5 rounded-xl border border-rose-300/20 bg-rose-300/10 px-4 py-3 text-sm text-rose-100"
+        >
+          {deleteError}
+        </p>
+      ) : null}
+
+      {savedProjects.length > 0 ? (
         <>
           <dl className="mt-6 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
         <div className="rounded-xl border border-white/10 bg-white/[0.03] p-4">
@@ -147,7 +193,7 @@ export default function PortfolioComparison({
             Projects scored
           </dt>
           <dd className="mt-2 text-2xl font-black text-white">
-            {scoredProjects.length}/{projects.length}
+            {scoredProjects.length}/{savedProjects.length}
           </dd>
         </div>
         <div className="rounded-xl border border-white/10 bg-white/[0.03] p-4">
@@ -267,7 +313,46 @@ export default function PortfolioComparison({
                       >
                         {analysis ? "Open" : "Analyze"}
                       </Link>
+                      {pendingDeleteId === project.id ? (
+                        <>
+                          <button
+                            type="button"
+                            onClick={() => setPendingDeleteId(null)}
+                            disabled={deletingId === project.id}
+                            className="rounded-lg border border-white/10 px-2.5 py-2 font-semibold text-slate-300 hover:bg-white/[0.05] disabled:cursor-not-allowed disabled:opacity-50"
+                          >
+                            Keep
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => deleteProject(project.id)}
+                            disabled={deletingId === project.id}
+                            aria-label={`Permanently delete ${project.name}`}
+                            className="rounded-lg bg-rose-400 px-2.5 py-2 font-bold text-slate-950 hover:bg-rose-300 disabled:cursor-not-allowed disabled:opacity-60"
+                          >
+                            {deletingId === project.id
+                              ? "Deleting..."
+                              : "Confirm delete"}
+                          </button>
+                        </>
+                      ) : (
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setDeleteError(null);
+                            setPendingDeleteId(project.id);
+                          }}
+                          className="rounded-lg border border-rose-300/20 px-2.5 py-2 font-semibold text-rose-200 hover:bg-rose-300/10"
+                        >
+                          Delete
+                        </button>
+                      )}
                     </div>
+                    {pendingDeleteId === project.id ? (
+                      <p className="mt-2 text-right text-[10px] leading-4 text-rose-200">
+                        Permanently removes the boundary and saved analyses.
+                      </p>
+                    ) : null}
                   </td>
                 </tr>
               );
