@@ -24,7 +24,7 @@ export default function Hero() {
           </p>
 
           <h1 className="mt-5 max-w-3xl text-5xl font-bold leading-[1.03] tracking-[-0.045em] text-white sm:text-6xl lg:text-7xl">
-            The professional development platform for Solar &amp; BESS projects
+            The Devs platform for Solar &amp; BESS projects
           </h1>
 
           <p className="mt-6 max-w-2xl text-lg leading-8 text-slate-300">
