@@ -8,9 +8,9 @@ import { isAuthenticationAvailable } from "@/lib/auth-config";
 import { listOwnedProjects } from "@/lib/projects/data";
 
 export const metadata: Metadata = {
-  title: "Solar & BESS Engineering Agent",
+  title: "SolarDev Engineering Copilot",
   description:
-    "Use SolarDev AI's project-aware engineering agent for sourced solar and BESS analysis, deterministic calculations and evidence review.",
+    "Use the SolarDev Engineering Copilot for project-aware, sourced solar and BESS analysis, deterministic calculations and evidence review.",
   alternates: { canonical: "/agents/project-development" },
 };
 

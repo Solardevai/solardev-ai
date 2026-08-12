@@ -33,7 +33,7 @@ export default function VolumeOne() {
     <section
       id="volume-1"
       aria-labelledby="handbook-series-title"
-      className="relative scroll-mt-24 overflow-hidden border-y border-white/10 bg-slate-950 py-20 sm:py-24"
+      className="relative scroll-mt-24 overflow-hidden border-y border-[#10271f]/10 bg-[#edf0e9] py-20 text-[#10271f] sm:py-24"
     >
       <div
         aria-hidden="true"
@@ -50,11 +50,11 @@ export default function VolumeOne() {
           </p>
           <h2
             id="handbook-series-title"
-            className="mt-4 text-3xl font-bold tracking-tight text-white sm:text-4xl"
+            className="mt-4 text-3xl font-bold tracking-tight text-[#10271f] sm:text-4xl"
           >
             From early development to operations
           </h2>
-          <p className="mt-5 text-lg leading-8 text-slate-400">
+          <p className="mt-5 text-lg leading-8 text-[#536860]">
             Two complementary volumes addressing key decisions across the
             utility-scale Solar PV and BESS project lifecycle.
           </p>
@@ -75,7 +75,7 @@ export default function VolumeOne() {
               return (
                 <article
                   key={product.volume}
-                  className={`flex h-full flex-col rounded-3xl border bg-white/[0.03] p-7 sm:p-9 ${
+                  className={`flex h-full flex-col rounded-3xl border bg-white/75 p-7 shadow-sm sm:p-9 ${
                     isEmerald
                       ? "border-emerald-400/20"
                       : "border-emerald-400/20"
@@ -91,40 +91,40 @@ export default function VolumeOne() {
                     Volume {product.volume}
                   </p>
 
-                  <h3 className="mt-4 text-3xl font-bold tracking-tight text-white sm:text-4xl">
+                  <h3 className="mt-4 text-3xl font-bold tracking-tight text-[#10271f] sm:text-4xl">
                     {product.title}
                   </h3>
 
-                  <p className="mt-6 text-lg leading-8 text-slate-300">
+                  <p className="mt-6 text-lg leading-8 text-[#29483c]">
                     {description}
                   </p>
 
-                  <p className="mt-4 flex-1 leading-7 text-slate-400">
+                  <p className="mt-4 flex-1 leading-7 text-[#536860]">
                     {scope}
                   </p>
 
                   <dl className="mt-7 grid grid-cols-3 gap-3">
-                    <div className="rounded-xl border border-white/10 bg-slate-950/50 p-3">
+                    <div className="rounded-xl border border-[#10271f]/10 bg-[#edf0e9] p-3">
                       <dt className="text-xs uppercase tracking-wide text-slate-500">
                         Pages
                       </dt>
-                      <dd className="mt-1 font-bold text-white">
+                      <dd className="mt-1 font-bold text-[#10271f]">
                         {product.pages}
                       </dd>
                     </div>
-                    <div className="rounded-xl border border-white/10 bg-slate-950/50 p-3">
+                    <div className="rounded-xl border border-[#10271f]/10 bg-[#edf0e9] p-3">
                       <dt className="text-xs uppercase tracking-wide text-slate-500">
                         Chapters
                       </dt>
-                      <dd className="mt-1 font-bold text-white">
+                      <dd className="mt-1 font-bold text-[#10271f]">
                         {product.chapters}
                       </dd>
                     </div>
-                    <div className="rounded-xl border border-white/10 bg-slate-950/50 p-3">
+                    <div className="rounded-xl border border-[#10271f]/10 bg-[#edf0e9] p-3">
                       <dt className="text-xs uppercase tracking-wide text-slate-500">
                         Edition
                       </dt>
-                      <dd className="mt-1 font-bold text-white">
+                      <dd className="mt-1 font-bold text-[#10271f]">
                         {product.edition.replace("Edition ", "")}
                       </dd>
                     </div>
@@ -133,7 +133,7 @@ export default function VolumeOne() {
                   <div className="mt-8 flex flex-wrap gap-3">
                     <Link
                       href={detailsHref}
-                      className={`inline-flex min-h-12 flex-1 items-center justify-center rounded-xl border border-white/15 px-5 py-3 text-center font-semibold text-white transition hover:bg-white/5 ${
+                      className={`inline-flex min-h-12 flex-1 items-center justify-center rounded-xl border border-[#10271f]/20 px-5 py-3 text-center font-semibold text-[#10271f] transition hover:bg-[#edf0e9] ${
                         isEmerald
                           ? "hover:border-emerald-400/40"
                           : "hover:border-emerald-400/40"

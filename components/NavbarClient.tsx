@@ -251,7 +251,7 @@ export default function Navbar({
                       className="mt-1 block rounded-xl px-4 py-3 transition hover:bg-white/[0.06] focus:outline-none focus-visible:bg-white/[0.06]"
                     >
                       <span className="block font-semibold text-white">
-                        Project Development Agent
+                        Engineering Copilot
                       </span>
                       <span className="mt-1 block text-xs leading-5 text-slate-400">
                         Preview evidence-led project actions and decision briefs.
@@ -379,7 +379,7 @@ export default function Navbar({
                       onClick={closeMenu}
                       className="flex min-h-12 items-center justify-between rounded-lg px-3 py-3 font-semibold text-white transition hover:bg-white/[0.05] focus:outline-none focus-visible:bg-white/[0.05]"
                     >
-                      Project Development Agent
+                      Engineering Copilot
                     </Link>
                   </div>
                 )}

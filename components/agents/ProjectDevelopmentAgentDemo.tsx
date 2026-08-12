@@ -166,7 +166,7 @@ function readableError(error: Error) {
   } catch {
     // The AI SDK may already provide a plain-text message.
   }
-  return error.message || "The engineering agent could not complete the request.";
+  return error.message || "The Engineering Copilot could not complete the request.";
 }
 
 function messageText(message: SolarAgentUIMessage) {

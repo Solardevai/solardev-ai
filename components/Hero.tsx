@@ -1,165 +1,155 @@
 import Link from "next/link";
 
+const proofPoints = [
+  "Project-aware guidance",
+  "Deterministic calculations",
+  "Sources and assumptions labelled",
+];
+
+const actionBrief = [
+  "Confirm the usable-area bridge before fixing capacity.",
+  "Validate the grid route and supporting authority evidence.",
+  "Close material survey gaps before the next investment gate.",
+];
+
 export default function Hero() {
   return (
     <section
       id="home"
-      className="relative overflow-hidden border-b border-white/10"
+      className="relative overflow-hidden border-b border-[#10271f]/10 bg-[#f4f5f0] text-[#10271f]"
     >
       <div className="pointer-events-none absolute inset-0">
-        <div className="absolute -left-48 -top-32 h-[34rem] w-[34rem] rounded-full bg-amber-300/[0.06] blur-3xl" />
-        <div className="absolute -right-40 top-16 h-[34rem] w-[34rem] rounded-full bg-emerald-400/10 blur-3xl" />
-        <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-slate-950 to-transparent" />
+        <div className="absolute -left-48 -top-40 h-[34rem] w-[34rem] rounded-full bg-amber-200/30 blur-3xl" />
+        <div className="absolute -right-40 top-8 h-[38rem] w-[38rem] rounded-full bg-emerald-300/20 blur-3xl" />
+        <div className="absolute inset-x-0 bottom-0 h-48 bg-gradient-to-t from-[#edf0e9] to-transparent" />
       </div>
 
-      <div className="relative mx-auto grid min-h-[820px] max-w-7xl items-center gap-14 px-6 py-20 lg:grid-cols-[0.82fr_1.18fr] lg:py-24">
+      <div className="relative mx-auto grid min-h-[790px] max-w-7xl items-center gap-14 px-6 py-20 lg:grid-cols-[0.82fr_1.18fr] lg:py-24">
         <div>
-          <div className="inline-flex items-center gap-3 rounded-full border border-emerald-400/25 bg-emerald-400/10 px-4 py-2 text-sm font-semibold text-emerald-300">
-            <span className="h-2 w-2 rounded-full bg-emerald-400 shadow-[0_0_12px_rgba(52,211,153,.8)]" />
-            Professional platform for Solar PV &amp; BESS
+          <div className="inline-flex items-center gap-3 rounded-full border border-[#10271f]/10 bg-white/70 px-4 py-2 text-sm font-semibold text-[#29483c] shadow-sm backdrop-blur">
+            <span className="h-2 w-2 rounded-full bg-emerald-500 shadow-[0_0_12px_rgba(16,185,129,.45)]" />
+            SolarDev Engineering Copilot is live
           </div>
 
-          <p className="mt-8 text-sm font-semibold uppercase tracking-[0.25em] text-emerald-400">
+          <p className="mt-8 text-sm font-semibold uppercase tracking-[0.25em] text-emerald-700">
             Screen · Develop · Decide
           </p>
 
-          <h1 className="mt-5 max-w-3xl text-5xl font-bold leading-[1.03] tracking-[-0.045em] text-white sm:text-6xl lg:text-7xl">
-            The professional platform for Solar &amp; BESS developers
+          <h1 className="mt-5 max-w-3xl text-5xl font-bold leading-[1.03] tracking-[-0.045em] text-[#10271f] sm:text-6xl lg:text-7xl">
+            Build the engineering basis before fixing project value.
           </h1>
 
-          <p className="mt-6 max-w-2xl text-lg leading-8 text-slate-300">
-            Bring site intelligence, transparent engineering tools, controlled
-            workflows and specialist AI agents into one evidence-led workspace.
+          <p className="mt-6 max-w-2xl text-lg leading-8 text-[#536860]">
+            Bring project context, deterministic solar and BESS calculations,
+            GIS evidence and engineering judgement into one traceable workspace.
           </p>
 
           <div className="mt-9 flex flex-col gap-3 sm:flex-row">
             <Link
-              href="/tools/solar-site-screening"
-              className="rounded-xl bg-emerald-400 px-7 py-4 text-center font-semibold text-slate-950 shadow-lg shadow-emerald-400/10 transition hover:-translate-y-0.5 hover:bg-emerald-300"
+              href="/agents/project-development"
+              className="rounded-xl bg-emerald-500 px-7 py-4 text-center font-semibold text-[#071d17] shadow-lg shadow-emerald-700/10 transition hover:-translate-y-0.5 hover:bg-emerald-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600 focus-visible:ring-offset-2 focus-visible:ring-offset-[#f4f5f0]"
             >
-              Launch SolarDev GIS Site Check
+              Open the Engineering Copilot
             </Link>
             <Link
-              href="/agents/project-development"
-              className="rounded-xl bg-amber-400 px-7 py-4 text-center font-semibold text-slate-950 shadow-lg shadow-amber-400/10 transition hover:-translate-y-0.5 hover:bg-amber-300"
+              href="/tools/solar-site-screening"
+              className="rounded-xl border border-[#10271f]/20 bg-white/60 px-7 py-4 text-center font-semibold text-[#10271f] transition hover:-translate-y-0.5 hover:border-emerald-600/40 hover:bg-white focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600 focus-visible:ring-offset-2 focus-visible:ring-offset-[#f4f5f0]"
             >
-              Preview the development agent
+              Run a GIS site screen
             </Link>
           </div>
 
-          <div className="mt-10 flex flex-wrap gap-x-6 gap-y-3 text-xs font-medium text-slate-400">
-            {[
-              "Free tools available now",
-              "Saved professional workspace",
-              "Traceable screening outputs",
-            ].map((item) => (
+          <div className="mt-9 flex flex-wrap gap-x-6 gap-y-3 text-xs font-medium text-[#536860]">
+            {proofPoints.map((item) => (
               <span key={item} className="flex items-center gap-2">
-                <span className="text-emerald-400">✓</span>
+                <span aria-hidden="true" className="text-emerald-600">✓</span>
                 {item}
               </span>
             ))}
           </div>
+
+          <Link
+            href="/handbooks"
+            className="mt-10 inline-flex text-xs font-semibold text-[#536860] underline decoration-[#536860]/30 underline-offset-4 transition hover:text-emerald-700"
+          >
+            Prefer the written methodology? Explore the SolarDev handbooks →
+          </Link>
         </div>
 
         <div className="relative">
-          <div className="absolute inset-8 rounded-full bg-emerald-400/10 blur-3xl" />
-          <div className="relative">
-            <div className="flex items-center justify-between px-2 pb-4 pt-1">
+          <div className="absolute inset-8 rounded-full bg-emerald-300/25 blur-3xl" />
+          <div className="relative overflow-hidden rounded-[2rem] border border-[#10271f]/10 bg-white/75 shadow-2xl shadow-[#10271f]/10 backdrop-blur">
+            <div className="flex flex-wrap items-center justify-between gap-4 border-b border-[#10271f]/10 px-5 py-4 sm:px-6">
               <div>
-                <p className="text-xs font-bold uppercase tracking-[0.18em] text-slate-500">
-                  SolarDev engineering workspace
+                <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-emerald-700">
+                  SolarDev Engineering Copilot
                 </p>
-                <p className="mt-1 text-sm font-semibold text-white">
-                  Early-stage decision support
+                <p className="mt-1 text-sm font-semibold text-[#10271f]">
+                  General engineering guidance
                 </p>
               </div>
-              <span className="rounded-full border border-emerald-400/20 bg-emerald-400/10 px-3 py-1 text-[10px] font-bold uppercase tracking-wide text-emerald-300">
-                Live tools
+              <span className="inline-flex items-center gap-2 rounded-full border border-[#10271f]/10 bg-[#edf0e9] px-3 py-1.5 text-[10px] font-bold uppercase tracking-wide text-[#29483c]">
+                <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
+                Live
               </span>
             </div>
 
-            <div className="grid gap-3 sm:grid-cols-3">
-              <Link
-                href="/tools/solar-site-screening"
-                className="group overflow-hidden rounded-2xl border border-white/10 bg-slate-950 transition hover:border-emerald-400/35"
-              >
-                <div className="relative h-52 overflow-hidden bg-[#193224]">
-                  <div className="absolute inset-0 opacity-80 [background-image:linear-gradient(28deg,transparent_45%,rgba(148,163,184,.35)_46%,rgba(148,163,184,.35)_49%,transparent_50%),linear-gradient(105deg,transparent_54%,rgba(100,116,139,.3)_55%,rgba(100,116,139,.3)_58%,transparent_59%),radial-gradient(circle_at_25%_28%,#355c3c_0,transparent_30%),radial-gradient(circle_at_75%_65%,#223e32_0,transparent_34%)]" />
-                  <svg viewBox="0 0 360 220" aria-hidden="true" className="absolute inset-0 h-full w-full">
-                    <path d="M78 58L278 44L318 151L207 192L55 142Z" fill="rgba(52,211,153,.18)" stroke="#34d399" strokeWidth="3" />
-                    {[[78,58],[278,44],[318,151],[207,192],[55,142]].map(([x,y]) => (
-                      <circle key={`${x}-${y}`} cx={x} cy={y} r="5" fill="#071d17" stroke="#6ee7b7" strokeWidth="3" />
-                    ))}
-                    <circle cx="294" cy="73" r="15" fill="rgba(34,211,238,.25)" stroke="#fff" strokeWidth="2" />
-                    <circle cx="294" cy="73" r="6" fill="#22d3ee" />
-                  </svg>
-                  <span className="absolute left-4 top-4 rounded-lg border border-emerald-400/20 bg-slate-950/85 px-3 py-2 text-[10px] font-bold uppercase tracking-[0.16em] text-emerald-300">
-                    SolarDev GIS Site Check
-                  </span>
-                  <div className="absolute bottom-3 left-3 right-3 grid grid-cols-3 gap-2">
-                    <Metric label="Area" value="42.8 ha" />
-                    <Metric label="Perimeter" value="2.9 km" />
-                    <Metric label="Yield" value="1,684" unit="kWh/kWp" />
-                  </div>
+            <div className="grid min-h-[500px] md:grid-cols-[1fr_150px]">
+              <div className="p-5 sm:p-7">
+                <div className="rounded-2xl bg-emerald-500 p-5 text-[#071d17] shadow-sm">
+                  <p className="text-[10px] font-bold uppercase tracking-[0.2em]">You</p>
+                  <p className="mt-3 text-sm font-semibold leading-6 sm:text-base">
+                    Review this feasibility-stage site and define the actions
+                    needed before the next investment gate.
+                  </p>
                 </div>
-                <div className="p-4">
-                  <strong className="block text-base text-white group-hover:text-emerald-200">
-                    Define and quantify a candidate site
-                  </strong>
-                  <span className="mt-2 block text-xs leading-5 text-slate-400">
-                    Draw the boundary, inspect grid context, run an indicative
-                    PVGIS check and export boundary or TMY files.
-                  </span>
-                </div>
-              </Link>
 
-              <div className="contents">
-                <Link
-                  href="/tools/sun-path"
-                  className="group rounded-2xl border border-white/10 bg-[radial-gradient(circle_at_75%_15%,rgba(251,191,36,.14),transparent_48%),#071d17] p-4 transition hover:border-amber-400/35"
-                >
-                  <div className="flex items-start justify-between">
-                    <div>
-                      <span className="inline-flex rounded-lg border border-amber-400/20 bg-amber-400/10 px-3 py-2 text-[10px] font-bold uppercase tracking-[0.16em] text-amber-300">
-                        Solar Geometry Tool
-                      </span>
-                      <strong className="mt-2 block text-sm leading-5 text-white group-hover:text-amber-200">
-                        Test solar geometry at a point
-                      </strong>
-                    </div>
-                    <span className="flex h-10 w-10 items-center justify-center rounded-full bg-amber-400 text-lg text-slate-950 shadow-[0_0_24px_rgba(251,191,36,.35)]">
-                      ☀
+                <div className="mt-5 rounded-2xl border border-[#10271f]/10 bg-[#f8f9f5] p-5">
+                  <div className="flex items-center justify-between gap-3">
+                    <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-emerald-700">
+                      Engineering action brief
+                    </p>
+                    <span className="rounded-full bg-emerald-100 px-2.5 py-1 text-[9px] font-bold text-emerald-800">
+                      CALCULATED + SOURCED
                     </span>
                   </div>
-                  <div className="mt-5 grid grid-cols-2 gap-2">
-                    <Metric label="Azimuth" value="154.2°" />
-                    <Metric label="Elevation" value="21.8°" />
+                  <div className="mt-4 space-y-2">
+                    {actionBrief.map((item, index) => (
+                      <div
+                        key={item}
+                        className="flex gap-3 rounded-xl border border-[#10271f]/8 bg-white p-3 text-xs leading-5 text-[#29483c]"
+                      >
+                        <span className="font-mono font-bold text-emerald-700">
+                          0{index + 1}
+                        </span>
+                        {item}
+                      </div>
+                    ))}
                   </div>
-                  <span className="mt-3 block text-xs leading-5 text-slate-400">
-                    Review sun direction, elevation, daylight and indicative
-                    flat-ground shading.
-                  </span>
-                </Link>
-
-                <Link
-                  href="/handbooks"
-                  className="group rounded-2xl border border-white/10 bg-white/[0.035] p-4 transition hover:border-emerald-300/30 hover:bg-emerald-300/[0.05]"
-                >
-                  <span className="inline-flex rounded-lg border border-emerald-300/20 bg-emerald-300/10 px-3 py-2 text-[10px] font-bold uppercase tracking-[0.16em] text-emerald-200">
-                    Handbooks
-                  </span>
-                  <strong className="mt-2 block text-sm leading-5 text-white group-hover:text-emerald-100">
-                    Apply the outputs within controlled workflows
-                  </strong>
-                  <span className="mt-2 block text-xs leading-5 text-slate-400">
-                    Development methodology, due diligence and reusable AI
-                    workflows for Solar PV and BESS teams.
-                  </span>
-                  <span className="mt-4 inline-flex text-xs font-semibold text-emerald-300">
-                    Explore both volumes →
-                  </span>
-                </Link>
+                  <div className="mt-4 flex flex-wrap gap-2 text-[9px] font-bold uppercase tracking-wide text-[#536860]">
+                    <span className="rounded-full bg-[#edf0e9] px-2.5 py-1">Sources labelled</span>
+                    <span className="rounded-full bg-[#edf0e9] px-2.5 py-1">Assumptions stated</span>
+                    <span className="rounded-full bg-[#edf0e9] px-2.5 py-1">Gaps flagged</span>
+                  </div>
+                </div>
               </div>
+
+              <aside className="flex flex-col border-t border-[#10271f]/10 bg-[#edf0e9] p-5 md:border-l md:border-t-0">
+                <div className="mx-auto mt-2 flex h-24 w-24 items-center justify-center rounded-full border border-white bg-white/70 shadow-inner">
+                  <div className="h-12 w-12 rounded-full border-2 border-[#10271f] bg-[radial-gradient(circle_at_35%_30%,white,#dce4df)] shadow-lg" />
+                </div>
+                <p className="mt-5 text-center text-[9px] font-bold uppercase tracking-[0.2em] text-emerald-700">
+                  Sol · Copilot
+                </p>
+                <p className="mt-2 text-center text-xs text-[#536860]">
+                  Ready when you are
+                </p>
+                <div className="mt-auto space-y-2 pt-8">
+                  <MiniCapability label="DC/AC ratio" />
+                  <MiniCapability label="Land capacity" />
+                  <MiniCapability label="BESS sizing" />
+                </div>
+              </aside>
             </div>
           </div>
         </div>
@@ -168,24 +158,10 @@ export default function Hero() {
   );
 }
 
-function Metric({
-  label,
-  value,
-  unit,
-}: {
-  label: string;
-  value: string;
-  unit?: string;
-}) {
+function MiniCapability({ label }: { label: string }) {
   return (
-    <span className="rounded-lg border border-white/10 bg-slate-950/85 px-2.5 py-2 shadow-lg backdrop-blur">
-      <span className="block text-[8px] uppercase tracking-wide text-slate-500">
-        {label}
-      </span>
-      <span className="mt-0.5 block font-mono text-xs font-semibold text-white">
-        {value}
-      </span>
-      {unit && <span className="block text-[7px] text-slate-500">{unit}</span>}
+    <span className="block rounded-lg border border-[#10271f]/10 bg-white/65 px-3 py-2 text-center text-[9px] font-semibold text-[#29483c]">
+      {label}
     </span>
   );
 }
