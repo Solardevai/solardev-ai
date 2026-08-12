@@ -493,7 +493,7 @@ export default function ProjectDevelopmentAgentDemo({
                   <SolarDevMark />
                 </div>
                 <p className="mt-5 text-[9px] font-bold uppercase tracking-[0.2em] text-[#17805f]">
-                  SolarDev copilot
+                  Project Development Agent
                 </p>
                 <h2 className="mt-4 max-w-2xl text-3xl font-semibold tracking-[-0.03em] sm:text-4xl">
                   Clear engineering answers,
@@ -550,7 +550,9 @@ export default function ProjectDevelopmentAgentDemo({
                             : "text-[#17805f]"
                         }`}
                       >
-                        {message.role === "user" ? "You" : "SolarDev copilot"}
+                        {message.role === "user"
+                          ? "You"
+                          : "Project Development Agent"}
                       </p>
                       {message.parts.map((part, index) => {
                         if (part.type === "text") {
@@ -677,7 +679,7 @@ export default function ProjectDevelopmentAgentDemo({
             ) : null}
           </div>
           <p className="relative mt-6 text-[9px] font-bold uppercase tracking-[0.2em] text-[#17805f]">
-            Sol · Engineering copilot
+            Sol · Project Development Agent
           </p>
           <p className="relative mt-2 min-h-10 text-center text-xs leading-5 text-[#5d7069]">
             {personaStatus}
