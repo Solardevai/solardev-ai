@@ -8,7 +8,11 @@ describe("SolarDev deterministic engineering tools", () => {
 
   it("estimates land capacity with explicit planning assumptions", () => {
     const output = estimateLandCapacity(100, 0.65, 0.8);
-    expect(output.result).toEqual({ usableAreaHa: 80, estimatedDcMwp: 52 });
+    expect(output.result).toEqual({
+      assumedUsableAreaHa: 80,
+      estimatedDcMwp: 52,
+    });
+    expect(output.inputs.dcDensityMwpPerUsableHa).toBe(0.65);
     expect(output.label).toBe("CALCULATED RESULT");
   });
 
@@ -21,11 +25,13 @@ describe("SolarDev deterministic engineering tools", () => {
   it("estimates BESS duration, reserve energy and containers", () => {
     const output = estimateBess(50, 200, 5, 0.1);
     expect(output.result.durationHours).toBe(4);
+    expect(output.result.requiredInstalledEnergyMwh).toBe(222.22);
     expect(output.result.estimatedContainers).toBe(45);
   });
 
   it("calculates screening financial metrics", () => {
-    const output = calculateFinancialMetrics({ capex: 1_000_000, annualRevenue: 180_000, annualOpex: 30_000, projectYears: 20, discountRate: 0.08, annualEnergyMwh: 10_000 });
+    const output = calculateFinancialMetrics({ currency: "EUR", capex: 1_000_000, annualRevenue: 180_000, annualOpex: 30_000, projectYears: 20, discountRate: 0.08, annualEnergyMwh: 10_000 });
+    expect(output.result.currency).toBe("EUR");
     expect(output.result.annualNetCash).toBe(150_000);
     expect(output.result.npv).toBeGreaterThan(0);
     expect(output.result.lcoePerMwh).toBeGreaterThan(0);

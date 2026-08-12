@@ -24,7 +24,7 @@ export default function FAQ() {
         aria-hidden="true"
         className="pointer-events-none absolute inset-0"
       >
-        <div className="absolute -left-40 top-20 h-96 w-96 rounded-full bg-blue-500/5 blur-3xl" />
+        <div className="absolute -left-40 top-20 h-96 w-96 rounded-full bg-emerald-400/[0.05] blur-3xl" />
 
         <div className="absolute -right-40 bottom-0 h-96 w-96 rounded-full bg-emerald-400/5 blur-3xl" />
       </div>

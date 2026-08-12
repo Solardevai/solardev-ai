@@ -22,10 +22,10 @@ function GisPreview() {
         </div>
         <div className="relative min-h-64 overflow-hidden bg-[#294333] [background-image:linear-gradient(25deg,transparent_44%,rgba(217,180,104,.24)_45%,rgba(217,180,104,.24)_53%,transparent_54%),linear-gradient(112deg,transparent_52%,rgba(17,41,30,.42)_53%,rgba(17,41,30,.42)_61%,transparent_62%),radial-gradient(circle_at_22%_25%,#526b3d_0,transparent_30%),radial-gradient(circle_at_75%_70%,#19382e_0,transparent_32%)]">
           <svg viewBox="0 0 420 280" aria-hidden="true" className="absolute inset-0 h-full w-full">
-            <path d="M65 55L345 38L376 205L222 252L48 180Z" fill="rgba(52,211,153,.12)" stroke="#020617" strokeWidth="8" strokeLinejoin="round" />
+            <path d="M65 55L345 38L376 205L222 252L48 180Z" fill="rgba(52,211,153,.12)" stroke="#071d17" strokeWidth="8" strokeLinejoin="round" />
             <path d="M65 55L345 38L376 205L222 252L48 180Z" fill="none" stroke="#34d399" strokeWidth="4" strokeLinejoin="round" />
             <path d="M95 92L170 77L211 112L182 156L104 149Z" fill="none" stroke="#f97316" strokeWidth="5" strokeLinejoin="round" />
-            <path d="M238 60C254 96 277 109 314 124C335 133 348 150 365 170" fill="none" stroke="#020617" strokeWidth="10" />
+            <path d="M238 60C254 96 277 109 314 124C335 133 348 150 365 170" fill="none" stroke="#071d17" strokeWidth="10" />
             <path d="M238 60C254 96 277 109 314 124C335 133 348 150 365 170" fill="none" stroke="#22d3ee" strokeWidth="5" />
           </svg>
           <div className="absolute bottom-3 left-3 rounded-lg border border-white/10 bg-slate-950/85 px-3 py-2 text-[8px] text-slate-300 backdrop-blur">

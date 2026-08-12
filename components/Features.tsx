@@ -55,7 +55,7 @@ export default function Features() {
       >
         <div className="absolute left-0 top-1/4 h-72 w-72 rounded-full bg-emerald-500/5 blur-3xl" />
 
-        <div className="absolute bottom-0 right-0 h-80 w-80 rounded-full bg-cyan-500/5 blur-3xl" />
+        <div className="absolute bottom-0 right-0 h-80 w-80 rounded-full bg-amber-300/[0.05] blur-3xl" />
       </div>
 
       <div className="relative mx-auto max-w-7xl px-6 lg:px-8">

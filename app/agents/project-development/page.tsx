@@ -17,9 +17,9 @@ export const metadata: Metadata = {
 export const dynamic = "force-dynamic";
 
 const trustSignals = [
-  ["Evidence-led", "Project documents and GIS findings"],
-  ["Deterministic", "Auditable solar and BESS calculations"],
-  ["Traceable", "Sources, assumptions and gaps labelled"],
+  ["Project-grounded", "Saved boundaries, GIS findings and project evidence"],
+  ["Auditable", "Deterministic solar PV, BESS and finance screens"],
+  ["Decision-ready", "Inputs, assumptions, constraints and next actions"],
 ] as const;
 
 export default async function ProjectDevelopmentAgentPage({
@@ -50,18 +50,19 @@ export default async function ProjectDevelopmentAgentPage({
               <div>
                 <div className="flex flex-wrap items-center gap-3">
                   <span className="rounded-full border border-emerald-300/20 bg-emerald-300/10 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.18em] text-emerald-200">
-                    SolarDev engineering agent
+                    SolarDev engineering copilot
                   </span>
                   <span className="text-[10px] font-semibold uppercase tracking-[0.16em] text-slate-500">
-                    Project-aware · Controlled AI
+                    Stage-aware · Evidence-led
                   </span>
                 </div>
                 <h1 className="mt-5 max-w-4xl text-4xl font-semibold tracking-[-0.035em] sm:text-5xl">
-                  Engineering clarity, from first screen to operation.
+                  Screen, quantify and document the engineering basis.
                 </h1>
                 <p className="mt-4 max-w-2xl text-base leading-7 text-slate-400">
-                  Ask questions, run auditable calculations and interrogate saved
-                  project evidence in one calm workspace.
+                  Move from early site questions to traceable solar PV and BESS
+                  decisions using saved project context, deterministic calculations
+                  and clearly labelled evidence.
                 </p>
               </div>
 
@@ -101,18 +102,18 @@ export default async function ProjectDevelopmentAgentPage({
           <div className="mt-6 flex flex-col gap-4 rounded-2xl border border-white/10 bg-white/[0.025] px-5 py-4 sm:flex-row sm:items-center sm:justify-between">
             <div>
               <p className="text-sm font-semibold text-slate-200">
-                Need better project evidence?
+                Start with a defensible site basis
               </p>
               <p className="mt-1 text-xs leading-5 text-slate-500">
-                Save a site boundary and analysis in SolarDev GIS, then open it
-                directly in the agent.
+                Create or update a saved site boundary, review its GIS findings and
+                bring the result into this workspace as project context.
               </p>
             </div>
             <Link
               href="/tools/solar-site-screening"
-              className="shrink-0 rounded-xl border border-emerald-300/20 bg-emerald-300/10 px-4 py-2.5 text-center text-xs font-bold text-emerald-200 transition hover:bg-emerald-300/15"
+              className="inline-flex min-h-11 shrink-0 items-center justify-center rounded-xl border border-emerald-300/30 bg-emerald-300/10 px-4 py-2.5 text-center text-xs font-bold text-emerald-200 transition hover:bg-emerald-300/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-300/60"
             >
-              Open SolarDev GIS Site Check
+              Run a GIS site screen
             </Link>
           </div>
         </section>

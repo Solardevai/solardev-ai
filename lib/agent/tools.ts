@@ -11,9 +11,9 @@ export function createSolarTools(ownerId: string, projectId?: string) {
       execute: ({ dcMw, acMw }) => calculateDcAcRatio(dcMw, acMw),
     }),
     estimateLandCapacity: tool({
-      description: "Estimate early-stage PV DC capacity from gross land area, usable fraction and planning density.",
-      inputSchema: z.object({ areaHa: z.number().positive(), densityMwpPerHa: z.number().positive().default(0.65), usableFraction: z.number().positive().max(1).default(0.8) }),
-      execute: ({ areaHa, densityMwpPerHa, usableFraction }) => estimateLandCapacity(areaHa, densityMwpPerHa, usableFraction),
+      description: "Estimate early-stage PV DC capacity from gross site area, an assumed usable-area fraction and DC planning density per usable hectare. This is not a developable-area or layout result.",
+      inputSchema: z.object({ areaHa: z.number().positive(), dcDensityMwpPerUsableHa: z.number().positive().default(0.65), usableFraction: z.number().positive().max(1).default(0.8) }),
+      execute: ({ areaHa, dcDensityMwpPerUsableHa, usableFraction }) => estimateLandCapacity(areaHa, dcDensityMwpPerUsableHa, usableFraction),
     }),
     sizePvString: tool({
       description: "Perform preliminary PV string voltage-window sizing using signed temperature coefficients in percent per degree C.",
@@ -21,13 +21,13 @@ export function createSolarTools(ownerId: string, projectId?: string) {
       execute: (input) => sizePvString(input),
     }),
     estimateBess: tool({
-      description: "Calculate BESS duration and an indicative container count including reserve.",
-      inputSchema: z.object({ powerMw: z.number().positive(), energyMwh: z.number().positive(), usableMwhPerContainer: z.number().positive().default(5), reserveFraction: z.number().min(0).max(0.95).default(0.1) }),
-      execute: ({ powerMw, energyMwh, usableMwhPerContainer, reserveFraction }) => estimateBess(powerMw, energyMwh, usableMwhPerContainer, reserveFraction),
+      description: "Calculate BESS duration from usable energy and power, then estimate required installed energy and container count including reserve.",
+      inputSchema: z.object({ powerMw: z.number().positive(), usableEnergyMwh: z.number().positive(), usableMwhPerContainer: z.number().positive().default(5), reserveFraction: z.number().min(0).max(0.95).default(0.1) }),
+      execute: ({ powerMw, usableEnergyMwh, usableMwhPerContainer, reserveFraction }) => estimateBess(powerMw, usableEnergyMwh, usableMwhPerContainer, reserveFraction),
     }),
     calculateFinancialMetrics: tool({
-      description: "Calculate screening NPV, IRR, simple payback and optional LCOE from constant annual cash flows.",
-      inputSchema: z.object({ capex: z.number().positive(), annualRevenue: z.number().nonnegative(), annualOpex: z.number().nonnegative(), projectYears: z.number().int().min(1).max(100), discountRate: z.number().min(-0.99).max(5), annualEnergyMwh: z.number().positive().optional() }),
+      description: "Calculate screening NPV, IRR, simple payback and optional LCOE from constant annual cash flows. All monetary inputs must use the stated currency; discount rate is a decimal.",
+      inputSchema: z.object({ currency: z.string().trim().min(3).max(20), capex: z.number().positive(), annualRevenue: z.number().nonnegative(), annualOpex: z.number().nonnegative(), projectYears: z.number().int().min(1).max(100), discountRate: z.number().min(-0.99).max(5), annualEnergyMwh: z.number().positive().optional() }),
       execute: (input) => calculateFinancialMetrics(input),
     }),
     searchProjectKnowledge: tool({

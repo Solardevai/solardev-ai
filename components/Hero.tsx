@@ -7,7 +7,7 @@ export default function Hero() {
       className="relative overflow-hidden border-b border-white/10"
     >
       <div className="pointer-events-none absolute inset-0">
-        <div className="absolute -left-48 -top-32 h-[34rem] w-[34rem] rounded-full bg-blue-500/10 blur-3xl" />
+        <div className="absolute -left-48 -top-32 h-[34rem] w-[34rem] rounded-full bg-amber-300/[0.06] blur-3xl" />
         <div className="absolute -right-40 top-16 h-[34rem] w-[34rem] rounded-full bg-emerald-400/10 blur-3xl" />
         <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-slate-950 to-transparent" />
       </div>
@@ -88,7 +88,7 @@ export default function Hero() {
                   <svg viewBox="0 0 360 220" aria-hidden="true" className="absolute inset-0 h-full w-full">
                     <path d="M78 58L278 44L318 151L207 192L55 142Z" fill="rgba(52,211,153,.18)" stroke="#34d399" strokeWidth="3" />
                     {[[78,58],[278,44],[318,151],[207,192],[55,142]].map(([x,y]) => (
-                      <circle key={`${x}-${y}`} cx={x} cy={y} r="5" fill="#020617" stroke="#6ee7b7" strokeWidth="3" />
+                      <circle key={`${x}-${y}`} cx={x} cy={y} r="5" fill="#071d17" stroke="#6ee7b7" strokeWidth="3" />
                     ))}
                     <circle cx="294" cy="73" r="15" fill="rgba(34,211,238,.25)" stroke="#fff" strokeWidth="2" />
                     <circle cx="294" cy="73" r="6" fill="#22d3ee" />
@@ -116,7 +116,7 @@ export default function Hero() {
               <div className="contents">
                 <Link
                   href="/tools/sun-path"
-                  className="group rounded-2xl border border-white/10 bg-[radial-gradient(circle_at_75%_15%,rgba(251,191,36,.14),transparent_48%),#020617] p-4 transition hover:border-amber-400/35"
+                  className="group rounded-2xl border border-white/10 bg-[radial-gradient(circle_at_75%_15%,rgba(251,191,36,.14),transparent_48%),#071d17] p-4 transition hover:border-amber-400/35"
                 >
                   <div className="flex items-start justify-between">
                     <div>
@@ -143,19 +143,19 @@ export default function Hero() {
 
                 <Link
                   href="/handbooks"
-                  className="group rounded-2xl border border-white/10 bg-white/[0.035] p-4 transition hover:border-blue-400/30 hover:bg-blue-400/[0.05]"
+                  className="group rounded-2xl border border-white/10 bg-white/[0.035] p-4 transition hover:border-emerald-300/30 hover:bg-emerald-300/[0.05]"
                 >
-                  <span className="inline-flex rounded-lg border border-blue-400/20 bg-blue-400/10 px-3 py-2 text-[10px] font-bold uppercase tracking-[0.16em] text-blue-300">
+                  <span className="inline-flex rounded-lg border border-emerald-300/20 bg-emerald-300/10 px-3 py-2 text-[10px] font-bold uppercase tracking-[0.16em] text-emerald-200">
                     Handbooks
                   </span>
-                  <strong className="mt-2 block text-sm leading-5 text-white group-hover:text-blue-200">
+                  <strong className="mt-2 block text-sm leading-5 text-white group-hover:text-emerald-100">
                     Apply the outputs within controlled workflows
                   </strong>
                   <span className="mt-2 block text-xs leading-5 text-slate-400">
                     Development methodology, due diligence and reusable AI
                     workflows for Solar PV and BESS teams.
                   </span>
-                  <span className="mt-4 inline-flex text-xs font-semibold text-blue-300">
+                  <span className="mt-4 inline-flex text-xs font-semibold text-emerald-300">
                     Explore both volumes →
                   </span>
                 </Link>

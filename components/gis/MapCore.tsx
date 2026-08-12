@@ -156,7 +156,7 @@ export function MapCoreCanvas({
         <path
           data-site-path
           fill="rgba(52, 211, 153, 0.2)"
-          stroke="#020617"
+          stroke="#071d17"
           strokeWidth="5"
           strokeLinejoin="round"
         />

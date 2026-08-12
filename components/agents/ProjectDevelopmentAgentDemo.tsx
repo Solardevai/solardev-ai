@@ -7,6 +7,8 @@ import {
   Check,
   ChevronDown,
   FilePlus2,
+  LoaderCircle,
+  LogIn,
   Pause,
   Settings2,
   Sparkles,
@@ -68,28 +70,68 @@ type Props = {
   isSignedIn: boolean;
 };
 
-const quickPrompts = [
+const projectQuickPrompts = [
   {
-    label: "Capacity",
+    label: "Indicative capacity",
+    description: "Gross area, usable fraction and DC planning density",
     prompt:
-      "Estimate capacity from this project's land area and explain the assumptions.",
+      "Estimate indicative PV DC capacity from this project's gross site area. Separate gross area, assumed usable area and planning density, and state what a layout must still verify.",
   },
   {
-    label: "Development risk",
+    label: "Development priorities",
+    description: "Rank evidence-backed risks and next actions",
     prompt:
-      "What are the three highest-priority development risks in the available evidence?",
+      "Rank the three most material development risks in the available project evidence. For each, state the evidence, uncertainty, owner and recommended next action.",
   },
   {
-    label: "DC / AC ratio",
+    label: "DC/AC basis",
+    description: "Calculate the ratio or identify missing design inputs",
     prompt:
-      "Calculate the DC/AC ratio and assess whether it needs more design evidence.",
+      "Using the available project inputs, calculate the PV DC/AC ratio. If either capacity is missing, list the exact input required and explain the design evidence needed before fixing the ratio.",
   },
   {
-    label: "Evidence gaps",
+    label: "Evidence gap register",
+    description: "Separate confirmed inputs, assumptions and gaps",
     prompt:
-      "Summarize what is known, what is assumed, and what must be verified next.",
+      "Prepare a concise evidence gap register: confirmed project inputs, assumptions, missing evidence, decision impact and recommended next action.",
   },
-];
+] as const;
+
+const generalQuickPrompts = [
+  {
+    label: "PV screening brief",
+    description: "Build a structured utility-scale input checklist",
+    prompt:
+      "Create a utility-scale solar PV screening input checklist, grouped by land, grid, planning, environment, resource, design and commercial workstreams.",
+  },
+  {
+    label: "Hybrid sizing basis",
+    description: "Separate PV, grid and BESS sizing parameters",
+    prompt:
+      "What project inputs are required to size a co-located solar PV and BESS project without confusing PV AC rating, grid export capacity, BESS power and usable energy?",
+  },
+  {
+    label: "DC/AC decision",
+    description: "Review engineering and commercial trade-offs",
+    prompt:
+      "Explain the engineering and commercial trade-offs that determine a utility-scale PV DC/AC ratio, and list the evidence needed before selecting a project value.",
+  },
+  {
+    label: "Development data room",
+    description: "Create a stage-gated evidence index",
+    prompt:
+      "Create a stage-gated data-room index for a utility-scale solar or BESS project, distinguishing screening evidence from detailed-design evidence.",
+  },
+] as const;
+
+const toolLabels: Record<string, string> = {
+  calculateDcAcRatio: "PV DC/AC ratio",
+  estimateLandCapacity: "land-to-capacity screen",
+  sizePvString: "PV string voltage screen",
+  estimateBess: "BESS duration and container screen",
+  calculateFinancialMetrics: "financial screen",
+  searchProjectKnowledge: "project evidence search",
+};
 
 function optionalNumber(value: string) {
   const parsed = Number(value);
@@ -97,9 +139,24 @@ function optionalNumber(value: string) {
 }
 
 function readableToolName(value: string) {
-  return value
-    .replace(/([a-z])([A-Z])/g, "$1 $2")
-    .replace(/^./, (letter) => letter.toUpperCase());
+  return (
+    toolLabels[value] ??
+    value
+      .replace(/([a-z])([A-Z])/g, "$1 $2")
+      .replace(/^./, (letter) => letter.toUpperCase())
+  );
+}
+
+function projectTechnologyLabel(value: string) {
+  if (value === "bess") return "BESS";
+  if (value === "hybrid") return "Solar PV + BESS";
+  return "Solar PV";
+}
+
+function projectStageLabel(value: string) {
+  if (value === "due-diligence") return "Due diligence";
+  if (value === "development") return "Development";
+  return "Screening";
 }
 
 function readableError(error: Error) {
@@ -153,6 +210,7 @@ export default function ProjectDevelopmentAgentDemo({
   const [bessPowerMw, setBessPowerMw] = useState("");
   const [bessEnergyMwh, setBessEnergyMwh] = useState("");
   const [documentStatus, setDocumentStatus] = useState("");
+  const [isUploading, setIsUploading] = useState(false);
   const [contextOpen, setContextOpen] = useState(false);
   const [isSpeaking, setIsSpeaking] = useState(false);
   const speechSupported = useSyncExternalStore(
@@ -172,10 +230,17 @@ export default function ProjectDevelopmentAgentDemo({
     () => projects.find((project) => project.id === projectId),
     [projectId, projects],
   );
+  const activeQuickPrompts = selectedProject
+    ? projectQuickPrompts
+    : generalQuickPrompts;
+  const agentTransport = useMemo(
+    () => new DefaultChatTransport({ api: "/api/agents/solar" }),
+    [],
+  );
 
   const { messages, sendMessage, status, error, stop } =
     useChat<SolarAgentUIMessage>({
-      transport: new DefaultChatTransport({ api: "/api/agents/solar" }),
+      transport: agentTransport,
     });
 
   const busy = status === "submitted" || status === "streaming";
@@ -209,6 +274,19 @@ export default function ProjectDevelopmentAgentDemo({
     bessPowerMw: optionalNumber(bessPowerMw),
     bessEnergyMwh: optionalNumber(bessEnergyMwh),
   };
+  const manualInputCount = Object.values(manualInputs).filter(
+    (value) => typeof value === "number" && value > 0,
+  ).length;
+  const contextModeLabel = selectedProject
+    ? "Project context loaded"
+    : "General advisory mode";
+  const voiceButtonLabel = !speechSupported
+    ? "Voice unavailable"
+    : busy
+      ? "Available when complete"
+      : !latestAssistantText
+        ? "Available after an answer"
+        : "Speak latest answer";
 
   useEffect(() => {
     return () => {
@@ -261,8 +339,9 @@ export default function ProjectDevelopmentAgentDemo({
   }
 
   async function uploadDocument(file: File | undefined) {
-    if (!file || !projectId) return;
-    setDocumentStatus("Uploading and indexing…");
+    if (!file || !projectId || isUploading) return;
+    setIsUploading(true);
+    setDocumentStatus(`Indexing ${file.name}…`);
 
     try {
       const body = new FormData();
@@ -282,6 +361,8 @@ export default function ProjectDevelopmentAgentDemo({
       );
     } catch {
       setDocumentStatus("The document could not be uploaded. Please try again.");
+    } finally {
+      setIsUploading(false);
     }
   }
 
@@ -304,7 +385,7 @@ export default function ProjectDevelopmentAgentDemo({
               onClick={() => setContextOpen((current) => !current)}
               aria-expanded={contextOpen}
               aria-controls="agent-project-context"
-              className="rounded-lg border border-white/10 p-2 text-slate-300 lg:hidden"
+              className="flex size-10 items-center justify-center rounded-xl border border-white/10 text-slate-300 transition hover:border-emerald-300/30 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-300/70 lg:hidden"
             >
               <Settings2 className="size-4" />
               <span className="sr-only">Toggle project context</span>
@@ -316,18 +397,26 @@ export default function ProjectDevelopmentAgentDemo({
             className={`${contextOpen ? "block" : "hidden"} px-5 pb-5 lg:block lg:px-6 lg:pb-6`}
           >
             <p className="mt-5 text-[9px] font-bold uppercase tracking-[0.2em] text-emerald-200/60">
-              Project workspace
+              Engineering context
             </p>
 
             <label className="mt-4 block text-[10px] font-semibold text-slate-300">
-              Saved project
+              Project context
               <span className="relative mt-1.5 block">
                 <select
                   value={projectId}
-                  onChange={(event) => setProjectId(event.target.value)}
-                  className="w-full appearance-none rounded-xl border border-white/10 bg-white/[0.045] px-3 py-2.5 pr-9 text-xs text-white outline-none transition focus:border-emerald-300/40"
+                  disabled={!isSignedIn}
+                  onChange={(event) => {
+                    setProjectId(event.target.value);
+                    setDocumentStatus("");
+                  }}
+                  className="min-h-11 w-full appearance-none rounded-xl border border-white/10 bg-white/[0.045] px-3 py-2.5 pr-9 text-xs text-white outline-none transition focus:border-emerald-300/40 focus-visible:ring-2 focus-visible:ring-emerald-300/30 disabled:cursor-not-allowed disabled:text-slate-500"
                 >
-                  <option value="">General engineering question</option>
+                  <option value="">
+                    {isSignedIn
+                      ? "General guidance (no project)"
+                      : "Sign in to load saved projects"}
+                  </option>
                   {projects.map((project) => (
                     <option key={project.id} value={project.id}>
                       {project.name}
@@ -337,31 +426,38 @@ export default function ProjectDevelopmentAgentDemo({
                 <ChevronDown className="pointer-events-none absolute right-3 top-1/2 size-3.5 -translate-y-1/2 text-slate-400" />
               </span>
             </label>
+            {!isSignedIn ? (
+              <p className="mt-2 text-[9px] leading-4 text-slate-500">
+                Saved project context is available after sign-in.
+              </p>
+            ) : null}
 
             {selectedProject ? (
               <dl className="mt-3 grid grid-cols-2 gap-2 rounded-xl border border-emerald-300/15 bg-emerald-300/[0.045] p-3 text-[10px]">
                 <div>
-                  <dt className="text-slate-500">Market</dt>
+                  <dt className="text-slate-500">Country / jurisdiction</dt>
                   <dd className="mt-1 text-slate-200">
                     {selectedProject.country || "Not set"}
                   </dd>
                 </div>
                 <div>
-                  <dt className="text-slate-500">Area</dt>
+                  <dt className="text-slate-500">Gross site area</dt>
                   <dd className="mt-1 text-slate-200">
-                    {selectedProject.areaHa.toFixed(1)} ha
+                    {selectedProject.areaHa > 0
+                      ? `${selectedProject.areaHa.toFixed(1)} ha`
+                      : "Not recorded"}
                   </dd>
                 </div>
                 <div>
                   <dt className="text-slate-500">Technology</dt>
-                  <dd className="mt-1 capitalize text-slate-200">
-                    {selectedProject.technology.replace("-", " ")}
+                  <dd className="mt-1 text-slate-200">
+                    {projectTechnologyLabel(selectedProject.technology)}
                   </dd>
                 </div>
                 <div>
                   <dt className="text-slate-500">Stage</dt>
-                  <dd className="mt-1 capitalize text-slate-200">
-                    {selectedProject.status.replace("-", " ")}
+                  <dd className="mt-1 text-slate-200">
+                    {projectStageLabel(selectedProject.status)}
                   </dd>
                 </div>
               </dl>
@@ -369,15 +465,18 @@ export default function ProjectDevelopmentAgentDemo({
 
             <details className="group mt-4 rounded-xl border border-white/10 bg-white/[0.025]">
               <summary className="flex cursor-pointer list-none items-center justify-between px-3 py-3 text-[10px] font-semibold text-slate-300">
-                Design inputs
+                Optional design inputs
                 <ChevronDown className="size-3.5 transition group-open:rotate-180" />
               </summary>
-              <div className="grid grid-cols-2 gap-2 border-t border-white/10 p-3">
+              <fieldset
+                disabled={!isSignedIn}
+                className="grid grid-cols-2 gap-2 border-t border-white/10 p-3 disabled:opacity-60"
+              >
                 {[
-                  ["PV DC", "MWp", pvDcMw, setPvDcMw],
-                  ["PV AC", "MW", pvAcMw, setPvAcMw],
+                  ["PV DC capacity", "MWp", pvDcMw, setPvDcMw],
+                  ["PV AC rating", "MWac", pvAcMw, setPvAcMw],
                   ["BESS power", "MW", bessPowerMw, setBessPowerMw],
-                  ["BESS energy", "MWh", bessEnergyMwh, setBessEnergyMwh],
+                  ["BESS usable energy", "MWh", bessEnergyMwh, setBessEnergyMwh],
                 ].map(([label, unit, value, setter]) => (
                   <label key={label as string} className="text-[9px] text-slate-500">
                     <span className="flex justify-between gap-1">
@@ -386,44 +485,64 @@ export default function ProjectDevelopmentAgentDemo({
                     </span>
                     <input
                       type="number"
-                      min="0"
+                      min="0.001"
                       step="any"
+                      aria-label={`${label as string} (${unit as string})`}
                       value={value as string}
                       onChange={(event) =>
                         (setter as (nextValue: string) => void)(event.target.value)
                       }
-                      className="mt-1.5 w-full rounded-lg border border-white/10 bg-white/[0.035] px-2.5 py-2 text-xs text-white outline-none focus:border-emerald-300/40"
+                      className="mt-1.5 min-h-10 w-full rounded-lg border border-white/10 bg-white/[0.035] px-2.5 py-2 text-xs text-white outline-none focus:border-emerald-300/40 focus-visible:ring-2 focus-visible:ring-emerald-300/30"
                     />
                   </label>
                 ))}
-              </div>
+                <p className="col-span-2 text-[8px] leading-4 text-slate-500">
+                  User-supplied overrides. They are labelled as project inputs,
+                  not verified evidence.
+                </p>
+              </fieldset>
             </details>
 
             <div className="mt-4 rounded-xl border border-white/10 bg-white/[0.025] p-3">
               <div className="flex items-center gap-2 text-[10px] font-semibold text-slate-300">
                 <FilePlus2 className="size-3.5 text-emerald-300" />
-                Project evidence
+                Text project evidence
               </div>
               <label
                 className={`mt-2.5 block rounded-lg border border-dashed px-3 py-2.5 text-center text-[9px] transition ${
-                  projectId
+                  projectId && !isUploading
                     ? "cursor-pointer border-white/15 text-slate-400 hover:border-emerald-300/35 hover:text-slate-200"
                     : "border-white/10 text-slate-600"
                 }`}
               >
-                {projectId
-                  ? "Add TXT, MD, CSV or JSON"
-                  : "Select a project to add evidence"}
+                {isUploading ? (
+                  <span className="inline-flex items-center gap-2">
+                    <LoaderCircle className="size-3 animate-spin" /> Indexing
+                    evidence
+                  </span>
+                ) : projectId ? (
+                  "Add TXT, MD, CSV or JSON"
+                ) : isSignedIn ? (
+                  "Select a saved project first"
+                ) : (
+                  "Sign in to add project evidence"
+                )}
                 <input
                   type="file"
                   accept=".txt,.md,.csv,.json,text/plain,text/markdown,text/csv,application/json"
-                  disabled={!projectId}
-                  onChange={(event) =>
-                    void uploadDocument(event.target.files?.[0])
-                  }
+                  disabled={!projectId || isUploading}
+                  onChange={(event) => {
+                    const file = event.target.files?.[0];
+                    event.target.value = "";
+                    void uploadDocument(file);
+                  }}
                   className="sr-only"
                 />
               </label>
+              <p className="mt-2 text-[8px] leading-4 text-slate-500">
+                Text formats only · 1 MB maximum. PDF and DOCX ingestion is a
+                planned extension.
+              </p>
               {documentStatus ? (
                 <p className="mt-2 text-[9px] leading-4 text-slate-400" role="status">
                   {documentStatus}
@@ -436,8 +555,8 @@ export default function ProjectDevelopmentAgentDemo({
                 <Check className="size-2.5" />
               </span>
               <span>
-                Engineering guardrails are active. Evidence, assumptions and
-                calculations are labelled.
+                Screening support only. Sources, project inputs, assumptions,
+                calculated results and engineering judgement are separated.
               </span>
             </div>
           </div>
@@ -447,19 +566,19 @@ export default function ProjectDevelopmentAgentDemo({
           <header className="flex flex-wrap items-center justify-between gap-3 border-b border-[#10271f]/10 px-5 py-4 sm:px-7">
             <div>
               <p className="text-[9px] font-bold uppercase tracking-[0.19em] text-[#17805f]">
-                Solar energy expert
+                Solar &amp; BESS engineering copilot
               </p>
               <p className="mt-1 text-sm font-semibold">
-                {selectedProject?.name ?? "General engineering workspace"}
+                {selectedProject?.name ?? "General engineering guidance"}
               </p>
             </div>
             <div className="flex items-center gap-2 text-[9px] font-semibold text-[#4c625a]">
               <span className="inline-flex items-center gap-1.5 rounded-full bg-white px-2.5 py-1.5 shadow-sm ring-1 ring-[#10271f]/5">
                 <span className={`size-1.5 rounded-full ${busy ? "animate-pulse bg-amber-400" : "bg-emerald-500"}`} />
-                {busy ? "Working" : "Agent online"}
+                {busy ? "Working" : "Ready"}
               </span>
               <span className="hidden rounded-full bg-[#e9eeea] px-2.5 py-1.5 sm:inline-flex">
-                Project-aware
+                {contextModeLabel}
               </span>
             </div>
           </header>
@@ -472,17 +591,17 @@ export default function ProjectDevelopmentAgentDemo({
               <div className="mx-auto mt-20 max-w-md rounded-2xl border border-[#10271f]/10 bg-white p-7 text-center shadow-sm">
                 <SolarDevMark />
                 <h2 className="mt-5 text-xl font-semibold">
-                  Sign in to use the engineering agent
+                  Sign in to open the engineering workspace
                 </h2>
                 <p className="mt-3 text-sm leading-6 text-[#5d7069]">
-                  Authentication keeps project geometry, analyses and evidence
-                  private to their owner.
+                  Work with saved project context, GIS findings and owner-scoped
+                  evidence while keeping each project private.
                 </p>
                 <Link
                   href="/sign-in?redirect_url=/agents/project-development"
-                  className="mt-5 inline-flex rounded-xl bg-[#0b2a21] px-5 py-3 text-sm font-bold text-white transition hover:bg-[#123d30]"
+                  className="mt-5 inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-amber-400 px-5 py-3 text-sm font-bold text-slate-950 transition hover:bg-amber-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-500 focus-visible:ring-offset-2"
                 >
-                  Sign in
+                  <LogIn className="size-4" /> Sign in to continue
                 </Link>
               </div>
             ) : null}
@@ -493,35 +612,43 @@ export default function ProjectDevelopmentAgentDemo({
                   <SolarDevMark />
                 </div>
                 <p className="mt-5 text-[9px] font-bold uppercase tracking-[0.2em] text-[#17805f]">
-                  SolarDev copilot
+                  {selectedProject
+                    ? "Project-grounded copilot"
+                    : "General engineering copilot"}
                 </p>
                 <h2 className="mt-4 max-w-2xl text-3xl font-semibold tracking-[-0.03em] sm:text-4xl">
-                  Clear engineering answers,
-                  <br className="hidden sm:block" /> grounded in your project.
+                  {selectedProject
+                    ? "Turn project evidence into a defensible next decision."
+                    : "Build the engineering basis before fixing a project value."}
                 </h2>
                 <p className="mt-4 max-w-xl text-sm leading-6 text-[#5d7069]">
-                  Ask about solar PV, BESS, development risk or project economics.
-                  Supported calculations run through deterministic tools.
+                  {selectedProject
+                    ? "Ask about the selected project, test assumptions and expose the evidence still needed. Supported calculations use deterministic tools."
+                    : "Ask a general solar PV, BESS or development question. Select a saved project when you need project-specific conclusions."}
                 </p>
                 <div className="mt-8 grid w-full gap-2 sm:grid-cols-2">
-                  {quickPrompts.map(({ label, prompt }, index) => (
-                    <button
-                      key={prompt}
-                      type="button"
-                      onClick={() => choosePrompt(prompt)}
-                      className="group flex min-h-16 items-start gap-3 rounded-xl border border-[#10271f]/10 bg-white/80 px-4 py-3 text-left text-xs leading-5 text-[#233b32] transition hover:-translate-y-0.5 hover:border-[#17805f]/30 hover:bg-white hover:shadow-md"
-                    >
-                      <span className="mt-0.5 font-mono text-[9px] font-bold text-[#17805f]/65">
-                        {String(index + 1).padStart(2, "0")}
-                      </span>
-                      <span>
-                        <span className="block font-semibold text-[#10271f]">
-                          {label}
+                  {activeQuickPrompts.map(
+                    ({ label, description, prompt }, index) => (
+                      <button
+                        key={prompt}
+                        type="button"
+                        onClick={() => choosePrompt(prompt)}
+                        className="group flex min-h-20 items-start gap-3 rounded-xl border border-[#10271f]/10 bg-white/80 px-4 py-3 text-left text-xs leading-5 text-[#233b32] transition hover:-translate-y-0.5 hover:border-[#17805f]/30 hover:bg-white hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#17805f]/50"
+                      >
+                        <span className="mt-0.5 font-mono text-[9px] font-bold text-[#17805f]/65">
+                          {String(index + 1).padStart(2, "0")}
                         </span>
-                        <span className="mt-0.5 block text-[#60736c]">{prompt}</span>
-                      </span>
-                    </button>
-                  ))}
+                        <span>
+                          <span className="block font-semibold text-[#10271f]">
+                            {label}
+                          </span>
+                          <span className="mt-0.5 block text-[#60736c]">
+                            {description}
+                          </span>
+                        </span>
+                      </button>
+                    ),
+                  )}
                 </div>
               </div>
             ) : null}
@@ -580,8 +707,8 @@ export default function ProjectDevelopmentAgentDemo({
                                 }`}
                               />
                               {part.state === "output-available"
-                                ? "Calculated"
-                                : "Using"}{" "}
+                                ? "Completed"
+                                : "Running"}{" "}
                               {readableToolName(getToolName(part))}
                             </div>
                           );
@@ -598,7 +725,7 @@ export default function ProjectDevelopmentAgentDemo({
                       <Sparkles className="size-3.5 animate-pulse text-[#17805f]" />
                     </div>
                     <p className="pt-1 text-xs text-[#60736c]">
-                      Reviewing evidence and calculations…
+                      Reviewing context, evidence and calculations…
                     </p>
                   </div>
                 ) : null}
@@ -630,7 +757,12 @@ export default function ProjectDevelopmentAgentDemo({
                 }}
                 disabled={!isSignedIn}
                 rows={2}
-                placeholder="Ask about this project…"
+                aria-label="Ask the SolarDev engineering copilot"
+                placeholder={
+                  selectedProject
+                    ? `Ask about ${selectedProject.name}…`
+                    : "Ask a solar PV, BESS or project-development question…"
+                }
                 className="min-h-14 w-full resize-none bg-transparent px-2.5 py-2 text-sm text-[#10271f] outline-none placeholder:text-[#7b8c85]"
               />
               <div className="flex items-center justify-between gap-3 px-2 pb-1">
@@ -641,7 +773,7 @@ export default function ProjectDevelopmentAgentDemo({
                   <button
                     type="button"
                     onClick={stop}
-                    className="flex size-8 items-center justify-center rounded-lg bg-[#0b2a21] text-white transition hover:bg-[#123d30]"
+                    className="flex size-10 items-center justify-center rounded-xl bg-[#0b2a21] text-white transition hover:bg-[#123d30] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#17805f]/60"
                   >
                     <Pause className="size-3.5" />
                     <span className="sr-only">Stop response</span>
@@ -650,7 +782,7 @@ export default function ProjectDevelopmentAgentDemo({
                   <button
                     type="submit"
                     disabled={!input.trim() || !isSignedIn}
-                    className="flex size-8 items-center justify-center rounded-lg bg-[#0b2a21] text-white transition hover:bg-[#123d30] disabled:cursor-not-allowed disabled:bg-[#b7c9c1]"
+                    className="flex size-10 items-center justify-center rounded-xl bg-emerald-400 text-slate-950 transition hover:bg-emerald-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500/70 disabled:cursor-not-allowed disabled:bg-[#cbd5d0] disabled:text-[#71827b]"
                   >
                     <ArrowUp className="size-3.5" />
                     <span className="sr-only">Send message</span>
@@ -659,8 +791,9 @@ export default function ProjectDevelopmentAgentDemo({
               </div>
             </div>
             <p className="mx-auto mt-2 max-w-3xl text-center text-[8px] leading-4 text-[#8b9892]">
-              Indicative engineering support. Verify safety-critical and regulatory
-              decisions with qualified professionals and authoritative sources.
+              Screening support only. Verify safety-critical, regulatory and
+              investment decisions with qualified professionals and authoritative
+              sources.
             </p>
           </form>
         </section>
@@ -691,7 +824,7 @@ export default function ProjectDevelopmentAgentDemo({
               type="button"
               onClick={isSpeaking ? stopSpeaking : speakLatestAnswer}
               disabled={!speechSupported || !latestAssistantText || busy}
-              className="mt-2 flex w-full items-center justify-center gap-2 rounded-xl bg-[#0b2a21] px-3 py-2.5 text-[10px] font-bold text-white transition hover:bg-[#123d30] disabled:cursor-not-allowed disabled:bg-[#c7d1cc]"
+              className="mt-2 flex min-h-10 w-full items-center justify-center gap-2 rounded-xl border border-[#10271f]/10 bg-white px-3 py-2.5 text-[10px] font-bold text-[#16372b] transition hover:border-[#17805f]/30 hover:bg-[#f7faf8] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#17805f]/50 disabled:cursor-not-allowed disabled:bg-[#e4e9e5] disabled:text-[#7b8c85]"
             >
               {isSpeaking ? (
                 <>
@@ -699,16 +832,47 @@ export default function ProjectDevelopmentAgentDemo({
                 </>
               ) : (
                 <>
-                  <Volume2 className="size-3.5" /> Listen to answer
+                  <Volume2 className="size-3.5" /> {voiceButtonLabel}
                 </>
               )}
             </button>
             <p className="mt-2 text-center text-[8px] leading-4 text-[#819089]">
-              Uses your browser&apos;s voice. No extra AI call.
+              Browser-native playback; availability depends on your device.
             </p>
           </div>
 
+          <div className="relative mt-4 w-full rounded-2xl border border-[#10271f]/10 bg-white/70 p-3">
+            <p className="text-[9px] font-bold uppercase tracking-[0.15em] text-[#71827b]">
+              Session basis
+            </p>
+            <dl className="mt-3 space-y-2.5 text-[9px] leading-4">
+              <div className="flex items-start justify-between gap-3">
+                <dt className="text-[#71827b]">Context</dt>
+                <dd className="text-right font-semibold text-[#29483c]">
+                  {selectedProject?.name ?? "General guidance"}
+                </dd>
+              </div>
+              <div className="flex items-start justify-between gap-3">
+                <dt className="text-[#71827b]">Manual inputs</dt>
+                <dd className="text-right font-semibold text-[#29483c]">
+                  {manualInputCount > 0
+                    ? `${manualInputCount} supplied`
+                    : "None supplied"}
+                </dd>
+              </div>
+              <div className="flex items-start justify-between gap-3">
+                <dt className="text-[#71827b]">Project evidence</dt>
+                <dd className="text-right font-semibold text-[#29483c]">
+                  {selectedProject ? "Search enabled" : "Not available"}
+                </dd>
+              </div>
+            </dl>
+          </div>
+
           <div className="mt-auto w-full border-t border-[#10271f]/10 pt-5">
+            <p className="mb-3 text-[9px] font-bold uppercase tracking-[0.15em] text-[#71827b]">
+              Response discipline
+            </p>
             <div className="space-y-3 text-[9px] leading-4 text-[#65776f]">
               {["Sources", "Assumptions", "Calculated results"].map((label) => (
                 <div key={label} className="flex items-center gap-2">
