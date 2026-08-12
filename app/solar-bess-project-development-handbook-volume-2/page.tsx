@@ -155,7 +155,7 @@ export default function VolumeTwoPage() {
       <header className="border-b border-white/10">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-5">
           <Link href="/" className="text-lg font-bold">
-            SolarDev <span className="text-yellow-400">AI</span>
+            SolarDev <span className="text-amber-300">AI</span>
           </Link>
           <Link
             href="/handbooks"

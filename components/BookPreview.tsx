@@ -128,7 +128,7 @@ export default function BookPreview({
       className="relative overflow-hidden border-b border-white/10 bg-slate-900/45"
     >
       <div className="pointer-events-none absolute inset-0">
-        <div className="absolute left-[-12rem] top-20 h-[32rem] w-[32rem] rounded-full bg-blue-500/5 blur-3xl" />
+        <div className="absolute left-[-12rem] top-20 h-[32rem] w-[32rem] rounded-full bg-emerald-400/[0.05] blur-3xl" />
         <div className="absolute right-[-10rem] bottom-20 h-[30rem] w-[30rem] rounded-full bg-emerald-400/5 blur-3xl" />
       </div>
 

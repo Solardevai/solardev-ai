@@ -91,12 +91,12 @@ const homeStructuredData = {
     },
     {
       "@type": "SoftwareApplication",
-      name: "SolarDev Project Development Agent Preview",
+      name: "SolarDev Engineering Copilot",
       applicationCategory: "BusinessApplication",
       operatingSystem: "Web",
       url: "https://www.solardev.ai/agents/project-development",
       description:
-        "Interactive preview of an evidence-led specialist agent for solar and BESS project development workflows.",
+        "Project-aware engineering copilot for sourced solar and BESS analysis, deterministic calculations and evidence review.",
       offers: {
         "@type": "Offer",
         price: "0",
@@ -120,7 +120,7 @@ export default function Home() {
 
       <Navbar />
 
-      <main className="min-h-screen bg-slate-950 text-white">
+      <main className="min-h-screen bg-[#f4f5f0] text-[#10271f]">
         <Hero />
         <PlatformExperience />
         <Features />

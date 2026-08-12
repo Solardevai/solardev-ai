@@ -10,7 +10,7 @@ const SITE_TITLE =
   "Professional Solar & BESS Development Platform | SolarDev AI";
 
 const SITE_DESCRIPTION =
-  "GIS site intelligence, engineering-led workflows, traceable project outputs and controlled AI agents for utility-scale Solar PV and BESS development.";
+  "GIS site intelligence, engineering-led workflows, traceable project outputs and the SolarDev Engineering Copilot for utility-scale Solar PV and BESS development.";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -129,9 +129,9 @@ export default function RootLayout({ children }: RootLayoutProps) {
             appearance={{
               variables: {
                 colorPrimary: "#fbbf24",
-                colorBackground: "#0f172a",
-                colorForeground: "#f8fafc",
-                colorMutedForeground: "#94a3b8",
+                colorBackground: "#0b2a21",
+                colorForeground: "#f4f5f0",
+                colorMutedForeground: "#9cafaa",
                 borderRadius: "0.875rem",
               },
               elements: {

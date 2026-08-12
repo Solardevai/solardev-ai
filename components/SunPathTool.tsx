@@ -350,9 +350,9 @@ export default function SunPathTool() {
               <path d="M-20 560C145 480 245 525 365 475S650 400 930 455V650H-20Z" fill="#192b39" />
               <g fill="none" strokeLinecap="round">
                 <path d="M-40 485C110 440 170 310 315 315S470 420 605 340S710 135 940 80" stroke="#4a5b70" strokeWidth="18" />
-                <path d="M-40 485C110 440 170 310 315 315S470 420 605 340S710 135 940 80" stroke="#94a3b8" strokeWidth="2" strokeDasharray="12 10" opacity=".7" />
+                <path d="M-40 485C110 440 170 310 315 315S470 420 605 340S710 135 940 80" stroke="#9cafaa" strokeWidth="2" strokeDasharray="12 10" opacity=".7" />
                 <path d="M75 -20C120 155 240 200 230 390S145 540 115 650M520 -20C485 120 500 215 650 265S845 310 930 375" stroke="#3d4e63" strokeWidth="10" />
-                <path d="M75 -20C120 155 240 200 230 390S145 540 115 650M520 -20C485 120 500 215 650 265S845 310 930 375" stroke="#64748b" strokeWidth="1.5" strokeDasharray="8 9" />
+                <path d="M75 -20C120 155 240 200 230 390S145 540 115 650M520 -20C485 120 500 215 650 265S845 310 930 375" stroke="#71827b" strokeWidth="1.5" strokeDasharray="8 9" />
                 <path d="M-20 210L165 225L255 145L430 205L555 160L690 205L930 175M350 650L385 510L485 445L510 290L625 215" stroke="#273a52" strokeWidth="5" />
                 <path d="M-20 75L165 125L300 75L445 110L610 65L770 105L930 45M-20 390L130 355L280 405L425 370L560 410L720 365L930 415" stroke="#20334b" strokeWidth="3" />
               </g>

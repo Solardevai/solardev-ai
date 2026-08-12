@@ -173,12 +173,12 @@ export default function Navbar({
           onClick={closeMenu}
           className="flex items-center gap-3 whitespace-nowrap transition hover:opacity-90 lg:justify-self-start"
         >
-          <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-yellow-400/30 bg-yellow-400/10">
-            <span className="h-4 w-4 rounded-full bg-yellow-400 shadow-[0_0_20px_rgba(250,204,21,0.75)]" />
+          <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-amber-300/30 bg-amber-300/10">
+            <span className="h-4 w-4 rounded-full bg-amber-300 shadow-[0_0_20px_rgba(252,211,77,0.65)]" />
           </span>
 
           <span className="hidden text-xl font-bold tracking-tight text-white sm:inline lg:text-2xl">
-            SolarDev <span className="text-yellow-400">AI</span>
+            SolarDev <span className="text-amber-300">AI</span>
           </span>
         </Link>
 
@@ -251,7 +251,7 @@ export default function Navbar({
                       className="mt-1 block rounded-xl px-4 py-3 transition hover:bg-white/[0.06] focus:outline-none focus-visible:bg-white/[0.06]"
                     >
                       <span className="block font-semibold text-white">
-                        Project Development Agent
+                        Engineering Copilot
                       </span>
                       <span className="mt-1 block text-xs leading-5 text-slate-400">
                         Preview evidence-led project actions and decision briefs.
@@ -379,7 +379,7 @@ export default function Navbar({
                       onClick={closeMenu}
                       className="flex min-h-12 items-center justify-between rounded-lg px-3 py-3 font-semibold text-white transition hover:bg-white/[0.05] focus:outline-none focus-visible:bg-white/[0.05]"
                     >
-                      Project Development Agent
+                      Engineering Copilot
                     </Link>
                   </div>
                 )}

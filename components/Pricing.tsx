@@ -12,7 +12,7 @@ export default function Pricing() {
     <section
       id="pricing"
       aria-labelledby="pricing-title"
-      className="relative scroll-mt-24 overflow-hidden border-y border-white/10 bg-slate-950 py-16 sm:py-20"
+      className="relative scroll-mt-24 overflow-hidden border-y border-[#10271f]/10 bg-[#f4f5f0] py-16 text-[#10271f] sm:py-20"
     >
       <div
         aria-hidden="true"
@@ -26,24 +26,24 @@ export default function Pricing() {
           </p>
           <h2
             id="pricing-title"
-            className="mt-3 text-3xl font-bold tracking-tight text-white sm:text-4xl"
+            className="mt-3 text-3xl font-bold tracking-tight text-[#10271f] sm:text-4xl"
           >
             Choose your volume
           </h2>
-          <p className="mx-auto mt-4 max-w-2xl leading-7 text-slate-400">
+          <p className="mx-auto mt-4 max-w-2xl leading-7 text-[#536860]">
             Each volume is an individual digital edition with a
             one-time purchase price.
           </p>
         </div>
 
         <div className="mt-10 grid gap-5 md:grid-cols-2">
-          <article className="flex h-full flex-col rounded-2xl border border-emerald-400/25 bg-white/[0.035] p-6 shadow-xl shadow-black/15">
+          <article className="flex h-full flex-col rounded-2xl border border-emerald-600/25 bg-white/80 p-6 shadow-xl shadow-[#10271f]/10">
             <div className="flex items-start justify-between gap-4">
               <div>
                 <p className="text-sm font-semibold uppercase tracking-[0.18em] text-emerald-400">
                   {volumeOne.volume}
                 </p>
-                <h3 className="mt-2 text-xl font-bold text-white">
+                <h3 className="mt-2 text-xl font-bold text-[#10271f]">
                   {volumeOne.title}
                 </h3>
               </div>
@@ -53,7 +53,7 @@ export default function Pricing() {
             </div>
 
             <div className="mt-5 flex items-end gap-2">
-              <span className="text-4xl font-bold tracking-tight text-white">
+              <span className="text-4xl font-bold tracking-tight text-[#10271f]">
                 €{volumeOne.price}
               </span>
               <span className="pb-1 text-sm text-slate-500">
@@ -61,7 +61,7 @@ export default function Pricing() {
               </span>
             </div>
 
-            <ul className="mt-5 flex-1 space-y-2 text-sm text-slate-300">
+            <ul className="mt-5 flex-1 space-y-2 text-sm text-[#29483c]">
               <li>{volumeOne.pages}-page PDF edition</li>
               <li>{volumeOne.chapters} professional chapters</li>
               <li>Individual professional-use licence</li>
@@ -83,13 +83,13 @@ export default function Pricing() {
             </TrackedCheckoutLink>
           </article>
 
-          <article className="flex h-full flex-col rounded-2xl border border-white/10 bg-white/[0.025] p-6">
+          <article className="flex h-full flex-col rounded-2xl border border-[#10271f]/10 bg-white/70 p-6">
             <div className="flex items-start justify-between gap-4">
               <div>
                 <p className="text-sm font-semibold uppercase tracking-[0.18em] text-emerald-400">
                   {volumeTwo.volume}
                 </p>
-                <h3 className="mt-2 text-xl font-bold text-white">
+                <h3 className="mt-2 text-xl font-bold text-[#10271f]">
                   {volumeTwo.title}
                 </h3>
               </div>
@@ -99,7 +99,7 @@ export default function Pricing() {
             </div>
 
             <div className="mt-5 flex items-end gap-2">
-              <span className="text-4xl font-bold tracking-tight text-white">
+              <span className="text-4xl font-bold tracking-tight text-[#10271f]">
                 €{volumeTwo.price}
               </span>
               <span className="pb-1 text-sm text-slate-500">
@@ -107,7 +107,7 @@ export default function Pricing() {
               </span>
             </div>
 
-            <ul className="mt-5 flex-1 space-y-2 text-sm text-slate-300">
+            <ul className="mt-5 flex-1 space-y-2 text-sm text-[#29483c]">
               <li>{volumeTwo.pages}-page PDF edition</li>
               <li>{volumeTwo.chapters} professional chapters</li>
               <li>Individual professional-use licence</li>

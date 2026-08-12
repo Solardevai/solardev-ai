@@ -35,28 +35,28 @@ const roadmapItems: RoadmapItem[] = [
   {
     year: "2026 · Q3",
     number: "03",
-    title: "GIS Workspace & Agent Preview",
+    title: "Project Workspace & Engineering Copilot",
     description:
-      "Turn saved boundaries into traceable screening evidence while demonstrating the first specialist-agent interaction model.",
+      "Connect saved projects, deterministic tools and evidence-labelled engineering guidance in one project-aware workspace.",
     deliverables: [
       "Saved GIS projects and screening index",
       "Source registers, PDF reports and CSV exports",
-      "Project Development Agent preview",
+      "SolarDev Engineering Copilot",
     ],
-    status: "Preview live",
+    status: "Live",
     state: "current",
   },
   {
     year: "2026 · Q4",
     number: "04",
-    title: "Platform Expansion",
+    title: "Evidence & Data Expansion",
     description:
-      "Expand the live platform with deeper market evidence, development-envelope calculations and controlled specialist agents.",
+      "Extend the live copilot with richer project documents, jurisdictional evidence, spatial intelligence and team review workflows.",
     deliverables: [
-      "Country-specific authority datasets",
-      "Collaboration and evidence workflows",
-      "Project-aware specialist agents",
-      "Independent methodology review",
+      "PDF and DOCX evidence ingestion",
+      "Country-specific authority and market connectors",
+      "GIS and PostGIS portfolio intelligence",
+      "Collaboration, permissions and review workflows",
     ],
     status: "Planned",
     state: "upcoming",
@@ -66,27 +66,27 @@ const roadmapItems: RoadmapItem[] = [
 const stateStyles = {
   complete: {
     marker:
-      "border-emerald-300 bg-emerald-400 text-slate-950 shadow-[0_0_0_6px_rgba(52,211,153,0.1)]",
+      "border-emerald-500 bg-emerald-500 text-[#071d17] shadow-[0_0_0_6px_rgba(16,185,129,0.1)]",
     status:
-      "border-emerald-400/25 bg-emerald-400/10 text-emerald-300",
-    card: "border-emerald-400/20 bg-emerald-400/[0.045]",
-    bullet: "bg-emerald-400",
+      "border-emerald-700/15 bg-emerald-100 text-emerald-800",
+    card: "border-emerald-700/15 bg-white/75",
+    bullet: "bg-emerald-600",
   },
   current: {
     marker:
-      "border-emerald-300 bg-slate-950 text-emerald-300 shadow-[0_0_0_6px_rgba(52,211,153,0.12)]",
+      "border-emerald-600 bg-[#10271f] text-emerald-300 shadow-[0_0_0_6px_rgba(16,185,129,0.12)]",
     status:
-      "border-emerald-400/30 bg-emerald-400/10 text-emerald-300",
+      "border-emerald-700/20 bg-emerald-100 text-emerald-800",
     card:
-      "border-emerald-400/35 bg-gradient-to-b from-emerald-400/[0.075] to-white/[0.025] shadow-2xl shadow-emerald-950/20",
-    bullet: "bg-emerald-300",
+      "border-emerald-600/35 bg-gradient-to-b from-emerald-50 to-white shadow-xl shadow-emerald-900/10",
+    bullet: "bg-emerald-600",
   },
   upcoming: {
     marker:
-      "border-white/20 bg-slate-950 text-slate-400 shadow-[0_0_0_6px_rgba(255,255,255,0.035)]",
-    status: "border-white/10 bg-white/[0.035] text-slate-400",
-    card: "border-white/10 bg-white/[0.025]",
-    bullet: "bg-slate-600",
+      "border-[#10271f]/20 bg-[#f4f5f0] text-[#536860] shadow-[0_0_0_6px_rgba(16,39,31,0.04)]",
+    status: "border-[#10271f]/10 bg-[#10271f]/5 text-[#536860]",
+    card: "border-[#10271f]/10 bg-white/60",
+    bullet: "bg-[#778a82]",
   },
 } as const;
 
@@ -142,7 +142,7 @@ export default function Roadmap() {
     <section
       id="roadmap"
       aria-labelledby="roadmap-title"
-      className="relative scroll-mt-24 overflow-hidden border-y border-white/10 bg-slate-950 py-16 sm:py-20"
+      className="relative scroll-mt-24 overflow-hidden border-y border-[#10271f]/10 bg-[#f4f5f0] py-16 text-[#10271f] sm:py-20"
     >
       <div
         aria-hidden="true"
@@ -162,7 +162,7 @@ export default function Roadmap() {
         <div className="relative mx-auto mt-12 max-w-6xl">
           <div
             aria-hidden="true"
-            className="absolute bottom-5 left-[17px] top-5 w-px bg-white/10 md:bottom-auto md:left-[12.5%] md:right-[12.5%] md:top-[17px] md:h-px md:w-auto"
+            className="absolute bottom-5 left-[17px] top-5 w-px bg-[#10271f]/10 md:bottom-auto md:left-[12.5%] md:right-[12.5%] md:top-[17px] md:h-px md:w-auto"
           />
           <div
             aria-hidden="true"
@@ -183,10 +183,10 @@ export default function Roadmap() {
 
                     <div className="flex min-w-0 flex-1 items-center justify-between gap-3 md:w-full md:flex-col md:justify-start md:text-center">
                       <div>
-                        <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-slate-500">
+                        <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-[#778a82]">
                           Stage {item.number}
                         </p>
-                        <p className="mt-1 text-lg font-bold tracking-tight text-white">
+                        <p className="mt-1 text-lg font-bold tracking-tight text-[#10271f]">
                           {item.year}
                         </p>
                       </div>
@@ -202,18 +202,18 @@ export default function Roadmap() {
                   <article
                     className={`mt-5 flex min-h-64 flex-col rounded-2xl border p-5 transition duration-300 md:mt-6 md:p-6 ${styles.card}`}
                   >
-                    <h3 className="text-xl font-semibold text-white">
+                    <h3 className="text-xl font-semibold text-[#10271f]">
                       {item.title}
                     </h3>
-                    <p className="mt-3 text-sm leading-6 text-slate-400">
+                    <p className="mt-3 text-sm leading-6 text-[#536860]">
                       {item.description}
                     </p>
 
-                    <ul className="mt-auto grid gap-2 border-t border-white/[0.08] pt-5">
+                    <ul className="mt-auto grid gap-2 border-t border-[#10271f]/10 pt-5">
                       {item.deliverables.map((deliverable) => (
                         <li
                           key={deliverable}
-                          className="flex items-start gap-2.5 text-xs font-medium leading-5 text-slate-300"
+                          className="flex items-start gap-2.5 text-xs font-medium leading-5 text-[#29483c]"
                         >
                           <span
                             aria-hidden="true"
@@ -229,9 +229,9 @@ export default function Roadmap() {
             })}
           </ol>
 
-          <div className="mt-9 flex items-center justify-center gap-3 text-xs text-slate-500">
+          <div className="mt-9 flex items-center justify-center gap-3 text-xs text-[#778a82]">
             <span className="h-px w-10 bg-gradient-to-r from-transparent to-emerald-400/60" />
-            <span>Knowledge → tools → platform</span>
+            <span>Knowledge → tools → evidence-led copilot</span>
             <span className="h-px w-10 bg-gradient-to-l from-transparent to-emerald-400/60" />
           </div>
         </div>

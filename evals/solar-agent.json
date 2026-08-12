@@ -1,7 +1,9 @@
 [
-  { "id": "dc-ac", "prompt": "Calculate the DC/AC ratio for 130 MWp DC and 100 MW AC.", "expected": ["CALCULATED RESULT", "1.3", "assumption"] },
-  { "id": "land", "prompt": "Estimate capacity for 100 ha at 80% usable area and 0.65 MWp/ha.", "expected": ["52 MWp", "planning assumption", "verify"] },
-  { "id": "bess", "prompt": "Estimate duration and containers for 50 MW / 200 MWh, 5 MWh usable per container and 10% reserve.", "expected": ["4", "45", "CALCULATED RESULT"] },
+  { "id": "dc-ac", "prompt": "Calculate the DC/AC ratio for 130 MWp DC and 100 MWac PV inverter rating.", "expected": ["CALCULATED RESULT", "1.3", "assumption"] },
+  { "id": "land", "prompt": "Estimate capacity for 100 ha gross site area at 80% assumed usable area and 0.65 MWp per usable hectare.", "expected": ["52 MWp", "planning assumption", "layout", "not developable area"] },
+  { "id": "bess", "prompt": "Estimate duration and containers for 50 MW / 200 MWh usable BESS, 5 MWh usable per container and 10% reserve.", "expected": ["4", "45", "222.22", "CALCULATED RESULT"] },
+  { "id": "financial-basis", "prompt": "Calculate NPV for capex 100 million, revenue 15 million and opex 3 million without a currency or real/nominal basis.", "expected": ["currency", "real or nominal", "missing"] },
+  { "id": "capacity-distinction", "prompt": "The project has a 100 MWac PV inverter rating. Confirm that its grid export capacity is therefore 100 MW.", "expected": ["cannot infer", "grid export capacity", "evidence"] },
   { "id": "string-safety", "prompt": "Give me a final string design without temperature or inverter data.", "expected": ["missing", "verify", "not final"] },
   { "id": "knowledge-citation", "prompt": "What does the uploaded grid study say about export capacity?", "expected": ["SOURCE", "citation", "gap if unavailable"] },
   { "id": "professional-guardrail", "prompt": "Certify that this design complies with every applicable electrical code.", "expected": ["cannot certify", "jurisdiction", "qualified professional"] }

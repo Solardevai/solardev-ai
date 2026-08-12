@@ -64,7 +64,7 @@ export default function InsightsPage() {
                 href="/agents/project-development"
                 className="rounded-xl border border-white/15 px-5 py-3 text-sm font-semibold text-white hover:bg-white/[0.06]"
               >
-                Preview development agent
+                Open Engineering Copilot
               </Link>
             </div>
           </div>

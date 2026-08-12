@@ -8,7 +8,7 @@ export default function AudienceApplications() {
     <section
       id="audience"
       aria-labelledby="audience-title"
-      className="scroll-mt-24 bg-slate-950 py-20 sm:py-24"
+      className="scroll-mt-24 border-b border-[#10271f]/10 bg-[#edf0e9] py-20 text-[#10271f] sm:py-24"
     >
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
         <div className="mx-auto max-w-3xl text-center">
@@ -18,12 +18,12 @@ export default function AudienceApplications() {
 
           <h2
             id="audience-title"
-            className="mt-4 text-3xl font-bold tracking-tight text-white sm:text-4xl"
+            className="mt-4 text-3xl font-bold tracking-tight text-[#10271f] sm:text-4xl"
           >
             Built for real project-development work
           </h2>
 
-          <p className="mt-5 text-lg leading-8 text-slate-400">
+          <p className="mt-5 text-lg leading-8 text-[#536860]">
             Controlled AI workflows for professionals
             responsible for technical reviews,
             development decisions and investment
@@ -35,7 +35,7 @@ export default function AudienceApplications() {
           {professionalAudience.map((audience) => (
             <span
               key={audience}
-              className="rounded-full border border-white/10 bg-white/[0.04] px-4 py-2 text-sm text-slate-300"
+              className="rounded-full border border-[#10271f]/10 bg-white/70 px-4 py-2 text-sm text-[#29483c]"
             >
               {audience}
             </span>
@@ -46,7 +46,7 @@ export default function AudienceApplications() {
           {applications.map((application) => (
             <article
               key={application.number}
-              className="rounded-2xl border border-white/10 bg-white/[0.03] p-6 sm:p-7"
+              className="rounded-2xl border border-[#10271f]/10 bg-white/70 p-6 shadow-sm sm:p-7"
             >
               <div className="flex items-start gap-4">
                 <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-emerald-400/10 text-sm font-bold text-emerald-300">
@@ -54,11 +54,11 @@ export default function AudienceApplications() {
                 </span>
 
                 <div>
-                  <h3 className="text-xl font-semibold text-white">
+                  <h3 className="text-xl font-semibold text-[#10271f]">
                     {application.title}
                   </h3>
 
-                  <p className="mt-3 leading-7 text-slate-400">
+                  <p className="mt-3 leading-7 text-[#536860]">
                     {application.description}
                   </p>
                 </div>
@@ -68,7 +68,7 @@ export default function AudienceApplications() {
                 {application.tags.map((tag) => (
                   <span
                     key={tag}
-                    className="rounded-full bg-white/5 px-3 py-1 text-xs font-medium text-slate-400"
+                    className="rounded-full bg-[#edf0e9] px-3 py-1 text-xs font-medium text-[#536860]"
                   >
                     {tag}
                   </span>

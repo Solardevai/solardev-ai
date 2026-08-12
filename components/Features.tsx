@@ -46,7 +46,7 @@ export default function Features() {
     <section
       id="features"
       aria-labelledby="features-title"
-      className="relative overflow-hidden bg-slate-950 py-20 sm:py-24 lg:py-28"
+      className="relative overflow-hidden border-b border-[#10271f]/10 bg-[#f4f5f0] py-20 text-[#10271f] sm:py-24 lg:py-28"
     >
       {/* Background decoration */}
       <div
@@ -55,7 +55,7 @@ export default function Features() {
       >
         <div className="absolute left-0 top-1/4 h-72 w-72 rounded-full bg-emerald-500/5 blur-3xl" />
 
-        <div className="absolute bottom-0 right-0 h-80 w-80 rounded-full bg-cyan-500/5 blur-3xl" />
+        <div className="absolute bottom-0 right-0 h-80 w-80 rounded-full bg-amber-300/[0.05] blur-3xl" />
       </div>
 
       <div className="relative mx-auto max-w-7xl px-6 lg:px-8">
@@ -67,12 +67,12 @@ export default function Features() {
 
           <h2
             id="features-title"
-            className="mt-4 text-3xl font-bold tracking-tight text-white sm:text-4xl lg:text-5xl"
+            className="mt-4 text-3xl font-bold tracking-tight text-[#10271f] sm:text-4xl lg:text-5xl"
           >
             Engineering knowledge, controlled AI and traceable tools
           </h2>
 
-          <p className="mx-auto mt-6 max-w-2xl text-lg leading-8 text-slate-300">
+          <p className="mx-auto mt-6 max-w-2xl text-lg leading-8 text-[#536860]">
             SolarDev AI separates professional methodology, AI-assisted
             workflows and deterministic calculations so each output can be
             reviewed at the appropriate level.
@@ -84,7 +84,7 @@ export default function Features() {
           {features.map((feature) => (
             <article
               key={feature.number}
-              className="group relative overflow-hidden rounded-2xl border border-white/10 bg-white/[0.035] p-6 transition duration-300 hover:-translate-y-1 hover:border-emerald-400/30 hover:bg-white/[0.055] sm:p-7"
+              className="group relative overflow-hidden rounded-2xl border border-[#10271f]/10 bg-white/75 p-6 shadow-sm transition duration-300 hover:-translate-y-1 hover:border-emerald-600/30 hover:bg-white sm:p-7"
             >
               <div
                 aria-hidden="true"
@@ -96,19 +96,19 @@ export default function Features() {
                   {feature.number}
                 </span>
 
-                <h3 className="mt-6 text-xl font-semibold text-white">
+                <h3 className="mt-6 text-xl font-semibold text-[#10271f]">
                   {feature.title}
                 </h3>
 
-                <p className="mt-4 text-sm leading-6 text-slate-400 sm:text-base">
+                <p className="mt-4 text-sm leading-6 text-[#536860] sm:text-base">
                   {feature.description}
                 </p>
 
-                <ul className="mt-6 space-y-3 border-t border-white/10 pt-5">
+                <ul className="mt-6 space-y-3 border-t border-[#10271f]/10 pt-5">
                   {feature.points.map((point) => (
                     <li
                       key={point}
-                      className="flex items-start gap-3 text-sm leading-6 text-slate-300"
+                      className="flex items-start gap-3 text-sm leading-6 text-[#29483c]"
                     >
                       <span
                         aria-hidden="true"
@@ -125,8 +125,8 @@ export default function Features() {
         </div>
 
         {/* Professional principle */}
-        <div className="mx-auto mt-12 max-w-4xl rounded-2xl border border-white/10 bg-white/[0.025] px-6 py-7 text-center sm:px-10">
-          <p className="text-base leading-7 text-slate-300">
+        <div className="mx-auto mt-12 max-w-4xl rounded-2xl border border-[#10271f]/10 bg-[#edf0e9] px-6 py-7 text-center sm:px-10">
+          <p className="text-base leading-7 text-[#29483c]">
             AI-generated outputs are treated as draft analysis requiring
             verification before they are used in project decisions,
             engineering deliverables or investment recommendations.

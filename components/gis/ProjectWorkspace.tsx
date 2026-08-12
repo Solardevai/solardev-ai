@@ -62,7 +62,7 @@ const intersectionLegendDefinitions: Partial<
   },
   "flood-risk-areas": { label: "Flood reporting area", color: "#38bdf8" },
   "surface-water": { label: "Surface water / wetland", color: "#22d3ee" },
-  "main-road": { label: "Main road", color: "#f8fafc" },
+  "main-road": { label: "Main road", color: "#f4f5f0" },
   "transmission-line": { label: "Transmission line", color: "#ef4444" },
   substation: { label: "Substation", color: "#a78bfa" },
   terrain: { label: "North-facing terrain mask", color: "#f97316" },
@@ -283,7 +283,7 @@ function ConstraintMapOverlay({
               cy={shape.y}
               r="6"
               fill={shape.color}
-              stroke="#020617"
+              stroke="#071d17"
               strokeWidth="2"
               data-criterion-id={shape.criterionId}
             />
@@ -293,7 +293,7 @@ function ConstraintMapOverlay({
                 <path
                   d={shape.pathData}
                   fill="none"
-                  stroke="#020617"
+                  stroke="#071d17"
                   strokeOpacity="0.9"
                   strokeWidth="7"
                   strokeLinejoin="round"
@@ -545,7 +545,7 @@ export default function ProjectWorkspace({
           href={`/agents/project-development?projectId=${project.id}`}
           className="rounded-lg border border-emerald-300/20 bg-emerald-300/10 px-3 py-2 text-xs font-semibold text-emerald-200 hover:bg-emerald-300/15"
         >
-          Open in engineering agent
+          Open in Engineering Copilot
         </Link>
         <Link
           href="/tools/solar-site-screening"
