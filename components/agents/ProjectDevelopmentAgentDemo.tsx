@@ -612,13 +612,7 @@ export default function ProjectDevelopmentAgentDemo({
                   <SolarDevMark />
                 </div>
                 <p className="mt-5 text-[9px] font-bold uppercase tracking-[0.2em] text-[#17805f]">
-<<<<<<< HEAD
                   Project Development Agent
-=======
-                  {selectedProject
-                    ? "Project-grounded copilot"
-                    : "General engineering copilot"}
->>>>>>> d2d00ba3bf787d01aba0a9af1276dc26dfc758a0
                 </p>
                 <h2 className="mt-4 max-w-2xl text-3xl font-semibold tracking-[-0.03em] sm:text-4xl">
                   {selectedProject
