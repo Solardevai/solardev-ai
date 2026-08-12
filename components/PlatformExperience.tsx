@@ -118,7 +118,7 @@ export default function PlatformExperience() {
             <p className="text-sm font-bold uppercase tracking-[0.2em] text-amber-300">Platform direction</p>
             <h2 className="mt-4 text-3xl font-bold tracking-tight sm:text-5xl">Meet the Project Development Agent</h2>
             <p className="mt-6 text-lg leading-8 text-slate-300">A specialist agent designed around real development stages, evidence registers, information gaps, risk ownership and decision gates—not generic chat.</p>
-            <Link href="/agents/project-development" className="mt-7 inline-flex rounded-xl bg-amber-400 px-5 py-3 text-sm font-bold text-slate-950 hover:bg-amber-300">Try the interactive preview</Link>
+            <Link href="/agents/project-development" className="mt-7 inline-flex rounded-xl bg-amber-400 px-5 py-3 text-sm font-bold text-slate-950 hover:bg-amber-300">Open the engineering agent</Link>
           </div>
           <div className="rounded-3xl border border-white/10 bg-slate-900 p-5 shadow-2xl shadow-black/30">
             <div className="flex items-center justify-between border-b border-white/10 pb-4">

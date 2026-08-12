@@ -1,5 +1,20 @@
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
+## SolarDev Engineering Agent
+
+The authenticated agent workspace at `/agents/project-development` combines a strong solar/BESS system policy, project context, owner-scoped document retrieval and deterministic tools for DC/AC ratio, land-capacity screening, PV string sizing, BESS duration/container estimates and basic financial metrics.
+
+Configure the variables documented in `.env.example`. On Vercel, AI Gateway can authenticate with OIDC; local development normally uses `AI_GATEWAY_API_KEY`. The default model is configurable through `AI_GATEWAY_MODEL`.
+
+After pulling the agent changes, generate the Prisma client and apply the included migration in the target environment:
+
+```bash
+npx prisma generate
+npx prisma migrate deploy
+```
+
+Project documents currently accept TXT, Markdown, CSV and JSON up to the configured byte limit. Set `SOLARDEV_RAG_API_URL` and `SOLARDEV_RAG_API_TOKEN` to replace the built-in lexical adapter with an external retrieval service later.
+
 ## Getting Started
 
 First, run the development server:

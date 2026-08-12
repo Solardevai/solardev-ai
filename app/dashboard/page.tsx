@@ -26,6 +26,14 @@ export const dynamic = "force-dynamic";
 
 const workspaceTools = [
   {
+    title: "Solar & BESS engineering agent",
+    description:
+      "Ask project-aware questions, run auditable calculations and search uploaded evidence.",
+    href: "/agents/project-development",
+    action: "Open engineering agent",
+    accent: "emerald",
+  },
+  {
     title: "New site assessment",
     description:
       "Draw a boundary, review mapped infrastructure and run an indicative PVGIS yield check.",
@@ -115,7 +123,7 @@ export default async function DashboardPage({
 
           <PortfolioComparison projects={projects} />
 
-          <div className="grid gap-6 lg:grid-cols-3">
+          <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-4">
             {workspaceTools.map((tool) => (
               <article
                 key={tool.title}
