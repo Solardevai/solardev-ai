@@ -2,9 +2,56 @@
 
 import { useChat } from "@ai-sdk/react";
 import { DefaultChatTransport, getToolName, isToolUIPart } from "ai";
+import {
+  ArrowUp,
+  Check,
+  ChevronDown,
+  FilePlus2,
+  Pause,
+  Settings2,
+  Sparkles,
+  Volume2,
+} from "lucide-react";
+import dynamic from "next/dynamic";
 import Link from "next/link";
-import { FormEvent, useMemo, useState } from "react";
+import {
+  FormEvent,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  useSyncExternalStore,
+} from "react";
+import type { PersonaState } from "@/components/ai-elements/persona";
 import type { SolarAgentUIMessage } from "@/lib/agent/solar-agent";
+
+const MessageResponse = dynamic(() =>
+  import("@/components/ai-elements/message").then(
+    (module) => module.MessageResponse,
+  ),
+);
+
+const Persona = dynamic(
+  () =>
+    import("@/components/ai-elements/persona").then(
+      (module) => module.Persona,
+    ),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="size-24 animate-pulse rounded-full bg-emerald-100/70" />
+    ),
+  },
+);
+
+const subscribeToWideViewport = (onStoreChange: () => void) => {
+  const query = window.matchMedia("(min-width: 1280px)");
+  query.addEventListener("change", onStoreChange);
+  return () => query.removeEventListener("change", onStoreChange);
+};
+
+const getWideViewportSnapshot = () =>
+  window.matchMedia("(min-width: 1280px)").matches;
 
 export type AgentProjectOption = {
   id: string;
@@ -22,10 +69,26 @@ type Props = {
 };
 
 const quickPrompts = [
-  "Estimate capacity from this project's land area and explain the assumptions.",
-  "What are the three highest-priority development risks in the available evidence?",
-  "Calculate the DC/AC ratio and assess whether it needs more design evidence.",
-  "Summarize what is known, what is assumed, and what must be verified next.",
+  {
+    label: "Capacity",
+    prompt:
+      "Estimate capacity from this project's land area and explain the assumptions.",
+  },
+  {
+    label: "Development risk",
+    prompt:
+      "What are the three highest-priority development risks in the available evidence?",
+  },
+  {
+    label: "DC / AC ratio",
+    prompt:
+      "Calculate the DC/AC ratio and assess whether it needs more design evidence.",
+  },
+  {
+    label: "Evidence gaps",
+    prompt:
+      "Summarize what is known, what is assumed, and what must be verified next.",
+  },
 ];
 
 function optionalNumber(value: string) {
@@ -34,7 +97,9 @@ function optionalNumber(value: string) {
 }
 
 function readableToolName(value: string) {
-  return value.replace(/([a-z])([A-Z])/g, "$1 $2").replace(/^./, (letter) => letter.toUpperCase());
+  return value
+    .replace(/([a-z])([A-Z])/g, "$1 $2")
+    .replace(/^./, (letter) => letter.toUpperCase());
 }
 
 function readableError(error: Error) {
@@ -47,7 +112,40 @@ function readableError(error: Error) {
   return error.message || "The engineering agent could not complete the request.";
 }
 
-export default function ProjectDevelopmentAgentDemo({ projects, initialProjectId, isSignedIn }: Props) {
+function messageText(message: SolarAgentUIMessage) {
+  return message.parts
+    .map((part) => (part.type === "text" ? part.text : ""))
+    .filter(Boolean)
+    .join("\n\n")
+    .trim();
+}
+
+function speechText(markdown: string) {
+  return markdown
+    .replace(/```[\s\S]*?```/g, " Code block omitted. ")
+    .replace(/[#*_>`~\[\]()|]/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+function SolarDevMark({ dark = false }: { dark?: boolean }) {
+  return (
+    <span
+      aria-hidden="true"
+      className={`relative block h-8 w-8 rounded-xl ${dark ? "bg-[#0b2a21]" : "bg-white"}`}
+    >
+      <span className="absolute bottom-2 left-[7px] h-3.5 w-1.5 -skew-y-12 rounded-sm bg-lime-300" />
+      <span className="absolute bottom-2 left-[14px] h-5 w-1.5 -skew-y-12 rounded-sm bg-lime-300" />
+      <span className="absolute bottom-2 left-[21px] h-4 w-1.5 -skew-y-12 rounded-sm bg-lime-300" />
+    </span>
+  );
+}
+
+export default function ProjectDevelopmentAgentDemo({
+  projects,
+  initialProjectId,
+  isSignedIn,
+}: Props) {
   const [input, setInput] = useState("");
   const [projectId, setProjectId] = useState(initialProjectId ?? "");
   const [pvDcMw, setPvDcMw] = useState("");
@@ -55,11 +153,55 @@ export default function ProjectDevelopmentAgentDemo({ projects, initialProjectId
   const [bessPowerMw, setBessPowerMw] = useState("");
   const [bessEnergyMwh, setBessEnergyMwh] = useState("");
   const [documentStatus, setDocumentStatus] = useState("");
-  const selectedProject = useMemo(() => projects.find((project) => project.id === projectId), [projectId, projects]);
-  const { messages, sendMessage, status, error, stop } = useChat<SolarAgentUIMessage>({
-    transport: new DefaultChatTransport({ api: "/api/agents/solar" }),
-  });
+  const [contextOpen, setContextOpen] = useState(false);
+  const [isSpeaking, setIsSpeaking] = useState(false);
+  const speechSupported = useSyncExternalStore(
+    () => () => undefined,
+    () => "speechSynthesis" in window,
+    () => false,
+  );
+  const showAnimatedPersona = useSyncExternalStore(
+    subscribeToWideViewport,
+    getWideViewportSnapshot,
+    () => false,
+  );
+  const inputRef = useRef<HTMLTextAreaElement>(null);
+  const conversationEndRef = useRef<HTMLDivElement>(null);
+
+  const selectedProject = useMemo(
+    () => projects.find((project) => project.id === projectId),
+    [projectId, projects],
+  );
+
+  const { messages, sendMessage, status, error, stop } =
+    useChat<SolarAgentUIMessage>({
+      transport: new DefaultChatTransport({ api: "/api/agents/solar" }),
+    });
+
   const busy = status === "submitted" || status === "streaming";
+  const latestAssistantText = useMemo(() => {
+    for (let index = messages.length - 1; index >= 0; index -= 1) {
+      if (messages[index].role === "assistant") {
+        const text = messageText(messages[index]);
+        if (text) return text;
+      }
+    }
+    return "";
+  }, [messages]);
+
+  const personaState: PersonaState = busy
+    ? "thinking"
+    : isSpeaking
+      ? "speaking"
+      : "idle";
+
+  const personaStatus = busy
+    ? "Reviewing the project and running engineering tools"
+    : isSpeaking
+      ? "Reading the latest answer"
+      : latestAssistantText
+        ? "Ready for your follow-up"
+        : "Ready when you are";
 
   const manualInputs = {
     pvDcMw: optionalNumber(pvDcMw),
@@ -68,92 +210,518 @@ export default function ProjectDevelopmentAgentDemo({ projects, initialProjectId
     bessEnergyMwh: optionalNumber(bessEnergyMwh),
   };
 
+  useEffect(() => {
+    return () => {
+      if (typeof window !== "undefined" && "speechSynthesis" in window) {
+        window.speechSynthesis.cancel();
+      }
+    };
+  }, []);
+
+  useEffect(() => {
+    conversationEndRef.current?.scrollIntoView({
+      behavior: messages.length > 1 ? "smooth" : "auto",
+      block: "end",
+    });
+  }, [messages, busy]);
+
   async function submit(event?: FormEvent) {
     event?.preventDefault();
     const text = input.trim();
     if (!text || busy || !isSignedIn) return;
     setInput("");
-    await sendMessage({ text }, { body: { projectId: projectId || undefined, manualInputs } });
+    await sendMessage(
+      { text },
+      { body: { projectId: projectId || undefined, manualInputs } },
+    );
+  }
+
+  function choosePrompt(prompt: string) {
+    setInput(prompt);
+    requestAnimationFrame(() => inputRef.current?.focus());
+  }
+
+  function stopSpeaking() {
+    if (speechSupported) window.speechSynthesis.cancel();
+    setIsSpeaking(false);
+  }
+
+  function speakLatestAnswer() {
+    if (!speechSupported || !latestAssistantText || busy) return;
+    window.speechSynthesis.cancel();
+    const utterance = new SpeechSynthesisUtterance(
+      speechText(latestAssistantText),
+    );
+    utterance.rate = 0.96;
+    utterance.pitch = 1;
+    utterance.onstart = () => setIsSpeaking(true);
+    utterance.onend = () => setIsSpeaking(false);
+    utterance.onerror = () => setIsSpeaking(false);
+    window.speechSynthesis.speak(utterance);
   }
 
   async function uploadDocument(file: File | undefined) {
     if (!file || !projectId) return;
     setDocumentStatus("Uploading and indexing…");
-    const body = new FormData();
-    body.set("file", file);
-    const response = await fetch(`/api/agents/solar/knowledge/${projectId}`, { method: "POST", body });
-    const result = (await response.json()) as { document?: { name: string; chunkCount: number }; error?: string };
-    setDocumentStatus(response.ok && result.document ? `${result.document.name} indexed in ${result.document.chunkCount} evidence chunks.` : result.error ?? "Upload failed.");
+
+    try {
+      const body = new FormData();
+      body.set("file", file);
+      const response = await fetch(
+        `/api/agents/solar/knowledge/${projectId}`,
+        { method: "POST", body },
+      );
+      const result = (await response.json()) as {
+        document?: { name: string; chunkCount: number };
+        error?: string;
+      };
+      setDocumentStatus(
+        response.ok && result.document
+          ? `${result.document.name} indexed in ${result.document.chunkCount} evidence chunks.`
+          : result.error ?? "Upload failed.",
+      );
+    } catch {
+      setDocumentStatus("The document could not be uploaded. Please try again.");
+    }
   }
 
   return (
-    <div className="grid overflow-hidden rounded-3xl border border-white/10 bg-slate-900 shadow-2xl shadow-black/20 lg:grid-cols-[310px_minmax(0,1fr)]">
-      <aside className="border-b border-white/10 bg-slate-950/80 p-5 lg:border-b-0 lg:border-r">
-        <p className="text-xs font-bold uppercase tracking-[0.16em] text-emerald-300">Project context</p>
-        <label className="mt-5 block text-xs font-semibold text-slate-300">
-          Saved project
-          <select value={projectId} onChange={(event) => setProjectId(event.target.value)} className="mt-2 w-full rounded-xl border border-white/10 bg-slate-900 px-3 py-3 text-sm text-white">
-            <option value="">General engineering question</option>
-            {projects.map((project) => <option key={project.id} value={project.id}>{project.name}</option>)}
-          </select>
-        </label>
-        {selectedProject ? (
-          <div className="mt-3 rounded-xl border border-emerald-300/15 bg-emerald-300/[0.05] p-3 text-xs leading-5 text-slate-300">
-            {selectedProject.technology.toUpperCase()} · {selectedProject.country} · {selectedProject.areaHa.toFixed(1)} ha<br />
-            Status: {selectedProject.status.replace("-", " ")}
+    <div className="overflow-hidden rounded-[28px] border border-white/10 bg-[#f4f5f0] shadow-2xl shadow-black/30">
+      <div className="grid lg:grid-cols-[260px_minmax(0,1fr)] xl:grid-cols-[260px_minmax(0,1fr)_220px]">
+        <aside className="bg-[#071d17] text-white lg:min-h-[760px]">
+          <div className="flex items-center justify-between border-b border-white/10 px-5 py-4 lg:border-b-0 lg:px-6 lg:pt-6">
+            <div className="flex items-center gap-3">
+              <SolarDevMark dark />
+              <div>
+                <p className="text-sm font-bold tracking-tight">SolarDev</p>
+                <p className="text-[8px] font-bold uppercase tracking-[0.22em] text-emerald-300/70">
+                  Engineering intelligence
+                </p>
+              </div>
+            </div>
+            <button
+              type="button"
+              onClick={() => setContextOpen((current) => !current)}
+              aria-expanded={contextOpen}
+              aria-controls="agent-project-context"
+              className="rounded-lg border border-white/10 p-2 text-slate-300 lg:hidden"
+            >
+              <Settings2 className="size-4" />
+              <span className="sr-only">Toggle project context</span>
+            </button>
           </div>
-        ) : null}
 
-        <details className="mt-5 rounded-xl border border-white/10 p-3">
-          <summary className="cursor-pointer text-xs font-semibold text-slate-300">Manual design inputs</summary>
-          <div className="mt-3 grid grid-cols-2 gap-2">
-            {[["PV DC (MWp)", pvDcMw, setPvDcMw], ["PV AC (MW)", pvAcMw, setPvAcMw], ["BESS power (MW)", bessPowerMw, setBessPowerMw], ["BESS energy (MWh)", bessEnergyMwh, setBessEnergyMwh]].map(([label, value, setter]) => (
-              <label key={label as string} className="text-[10px] text-slate-400">{label as string}<input type="number" min="0" step="any" value={value as string} onChange={(event) => (setter as (value: string) => void)(event.target.value)} className="mt-1 w-full rounded-lg border border-white/10 bg-slate-900 px-2 py-2 text-xs text-white" /></label>
-            ))}
+          <div
+            id="agent-project-context"
+            className={`${contextOpen ? "block" : "hidden"} px-5 pb-5 lg:block lg:px-6 lg:pb-6`}
+          >
+            <p className="mt-5 text-[9px] font-bold uppercase tracking-[0.2em] text-emerald-200/60">
+              Project workspace
+            </p>
+
+            <label className="mt-4 block text-[10px] font-semibold text-slate-300">
+              Saved project
+              <span className="relative mt-1.5 block">
+                <select
+                  value={projectId}
+                  onChange={(event) => setProjectId(event.target.value)}
+                  className="w-full appearance-none rounded-xl border border-white/10 bg-white/[0.045] px-3 py-2.5 pr-9 text-xs text-white outline-none transition focus:border-emerald-300/40"
+                >
+                  <option value="">General engineering question</option>
+                  {projects.map((project) => (
+                    <option key={project.id} value={project.id}>
+                      {project.name}
+                    </option>
+                  ))}
+                </select>
+                <ChevronDown className="pointer-events-none absolute right-3 top-1/2 size-3.5 -translate-y-1/2 text-slate-400" />
+              </span>
+            </label>
+
+            {selectedProject ? (
+              <dl className="mt-3 grid grid-cols-2 gap-2 rounded-xl border border-emerald-300/15 bg-emerald-300/[0.045] p-3 text-[10px]">
+                <div>
+                  <dt className="text-slate-500">Market</dt>
+                  <dd className="mt-1 text-slate-200">
+                    {selectedProject.country || "Not set"}
+                  </dd>
+                </div>
+                <div>
+                  <dt className="text-slate-500">Area</dt>
+                  <dd className="mt-1 text-slate-200">
+                    {selectedProject.areaHa.toFixed(1)} ha
+                  </dd>
+                </div>
+                <div>
+                  <dt className="text-slate-500">Technology</dt>
+                  <dd className="mt-1 capitalize text-slate-200">
+                    {selectedProject.technology.replace("-", " ")}
+                  </dd>
+                </div>
+                <div>
+                  <dt className="text-slate-500">Stage</dt>
+                  <dd className="mt-1 capitalize text-slate-200">
+                    {selectedProject.status.replace("-", " ")}
+                  </dd>
+                </div>
+              </dl>
+            ) : null}
+
+            <details className="group mt-4 rounded-xl border border-white/10 bg-white/[0.025]">
+              <summary className="flex cursor-pointer list-none items-center justify-between px-3 py-3 text-[10px] font-semibold text-slate-300">
+                Design inputs
+                <ChevronDown className="size-3.5 transition group-open:rotate-180" />
+              </summary>
+              <div className="grid grid-cols-2 gap-2 border-t border-white/10 p-3">
+                {[
+                  ["PV DC", "MWp", pvDcMw, setPvDcMw],
+                  ["PV AC", "MW", pvAcMw, setPvAcMw],
+                  ["BESS power", "MW", bessPowerMw, setBessPowerMw],
+                  ["BESS energy", "MWh", bessEnergyMwh, setBessEnergyMwh],
+                ].map(([label, unit, value, setter]) => (
+                  <label key={label as string} className="text-[9px] text-slate-500">
+                    <span className="flex justify-between gap-1">
+                      {label as string}
+                      <span className="text-emerald-300/60">{unit as string}</span>
+                    </span>
+                    <input
+                      type="number"
+                      min="0"
+                      step="any"
+                      value={value as string}
+                      onChange={(event) =>
+                        (setter as (nextValue: string) => void)(event.target.value)
+                      }
+                      className="mt-1.5 w-full rounded-lg border border-white/10 bg-white/[0.035] px-2.5 py-2 text-xs text-white outline-none focus:border-emerald-300/40"
+                    />
+                  </label>
+                ))}
+              </div>
+            </details>
+
+            <div className="mt-4 rounded-xl border border-white/10 bg-white/[0.025] p-3">
+              <div className="flex items-center gap-2 text-[10px] font-semibold text-slate-300">
+                <FilePlus2 className="size-3.5 text-emerald-300" />
+                Project evidence
+              </div>
+              <label
+                className={`mt-2.5 block rounded-lg border border-dashed px-3 py-2.5 text-center text-[9px] transition ${
+                  projectId
+                    ? "cursor-pointer border-white/15 text-slate-400 hover:border-emerald-300/35 hover:text-slate-200"
+                    : "border-white/10 text-slate-600"
+                }`}
+              >
+                {projectId
+                  ? "Add TXT, MD, CSV or JSON"
+                  : "Select a project to add evidence"}
+                <input
+                  type="file"
+                  accept=".txt,.md,.csv,.json,text/plain,text/markdown,text/csv,application/json"
+                  disabled={!projectId}
+                  onChange={(event) =>
+                    void uploadDocument(event.target.files?.[0])
+                  }
+                  className="sr-only"
+                />
+              </label>
+              {documentStatus ? (
+                <p className="mt-2 text-[9px] leading-4 text-slate-400" role="status">
+                  {documentStatus}
+                </p>
+              ) : null}
+            </div>
+
+            <div className="mt-5 flex items-start gap-2 border-t border-white/10 pt-4 text-[9px] leading-4 text-slate-400">
+              <span className="mt-0.5 flex size-4 shrink-0 items-center justify-center rounded-full bg-emerald-300/15 text-emerald-300">
+                <Check className="size-2.5" />
+              </span>
+              <span>
+                Engineering guardrails are active. Evidence, assumptions and
+                calculations are labelled.
+              </span>
+            </div>
           </div>
-        </details>
+        </aside>
 
-        <div className="mt-5">
-          <p className="text-xs font-semibold text-slate-300">Project evidence</p>
-          <label className={`mt-2 block rounded-xl border border-dashed p-3 text-center text-xs ${projectId ? "cursor-pointer border-white/15 text-slate-400 hover:border-emerald-300/30" : "border-white/10 text-slate-600"}`}>
-            {projectId ? "Upload TXT, MD, CSV or JSON" : "Select a saved project to add documents"}
-            <input type="file" accept=".txt,.md,.csv,.json,text/plain,text/markdown,text/csv,application/json" disabled={!projectId} onChange={(event) => void uploadDocument(event.target.files?.[0])} className="sr-only" />
-          </label>
-          {documentStatus ? <p className="mt-2 text-[10px] leading-4 text-slate-400">{documentStatus}</p> : null}
-        </div>
+        <section className="flex min-h-[680px] min-w-0 flex-col bg-[#f4f5f0] text-[#10271f] lg:min-h-[760px]">
+          <header className="flex flex-wrap items-center justify-between gap-3 border-b border-[#10271f]/10 px-5 py-4 sm:px-7">
+            <div>
+              <p className="text-[9px] font-bold uppercase tracking-[0.19em] text-[#17805f]">
+                Solar energy expert
+              </p>
+              <p className="mt-1 text-sm font-semibold">
+                {selectedProject?.name ?? "General engineering workspace"}
+              </p>
+            </div>
+            <div className="flex items-center gap-2 text-[9px] font-semibold text-[#4c625a]">
+              <span className="inline-flex items-center gap-1.5 rounded-full bg-white px-2.5 py-1.5 shadow-sm ring-1 ring-[#10271f]/5">
+                <span className={`size-1.5 rounded-full ${busy ? "animate-pulse bg-amber-400" : "bg-emerald-500"}`} />
+                {busy ? "Working" : "Agent online"}
+              </span>
+              <span className="hidden rounded-full bg-[#e9eeea] px-2.5 py-1.5 sm:inline-flex">
+                Project-aware
+              </span>
+            </div>
+          </header>
 
-        <div className="mt-6 rounded-xl border border-amber-300/15 bg-amber-300/[0.05] p-3 text-[10px] leading-5 text-amber-100/75">
-          Screening support only. Outputs label sources, assumptions and calculated results; accountable engineers must verify design, safety and compliance decisions.
-        </div>
-      </aside>
+          <div
+            className="flex-1 overflow-y-auto px-5 py-6 sm:px-7 sm:py-8"
+            aria-live="polite"
+          >
+            {!isSignedIn ? (
+              <div className="mx-auto mt-20 max-w-md rounded-2xl border border-[#10271f]/10 bg-white p-7 text-center shadow-sm">
+                <SolarDevMark />
+                <h2 className="mt-5 text-xl font-semibold">
+                  Sign in to use the engineering agent
+                </h2>
+                <p className="mt-3 text-sm leading-6 text-[#5d7069]">
+                  Authentication keeps project geometry, analyses and evidence
+                  private to their owner.
+                </p>
+                <Link
+                  href="/sign-in?redirect_url=/agents/project-development"
+                  className="mt-5 inline-flex rounded-xl bg-[#0b2a21] px-5 py-3 text-sm font-bold text-white transition hover:bg-[#123d30]"
+                >
+                  Sign in
+                </Link>
+              </div>
+            ) : null}
 
-      <section className="flex min-h-[680px] flex-col">
-        <header className="flex items-center justify-between gap-3 border-b border-white/10 px-5 py-4">
-          <div><p className="text-[10px] font-bold uppercase tracking-[0.16em] text-emerald-300">SolarDev Engineering Agent</p><p className="mt-1 text-sm text-slate-400">Project-aware solar and BESS analysis</p></div>
-          <span className="rounded-full border border-emerald-300/20 bg-emerald-300/10 px-3 py-1 text-[10px] font-bold uppercase tracking-wide text-emerald-200">AI + deterministic tools</span>
-        </header>
+            {isSignedIn && messages.length === 0 ? (
+              <div className="mx-auto flex min-h-[470px] max-w-3xl flex-col items-center justify-center text-center">
+                <div className="xl:hidden">
+                  <SolarDevMark />
+                </div>
+                <p className="mt-5 text-[9px] font-bold uppercase tracking-[0.2em] text-[#17805f]">
+                  SolarDev copilot
+                </p>
+                <h2 className="mt-4 max-w-2xl text-3xl font-semibold tracking-[-0.03em] sm:text-4xl">
+                  Clear engineering answers,
+                  <br className="hidden sm:block" /> grounded in your project.
+                </h2>
+                <p className="mt-4 max-w-xl text-sm leading-6 text-[#5d7069]">
+                  Ask about solar PV, BESS, development risk or project economics.
+                  Supported calculations run through deterministic tools.
+                </p>
+                <div className="mt-8 grid w-full gap-2 sm:grid-cols-2">
+                  {quickPrompts.map(({ label, prompt }, index) => (
+                    <button
+                      key={prompt}
+                      type="button"
+                      onClick={() => choosePrompt(prompt)}
+                      className="group flex min-h-16 items-start gap-3 rounded-xl border border-[#10271f]/10 bg-white/80 px-4 py-3 text-left text-xs leading-5 text-[#233b32] transition hover:-translate-y-0.5 hover:border-[#17805f]/30 hover:bg-white hover:shadow-md"
+                    >
+                      <span className="mt-0.5 font-mono text-[9px] font-bold text-[#17805f]/65">
+                        {String(index + 1).padStart(2, "0")}
+                      </span>
+                      <span>
+                        <span className="block font-semibold text-[#10271f]">
+                          {label}
+                        </span>
+                        <span className="mt-0.5 block text-[#60736c]">{prompt}</span>
+                      </span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            ) : null}
 
-        <div className="flex-1 space-y-5 overflow-y-auto p-5 sm:p-6" aria-live="polite">
-          {!isSignedIn ? <div className="mx-auto mt-20 max-w-md rounded-2xl border border-amber-300/20 bg-amber-300/[0.05] p-6 text-center"><h2 className="text-xl font-semibold">Sign in to use the engineering agent</h2><p className="mt-3 text-sm leading-6 text-slate-400">Authentication keeps saved-project geometry, analyses and documents isolated to their owner.</p><Link href="/sign-in?redirect_url=/agents/project-development" className="mt-5 inline-flex rounded-xl bg-emerald-400 px-5 py-3 text-sm font-bold text-slate-950">Sign in</Link></div> : null}
-          {isSignedIn && messages.length === 0 ? <div className="mx-auto max-w-2xl py-10 text-center"><h2 className="text-2xl font-semibold">What should we assess?</h2><p className="mt-3 text-sm leading-6 text-slate-400">Ask about site capacity, string sizing, BESS configuration, financial screening, GIS evidence or uploaded project documents.</p><div className="mt-7 grid gap-3 sm:grid-cols-2">{quickPrompts.map((prompt) => <button key={prompt} type="button" onClick={() => setInput(prompt)} className="rounded-xl border border-white/10 bg-white/[0.025] p-4 text-left text-sm leading-6 text-slate-300 hover:border-emerald-300/25 hover:bg-emerald-300/[0.05]">{prompt}</button>)}</div></div> : null}
-          {messages.map((message) => <article key={message.id} className={message.role === "user" ? "ml-auto max-w-2xl rounded-2xl bg-emerald-400 px-4 py-3 text-sm leading-7 text-slate-950" : "max-w-3xl rounded-2xl border border-white/10 bg-white/[0.025] px-4 py-4 text-sm leading-7 text-slate-200"}>
-            <p className={`mb-2 text-[10px] font-bold uppercase tracking-[0.14em] ${message.role === "user" ? "text-slate-800" : "text-emerald-300"}`}>{message.role === "user" ? "You" : "SolarDev Agent"}</p>
-            {message.parts.map((part, index) => {
-              if (part.type === "text") return <div key={index} className="whitespace-pre-wrap">{part.text}</div>;
-              if (isToolUIPart(part)) return <div key={index} className="my-2 rounded-lg border border-sky-300/15 bg-sky-300/[0.04] px-3 py-2 text-xs text-sky-100/80">{part.state === "output-available" ? "Calculated" : "Using"}: {readableToolName(getToolName(part))}</div>;
-              return null;
-            })}
-          </article>)}
-          {error ? <div className="rounded-xl border border-rose-300/20 bg-rose-300/[0.06] p-3 text-sm text-rose-200">{readableError(error)}</div> : null}
-        </div>
+            {messages.length > 0 ? (
+              <div className="mx-auto max-w-3xl space-y-7">
+                {messages.map((message) => (
+                  <article
+                    key={message.id}
+                    className={
+                      message.role === "user"
+                        ? "ml-auto max-w-[88%] rounded-2xl rounded-br-md bg-[#0b2a21] px-4 py-3 text-sm leading-6 text-white sm:max-w-[78%]"
+                        : "grid grid-cols-[30px_minmax(0,1fr)] gap-3"
+                    }
+                  >
+                    {message.role === "assistant" ? (
+                      <div className="flex size-7 items-center justify-center rounded-lg bg-white shadow-sm ring-1 ring-[#10271f]/10">
+                        <Sparkles className="size-3.5 text-[#17805f]" />
+                      </div>
+                    ) : null}
+                    <div className={message.role === "assistant" ? "min-w-0" : ""}>
+                      <p
+                        className={`mb-2 text-[9px] font-bold uppercase tracking-[0.16em] ${
+                          message.role === "user"
+                            ? "text-emerald-100/65"
+                            : "text-[#17805f]"
+                        }`}
+                      >
+                        {message.role === "user" ? "You" : "SolarDev copilot"}
+                      </p>
+                      {message.parts.map((part, index) => {
+                        if (part.type === "text") {
+                          return message.role === "assistant" ? (
+                            <MessageResponse
+                              key={index}
+                              className="text-sm leading-7 text-[#243a32] [&_a]:text-[#087a58] [&_a]:underline [&_blockquote]:border-l-[#17805f]/40 [&_blockquote]:text-[#536860] [&_code]:rounded [&_code]:bg-[#e7ece8] [&_code]:px-1 [&_h1]:text-xl [&_h2]:mt-6 [&_h2]:text-lg [&_h3]:mt-5 [&_h3]:text-base [&_li]:my-1 [&_strong]:font-semibold [&_strong]:text-[#10271f]"
+                            >
+                              {part.text}
+                            </MessageResponse>
+                          ) : (
+                            <p key={index}>{part.text}</p>
+                          );
+                        }
 
-        <form onSubmit={(event) => void submit(event)} className="border-t border-white/10 p-4 sm:p-5">
-          <div className="flex gap-3 rounded-2xl border border-white/10 bg-slate-950 p-2 focus-within:border-emerald-300/30">
-            <textarea value={input} onChange={(event) => setInput(event.target.value)} onKeyDown={(event) => { if (event.key === "Enter" && !event.shiftKey) { event.preventDefault(); void submit(); } }} disabled={!isSignedIn} rows={2} placeholder="Ask a solar or BESS engineering question…" className="min-h-14 flex-1 resize-none bg-transparent px-3 py-2 text-sm text-white outline-none placeholder:text-slate-600" />
-            {busy ? <button type="button" onClick={stop} className="self-end rounded-xl border border-white/10 px-4 py-3 text-xs font-semibold">Stop</button> : <button type="submit" disabled={!input.trim() || !isSignedIn} className="self-end rounded-xl bg-emerald-400 px-4 py-3 text-xs font-bold text-slate-950 disabled:opacity-40">Send</button>}
+                        if (isToolUIPart(part)) {
+                          return (
+                            <div
+                              key={index}
+                              className="my-3 inline-flex items-center gap-2 rounded-full border border-[#17805f]/15 bg-[#e7eee9] px-3 py-1.5 text-[10px] font-semibold text-[#356153]"
+                            >
+                              <span
+                                className={`size-1.5 rounded-full ${
+                                  part.state === "output-available"
+                                    ? "bg-emerald-500"
+                                    : "animate-pulse bg-amber-400"
+                                }`}
+                              />
+                              {part.state === "output-available"
+                                ? "Calculated"
+                                : "Using"}{" "}
+                              {readableToolName(getToolName(part))}
+                            </div>
+                          );
+                        }
+                        return null;
+                      })}
+                    </div>
+                  </article>
+                ))}
+
+                {busy ? (
+                  <div className="grid grid-cols-[30px_minmax(0,1fr)] gap-3">
+                    <div className="flex size-7 items-center justify-center rounded-lg bg-white shadow-sm ring-1 ring-[#10271f]/10">
+                      <Sparkles className="size-3.5 animate-pulse text-[#17805f]" />
+                    </div>
+                    <p className="pt-1 text-xs text-[#60736c]">
+                      Reviewing evidence and calculations…
+                    </p>
+                  </div>
+                ) : null}
+
+                {error ? (
+                  <div className="rounded-xl border border-rose-300/50 bg-rose-50 p-3 text-sm text-rose-800">
+                    {readableError(error)}
+                  </div>
+                ) : null}
+                <div ref={conversationEndRef} />
+              </div>
+            ) : null}
           </div>
-        </form>
-      </section>
+
+          <form
+            onSubmit={(event) => void submit(event)}
+            className="border-t border-[#10271f]/10 bg-[#f4f5f0] px-4 py-4 sm:px-6"
+          >
+            <div className="mx-auto max-w-3xl rounded-2xl border border-[#10271f]/15 bg-white p-2 shadow-[0_14px_35px_rgba(16,39,31,0.08)] transition focus-within:border-[#17805f]/40 focus-within:shadow-[0_14px_38px_rgba(16,39,31,0.12)]">
+              <textarea
+                ref={inputRef}
+                value={input}
+                onChange={(event) => setInput(event.target.value)}
+                onKeyDown={(event) => {
+                  if (event.key === "Enter" && !event.shiftKey) {
+                    event.preventDefault();
+                    void submit();
+                  }
+                }}
+                disabled={!isSignedIn}
+                rows={2}
+                placeholder="Ask about this project…"
+                className="min-h-14 w-full resize-none bg-transparent px-2.5 py-2 text-sm text-[#10271f] outline-none placeholder:text-[#7b8c85]"
+              />
+              <div className="flex items-center justify-between gap-3 px-2 pb-1">
+                <span className="text-[9px] text-[#899790]">
+                  Enter to send · Shift + Enter for a new line
+                </span>
+                {busy ? (
+                  <button
+                    type="button"
+                    onClick={stop}
+                    className="flex size-8 items-center justify-center rounded-lg bg-[#0b2a21] text-white transition hover:bg-[#123d30]"
+                  >
+                    <Pause className="size-3.5" />
+                    <span className="sr-only">Stop response</span>
+                  </button>
+                ) : (
+                  <button
+                    type="submit"
+                    disabled={!input.trim() || !isSignedIn}
+                    className="flex size-8 items-center justify-center rounded-lg bg-[#0b2a21] text-white transition hover:bg-[#123d30] disabled:cursor-not-allowed disabled:bg-[#b7c9c1]"
+                  >
+                    <ArrowUp className="size-3.5" />
+                    <span className="sr-only">Send message</span>
+                  </button>
+                )}
+              </div>
+            </div>
+            <p className="mx-auto mt-2 max-w-3xl text-center text-[8px] leading-4 text-[#8b9892]">
+              Indicative engineering support. Verify safety-critical and regulatory
+              decisions with qualified professionals and authoritative sources.
+            </p>
+          </form>
+        </section>
+
+        <aside className="relative hidden overflow-hidden border-l border-[#10271f]/10 bg-[#edf0e9] px-5 py-7 text-[#10271f] xl:flex xl:min-h-[760px] xl:flex-col xl:items-center">
+          <div className="absolute inset-x-0 top-0 h-36 bg-[radial-gradient(circle_at_50%_0%,rgba(52,211,153,0.16),transparent_68%)]" />
+          <div className="relative mt-5 flex size-36 items-center justify-center rounded-full border border-white/70 bg-white/45 shadow-[0_20px_60px_rgba(18,57,44,0.12)]">
+            {showAnimatedPersona ? (
+              <Persona
+                state={personaState}
+                variant="halo"
+                className="size-32"
+              />
+            ) : null}
+          </div>
+          <p className="relative mt-6 text-[9px] font-bold uppercase tracking-[0.2em] text-[#17805f]">
+            Sol · Engineering copilot
+          </p>
+          <p className="relative mt-2 min-h-10 text-center text-xs leading-5 text-[#5d7069]">
+            {personaStatus}
+          </p>
+
+          <div className="relative mt-5 w-full rounded-2xl border border-[#10271f]/10 bg-white/70 p-3">
+            <p className="text-[9px] font-bold uppercase tracking-[0.15em] text-[#71827b]">
+              Voice
+            </p>
+            <button
+              type="button"
+              onClick={isSpeaking ? stopSpeaking : speakLatestAnswer}
+              disabled={!speechSupported || !latestAssistantText || busy}
+              className="mt-2 flex w-full items-center justify-center gap-2 rounded-xl bg-[#0b2a21] px-3 py-2.5 text-[10px] font-bold text-white transition hover:bg-[#123d30] disabled:cursor-not-allowed disabled:bg-[#c7d1cc]"
+            >
+              {isSpeaking ? (
+                <>
+                  <Pause className="size-3.5" /> Stop speaking
+                </>
+              ) : (
+                <>
+                  <Volume2 className="size-3.5" /> Listen to answer
+                </>
+              )}
+            </button>
+            <p className="mt-2 text-center text-[8px] leading-4 text-[#819089]">
+              Uses your browser&apos;s voice. No extra AI call.
+            </p>
+          </div>
+
+          <div className="mt-auto w-full border-t border-[#10271f]/10 pt-5">
+            <div className="space-y-3 text-[9px] leading-4 text-[#65776f]">
+              {["Sources", "Assumptions", "Calculated results"].map((label) => (
+                <div key={label} className="flex items-center gap-2">
+                  <span className="flex size-4 items-center justify-center rounded-full bg-[#dce8e1] text-[#17805f]">
+                    <Check className="size-2.5" />
+                  </span>
+                  {label} clearly labelled
+                </div>
+              ))}
+            </div>
+          </div>
+        </aside>
+      </div>
     </div>
   );
 }
