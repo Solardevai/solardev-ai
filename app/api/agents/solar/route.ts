@@ -25,7 +25,6 @@ const requestSchema = z.object({
 export async function POST(request: Request) {
   const { userId } = await auth();
   if (!userId) return Response.json({ error: "Sign in to use the SolarDev Engineering Agent." }, { status: 401 });
-  if (!process.env.AI_GATEWAY_API_KEY && !process.env.VERCEL_OIDC_TOKEN) return Response.json({ error: "AI Gateway is not configured." }, { status: 503 });
   let payload: unknown;
   try { payload = await request.json(); } catch { return Response.json({ error: "Request body must be valid JSON." }, { status: 400 }); }
   const parsed = requestSchema.safeParse(payload);

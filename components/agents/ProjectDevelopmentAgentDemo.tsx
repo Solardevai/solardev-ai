@@ -37,6 +37,16 @@ function readableToolName(value: string) {
   return value.replace(/([a-z])([A-Z])/g, "$1 $2").replace(/^./, (letter) => letter.toUpperCase());
 }
 
+function readableError(error: Error) {
+  try {
+    const parsed = JSON.parse(error.message) as { error?: unknown };
+    if (typeof parsed.error === "string") return parsed.error;
+  } catch {
+    // The AI SDK may already provide a plain-text message.
+  }
+  return error.message || "The engineering agent could not complete the request.";
+}
+
 export default function ProjectDevelopmentAgentDemo({ projects, initialProjectId, isSignedIn }: Props) {
   const [input, setInput] = useState("");
   const [projectId, setProjectId] = useState(initialProjectId ?? "");
@@ -134,7 +144,7 @@ export default function ProjectDevelopmentAgentDemo({ projects, initialProjectId
               return null;
             })}
           </article>)}
-          {error ? <div className="rounded-xl border border-rose-300/20 bg-rose-300/[0.06] p-3 text-sm text-rose-200">{error.message}</div> : null}
+          {error ? <div className="rounded-xl border border-rose-300/20 bg-rose-300/[0.06] p-3 text-sm text-rose-200">{readableError(error)}</div> : null}
         </div>
 
         <form onSubmit={(event) => void submit(event)} className="border-t border-white/10 p-4 sm:p-5">
