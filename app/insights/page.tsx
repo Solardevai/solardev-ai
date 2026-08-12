@@ -64,7 +64,7 @@ export default function InsightsPage() {
                 href="/agents/project-development"
                 className="rounded-xl border border-white/15 px-5 py-3 text-sm font-semibold text-white hover:bg-white/[0.06]"
               >
-                Open Engineering Copilot
+                Open Solar and BESS Agent
               </Link>
             </div>
           </div>

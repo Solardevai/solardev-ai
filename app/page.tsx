@@ -91,12 +91,12 @@ const homeStructuredData = {
     },
     {
       "@type": "SoftwareApplication",
-      name: "SolarDev Engineering Copilot",
+      name: "SolarDev Solar and BESS Agent",
       applicationCategory: "BusinessApplication",
       operatingSystem: "Web",
       url: "https://www.solardev.ai/agents/project-development",
       description:
-        "Project-aware engineering copilot for sourced solar and BESS analysis, deterministic calculations and evidence review.",
+        "Project-aware Solar and BESS Agent for sourced solar and BESS analysis, deterministic calculations and evidence review.",
       offers: {
         "@type": "Offer",
         price: "0",

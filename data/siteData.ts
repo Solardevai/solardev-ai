@@ -4,7 +4,7 @@ export const siteConfig = {
   name: "SolarDev AI",
   tagline: "AI for Utility-Scale Solar & BESS Professionals",
   description:
-    "A professional platform combining GIS site intelligence, engineering-led workflows, traceable project outputs and the SolarDev Engineering Copilot for utility-scale Solar PV and BESS development.",
+    "A professional platform combining GIS site intelligence, engineering-led workflows, traceable project outputs and the SolarDev Solar and BESS Agent for utility-scale Solar PV and BESS development.",
 
   infoEmail: "info@solardev.ai",
   supportEmail: "support@solardev.ai",
@@ -248,7 +248,7 @@ export const faqItems = [
   {
     question: "What is available on the SolarDev AI platform today?",
     answer:
-      "SolarDev GIS Site Check and the Solar Geometry Tool are available now, alongside saved GIS projects, deterministic constraint screening, a preliminary screening index, PDF reports, CSV registers and the professional workflow library. The SolarDev Engineering Copilot is live with project context, deterministic solar and BESS calculations, and clearly labelled sources, assumptions and results.",
+      "SolarDev GIS Site Check and the Solar Geometry Tool are available now, alongside saved GIS projects, deterministic constraint screening, a preliminary screening index, PDF reports, CSV registers and the professional workflow library. The SolarDev Solar and BESS Agent is live with project context, deterministic solar and BESS calculations, and clearly labelled sources, assumptions and results.",
   },
   {
     question: "Is this a general AI book?",

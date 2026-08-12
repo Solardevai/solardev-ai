@@ -13,7 +13,7 @@ const evidenceOutputs = [
   "PDF + CSV exports",
 ];
 
-const copilotActions = [
+const agentActions = [
   "Validate the usable-area bridge against mapped exclusions.",
   "Confirm the grid option, route and authority evidence.",
   "Close material survey gaps before fixing capacity and CAPEX.",
@@ -71,7 +71,7 @@ export default function PlatformExperience() {
           <div className="mx-auto max-w-3xl text-center">
             <p className="text-sm font-bold uppercase tracking-[0.2em] text-emerald-700">One professional platform</p>
             <h2 className="mt-4 text-3xl font-bold tracking-tight sm:text-5xl">Move from site boundary to decision-ready evidence</h2>
-            <p className="mt-6 text-lg leading-8 text-[#536860]">Use the GIS workspace and deterministic engineering tools to build evidence the Engineering Copilot can interpret in project context.</p>
+            <p className="mt-6 text-lg leading-8 text-[#536860]">Use the GIS workspace and deterministic engineering tools to build evidence the Solar and BESS Agent can interpret in project context.</p>
           </div>
 
           <div className="mt-14 grid gap-8 lg:grid-cols-[1.35fr_.65fr] lg:items-center">
@@ -119,18 +119,18 @@ export default function PlatformExperience() {
         <div className="mx-auto grid max-w-7xl gap-10 px-6 lg:grid-cols-[.9fr_1.1fr] lg:items-center lg:px-8">
           <div>
             <p className="text-sm font-bold uppercase tracking-[0.2em] text-emerald-700">Live engineering workspace</p>
-            <h2 className="mt-4 text-3xl font-bold tracking-tight sm:text-5xl">Meet the SolarDev Engineering Copilot</h2>
-            <p className="mt-6 text-lg leading-8 text-[#536860]">One project-aware copilot for solar PV, BESS and development questions. It combines deterministic tools, project evidence and explicit engineering guardrails rather than behaving like generic chat.</p>
-            <Link href="/agents/project-development" className="mt-7 inline-flex rounded-xl bg-emerald-500 px-5 py-3 text-sm font-bold text-[#071d17] hover:bg-emerald-400">Open the Engineering Copilot</Link>
+            <h2 className="mt-4 text-3xl font-bold tracking-tight sm:text-5xl">Meet the SolarDev Solar and BESS Agent</h2>
+            <p className="mt-6 text-lg leading-8 text-[#536860]">One project-aware Solar and BESS Agent for development questions. It combines deterministic tools, project evidence and explicit engineering guardrails rather than behaving like generic chat.</p>
+            <Link href="/agents/project-development" className="mt-7 inline-flex rounded-xl bg-emerald-500 px-5 py-3 text-sm font-bold text-[#071d17] hover:bg-emerald-400">Open the Solar and BESS Agent</Link>
           </div>
           <div className="rounded-3xl border border-[#10271f]/10 bg-white/75 p-5 shadow-2xl shadow-[#10271f]/10">
             <div className="flex items-center justify-between border-b border-[#10271f]/10 pb-4">
-              <div><p className="text-[9px] font-bold uppercase tracking-[0.15em] text-emerald-700">SolarDev Engineering Copilot</p><p className="mt-1 text-sm font-semibold">Evidence-led action brief</p></div>
+              <div><p className="text-[9px] font-bold uppercase tracking-[0.15em] text-emerald-700">SolarDev Solar and BESS Agent</p><p className="mt-1 text-sm font-semibold">Evidence-led action brief</p></div>
               <span className="rounded-full bg-emerald-100 px-3 py-1 text-[9px] font-bold text-emerald-800">LIVE</span>
             </div>
             <div className="mt-4 rounded-xl bg-[#edf0e9] p-4 text-sm leading-6 text-[#29483c]">“Review this feasibility-stage site and define the three actions needed before the next investment gate.”</div>
             <div className="mt-4 space-y-2">
-              {copilotActions.map((item, index) => <div key={item} className="flex gap-3 rounded-xl border border-emerald-700/10 bg-emerald-50 p-3 text-sm text-[#29483c]"><span className="font-mono font-bold text-emerald-700">0{index + 1}</span>{item}</div>)}
+              {agentActions.map((item, index) => <div key={item} className="flex gap-3 rounded-xl border border-emerald-700/10 bg-emerald-50 p-3 text-sm text-[#29483c]"><span className="font-mono font-bold text-emerald-700">0{index + 1}</span>{item}</div>)}
             </div>
           </div>
         </div>

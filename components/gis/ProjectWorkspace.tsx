@@ -545,7 +545,7 @@ export default function ProjectWorkspace({
           href={`/agents/project-development?projectId=${project.id}`}
           className="rounded-lg border border-emerald-300/20 bg-emerald-300/10 px-3 py-2 text-xs font-semibold text-emerald-200 hover:bg-emerald-300/15"
         >
-          Open in Engineering Copilot
+          Open in Solar and BESS Agent
         </Link>
         <Link
           href="/tools/solar-site-screening"

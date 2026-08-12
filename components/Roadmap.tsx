@@ -35,13 +35,13 @@ const roadmapItems: RoadmapItem[] = [
   {
     year: "2026 · Q3",
     number: "03",
-    title: "Project Workspace & Engineering Copilot",
+    title: "Project Workspace & Solar and BESS Agent",
     description:
       "Connect saved projects, deterministic tools and evidence-labelled engineering guidance in one project-aware workspace.",
     deliverables: [
       "Saved GIS projects and screening index",
       "Source registers, PDF reports and CSV exports",
-      "SolarDev Engineering Copilot",
+      "SolarDev Solar and BESS Agent",
     ],
     status: "Live",
     state: "current",
@@ -51,7 +51,7 @@ const roadmapItems: RoadmapItem[] = [
     number: "04",
     title: "Evidence & Data Expansion",
     description:
-      "Extend the live copilot with richer project documents, jurisdictional evidence, spatial intelligence and team review workflows.",
+      "Extend the live Solar and BESS Agent with richer project documents, jurisdictional evidence, spatial intelligence and team review workflows.",
     deliverables: [
       "PDF and DOCX evidence ingestion",
       "Country-specific authority and market connectors",
@@ -231,7 +231,7 @@ export default function Roadmap() {
 
           <div className="mt-9 flex items-center justify-center gap-3 text-xs text-[#778a82]">
             <span className="h-px w-10 bg-gradient-to-r from-transparent to-emerald-400/60" />
-            <span>Knowledge → tools → evidence-led copilot</span>
+            <span>Knowledge → tools → evidence-led agent</span>
             <span className="h-px w-10 bg-gradient-to-l from-transparent to-emerald-400/60" />
           </div>
         </div>

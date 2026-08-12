@@ -166,7 +166,7 @@ function readableError(error: Error) {
   } catch {
     // The AI SDK may already provide a plain-text message.
   }
-  return error.message || "The Engineering Copilot could not complete the request.";
+  return error.message || "The Solar and BESS Agent could not complete the request.";
 }
 
 function messageText(message: SolarAgentUIMessage) {
@@ -566,7 +566,7 @@ export default function ProjectDevelopmentAgentDemo({
           <header className="flex flex-wrap items-center justify-between gap-3 border-b border-[#10271f]/10 px-5 py-4 sm:px-7">
             <div>
               <p className="text-[9px] font-bold uppercase tracking-[0.19em] text-[#17805f]">
-                Solar &amp; BESS engineering copilot
+                Solar and BESS Agent
               </p>
               <p className="mt-1 text-sm font-semibold">
                 {selectedProject?.name ?? "General engineering guidance"}
@@ -757,7 +757,7 @@ export default function ProjectDevelopmentAgentDemo({
                 }}
                 disabled={!isSignedIn}
                 rows={2}
-                aria-label="Ask the SolarDev engineering copilot"
+                aria-label="Ask the SolarDev Solar and BESS Agent"
                 placeholder={
                   selectedProject
                     ? `Ask about ${selectedProject.name}…`

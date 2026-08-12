@@ -8,9 +8,9 @@ import { isAuthenticationAvailable } from "@/lib/auth-config";
 import { listOwnedProjects } from "@/lib/projects/data";
 
 export const metadata: Metadata = {
-  title: "SolarDev Engineering Copilot",
+  title: "SolarDev Solar and BESS Agent",
   description:
-    "Use the SolarDev Engineering Copilot for project-aware, sourced solar and BESS analysis, deterministic calculations and evidence review.",
+    "Use the SolarDev Solar and BESS Agent for project-aware, sourced solar and BESS analysis, deterministic calculations and evidence review.",
   alternates: { canonical: "/agents/project-development" },
 };
 
@@ -50,7 +50,7 @@ export default async function ProjectDevelopmentAgentPage({
               <div>
                 <div className="flex flex-wrap items-center gap-3">
                   <span className="rounded-full border border-emerald-300/20 bg-emerald-300/10 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.18em] text-emerald-200">
-                    SolarDev engineering copilot
+                    SolarDev Solar and BESS Agent
                   </span>
                   <span className="text-[10px] font-semibold uppercase tracking-[0.16em] text-slate-500">
                     Stage-aware · Evidence-led

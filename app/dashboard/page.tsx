@@ -26,11 +26,11 @@ export const dynamic = "force-dynamic";
 
 const workspaceTools = [
   {
-    title: "SolarDev Engineering Copilot",
+    title: "SolarDev Solar and BESS Agent",
     description:
       "Ask project-aware questions, run auditable calculations and search uploaded evidence.",
     href: "/agents/project-development",
-    action: "Open Engineering Copilot",
+    action: "Open Solar and BESS Agent",
     accent: "emerald",
   },
   {

@@ -24,7 +24,7 @@ const requestSchema = z.object({
 
 export async function POST(request: Request) {
   const { userId } = await auth();
-  if (!userId) return Response.json({ error: "Sign in to use the SolarDev Engineering Copilot." }, { status: 401 });
+  if (!userId) return Response.json({ error: "Sign in to use the SolarDev Solar and BESS Agent." }, { status: 401 });
   let payload: unknown;
   try { payload = await request.json(); } catch { return Response.json({ error: "Request body must be valid JSON." }, { status: 400 }); }
   const parsed = requestSchema.safeParse(payload);
