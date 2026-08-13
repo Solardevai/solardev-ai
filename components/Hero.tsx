@@ -109,11 +109,6 @@ export default function Hero() {
                     </div>
                   </div>
                 </div>
-                <div className="mt-3 space-y-2 rounded-xl border border-[#10271f]/10 bg-white p-3">
-                  <span className="block h-1.5 w-full rounded-full bg-[#dfe6e1]" />
-                  <span className="block h-1.5 w-4/5 rounded-full bg-[#dfe6e1]" />
-                  <span className="block h-1.5 w-2/5 rounded-full bg-emerald-300" />
-                </div>
                 <span className="mt-auto pt-5 text-xs font-semibold text-emerald-700">
                   Open the agent →
                 </span>
