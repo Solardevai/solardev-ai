@@ -30,7 +30,7 @@ export default function Hero() {
           </p>
 
           <h1 className="mt-5 max-w-3xl text-5xl font-bold leading-[1.03] tracking-[-0.045em] text-[#10271f] sm:text-6xl lg:text-7xl">
-            Build the engineering basis before fixing project value.
+            Solar and Storage Platform.
           </h1>
 
           <p className="mt-6 max-w-2xl text-lg leading-8 text-[#536860]">
