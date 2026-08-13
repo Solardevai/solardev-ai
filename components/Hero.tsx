@@ -81,13 +81,33 @@ export default function Hero() {
                     AI
                   </span>
                 </div>
-                <div className="mt-5 rounded-xl bg-emerald-500 p-3 text-[#071d17]">
-                  <span className="text-[8px] font-bold uppercase tracking-wide">
-                    Action brief
-                  </span>
-                  <span className="mt-2 block text-[11px] font-semibold leading-4">
-                    Validate the grid route before the next investment gate.
-                  </span>
+                <div className="mt-5 rounded-xl bg-emerald-500 p-2">
+                  <div className="flex min-h-24 flex-col rounded-lg border border-[#10271f]/10 bg-white p-2.5 shadow-sm">
+                    <span className="text-[8px] leading-3 text-[#7b8c85]">
+                      Ask a solar PV, BESS or project-development question…
+                    </span>
+                    <div className="mt-auto flex items-end justify-between gap-2 pt-5">
+                      <span className="text-[6px] leading-3 text-[#899790]">
+                        Enter to send · Shift + Enter for a new line
+                      </span>
+                      <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-[#ced8d3] text-[#71827b] transition group-hover:bg-emerald-300 group-hover:text-[#071d17]">
+                        <svg
+                          aria-hidden="true"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          className="h-3.5 w-3.5"
+                        >
+                          <path
+                            d="M12 19V5M6.5 10.5 12 5l5.5 5.5"
+                            stroke="currentColor"
+                            strokeWidth="1.8"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                          />
+                        </svg>
+                      </span>
+                    </div>
+                  </div>
                 </div>
                 <div className="mt-3 space-y-2 rounded-xl border border-[#10271f]/10 bg-white p-3">
                   <span className="block h-1.5 w-full rounded-full bg-[#dfe6e1]" />
