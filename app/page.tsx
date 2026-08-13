@@ -2,9 +2,7 @@ import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
 import PlatformExperience from "@/components/PlatformExperience";
 import Features from "@/components/Features";
-import VolumeOne from "@/components/VolumeOne";
 import AudienceApplications from "@/components/Audience";
-import Pricing from "@/components/Pricing";
 import FAQ from "@/components/FAQ";
 import Roadmap from "@/components/Roadmap";
 import Contact from "@/components/Contact";
@@ -126,8 +124,6 @@ export default function Home() {
         <Features />
         <AudienceApplications />
         <Roadmap />
-        <VolumeOne />
-        <Pricing />
         <FAQ />
         <Contact />
       </main>
