@@ -215,13 +215,13 @@ export const roadmapItems = [
   },
   {
     volume: "2026 · Q2",
-    title: "SolarDev AI Tools",
+    title: "AI Tools",
     status: "In development",
     active: true,
   },
   {
     volume: "2026 · Q4",
-    title: "SolarDev GIS Site Check Expansion",
+    title: "GIS Site Check Expansion",
     status: "Planned",
     active: false,
   },

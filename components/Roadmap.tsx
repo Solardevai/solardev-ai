@@ -22,12 +22,12 @@ const roadmapItems: RoadmapItem[] = [
   {
     year: "2026 · Q2",
     number: "02",
-    title: "SolarDev AI Tools",
+    title: "AI Tools",
     description:
       "Practical early-stage tools for solar site assessment and solar-angle analysis.",
     deliverables: [
-      "SolarDev GIS Site Check",
-      "SolarDev Solar Geometry Tool",
+      "GIS Site Check",
+      "Solar Geometry Tool",
     ],
     status: "Available",
     state: "complete",
@@ -41,7 +41,7 @@ const roadmapItems: RoadmapItem[] = [
     deliverables: [
       "Saved GIS projects and screening index",
       "Source registers, PDF reports and CSV exports",
-      "SolarDev Solar and BESS Agent",
+      "Solar and BESS Agent",
     ],
     status: "Live",
     state: "current",
