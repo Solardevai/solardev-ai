@@ -1,7 +1,6 @@
 import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
 import PlatformExperience from "@/components/PlatformExperience";
-import Features from "@/components/Features";
 import AudienceApplications from "@/components/Audience";
 import FAQ from "@/components/FAQ";
 import Roadmap from "@/components/Roadmap";
@@ -121,7 +120,6 @@ export default function Home() {
       <main className="min-h-screen bg-[#f4f5f0] text-[#10271f]">
         <Hero />
         <PlatformExperience />
-        <Features />
         <AudienceApplications />
         <Roadmap />
         <FAQ />

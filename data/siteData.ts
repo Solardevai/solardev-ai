@@ -176,44 +176,44 @@ export const applications = [
     number: "01",
     title: "Opportunity screening",
     description:
-      "Compare potential sites, identify fatal flaws and define the next technical actions.",
+      "Compare potential sites, spot issues that could stop a project and identify what to investigate next.",
     tags: [
-      "Site screening",
-      "Constraints",
-      "Go / No-Go",
+      "Compare sites",
+      "Identify constraints",
+      "Decide whether to proceed",
     ],
   },
   {
     number: "02",
     title: "Technical due diligence",
     description:
-      "Review project evidence, identify information gaps and structure decision-ready findings.",
+      "Check project documents and source data, find missing information and organise the findings for review.",
     tags: [
-      "Evidence",
-      "Information gaps",
-      "Technical risk",
+      "Check evidence",
+      "Find missing data",
+      "Understand technical risk",
     ],
   },
   {
     number: "03",
     title: "Development planning",
     description:
-      "Coordinate workstreams, dependencies, decision gates and Ready-to-Build activities.",
+      "Organise surveys, approvals and technical tasks in the order needed to move a project forward.",
     tags: [
-      "Roadmap",
-      "Responsibilities",
-      "Programme",
+      "Plan next steps",
+      "Assign responsibilities",
+      "Track the programme",
     ],
   },
   {
     number: "04",
-    title: "Risk and CAPEX",
+    title: "Risk and early cost estimates",
     description:
-      "Translate technical findings into accountable risks and transparent initial investment ranges.",
+      "Turn technical findings into a clear risk register and an initial range for capital costs (CAPEX).",
     tags: [
-      "Risk register",
-      "CAPEX",
-      "Sensitivity",
+      "Record risks",
+      "Estimate capital costs",
+      "Test key assumptions",
     ],
   },
 ];
