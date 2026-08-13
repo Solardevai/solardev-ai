@@ -81,9 +81,6 @@ export default function Hero() {
                     AI
                   </span>
                 </div>
-                <strong className="mt-4 block text-base leading-5 text-[#10271f] group-hover:text-emerald-800">
-                  Turn project evidence into next actions
-                </strong>
                 <div className="mt-5 rounded-xl bg-emerald-500 p-3 text-[#071d17]">
                   <span className="text-[8px] font-bold uppercase tracking-wide">
                     Action brief
@@ -109,9 +106,6 @@ export default function Hero() {
                 <span className="text-[9px] font-bold uppercase tracking-[0.16em] text-cyan-800">
                   GIS Site Screening
                 </span>
-                <strong className="mt-4 block text-base leading-5 text-[#10271f] group-hover:text-cyan-800">
-                  Define and quantify a candidate site
-                </strong>
                 <div className="relative mt-5 h-28 overflow-hidden rounded-xl bg-[#dce9df]">
                   <div className="absolute inset-0 opacity-60 [background-image:linear-gradient(30deg,transparent_46%,rgba(71,85,105,.35)_47%,rgba(71,85,105,.35)_50%,transparent_51%),radial-gradient(circle_at_70%_30%,#b6d5bf_0,transparent_35%)]" />
                   <svg
@@ -145,9 +139,6 @@ export default function Hero() {
                 <span className="text-[9px] font-bold uppercase tracking-[0.16em] text-amber-700">
                   Sun Position
                 </span>
-                <strong className="mt-4 block text-base leading-5 text-[#10271f] group-hover:text-amber-700">
-                  Test solar geometry at any point
-                </strong>
                 <div className="relative mt-5 h-28 overflow-hidden rounded-xl bg-[linear-gradient(to_bottom,#e9f3f0_0%,#f8e8bd_68%,#d8e2d9_69%)]">
                   <span className="absolute right-5 top-4 h-10 w-10 rounded-full bg-amber-400 shadow-[0_0_24px_rgba(251,191,36,.65)]" />
                   <span className="absolute bottom-4 left-4 right-4 h-px origin-left -rotate-[18deg] bg-amber-700/50" />

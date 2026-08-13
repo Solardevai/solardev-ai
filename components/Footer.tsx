@@ -4,6 +4,10 @@ import CookiePreferencesButton from "@/components/CookiePreferencesButton";
 
 const productLinks = [
   {
+    label: "Solar and BESS Agent",
+    href: "/agents/project-development",
+  },
+  {
     label: "Handbooks",
     href: "/handbooks",
   },

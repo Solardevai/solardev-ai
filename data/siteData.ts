@@ -34,10 +34,6 @@ export const navigationItems = [
     href: "/",
   },
   {
-    label: "Platform",
-    href: "/#platform",
-  },
-  {
     label: "Insights",
     href: "/insights",
   },
