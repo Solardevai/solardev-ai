@@ -46,16 +46,8 @@ export const navigationItems = [
     href: "/methodology",
   },
   {
-    label: "Professionals",
-    href: "/#audience",
-  },
-  {
     label: "FAQ",
     href: "/#faq",
-  },
-  {
-    label: "Contact",
-    href: "/#contact",
   },
 ];
 
@@ -248,7 +240,7 @@ export const faqItems = [
   {
     question: "What is available on the SolarDev AI platform today?",
     answer:
-      "SolarDev GIS Site Check and the Solar Geometry Tool are available now, alongside saved GIS projects, deterministic constraint screening, a preliminary screening index, PDF reports, CSV registers and the professional workflow library. The SolarDev Solar and BESS Agent is live with project context, deterministic solar and BESS calculations, and clearly labelled sources, assumptions and results.",
+      "SolarDev GIS Site Check and the Solar Geometry Tool are available now, alongside saved GIS projects, deterministic constraint screening, a preliminary screening index, PDF reports and CSV registers. The SolarDev Solar and BESS Agent is live with project context, deterministic solar and BESS calculations, and clearly labelled sources, assumptions and results.",
   },
   {
     question: "Is this a general AI book?",

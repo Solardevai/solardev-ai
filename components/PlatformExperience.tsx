@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { workflowGuides } from "@/data/workflowGuides";
 
 const gisCapabilities = [
   "Satellite and topographic basemaps",
@@ -136,17 +135,6 @@ export default function PlatformExperience() {
         </div>
       </section>
 
-      <section className="border-b border-[#10271f]/10 bg-[#edf0e9] py-20 text-[#10271f]">
-        <div className="mx-auto max-w-7xl px-6 lg:px-8">
-          <div className="flex flex-wrap items-end justify-between gap-5">
-            <div><p className="text-sm font-bold uppercase tracking-[0.2em] text-emerald-700">Workflow library</p><h2 className="mt-4 text-3xl font-bold tracking-tight sm:text-4xl">Engineering guidance built around real decisions</h2></div>
-            <Link href="/insights" className="text-sm font-semibold text-emerald-700 hover:text-emerald-800">Explore all {workflowGuides.length} guides →</Link>
-          </div>
-          <div className="mt-10 grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-            {workflowGuides.slice(0, 8).map((guide) => <Link key={guide.slug} href={`/insights/${guide.slug}`} className="rounded-2xl border border-[#10271f]/10 bg-white/70 p-5 transition hover:-translate-y-0.5 hover:border-emerald-600/30 hover:bg-white"><span className="text-[9px] font-bold uppercase tracking-[0.14em] text-emerald-700">{guide.category}</span><h3 className="mt-3 font-semibold leading-6 text-[#10271f]">{guide.title}</h3></Link>)}
-          </div>
-        </div>
-      </section>
     </>
   );
 }

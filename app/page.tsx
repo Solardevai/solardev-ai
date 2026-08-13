@@ -4,7 +4,6 @@ import PlatformExperience from "@/components/PlatformExperience";
 import AudienceApplications from "@/components/Audience";
 import FAQ from "@/components/FAQ";
 import Roadmap from "@/components/Roadmap";
-import Contact from "@/components/Contact";
 import Footer from "@/components/Footer";
 import { faqItems, siteConfig } from "@/data/siteData";
 
@@ -30,13 +29,11 @@ const homeStructuredData = {
           "@type": "ContactPoint",
           contactType: "general enquiries",
           email: siteConfig.infoEmail,
-          url: "https://www.solardev.ai/#contact",
         },
         {
           "@type": "ContactPoint",
           contactType: "customer support",
           email: siteConfig.supportEmail,
-          url: "https://www.solardev.ai/#contact",
         },
       ],
       knowsAbout: [
@@ -123,7 +120,6 @@ export default function Home() {
         <AudienceApplications />
         <Roadmap />
         <FAQ />
-        <Contact />
       </main>
 
       <Footer />

@@ -34,10 +34,6 @@ const companyLinks = [
     label: "FAQ",
     href: "/#faq",
   },
-  {
-    label: "Contact",
-    href: "/#contact",
-  },
 ];
 
 const legalLinks = [
