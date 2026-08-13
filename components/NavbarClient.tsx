@@ -211,26 +211,26 @@ export default function Navbar({
 
                   <div className="absolute left-1/2 top-full z-50 mt-4 w-80 -translate-x-1/2 rounded-2xl border border-white/10 bg-slate-900 p-2 shadow-2xl shadow-black/40">
                     <Link
-                      href="/handbooks"
+                      href="/tools/solar-site-screening"
                       className="block rounded-xl px-4 py-3 transition hover:bg-white/[0.06] focus:outline-none focus-visible:bg-white/[0.06]"
                     >
                       <span className="block font-semibold text-white">
-                        Handbooks
+                        GIS Site Check
                       </span>
                       <span className="mt-1 block text-xs leading-5 text-slate-400">
-                        Utility-scale Solar and BESS development volumes.
+                        Screen a site, save it and continue into GIS analysis.
                       </span>
                     </Link>
 
                     <Link
-                      href="/tools/solar-site-screening"
+                      href="/agents/project-development"
                       className="mt-1 block rounded-xl px-4 py-3 transition hover:bg-white/[0.06] focus:outline-none focus-visible:bg-white/[0.06]"
                     >
                       <span className="block font-semibold text-white">
-                        SolarDev GIS Site Check
+                        Solar and BESS Agent
                       </span>
                       <span className="mt-1 block text-xs leading-5 text-slate-400">
-                        Screen a site, save it and continue into GIS analysis.
+                        Ask a PV, BESS or project-development question.
                       </span>
                     </Link>
 
@@ -247,14 +247,14 @@ export default function Navbar({
                     </Link>
 
                     <Link
-                      href="/agents/project-development"
+                      href="/handbooks"
                       className="mt-1 block rounded-xl px-4 py-3 transition hover:bg-white/[0.06] focus:outline-none focus-visible:bg-white/[0.06]"
                     >
                       <span className="block font-semibold text-white">
-                        Solar and BESS Agent
+                        Handbooks
                       </span>
                       <span className="mt-1 block text-xs leading-5 text-slate-400">
-                        Preview evidence-led project actions and decision briefs.
+                        Utility-scale Solar and BESS development volumes.
                       </span>
                     </Link>
 
@@ -348,6 +348,27 @@ export default function Navbar({
                       Tools
                     </p>
                     <Link
+                      href="/tools/solar-site-screening"
+                      onClick={closeMenu}
+                      className="flex min-h-12 items-center justify-between rounded-lg px-3 py-3 font-semibold text-white transition hover:bg-white/[0.05] focus:outline-none focus-visible:bg-white/[0.05]"
+                    >
+                      GIS Site Check
+                    </Link>
+                    <Link
+                      href="/agents/project-development"
+                      onClick={closeMenu}
+                      className="flex min-h-12 items-center justify-between rounded-lg px-3 py-3 font-semibold text-white transition hover:bg-white/[0.05] focus:outline-none focus-visible:bg-white/[0.05]"
+                    >
+                      Solar and BESS Agent
+                    </Link>
+                    <Link
+                      href="/tools/sun-path"
+                      onClick={closeMenu}
+                      className="flex min-h-12 items-center justify-between rounded-lg px-3 py-3 font-semibold text-white transition hover:bg-white/[0.05] focus:outline-none focus-visible:bg-white/[0.05]"
+                    >
+                      Solar Geometry Tool
+                    </Link>
+                    <Link
                       href="/handbooks"
                       onClick={closeMenu}
                       className="flex min-h-12 items-center justify-between rounded-lg px-3 py-3 font-semibold text-white transition hover:bg-white/[0.05] focus:outline-none focus-visible:bg-white/[0.05]"
@@ -359,27 +380,6 @@ export default function Navbar({
                       >
                         →
                       </span>
-                    </Link>
-                    <Link
-                      href="/tools/solar-site-screening"
-                      onClick={closeMenu}
-                      className="flex min-h-12 items-center justify-between rounded-lg px-3 py-3 font-semibold text-white transition hover:bg-white/[0.05] focus:outline-none focus-visible:bg-white/[0.05]"
-                    >
-                      SolarDev GIS Site Check
-                    </Link>
-                    <Link
-                      href="/tools/sun-path"
-                      onClick={closeMenu}
-                      className="flex min-h-12 items-center justify-between rounded-lg px-3 py-3 font-semibold text-white transition hover:bg-white/[0.05] focus:outline-none focus-visible:bg-white/[0.05]"
-                    >
-                      Solar Geometry Tool
-                    </Link>
-                    <Link
-                      href="/agents/project-development"
-                      onClick={closeMenu}
-                      className="flex min-h-12 items-center justify-between rounded-lg px-3 py-3 font-semibold text-white transition hover:bg-white/[0.05] focus:outline-none focus-visible:bg-white/[0.05]"
-                    >
-                      Solar and BESS Agent
                     </Link>
                   </div>
                 )}

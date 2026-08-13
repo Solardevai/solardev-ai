@@ -58,9 +58,6 @@ export default function Hero() {
                 <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-emerald-700">
                   SolarDev project-development workspace
                 </p>
-                <p className="mt-1 text-sm font-semibold text-[#10271f]">
-                  Three tools, one evidence trail
-                </p>
               </div>
               <span className="inline-flex items-center gap-2 rounded-full border border-[#10271f]/10 bg-[#edf0e9] px-3 py-1.5 text-[10px] font-bold uppercase tracking-wide text-[#29483c]">
                 <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
