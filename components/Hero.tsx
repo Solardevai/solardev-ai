@@ -38,27 +38,6 @@ export default function Hero() {
             analysis in one traceable workspace for Solar PV and BESS decisions.
           </p>
 
-          <div className="mt-9 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
-            <Link
-              href="/agents/project-development"
-              className="rounded-xl bg-emerald-500 px-7 py-4 text-center font-semibold text-[#071d17] shadow-lg shadow-emerald-700/10 transition hover:-translate-y-0.5 hover:bg-emerald-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600 focus-visible:ring-offset-2 focus-visible:ring-offset-[#f4f5f0]"
-            >
-              Open the Project Development Agent
-            </Link>
-            <Link
-              href="/tools/solar-site-screening"
-              className="rounded-xl border border-[#10271f]/20 bg-white/60 px-7 py-4 text-center font-semibold text-[#10271f] transition hover:-translate-y-0.5 hover:border-emerald-600/40 hover:bg-white focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600 focus-visible:ring-offset-2 focus-visible:ring-offset-[#f4f5f0]"
-            >
-              Run a GIS site screen
-            </Link>
-            <Link
-              href="/tools/sun-path"
-              className="rounded-xl border border-[#10271f]/20 bg-white/60 px-7 py-4 text-center font-semibold text-[#10271f] transition hover:-translate-y-0.5 hover:border-amber-500/50 hover:bg-white focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-500 focus-visible:ring-offset-2 focus-visible:ring-offset-[#f4f5f0]"
-            >
-              Check sun position
-            </Link>
-          </div>
-
           <div className="mt-9 flex flex-wrap gap-x-6 gap-y-3 text-xs font-medium text-[#536860]">
             {proofPoints.map((item) => (
               <span key={item} className="flex items-center gap-2">
