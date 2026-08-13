@@ -23,10 +23,6 @@ const companyLinks = [
     href: "/methodology",
   },
   {
-    label: "Professionals",
-    href: "/#audience",
-  },
-  {
     label: "Roadmap",
     href: "/#roadmap",
   },
