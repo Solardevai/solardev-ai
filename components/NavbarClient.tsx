@@ -230,7 +230,7 @@ export default function Navbar({
                         Solar and BESS Agent
                       </span>
                       <span className="mt-1 block text-xs leading-5 text-slate-400">
-                        Ask a PV, BESS or project-development question.
+                        Ask a PV, BESS or Project development question.
                       </span>
                     </Link>
 
