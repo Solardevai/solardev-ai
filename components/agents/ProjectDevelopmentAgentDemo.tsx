@@ -70,60 +70,6 @@ type Props = {
   isSignedIn: boolean;
 };
 
-const projectQuickPrompts = [
-  {
-    label: "Indicative capacity",
-    description: "Gross area, usable fraction and DC planning density",
-    prompt:
-      "Estimate indicative PV DC capacity from this project's gross site area. Separate gross area, assumed usable area and planning density, and state what a layout must still verify.",
-  },
-  {
-    label: "Development priorities",
-    description: "Rank evidence-backed risks and next actions",
-    prompt:
-      "Rank the three most material development risks in the available project evidence. For each, state the evidence, uncertainty, owner and recommended next action.",
-  },
-  {
-    label: "DC/AC basis",
-    description: "Calculate the ratio or identify missing design inputs",
-    prompt:
-      "Using the available project inputs, calculate the PV DC/AC ratio. If either capacity is missing, list the exact input required and explain the design evidence needed before fixing the ratio.",
-  },
-  {
-    label: "Evidence gap register",
-    description: "Separate confirmed inputs, assumptions and gaps",
-    prompt:
-      "Prepare a concise evidence gap register: confirmed project inputs, assumptions, missing evidence, decision impact and recommended next action.",
-  },
-] as const;
-
-const generalQuickPrompts = [
-  {
-    label: "PV screening brief",
-    description: "Build a structured utility-scale input checklist",
-    prompt:
-      "Create a utility-scale solar PV screening input checklist, grouped by land, grid, planning, environment, resource, design and commercial workstreams.",
-  },
-  {
-    label: "Hybrid sizing basis",
-    description: "Separate PV, grid and BESS sizing parameters",
-    prompt:
-      "What project inputs are required to size a co-located solar PV and BESS project without confusing PV AC rating, grid export capacity, BESS power and usable energy?",
-  },
-  {
-    label: "DC/AC decision",
-    description: "Review engineering and commercial trade-offs",
-    prompt:
-      "Explain the engineering and commercial trade-offs that determine a utility-scale PV DC/AC ratio, and list the evidence needed before selecting a project value.",
-  },
-  {
-    label: "Development data room",
-    description: "Create a stage-gated evidence index",
-    prompt:
-      "Create a stage-gated data-room index for a utility-scale solar or BESS project, distinguishing screening evidence from detailed-design evidence.",
-  },
-] as const;
-
 const toolLabels: Record<string, string> = {
   calculateDcAcRatio: "PV DC/AC ratio",
   estimateLandCapacity: "land-to-capacity screen",
@@ -230,9 +176,6 @@ export default function ProjectDevelopmentAgentDemo({
     () => projects.find((project) => project.id === projectId),
     [projectId, projects],
   );
-  const activeQuickPrompts = selectedProject
-    ? projectQuickPrompts
-    : generalQuickPrompts;
   const agentTransport = useMemo(
     () => new DefaultChatTransport({ api: "/api/agents/solar" }),
     [],
@@ -312,11 +255,6 @@ export default function ProjectDevelopmentAgentDemo({
       { text },
       { body: { projectId: projectId || undefined, manualInputs } },
     );
-  }
-
-  function choosePrompt(prompt: string) {
-    setInput(prompt);
-    requestAnimationFrame(() => inputRef.current?.focus());
   }
 
   function stopSpeaking() {
@@ -603,51 +541,6 @@ export default function ProjectDevelopmentAgentDemo({
                 >
                   <LogIn className="size-4" /> Sign in to continue
                 </Link>
-              </div>
-            ) : null}
-
-            {isSignedIn && messages.length === 0 ? (
-              <div className="mx-auto flex min-h-[470px] max-w-3xl flex-col items-center justify-center text-center">
-                <div className="xl:hidden">
-                  <SolarDevMark />
-                </div>
-                <p className="mt-5 text-[9px] font-bold uppercase tracking-[0.2em] text-[#17805f]">
-                  Project Development Agent
-                </p>
-                <h2 className="mt-4 max-w-2xl text-3xl font-semibold tracking-[-0.03em] sm:text-4xl">
-                  {selectedProject
-                    ? "Turn project evidence into a defensible next decision."
-                    : "Build the engineering basis before fixing a project value."}
-                </h2>
-                <p className="mt-4 max-w-xl text-sm leading-6 text-[#5d7069]">
-                  {selectedProject
-                    ? "Ask about the selected project, test assumptions and expose the evidence still needed. Supported calculations use deterministic tools."
-                    : "Ask a general solar PV, BESS or development question. Select a saved project when you need project-specific conclusions."}
-                </p>
-                <div className="mt-8 grid w-full gap-2 sm:grid-cols-2">
-                  {activeQuickPrompts.map(
-                    ({ label, description, prompt }, index) => (
-                      <button
-                        key={prompt}
-                        type="button"
-                        onClick={() => choosePrompt(prompt)}
-                        className="group flex min-h-20 items-start gap-3 rounded-xl border border-[#10271f]/10 bg-white/80 px-4 py-3 text-left text-xs leading-5 text-[#233b32] transition hover:-translate-y-0.5 hover:border-[#17805f]/30 hover:bg-white hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#17805f]/50"
-                      >
-                        <span className="mt-0.5 font-mono text-[9px] font-bold text-[#17805f]/65">
-                          {String(index + 1).padStart(2, "0")}
-                        </span>
-                        <span>
-                          <span className="block font-semibold text-[#10271f]">
-                            {label}
-                          </span>
-                          <span className="mt-0.5 block text-[#60736c]">
-                            {description}
-                          </span>
-                        </span>
-                      </button>
-                    ),
-                  )}
-                </div>
               </div>
             ) : null}
 
