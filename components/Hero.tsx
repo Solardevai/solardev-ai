@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 const proofPoints = [
   "Project-aware guidance",
   "Deterministic calculations",
@@ -16,7 +18,7 @@ export default function Hero() {
         <div className="absolute inset-x-0 bottom-0 h-48 bg-gradient-to-t from-[#edf0e9] to-transparent" />
       </div>
 
-      <div className="relative mx-auto flex min-h-[620px] max-w-7xl items-center px-6 py-20 lg:py-24">
+      <div className="relative mx-auto grid min-h-[620px] max-w-7xl items-center gap-14 px-6 py-20 lg:grid-cols-[0.9fr_1.1fr] lg:py-24">
         <div className="max-w-4xl">
           <div className="inline-flex items-center gap-3 rounded-full border border-[#10271f]/10 bg-white/70 px-4 py-2 text-sm font-semibold text-[#29483c] shadow-sm backdrop-blur">
             <span className="h-2 w-2 rounded-full bg-emerald-500 shadow-[0_0_12px_rgba(16,185,129,.45)]" />
@@ -47,6 +49,65 @@ export default function Hero() {
             ))}
           </div>
         </div>
+
+        <Link
+          href="/agents/project-development"
+          aria-label="Open the SolarDev Solar and BESS Agent"
+          className="group relative block"
+        >
+          <div className="absolute inset-6 rounded-full bg-emerald-300/30 blur-3xl transition group-hover:bg-emerald-300/40" />
+
+          <div className="relative overflow-hidden rounded-[2rem] border border-[#10271f]/10 bg-white/75 p-5 shadow-2xl shadow-[#10271f]/10 backdrop-blur sm:p-7">
+            <div className="flex items-center justify-between gap-4">
+              <div>
+                <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-emerald-700">
+                  Project Development Agent
+                </p>
+                <h2 className="mt-2 text-xl font-semibold tracking-tight text-[#10271f] sm:text-2xl">
+                  Ask a project question
+                </h2>
+              </div>
+
+              <span className="inline-flex shrink-0 items-center gap-2 rounded-full border border-[#10271f]/10 bg-[#edf0e9] px-3 py-1.5 text-[10px] font-bold uppercase tracking-wide text-[#29483c]">
+                <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
+                Live
+              </span>
+            </div>
+
+            <div className="mt-6 min-h-48 rounded-[1.75rem] border border-[#10271f]/15 bg-white px-5 py-5 shadow-[0_14px_35px_rgba(16,39,31,0.08)] sm:min-h-52 sm:px-7 sm:py-6">
+              <p className="text-base leading-7 text-[#7b8c85] sm:text-lg">
+                Ask a solar PV, BESS or project-development question…
+              </p>
+
+              <div className="mt-20 flex items-end justify-between gap-4 sm:mt-24">
+                <span className="text-[10px] text-[#899790] sm:text-xs">
+                  Enter to send · Shift + Enter for a new line
+                </span>
+
+                <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-[#ced8d3] text-[#71827b] transition group-hover:bg-emerald-400 group-hover:text-[#071d17]">
+                  <svg
+                    aria-hidden="true"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    className="h-5 w-5"
+                  >
+                    <path
+                      d="M12 19V5M6.5 10.5 12 5l5.5 5.5"
+                      stroke="currentColor"
+                      strokeWidth="1.8"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
+                </span>
+              </div>
+            </div>
+
+            <p className="mt-5 text-sm font-semibold text-emerald-700">
+              Open the Solar and BESS Agent →
+            </p>
+          </div>
+        </Link>
       </div>
     </section>
   );
