@@ -38,6 +38,10 @@ export const navigationItems = [
     href: "/insights",
   },
   {
+    label: "Plans",
+    href: "/plans",
+  },
+  {
     label: "Methodology",
     href: "/methodology",
   },
