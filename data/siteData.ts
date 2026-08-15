@@ -41,10 +41,6 @@ export const navigationItems = [
     label: "Methodology",
     href: "/methodology",
   },
-  {
-    label: "FAQ",
-    href: "/#faq",
-  },
 ];
 
 export const trustAudiences = [
