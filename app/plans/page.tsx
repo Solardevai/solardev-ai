@@ -14,8 +14,8 @@ export const metadata: Metadata = {
 const plans = [
   {
     id: "free-open",
-    name: "No account",
-    eyebrow: "Open access",
+    name: "Basic",
+    eyebrow: "No account",
     description: "Start screening a site immediately. No registration required.",
     cta: "Explore public tools",
     href: "/tools/solar-site-screening",
@@ -28,8 +28,8 @@ const plans = [
   },
   {
     id: "free-account",
-    name: "Free account",
-    eyebrow: "Expanded workspace",
+    name: "Professional",
+    eyebrow: "Free account",
     description: "Save your work and unlock deeper project screening and analysis.",
     cta: "Create a free account",
     href: "/sign-up",
