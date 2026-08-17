@@ -1,0 +1,27 @@
+
+> solardev-ai@0.1.0 dev
+> next dev -p 3000
+
+▲ Next.js 16.2.10 (Turbopack)
+- Local:         http://localhost:3000
+- Network:       http://10.5.0.2:3000
+- Environments: .env.local
+✓ Ready in 758ms
+Creating turbopack project { dir: 'C:\\Users\\Ballotti\\Downloads\\solardev-ai', testMode: true }
+
+
+[35m
+[Clerk]:[0m You are running in keyless mode.
+You can [35mclaim your keys[0m by visiting https://dashboard.clerk.com/apps/claim?framework=nextjs&token=etd4uzyupconaghgz4xu4jc6wj96fuj2gf6u16lq&return_url=http%3A%2F%2Flocalhost%3A3000%2F
+
+ GET /plans 200 in 1602ms (next.js: 535ms, proxy.ts: 162ms, application-code: 906ms)
+ GET /plans 200 in 168ms (next.js: 5ms, proxy.ts: 25ms, application-code: 139ms)
+ GET /plans 200 in 26ms (next.js: 6ms, proxy.ts: 14ms, application-code: 7ms)
+ POST /plans 303 in 243ms (next.js: 6ms, proxy.ts: 8ms, application-code: 229ms)
+  └─ ƒ syncKeylessConfigAction({"apiKeysUrl":"https://dashboard.clerk.com/apps/app_3HE8oek3wT72sBzyK7A7PZex5iS/instances/ins_3HE8ocov3I5SSUxHglXOpSu6hjm/api-keys","claimUrl":"https://dashboard.clerk.com/apps/claim?framework=nextjs&token=etd4uzyupconaghgz4xu4jc6wj96fuj2gf6u16lq","...":"3 items not stringified"}) in 10ms node_modules/@clerk/nextjs/dist/esm/app-router/keyless-actions.js
+ GET /plans 200 in 171ms (next.js: 5ms, proxy.ts: 18ms, application-code: 148ms)
+ GET /plans 200 in 203ms (next.js: 5ms, proxy.ts: 7ms, application-code: 191ms)
+ POST /plans 303 in 142ms (next.js: 4ms, proxy.ts: 6ms, application-code: 132ms)
+  └─ ƒ syncKeylessConfigAction({"apiKeysUrl":"https://dashboard.clerk.com/apps/app_3HE8oek3wT72sBzyK7A7PZex5iS/instances/ins_3HE8ocov3I5SSUxHglXOpSu6hjm/api-keys","claimUrl":"https://dashboard.clerk.com/apps/claim?framework=nextjs&token=etd4uzyupconaghgz4xu4jc6wj96fuj2gf6u16lq","...":"3 items not stringified"}) in 13ms node_modules/@clerk/nextjs/dist/esm/app-router/keyless-actions.js
+ GET /plans 200 in 135ms (next.js: 3ms, proxy.ts: 16ms, application-code: 115ms)
+✓ Compiled in 438ms
