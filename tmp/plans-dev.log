@@ -25,3 +25,5 @@ You can [35mclaim your keys[0m by visiting https://dashboard.clerk.com/apps/cl
   └─ ƒ syncKeylessConfigAction({"apiKeysUrl":"https://dashboard.clerk.com/apps/app_3HE8oek3wT72sBzyK7A7PZex5iS/instances/ins_3HE8ocov3I5SSUxHglXOpSu6hjm/api-keys","claimUrl":"https://dashboard.clerk.com/apps/claim?framework=nextjs&token=etd4uzyupconaghgz4xu4jc6wj96fuj2gf6u16lq","...":"3 items not stringified"}) in 13ms node_modules/@clerk/nextjs/dist/esm/app-router/keyless-actions.js
  GET /plans 200 in 135ms (next.js: 3ms, proxy.ts: 16ms, application-code: 115ms)
 ✓ Compiled in 438ms
+✓ Compiled in 438ms
+✓ Compiled in 378ms

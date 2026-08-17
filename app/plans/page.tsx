@@ -164,9 +164,8 @@ export default function PlansPage() {
                     <h3 className="mt-3 text-3xl font-bold tracking-tight">{plan.name}</h3>
                   </div>
 
-                  <div className="mt-5 flex items-end gap-2 border-b border-[#10271f]/10 pb-6">
+                  <div className="mt-5 border-b border-[#10271f]/10 pb-6">
                     <span className="text-5xl font-bold tracking-tight">€0</span>
-                    <span className="pb-1.5 text-sm text-[#778a82]">forever</span>
                   </div>
 
                   <p className="mt-6 leading-7 text-[#536860]">{plan.description}</p>
