@@ -74,9 +74,6 @@ export default function Hero() {
                   <span className="text-[9px] font-bold uppercase tracking-[0.16em] text-emerald-700">
                     Project Development Agent
                   </span>
-                  <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-emerald-100 text-[10px] font-bold text-emerald-800">
-                    AI
-                  </span>
                 </div>
                 <div className="mt-5 rounded-xl bg-emerald-500 p-2">
                   <div className="flex min-h-24 flex-col rounded-lg border border-[#10271f]/10 bg-white p-2.5 shadow-sm">
