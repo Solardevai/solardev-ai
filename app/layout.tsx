@@ -10,7 +10,7 @@ const SITE_TITLE =
   "Professional Solar & BESS Development Platform | SolarDev AI";
 
 const SITE_DESCRIPTION =
-  "GIS site intelligence, engineering-led workflows, traceable project outputs and the SolarDev Solar and BESS Agent for utility-scale Solar PV and BESS development.";
+  "SolarDev AI provides GIS site screening, saved project workspaces, engineering reports and an AI agent for utility-scale solar PV and BESS development.";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),

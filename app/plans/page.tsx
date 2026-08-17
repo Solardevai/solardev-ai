@@ -7,7 +7,7 @@ import Navbar from "@/components/Navbar";
 export const metadata: Metadata = {
   title: "Free Plans",
   description:
-    "Compare SolarDev AI free access without an account and the expanded free workspace available after sign-up.",
+    "Compare SolarDev AI Basic and Professional plans for free GIS site screening, saved projects, engineering reports and the Solar and BESS Agent.",
   alternates: { canonical: "/plans" },
 };
 

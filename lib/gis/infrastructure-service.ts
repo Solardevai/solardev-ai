@@ -74,6 +74,8 @@ const OVERPASS_ENDPOINTS = [
   "https://maps.mail.ru/osm/tools/overpass/api/interpreter",
 ];
 
+const MINIMUM_SUBSTATION_VOLTAGE = 20_000;
+
 function parseVoltage(value?: string) {
   if (!value) return null;
   const voltages = value
@@ -206,7 +208,7 @@ export async function fetchInfrastructure(
         sourceTimestamp: null,
         retrievedAt,
         classification:
-          "MV 1–<45 kV; HV 45–<220 kV; EHV ≥220 kV; missing voltage shown as unclassified.",
+          "MV 1–<45 kV; HV 45–<220 kV; EHV ≥220 kV; substations with mapped voltage below 20 kV excluded.",
       },
     };
   }
@@ -257,9 +259,16 @@ export async function fetchInfrastructure(
   const features: InfrastructureFeature[] = [];
   for (const element of data.elements ?? []) {
     const tags = element.tags ?? {};
+    const voltage = parseVoltage(tags.voltage);
+    if (
+      tags.power === "substation" &&
+      voltage != null &&
+      voltage < MINIMUM_SUBSTATION_VOLTAGE
+    ) {
+      continue;
+    }
     if (isCoarseSubstationQuery) {
-      const overviewVoltage = parseVoltage(tags.voltage);
-      if (!overviewVoltage || overviewVoltage < 45_000) continue;
+      if (!voltage || voltage < 45_000) continue;
     }
     const geometry = geometryFor(element);
     if (!geometry) continue;
@@ -280,7 +289,7 @@ export async function fetchInfrastructure(
       kind,
       osmType: element.type,
       osmId: element.id,
-      voltage: parseVoltage(tags.voltage),
+      voltage,
       voltageRaw: tags.voltage ?? null,
       operator: tags.operator ?? null,
       name: tags.name ?? tags.ref ?? null,
@@ -310,7 +319,7 @@ export async function fetchInfrastructure(
       sourceTimestamp: data.osm3s?.timestamp_osm_base ?? null,
       retrievedAt,
       classification:
-        "MV 1–<45 kV; HV 45–<220 kV; EHV ≥220 kV; missing voltage shown as unclassified.",
+        "MV 1–<45 kV; HV 45–<220 kV; EHV ≥220 kV; substations with mapped voltage below 20 kV excluded.",
     },
   };
 }

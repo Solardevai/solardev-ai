@@ -4,7 +4,7 @@ export const siteConfig = {
   name: "SolarDev AI",
   tagline: "AI for Utility-Scale Solar & BESS Professionals",
   description:
-    "A professional platform combining GIS site intelligence, engineering-led workflows, traceable project outputs and the SolarDev Solar and BESS Agent for utility-scale Solar PV and BESS development.",
+    "SolarDev AI provides GIS site screening, saved project workspaces, engineering reports and an AI agent for utility-scale solar PV and BESS development.",
 
   infoEmail: "info@solardev.ai",
   supportEmail: "support@solardev.ai",
