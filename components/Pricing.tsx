@@ -48,7 +48,7 @@ export default function Pricing() {
                 </h3>
               </div>
               <span className="shrink-0 rounded-full border border-emerald-400/25 bg-emerald-400/10 px-2.5 py-1 text-xs font-bold text-emerald-300">
-                Available
+                Checkout paused
               </span>
             </div>
 
@@ -94,7 +94,7 @@ export default function Pricing() {
                 </h3>
               </div>
               <span className="shrink-0 rounded-full border border-emerald-400/25 bg-emerald-400/10 px-2.5 py-1 text-xs font-bold text-emerald-300">
-                Available
+                Checkout paused
               </span>
             </div>
 
@@ -131,8 +131,7 @@ export default function Pricing() {
         </div>
 
         <p className="mt-5 text-center text-xs leading-5 text-slate-500">
-          Individual licence · Secure Stripe checkout for available
-          editions · Prices shown in EUR
+          Handbook checkout is temporarily unavailable. Prices shown in EUR.
         </p>
       </div>
     </section>

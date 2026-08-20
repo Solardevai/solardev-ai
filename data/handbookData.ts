@@ -10,7 +10,7 @@ export const handbookVolumes = [
     title: volumeOneProductData.title,
     description:
       "A professional methodology for responsible, traceable and decision-focused AI-assisted Solar PV and BESS project development.",
-    status: "Available now",
+    status: "Checkout temporarily paused",
     pages: volumeOneProductData.pages,
     chapters: volumeOneProductData.chapters,
     edition: volumeOneProductData.edition,
@@ -18,7 +18,7 @@ export const handbookVolumes = [
     cover: "/volume-1-cover.webp",
     href: "/solar-bess-project-development-handbook",
     cta: "Explore Volume 1",
-    available: true,
+    available: false,
   },
   {
     id: "volume-2",
@@ -26,7 +26,7 @@ export const handbookVolumes = [
     title: volumeTwoProductData.title,
     description:
       "A professional methodology spanning FEED, grid connection, consenting, procurement, financing, construction, commissioning, operations and portfolio strategy.",
-    status: "Available now",
+    status: "Checkout temporarily paused",
     pages: volumeTwoProductData.pages,
     chapters: volumeTwoProductData.chapters,
     edition: volumeTwoProductData.edition,
@@ -34,6 +34,6 @@ export const handbookVolumes = [
     cover: "/volume-2-cover.webp",
     href: "/solar-bess-project-development-handbook-volume-2",
     cta: "Explore Volume 2",
-    available: true,
+    available: false,
   },
 ] as const;

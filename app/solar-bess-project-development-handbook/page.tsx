@@ -88,7 +88,7 @@ const structuredData = {
 
         price: productData.price.toFixed(2),
 
-        availability: "https://schema.org/InStock",
+        availability: "https://schema.org/OutOfStock",
 
         itemCondition: "https://schema.org/NewCondition",
 
@@ -260,8 +260,8 @@ export default function HandbookPage() {
             </TrackedCheckoutLink>
 
             <p className="mt-4 text-center text-xs text-slate-500">
-              Secure payment through Stripe. Immediate PDF download after
-              successful payment.
+              Handbook checkout is temporarily unavailable. Please check back
+              soon.
             </p>
           </div>
         </div>

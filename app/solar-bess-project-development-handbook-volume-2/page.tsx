@@ -80,7 +80,7 @@ const structuredData = {
           "https://www.solardev.ai/solar-bess-project-development-handbook-volume-2",
         priceCurrency: volumeTwoProductData.currency,
         price: volumeTwoProductData.price.toFixed(2),
-        availability: "https://schema.org/InStock",
+        availability: "https://schema.org/OutOfStock",
         itemCondition: "https://schema.org/NewCondition",
         seller: {
           "@type": "Organization",
@@ -241,8 +241,8 @@ export default function VolumeTwoPage() {
               Buy Volume 2 - €{volumeTwoProductData.price}
             </TrackedCheckoutLink>
             <p className="mt-4 text-center text-xs text-slate-500">
-              Secure Stripe payment. Immediate PDF download after
-              successful payment.
+              Handbook checkout is temporarily unavailable. Please check back
+              soon.
             </p>
           </div>
         </div>

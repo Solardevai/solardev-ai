@@ -30,3 +30,12 @@ You can [35mclaim your keys[0m by visiting https://dashboard.clerk.com/apps/cl
 ✓ Compiled in 497ms
 ✓ Compiled in 502ms
 ✓ Compiled in 420ms
+✓ Compiled in 771ms
+
+[35m
+[Clerk]:[0m You are running in keyless mode.
+You can [35mclaim your keys[0m by visiting https://dashboard.clerk.com/apps/claim?framework=nextjs&token=etd4uzyupconaghgz4xu4jc6wj96fuj2gf6u16lq&return_url=http%3A%2F%2Flocalhost%3A3000%2F
+
+ GET /handbooks 200 in 1065ms (next.js: 820ms, proxy.ts: 66ms, application-code: 179ms)
+ GET /solar-bess-project-development-handbook 200 in 659ms (next.js: 503ms, proxy.ts: 6ms, application-code: 150ms)
+ GET /solar-bess-project-development-handbook-volume-2 200 in 480ms (next.js: 383ms, proxy.ts: 5ms, application-code: 92ms)

@@ -4,7 +4,7 @@ import type { ReactNode } from "react";
 import { trackBeginCheckout } from "@/lib/analytics";
 
 type TrackedCheckoutLinkProps = {
-  href: string;
+  href: string | null;
   buttonLocation: string;
   itemId: string;
   itemName: string;
@@ -28,6 +28,18 @@ export default function TrackedCheckoutLink({
   ariaLabel,
   children,
 }: TrackedCheckoutLinkProps) {
+  if (!href) {
+    return (
+      <span
+        aria-disabled="true"
+        className={`${className ?? ""} cursor-not-allowed opacity-60 grayscale`}
+        title="Handbook checkout is temporarily unavailable"
+      >
+        Checkout temporarily unavailable
+      </span>
+    );
+  }
+
   function handleClick(): void {
     trackBeginCheckout({
       buttonLocation,

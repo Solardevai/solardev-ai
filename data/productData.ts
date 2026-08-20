@@ -1,7 +1,7 @@
 export const volumeOneProductData = {
   volume: 1,
-  checkoutUrl:
-    "https://buy.stripe.com/14A28s079egjcyt7macs801",
+  // Temporarily disabled while the handbook Stripe account is corrected.
+  checkoutUrl: null,
   stripeProductId: "prod_UuLZ6NyLniEzvt",
   itemId: "solardev-volume-1",
   itemName:
@@ -21,8 +21,8 @@ export const volumeOneProductData = {
 
 export const volumeTwoProductData = {
   volume: 2,
-  checkoutUrl:
-    "https://buy.stripe.com/5kQ7sMbPR8VZcyt7macs802",
+  // Temporarily disabled while the handbook Stripe account is corrected.
+  checkoutUrl: null,
   stripeProductId: "prod_UwjPCZO55zSGuI",
   itemId: "solardev-volume-2",
   itemName:
